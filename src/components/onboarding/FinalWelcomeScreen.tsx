@@ -8,13 +8,15 @@ interface FinalWelcomeScreenProps {
 }
 
 export const FinalWelcomeScreen: React.FC<FinalWelcomeScreenProps> = ({ onNext, userName }) => {
+  const firstName = userName ? userName.split(' ')[0] : '';
+  
   return (
     <div className="min-h-screen bg-jet-black flex flex-col items-center justify-center px-6 animate-fade-in">
       <div className="flex flex-col items-center space-y-8 max-w-md text-center">
         <Sparkles className="h-16 w-16 text-goldenrod" />
         
         <h1 className="text-3xl font-light text-white">
-          Thank you for sharing{userName ? `, ${userName}` : ''}.
+          Thank you for sharing{firstName ? `, ${firstName}` : ''}.
         </h1>
         
         <p className="text-xl font-light text-gray-300">
