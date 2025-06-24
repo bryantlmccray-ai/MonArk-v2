@@ -9,6 +9,8 @@ export const DiscoveryMap: React.FC = () => {
     { id: 2, name: 'OHIO CITY', x: 25, y: 45 },
     { id: 3, name: 'TREMONT', x: 35, y: 55 },
     { id: 4, name: 'UNIVERSITY CIRCLE', x: 65, y: 35 },
+    { id: 5, name: 'LITTLE ITALY', x: 68, y: 40 },
+    { id: 6, name: 'GORDON SQUARE', x: 22, y: 38 },
   ];
 
   const profilePins = [
@@ -16,15 +18,23 @@ export const DiscoveryMap: React.FC = () => {
     { id: 2, x: 58, y: 42, name: 'Maya', age: 26, image: 'https://images.unsplash.com/photo-1494790108755-2616b612b047?w=150&h=150&fit=crop&crop=face' },
     { id: 3, x: 30, y: 48, name: 'Jordan', age: 29, image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face' },
     { id: 4, x: 67, y: 38, name: 'Sam', age: 27, image: 'https://images.unsplash.com/photo-1539571696247-f4d8e4e47f66?w=150&h=150&fit=crop&crop=face' },
+    { id: 5, x: 38, y: 32, name: 'Casey', age: 30, image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face' },
+    { id: 6, x: 26, y: 52, name: 'Riley', age: 25, image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face' },
   ];
 
   return (
     <div className="min-h-screen bg-jet-black relative overflow-hidden">
       {/* Background Map with Grid Overlay */}
       <div 
-        className="absolute inset-0 opacity-10 bg-map-grid bg-grid"
+        className="absolute inset-0 opacity-10"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1577473506174-7deb5a8b2a6b?w=800&h=800&fit=crop')`,
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+            url('https://images.unsplash.com/photo-1577473506174-7deb5a8b2a6b?w=800&h=800&fit=crop')
+          `,
+          backgroundSize: '2rem 2rem, 2rem 2rem, cover',
+          backgroundPosition: '0 0, 0 0, center',
         }}
       />
       
@@ -32,7 +42,7 @@ export const DiscoveryMap: React.FC = () => {
       {locations.map((location) => (
         <div
           key={location.id}
-          className="absolute text-xs font-semibold text-white/60 uppercase tracking-wider"
+          className="absolute text-xs font-semibold text-white/40 uppercase tracking-wider pointer-events-none"
           style={{
             left: `${location.x}%`,
             top: `${location.y}%`,
@@ -55,13 +65,13 @@ export const DiscoveryMap: React.FC = () => {
           }}
           onClick={() => setSelectedPin(selectedPin === pin.id ? null : pin.id)}
         >
-          <div className={`relative ${selectedPin === pin.id ? 'animate-ping-slow' : ''}`}>
+          <div className={`relative ${selectedPin === pin.id ? 'animate-pulse' : ''}`}>
             <img
               src={pin.image}
               alt={pin.name}
               className={`w-12 h-12 rounded-full border-2 transition-all duration-300 ${
                 selectedPin === pin.id
-                  ? 'border-goldenrod shadow-golden-glow scale-110'
+                  ? 'border-goldenrod shadow-glow scale-110'
                   : 'border-white/30 hover:border-goldenrod/50'
               }`}
             />
