@@ -42,7 +42,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
       case 4:
         return <RIFQuiz onNext={nextStep} />;
       case 5:
-        return <FinalWelcomeScreen onNext={onComplete} />;
+        return <FinalWelcomeScreen onNext={onComplete} userName={basicProfileData?.name} />;
       default:
         return <BasicProfileStep onNext={handleBasicProfileNext} />;
     }
