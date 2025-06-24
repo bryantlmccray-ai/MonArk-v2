@@ -11,6 +11,8 @@ export const DiscoveryMap: React.FC = () => {
     { id: 4, name: 'UNIVERSITY CIRCLE', x: 65, y: 35 },
     { id: 5, name: 'LITTLE ITALY', x: 68, y: 40 },
     { id: 6, name: 'GORDON SQUARE', x: 22, y: 38 },
+    { id: 7, name: 'LAKEWOOD', x: 15, y: 50 },
+    { id: 8, name: 'SHAKER HEIGHTS', x: 75, y: 50 },
   ];
 
   const profilePins = [
@@ -24,21 +26,22 @@ export const DiscoveryMap: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-jet-black relative overflow-hidden">
-      {/* Background Map with Grid Overlay */}
+      {/* Dark map background with grid overlay */}
       <div 
-        className="absolute inset-0 opacity-10"
+        className="absolute inset-0"
         style={{
           backgroundImage: `
             linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
             linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
-            url('https://images.unsplash.com/photo-1577473506174-7deb5a8b2a6b?w=800&h=800&fit=crop')
+            url('https://images.unsplash.com/photo-1574169208507-84376144848b?w=1200&h=800&fit=crop&crop=edges')
           `,
           backgroundSize: '2rem 2rem, 2rem 2rem, cover',
           backgroundPosition: '0 0, 0 0, center',
+          opacity: 0.1
         }}
       />
       
-      {/* Location Labels */}
+      {/* Location Labels - Semi-transparent, uppercase */}
       {locations.map((location) => (
         <div
           key={location.id}
@@ -53,7 +56,7 @@ export const DiscoveryMap: React.FC = () => {
         </div>
       ))}
 
-      {/* Profile Pins */}
+      {/* Profile Pins - Circular profile pictures */}
       {profilePins.map((pin) => (
         <div
           key={pin.id}
@@ -65,7 +68,7 @@ export const DiscoveryMap: React.FC = () => {
           }}
           onClick={() => setSelectedPin(selectedPin === pin.id ? null : pin.id)}
         >
-          <div className={`relative ${selectedPin === pin.id ? 'animate-pulse' : ''}`}>
+          <div className="relative">
             <img
               src={pin.image}
               alt={pin.name}

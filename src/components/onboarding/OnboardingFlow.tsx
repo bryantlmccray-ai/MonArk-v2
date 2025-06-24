@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { BasicProfileStep } from './BasicProfileStep';
 import { AffirmationScreen } from './AffirmationScreen';
 import { IntentScreen } from './IntentScreen';
 import { InviteScreen } from './InviteScreen';
@@ -10,27 +11,40 @@ interface OnboardingFlowProps {
   onComplete: () => void;
 }
 
+interface BasicProfileData {
+  email: string;
+  name: string;
+}
+
 export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [basicProfileData, setBasicProfileData] = useState<BasicProfileData | null>(null);
 
   const nextStep = () => {
     setCurrentStep(prev => prev + 1);
   };
 
+  const handleBasicProfileNext = (data: BasicProfileData) => {
+    setBasicProfileData(data);
+    nextStep();
+  };
+
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <AffirmationScreen onNext={nextStep} />;
+        return <BasicProfileStep onNext={handleBasicProfileNext} />;
       case 1:
-        return <IntentScreen onNext={nextStep} />;
+        return <AffirmationScreen onNext={nextStep} />;
       case 2:
-        return <InviteScreen onNext={nextStep} />;
+        return <IntentScreen onNext={nextStep} />;
       case 3:
-        return <RIFQuiz onNext={nextStep} />;
+        return <InviteScreen onNext={nextStep} />;
       case 4:
+        return <RIFQuiz onNext={nextStep} />;
+      case 5:
         return <FinalWelcomeScreen onNext={onComplete} />;
       default:
-        return <AffirmationScreen onNext={nextStep} />;
+        return <BasicProfileStep onNext={handleBasicProfileNext} />;
     }
   };
 
