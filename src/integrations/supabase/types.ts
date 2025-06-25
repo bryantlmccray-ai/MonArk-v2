@@ -9,7 +9,144 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      rif_feedback: {
+        Row: {
+          created_at: string
+          data: Json
+          feedback_type: string
+          id: string
+          processed: boolean | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data: Json
+          feedback_type: string
+          id?: string
+          processed?: boolean | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          feedback_type?: string
+          id?: string
+          processed?: boolean | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rif_profiles: {
+        Row: {
+          boundary_respect: number | null
+          created_at: string
+          emotional_readiness: number | null
+          id: string
+          intent_clarity: number | null
+          is_active: boolean | null
+          pacing_preferences: number | null
+          post_date_alignment: number | null
+          profile_version: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          boundary_respect?: number | null
+          created_at?: string
+          emotional_readiness?: number | null
+          id?: string
+          intent_clarity?: number | null
+          is_active?: boolean | null
+          pacing_preferences?: number | null
+          post_date_alignment?: number | null
+          profile_version?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          boundary_respect?: number | null
+          created_at?: string
+          emotional_readiness?: number | null
+          id?: string
+          intent_clarity?: number | null
+          is_active?: boolean | null
+          pacing_preferences?: number | null
+          post_date_alignment?: number | null
+          profile_version?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rif_recommendations: {
+        Row: {
+          content: Json
+          created_at: string
+          delivered: boolean | null
+          engaged: boolean | null
+          id: string
+          recommendation_type: string
+          user_id: string
+        }
+        Insert: {
+          content: Json
+          created_at?: string
+          delivered?: boolean | null
+          engaged?: boolean | null
+          id?: string
+          recommendation_type: string
+          user_id: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          delivered?: boolean | null
+          engaged?: boolean | null
+          id?: string
+          recommendation_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rif_settings: {
+        Row: {
+          ai_personalization_enabled: boolean | null
+          created_at: string
+          crisis_resources_shown: boolean | null
+          data_sharing_consent: boolean | null
+          id: string
+          last_consent_update: string | null
+          reflection_prompts_enabled: boolean | null
+          rif_enabled: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_personalization_enabled?: boolean | null
+          created_at?: string
+          crisis_resources_shown?: boolean | null
+          data_sharing_consent?: boolean | null
+          id?: string
+          last_consent_update?: string | null
+          reflection_prompts_enabled?: boolean | null
+          rif_enabled?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_personalization_enabled?: boolean | null
+          created_at?: string
+          crisis_resources_shown?: boolean | null
+          data_sharing_consent?: boolean | null
+          id?: string
+          last_consent_update?: string | null
+          reflection_prompts_enabled?: boolean | null
+          rif_enabled?: boolean | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
