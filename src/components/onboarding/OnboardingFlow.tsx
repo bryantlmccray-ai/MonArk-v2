@@ -6,6 +6,7 @@ import { IntentScreen } from './IntentScreen';
 import { InviteScreen } from './InviteScreen';
 import { RIFQuiz } from './RIFQuiz';
 import { FinalWelcomeScreen } from './FinalWelcomeScreen';
+import { RIFIntegration } from '../rif/RIFIntegration';
 
 interface OnboardingFlowProps {
   onComplete: () => void;
@@ -40,8 +41,15 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
       case 3:
         return <InviteScreen onNext={nextStep} />;
       case 4:
-        return <RIFQuiz onNext={nextStep} />;
+        return (
+          <RIFIntegration 
+            mode="consent" 
+            onComplete={nextStep}
+          />
+        );
       case 5:
+        return <RIFQuiz onNext={nextStep} />;
+      case 6:
         return <FinalWelcomeScreen onNext={onComplete} userName={basicProfileData?.name} />;
       default:
         return <BasicProfileStep onNext={handleBasicProfileNext} />;
