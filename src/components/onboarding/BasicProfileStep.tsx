@@ -1,17 +1,29 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/hooks/useAuth';
 
 interface BasicProfileStepProps {
   onNext: (data: { email: string; name: string }) => void;
 }
 
 export const BasicProfileStep: React.FC<BasicProfileStepProps> = ({ onNext }) => {
+  const { user } = useAuth();
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [emailError, setEmailError] = useState('');
   const [nameError, setNameError] = useState('');
+
+  // Pre-populate with user data if available
+  useEffect(() => {
+    if (user) {
+      setEmail(user.email || '');
+      // Try to get name from user metadata
+      const userName = user.user_metadata?.name || user.user_metadata?.full_name || '';
+      setName(userName);
+    }
+  }, [user]);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -50,8 +62,8 @@ export const BasicProfileStep: React.FC<BasicProfileStepProps> = ({ onNext }) =>
       <div className="w-full max-w-md space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-3xl font-light text-white">Welcome to MonArk</h1>
-          <p className="text-gray-400">Let's start with the basics to create your profile</p>
+          <h1 className="text-3xl font-light text-white">Complete Your Profile</h1>
+          <p className="text-gray-400">Let's finalize your basic information</p>
         </div>
 
         {/* Form */}
@@ -84,6 +96,7 @@ export const BasicProfileStep: React.FC<BasicProfileStepProps> = ({ onNext }) =>
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               className="bg-charcoal-gray border-gray-700 text-white placeholder:text-gray-500 focus:border-goldenrod"
+              disabled={!!user?.email} // Disable if email comes from auth
             />
             {emailError && (
               <p className="text-red-400 text-sm">{emailError}</p>

@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { Settings, ShieldCheck, Edit } from 'lucide-react';
+import { Settings, ShieldCheck, Edit, LogOut } from 'lucide-react';
 import { ProfileCreation } from '../profile/ProfileCreation';
 import { RelationalCompass } from '../rif/RelationalCompass';
+import { useAuth } from '@/hooks/useAuth';
 
 interface ProfileProps {
   onOpenTrustScore: () => void;
@@ -12,6 +13,11 @@ interface ProfileProps {
 export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettings }) => {
   const [showProfileCreation, setShowProfileCreation] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   if (showProfileCreation) {
     return (
@@ -31,13 +37,24 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
         <div className="flex justify-between items-start">
           <div>
             <h1 className="text-2xl font-light text-white">Profile</h1>
+            {user?.email && (
+              <p className="text-gray-400 text-sm">{user.email}</p>
+            )}
           </div>
-          <button
-            onClick={onOpenSettings}
-            className="p-2 text-gray-400 hover:text-white transition-colors"
-          >
-            <Settings className="h-6 w-6" />
-          </button>
+          <div className="flex space-x-2">
+            <button
+              onClick={onOpenSettings}
+              className="p-2 text-gray-400 hover:text-white transition-colors"
+            >
+              <Settings className="h-6 w-6" />
+            </button>
+            <button
+              onClick={handleSignOut}
+              className="p-2 text-gray-400 hover:text-white transition-colors"
+            >
+              <LogOut className="h-6 w-6" />
+            </button>
+          </div>
         </div>
 
         {!hasProfile ? (
