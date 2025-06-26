@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Settings, ShieldCheck, Edit } from 'lucide-react';
 import { ProfileCreation } from '../profile/ProfileCreation';
+import { RelationalCompass } from '../rif/RelationalCompass';
 
 interface ProfileProps {
   onOpenTrustScore: () => void;
@@ -74,6 +75,9 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                 <ShieldCheck className="h-6 w-6 text-goldenrod" />
               </div>
             </div>
+
+            {/* Relational Compass Section */}
+            <RelationalCompass />
 
             {/* Trust Score Section */}
             <div className="bg-charcoal-gray rounded-xl p-6 border border-gray-800">
