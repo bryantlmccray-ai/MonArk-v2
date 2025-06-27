@@ -4,6 +4,7 @@ import { BioStep } from './BioStep';
 import { InterestsStep } from './InterestsStep';
 import { PhotosStep } from './PhotosStep';
 import { DatePaletteStep } from './DatePaletteStep';
+import { IdentityPreferencesStep } from './IdentityPreferencesStep';
 import { ProfileReviewStep } from './ProfileReviewStep';
 import { useProfile } from '@/hooks/useProfile';
 import { useToast } from '@/hooks/use-toast';
@@ -20,6 +21,16 @@ export interface ProfileData {
   budget: string;
   timeOfDay: string[];
   activityType: string[];
+  identityPreferences?: {
+    genderIdentity: string;
+    genderIdentityCustom?: string;
+    sexualOrientation: string;
+    sexualOrientationCustom?: string;
+    preferenceToSee: string[];
+    preferenceToBeSeenBy: string[];
+    discoveryPrivacyMode: string;
+    identityVisibility: boolean;
+  };
 }
 
 export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) => {
@@ -49,6 +60,16 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
         budget: profile.date_preferences?.budget || '$',
         timeOfDay: profile.date_preferences?.timeOfDay || [],
         activityType: profile.date_preferences?.activityType || [],
+        identityPreferences: {
+          genderIdentity: profile.gender_identity || '',
+          genderIdentityCustom: profile.gender_identity_custom || '',
+          sexualOrientation: profile.sexual_orientation || '',
+          sexualOrientationCustom: profile.sexual_orientation_custom || '',
+          preferenceToSee: profile.preference_to_see || [],
+          preferenceToBeSeenBy: profile.preference_to_be_seen_by || [],
+          discoveryPrivacyMode: profile.discovery_privacy_mode || 'open',
+          identityVisibility: profile.identity_visibility ?? true,
+        },
       }));
     }
   }, [profile, loading]);
@@ -69,8 +90,8 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
     try {
       console.log('Completing profile with data:', profileData);
       
-      // Save complete profile to database
-      const success = await updateProfile({
+      // Prepare the profile data for database update
+      const updateData: any = {
         bio: profileData.bio,
         interests: profileData.interests,
         photos: profileData.photos,
@@ -81,7 +102,22 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
           activityType: profileData.activityType,
         },
         is_profile_complete: true,
-      });
+      };
+
+      // Add identity preferences if they exist
+      if (profileData.identityPreferences) {
+        const { identityPreferences } = profileData;
+        updateData.gender_identity = identityPreferences.genderIdentity;
+        updateData.gender_identity_custom = identityPreferences.genderIdentityCustom;
+        updateData.sexual_orientation = identityPreferences.sexualOrientation;
+        updateData.sexual_orientation_custom = identityPreferences.sexualOrientationCustom;
+        updateData.preference_to_see = identityPreferences.preferenceToSee;
+        updateData.preference_to_be_seen_by = identityPreferences.preferenceToBeSeenBy;
+        updateData.discovery_privacy_mode = identityPreferences.discoveryPrivacyMode;
+        updateData.identity_visibility = identityPreferences.identityVisibility;
+      }
+
+      const success = await updateProfile(updateData);
 
       if (success) {
         console.log('Profile completed successfully');
@@ -127,6 +163,8 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
       case 3:
         return <DatePaletteStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
       case 4:
+        return <IdentityPreferencesStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
+      case 5:
         return <ProfileReviewStep profileData={profileData} onEdit={goToStep} onComplete={handleComplete} />;
       default:
         return <BioStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;

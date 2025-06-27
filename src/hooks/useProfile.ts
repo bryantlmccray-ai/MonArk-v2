@@ -16,6 +16,15 @@ export interface UserProfile {
   location_data: any;
   location_consent: boolean;
   show_location_on_profile: boolean;
+  gender_identity: string | null;
+  gender_identity_custom: string | null;
+  sexual_orientation: string | null;
+  sexual_orientation_custom: string | null;
+  preference_to_see: string[];
+  preference_to_be_seen_by: string[];
+  discovery_privacy_mode: string;
+  identity_visibility: boolean;
+  last_preference_update: string;
   created_at: string;
   updated_at: string;
 }

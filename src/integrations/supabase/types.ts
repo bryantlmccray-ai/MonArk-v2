@@ -542,13 +542,24 @@ export type Database = {
           bio: string | null
           created_at: string
           date_preferences: Json | null
+          discovery_privacy_mode: string | null
+          gender_identity: Database["public"]["Enums"]["gender_identity"] | null
+          gender_identity_custom: string | null
           id: string
+          identity_visibility: boolean | null
           interests: string[] | null
           is_profile_complete: boolean | null
+          last_preference_update: string | null
           location: string | null
           location_consent: boolean | null
           location_data: Json | null
           photos: string[] | null
+          preference_to_be_seen_by: string[] | null
+          preference_to_see: string[] | null
+          sexual_orientation:
+            | Database["public"]["Enums"]["sexual_orientation"]
+            | null
+          sexual_orientation_custom: string | null
           show_location_on_profile: boolean | null
           updated_at: string
           user_id: string
@@ -558,13 +569,26 @@ export type Database = {
           bio?: string | null
           created_at?: string
           date_preferences?: Json | null
+          discovery_privacy_mode?: string | null
+          gender_identity?:
+            | Database["public"]["Enums"]["gender_identity"]
+            | null
+          gender_identity_custom?: string | null
           id?: string
+          identity_visibility?: boolean | null
           interests?: string[] | null
           is_profile_complete?: boolean | null
+          last_preference_update?: string | null
           location?: string | null
           location_consent?: boolean | null
           location_data?: Json | null
           photos?: string[] | null
+          preference_to_be_seen_by?: string[] | null
+          preference_to_see?: string[] | null
+          sexual_orientation?:
+            | Database["public"]["Enums"]["sexual_orientation"]
+            | null
+          sexual_orientation_custom?: string | null
           show_location_on_profile?: boolean | null
           updated_at?: string
           user_id: string
@@ -574,13 +598,26 @@ export type Database = {
           bio?: string | null
           created_at?: string
           date_preferences?: Json | null
+          discovery_privacy_mode?: string | null
+          gender_identity?:
+            | Database["public"]["Enums"]["gender_identity"]
+            | null
+          gender_identity_custom?: string | null
           id?: string
+          identity_visibility?: boolean | null
           interests?: string[] | null
           is_profile_complete?: boolean | null
+          last_preference_update?: string | null
           location?: string | null
           location_consent?: boolean | null
           location_data?: Json | null
           photos?: string[] | null
+          preference_to_be_seen_by?: string[] | null
+          preference_to_see?: string[] | null
+          sexual_orientation?:
+            | Database["public"]["Enums"]["sexual_orientation"]
+            | null
+          sexual_orientation_custom?: string | null
           show_location_on_profile?: boolean | null
           updated_at?: string
           user_id?: string
@@ -625,7 +662,27 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      gender_identity:
+        | "Man"
+        | "Woman"
+        | "Nonbinary"
+        | "Genderfluid"
+        | "Agender"
+        | "Demigender"
+        | "Two-Spirit"
+        | "Questioning"
+        | "Custom"
+      sexual_orientation:
+        | "Straight"
+        | "Gay"
+        | "Lesbian"
+        | "Bisexual"
+        | "Pansexual"
+        | "Queer"
+        | "Asexual"
+        | "Demisexual"
+        | "Questioning"
+        | "Custom"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -740,6 +797,30 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      gender_identity: [
+        "Man",
+        "Woman",
+        "Nonbinary",
+        "Genderfluid",
+        "Agender",
+        "Demigender",
+        "Two-Spirit",
+        "Questioning",
+        "Custom",
+      ],
+      sexual_orientation: [
+        "Straight",
+        "Gay",
+        "Lesbian",
+        "Bisexual",
+        "Pansexual",
+        "Queer",
+        "Asexual",
+        "Demisexual",
+        "Questioning",
+        "Custom",
+      ],
+    },
   },
 } as const

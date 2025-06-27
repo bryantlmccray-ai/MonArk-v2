@@ -43,13 +43,15 @@ export const DiscoveryMap: React.FC = () => {
     { id: 8, name: 'SHAKER HEIGHTS', x: 75, y: 50 },
   ];
 
-  // Enhanced profile data with interests and compatibility scoring
+  // Enhanced profile data with identity information
   const allProfilePins = [
     { 
       id: 1, x: 42, y: 35, name: 'Alex', age: 28, distance: 2.3,
       bio: "Love exploring new coffee shops and hiking trails. Always up for deep conversations about life and dreams.",
       interests: ['Coffee', 'Hiking', 'Books', 'Photography'],
       image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+      genderIdentity: 'Man',
+      preferenceToSee: ['Women', 'Nonbinary people'],
       rifProfile: { intent_clarity: 8, pacing_preferences: 3, emotional_readiness: 9, boundary_respect: 8, post_date_alignment: 7 }
     },
     { 
@@ -57,6 +59,8 @@ export const DiscoveryMap: React.FC = () => {
       bio: "Artist and yoga instructor seeking genuine connections. I believe in taking time to really know someone.",
       interests: ['Art', 'Yoga', 'Music', 'Nature'],
       image: 'https://images.unsplash.com/photo-1494790108755-2616b612b047?w=150&h=150&fit=crop&crop=face',
+      genderIdentity: 'Woman',
+      preferenceToSee: ['Men', 'Women', 'Nonbinary people'],
       rifProfile: { intent_clarity: 6, pacing_preferences: 7, emotional_readiness: 7, boundary_respect: 9, post_date_alignment: 8 }
     },
     { 
@@ -64,6 +68,8 @@ export const DiscoveryMap: React.FC = () => {
       bio: "Tech professional who loves board games and cooking. Looking for someone to share adventures with.",
       interests: ['Technology', 'Gaming', 'Cooking', 'Travel'],
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+      genderIdentity: 'Nonbinary',
+      preferenceToSee: ['Everyone open to connection'],
       rifProfile: { intent_clarity: 9, pacing_preferences: 5, emotional_readiness: 8, boundary_respect: 7, post_date_alignment: 9 }
     },
     { 
@@ -71,6 +77,8 @@ export const DiscoveryMap: React.FC = () => {
       bio: "Fitness enthusiast and music lover. Enjoy spontaneous adventures and meaningful conversations.",
       interests: ['Fitness', 'Music', 'Dancing', 'Sports'],
       image: 'https://images.unsplash.com/photo-1539571696247-f4d8e4e47f66?w=150&h=150&fit=crop&crop=face',
+      genderIdentity: 'Woman',
+      preferenceToSee: ['Women', 'Queer folks'],
       rifProfile: { intent_clarity: 5, pacing_preferences: 8, emotional_readiness: 6, boundary_respect: 6, post_date_alignment: 5 }
     },
     { 
@@ -78,6 +86,8 @@ export const DiscoveryMap: React.FC = () => {
       bio: "Writer and book club organizer. I appreciate the beauty in everyday moments and deep conversations.",
       interests: ['Books', 'Writing', 'Movies', 'Art'],
       image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
+      genderIdentity: 'Genderfluid',
+      preferenceToSee: ['Men', 'Women', 'Nonbinary people', 'Genderfluid people'],
       rifProfile: { intent_clarity: 7, pacing_preferences: 4, emotional_readiness: 8, boundary_respect: 9, post_date_alignment: 8 }
     },
     { 
@@ -85,31 +95,68 @@ export const DiscoveryMap: React.FC = () => {
       bio: "Photographer and travel enthusiast. Love capturing moments and exploring new cultures.",
       interests: ['Photography', 'Travel', 'Food', 'Nature'],
       image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face',
+      genderIdentity: 'Man',
+      preferenceToSee: ['Men', 'Queer folks'],
       rifProfile: { intent_clarity: 8, pacing_preferences: 6, emotional_readiness: 7, boundary_respect: 8, post_date_alignment: 7 }
     },
   ];
 
+  // Identity-based filtering function
+  const isIdentityCompatible = (targetProfile: any) => {
+    if (!profile?.preference_to_see || !profile?.gender_identity) return true;
+    
+    // Map gender identities to preference categories
+    const mapGenderToPreference = (gender: string) => {
+      switch (gender) {
+        case 'Man': return 'Men';
+        case 'Woman': return 'Women';
+        case 'Nonbinary': return 'Nonbinary people';
+        case 'Genderfluid': return 'Genderfluid people';
+        case 'Agender': return 'Agender people';
+        case 'Demigender': return 'Demigender people';
+        case 'Two-Spirit': return 'Two-Spirit people';
+        default: return gender;
+      }
+    };
+
+    const userGenderPref = mapGenderToPreference(profile.gender_identity);
+    const targetGenderPref = mapGenderToPreference(targetProfile.genderIdentity);
+
+    // Check if user wants to see this person's gender
+    const userWantsToSee = profile.preference_to_see.includes(targetGenderPref) || 
+                          profile.preference_to_see.includes('Everyone open to connection');
+
+    // Check if this person wants to see user's gender
+    const targetWantsToSee = targetProfile.preferenceToSee.includes(userGenderPref) || 
+                            targetProfile.preferenceToSee.includes('Everyone open to connection');
+
+    return userWantsToSee && targetWantsToSee;
+  };
+
   // Enhanced profile distance calculation
-  const calculateDistance = (profile: any) => {
-    if (!hasLocation || !profile.location) return profile.distance;
+  const calculateDistance = (targetProfile: any) => {
+    if (!hasLocation || !targetProfile.location) return targetProfile.distance;
     
     // If user has location but profile doesn't, use default distance
-    if (!profile.location.lat || !profile.location.lng) return profile.distance;
+    if (!targetProfile.location.lat || !targetProfile.location.lng) return targetProfile.distance;
     
     const userLat = profile.location_data.lat;
     const userLng = profile.location_data.lng;
     
     // Simple distance calculation (Haversine formula would be more accurate)
-    const latDiff = Math.abs(userLat - profile.location.lat);
-    const lngDiff = Math.abs(userLng - profile.location.lng);
+    const latDiff = Math.abs(userLat - targetProfile.location.lat);
+    const lngDiff = Math.abs(userLng - targetProfile.location.lng);
     const distance = Math.sqrt(latDiff * latDiff + lngDiff * lngDiff) * 69; // Rough miles conversion
     
     return Math.round(distance * 10) / 10;
   };
 
-  // Filter profiles based on current filters and user location
+  // Filter profiles based on current filters, user location, and identity preferences
   const getFilteredProfiles = () => {
     return allProfilePins.filter(pin => {
+      // Identity compatibility check - this is the core filtering logic
+      if (!isIdentityCompatible(pin)) return false;
+
       // Age filter
       if (pin.age < filters.ageRange[0] || pin.age > filters.ageRange[1]) return false;
       
@@ -211,6 +258,8 @@ export const DiscoveryMap: React.FC = () => {
     }
   }, [rifProfile, filteredProfiles, showInsight]);
 
+  const hasIdentityPreferences = profile?.preference_to_see?.length > 0;
+
   return (
     <div className="min-h-screen bg-jet-black relative overflow-hidden">
       {/* Dark map background with grid overlay */}
@@ -308,6 +357,9 @@ export const DiscoveryMap: React.FC = () => {
               {filteredProfiles.length} people nearby
               {hasLocation && (
                 <span className="text-goldenrod"> • Location enabled</span>
+              )}
+              {hasIdentityPreferences && (
+                <span className="text-goldenrod"> • Identity preferences active</span>
               )}
               {rifProfile && (
                 <span> • Emotional compatibility enabled</span>
