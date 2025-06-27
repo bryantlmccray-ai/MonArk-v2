@@ -67,6 +67,8 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
 
   const handleComplete = async () => {
     try {
+      console.log('Completing profile with data:', profileData);
+      
       // Save complete profile to database
       const success = await updateProfile({
         bio: profileData.bio,
@@ -82,12 +84,14 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
       });
 
       if (success) {
+        console.log('Profile completed successfully');
         toast({
           title: "Profile completed!",
           description: "Your profile has been saved successfully.",
         });
         onComplete();
       } else {
+        console.error('Failed to save profile');
         toast({
           title: "Save failed",
           description: "There was an error saving your profile. Please try again.",
