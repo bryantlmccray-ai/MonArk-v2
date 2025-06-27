@@ -154,6 +154,26 @@ export const RIFPostDateFeedback: React.FC<RIFPostDateFeedbackProps> = ({
             </div>
           </div>
 
+          {/* Intent Clarity */}
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2">
+              <Target className="h-4 w-4 text-green-400" />
+              <label className="text-white text-sm font-medium">Intent Clarity</label>
+            </div>
+            <Slider
+              value={responses.intent_clarity}
+              onValueChange={(value) => setResponses(prev => ({ ...prev, intent_clarity: value }))}
+              max={10}
+              min={1}
+              step={1}
+              className="w-full"
+            />
+            <div className="flex justify-between text-xs text-gray-400">
+              <span>Unclear</span>
+              <span>Very clear</span>
+            </div>
+          </div>
+
           {/* Would See Again */}
           <div className="space-y-3">
             <label className="text-white text-sm font-medium">Would you like to see them again?</label>
@@ -176,14 +196,17 @@ export const RIFPostDateFeedback: React.FC<RIFPostDateFeedbackProps> = ({
 
           {/* Reflection Notes */}
           <div className="space-y-3">
-            <label className="text-white text-sm font-medium">Any additional thoughts? (Optional)</label>
+            <label className="text-white text-sm font-medium">Personal Growth Insights (Optional)</label>
             <textarea
               value={responses.reflection_notes}
               onChange={(e) => setResponses(prev => ({ ...prev, reflection_notes: e.target.value }))}
-              placeholder="What did you learn about yourself or what you're looking for?"
+              placeholder="What did you learn about yourself or what you're looking for? Any patterns you noticed?"
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-goldenrod focus:outline-none resize-none"
-              rows={3}
+              rows={4}
             />
+            <p className="text-xs text-gray-500">
+              This helps you track your dating journey and personal growth over time
+            </p>
           </div>
 
           <div className="flex space-x-3">
