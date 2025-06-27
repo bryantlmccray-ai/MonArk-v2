@@ -60,7 +60,7 @@ export const useConversationNudges = () => {
       const transformedData = (data || []).map(item => ({
         ...item,
         response_options: Array.isArray(item.response_options) 
-          ? item.response_options 
+          ? item.response_options.map(option => String(option))
           : typeof item.response_options === 'string' 
             ? [item.response_options]
             : []
