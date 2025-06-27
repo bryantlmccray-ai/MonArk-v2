@@ -181,7 +181,10 @@ export type Database = {
           interests: string[] | null
           is_profile_complete: boolean | null
           location: string | null
+          location_consent: boolean | null
+          location_data: Json | null
           photos: string[] | null
+          show_location_on_profile: boolean | null
           updated_at: string
           user_id: string
         }
@@ -194,7 +197,10 @@ export type Database = {
           interests?: string[] | null
           is_profile_complete?: boolean | null
           location?: string | null
+          location_consent?: boolean | null
+          location_data?: Json | null
           photos?: string[] | null
+          show_location_on_profile?: boolean | null
           updated_at?: string
           user_id: string
         }
@@ -207,7 +213,10 @@ export type Database = {
           interests?: string[] | null
           is_profile_complete?: boolean | null
           location?: string | null
+          location_consent?: boolean | null
+          location_data?: Json | null
           photos?: string[] | null
+          show_location_on_profile?: boolean | null
           updated_at?: string
           user_id?: string
         }

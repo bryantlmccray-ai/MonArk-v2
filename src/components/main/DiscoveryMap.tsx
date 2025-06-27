@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { RIFProfileCard } from './RIFProfileCard';
 import { RIFInsightOverlay } from '../rif/RIFInsightOverlay';
@@ -6,12 +5,15 @@ import { DiscoveryFilters, DiscoveryFilters as FilterType } from './DiscoveryFil
 import { ProfileSelectionOverlay } from './ProfileSelectionOverlay';
 import { useRIF } from '@/hooks/useRIF';
 import { toast } from 'sonner';
+import { useProfile } from '@/hooks/useProfile';
+import { MapPin } from 'lucide-react';
 
 export const DiscoveryMap: React.FC = () => {
   const [selectedPin, setSelectedPin] = useState<number | null>(null);
   const [showInsight, setShowInsight] = useState<boolean>(false);
   const [insightTarget, setInsightTarget] = useState<any>(null);
   const [selectedProfile, setSelectedProfile] = useState<any>(null);
+  const [showLocationPrompt, setShowLocationPrompt] = useState(false);
   const [filters, setFilters] = useState<FilterType>({
     ageRange: [22, 35],
     maxDistance: 25,
@@ -25,6 +27,10 @@ export const DiscoveryMap: React.FC = () => {
     showOnlyHighCompatibility: false
   });
   const { rifProfile } = useRIF();
+  const { profile } = useProfile();
+
+  // Check if user has location enabled
+  const hasLocation = profile?.location_consent && profile?.location_data;
 
   const locations = [
     { id: 1, name: 'DOWNTOWN', x: 40, y: 30 },
@@ -83,14 +89,33 @@ export const DiscoveryMap: React.FC = () => {
     },
   ];
 
-  // Filter profiles based on current filters
+  // Enhanced profile distance calculation
+  const calculateDistance = (profile: any) => {
+    if (!hasLocation || !profile.location) return profile.distance;
+    
+    // If user has location but profile doesn't, use default distance
+    if (!profile.location.lat || !profile.location.lng) return profile.distance;
+    
+    const userLat = profile.location_data.lat;
+    const userLng = profile.location_data.lng;
+    
+    // Simple distance calculation (Haversine formula would be more accurate)
+    const latDiff = Math.abs(userLat - profile.location.lat);
+    const lngDiff = Math.abs(userLng - profile.location.lng);
+    const distance = Math.sqrt(latDiff * latDiff + lngDiff * lngDiff) * 69; // Rough miles conversion
+    
+    return Math.round(distance * 10) / 10;
+  };
+
+  // Filter profiles based on current filters and user location
   const getFilteredProfiles = () => {
     return allProfilePins.filter(pin => {
       // Age filter
       if (pin.age < filters.ageRange[0] || pin.age > filters.ageRange[1]) return false;
       
-      // Distance filter
-      if (pin.distance > filters.maxDistance) return false;
+      // Distance filter - use calculated distance if available
+      const distance = hasLocation ? calculateDistance(pin) : pin.distance;
+      if (distance > filters.maxDistance) return false;
       
       // Interest filter
       if (filters.interests.length > 0) {
@@ -157,6 +182,16 @@ export const DiscoveryMap: React.FC = () => {
     }
   };
 
+  // Show location prompt for first-time discovery users
+  useEffect(() => {
+    if (!hasLocation && !showLocationPrompt) {
+      const timer = setTimeout(() => {
+        setShowLocationPrompt(true);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [hasLocation, showLocationPrompt]);
+
   // Auto-show insights for high compatibility matches
   useEffect(() => {
     if (rifProfile && !showInsight && filteredProfiles.length > 0) {
@@ -193,6 +228,40 @@ export const DiscoveryMap: React.FC = () => {
         }}
       />
       
+      {/* Location Prompt for new users */}
+      {showLocationPrompt && !hasLocation && (
+        <div className="absolute top-20 left-6 right-6 z-20">
+          <div className="bg-charcoal-gray/95 backdrop-blur-xl rounded-xl p-4 border border-goldenrod/30 shadow-2xl">
+            <div className="flex items-start space-x-3">
+              <MapPin className="h-5 w-5 text-goldenrod mt-0.5" />
+              <div className="flex-1">
+                <h4 className="text-white font-medium mb-1">Discover people nearby</h4>
+                <p className="text-gray-400 text-sm mb-3">
+                  Share your approximate location to see better matches in your area
+                </p>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => {
+                      setShowLocationPrompt(false);
+                      // Could trigger location modal here
+                    }}
+                    className="px-3 py-1 bg-goldenrod-gradient text-jet-black text-sm rounded-lg font-medium"
+                  >
+                    Add Location
+                  </button>
+                  <button
+                    onClick={() => setShowLocationPrompt(false)}
+                    className="px-3 py-1 bg-gray-700 text-gray-300 text-sm rounded-lg"
+                  >
+                    Maybe Later
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Location Labels */}
       {locations.map((location) => (
         <div
@@ -236,7 +305,13 @@ export const DiscoveryMap: React.FC = () => {
           <div>
             <h1 className="text-2xl font-light text-white">Discover</h1>
             <p className="text-gray-400 text-sm mt-1">
-              {filteredProfiles.length} people nearby • Emotional compatibility enabled
+              {filteredProfiles.length} people nearby
+              {hasLocation && (
+                <span className="text-goldenrod"> • Location enabled</span>
+              )}
+              {rifProfile && (
+                <span> • Emotional compatibility enabled</span>
+              )}
             </p>
           </div>
           

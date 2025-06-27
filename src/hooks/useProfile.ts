@@ -13,6 +13,9 @@ export interface UserProfile {
   photos: string[];
   date_preferences: any;
   is_profile_complete: boolean;
+  location_data: any;
+  location_consent: boolean;
+  show_location_on_profile: boolean;
   created_at: string;
   updated_at: string;
 }

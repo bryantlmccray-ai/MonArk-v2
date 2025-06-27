@@ -1,10 +1,12 @@
 
 import React, { useState } from 'react';
-import { Settings, ShieldCheck, Edit, LogOut } from 'lucide-react';
+import { Settings, ShieldCheck, Edit, LogOut, MapPin } from 'lucide-react';
 import { ProfileCreation } from '../profile/ProfileCreation';
 import { RelationalCompass } from '../rif/RelationalCompass';
+import { LocationConsentModal } from '../location/LocationConsentModal';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
+import { useLocation } from '@/hooks/useLocation';
 
 interface ProfileProps {
   onOpenTrustScore: () => void;
@@ -13,12 +15,36 @@ interface ProfileProps {
 
 export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettings }) => {
   const [showProfileCreation, setShowProfileCreation] = useState(false);
+  const [showLocationModal, setShowLocationModal] = useState(false);
   const { user, signOut } = useAuth();
   const { profile, loading } = useProfile();
+  const { clearLocation } = useLocation();
 
   const handleSignOut = async () => {
     await signOut();
   };
+
+  const handleLocationUpdate = () => {
+    // Refresh will happen automatically via the profile hook
+  };
+
+  const handleClearLocation = async () => {
+    await clearLocation();
+  };
+
+  const getLocationDisplay = () => {
+    if (!profile?.location_data) return null;
+    
+    const { city, state, country, manual_override } = profile.location_data;
+    const location = state ? `${city}, ${state}` : `${city}, ${country}`;
+    
+    return {
+      text: location,
+      isManual: manual_override,
+    };
+  };
+
+  const locationDisplay = getLocationDisplay();
 
   if (loading) {
     return (
@@ -109,6 +135,63 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                 </h2>
                 <ShieldCheck className="h-6 w-6 text-goldenrod" />
               </div>
+
+              {/* Location Display */}
+              {locationDisplay && profile?.show_location_on_profile && (
+                <div className="flex items-center justify-center space-x-1 text-gray-400">
+                  <MapPin className="h-4 w-4" />
+                  <span className="text-sm">
+                    {locationDisplay.isManual ? 'Based in' : 'Near'} {locationDisplay.text}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Location Section */}
+            <div className="bg-charcoal-gray rounded-xl p-6 border border-gray-800">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-2">
+                  <MapPin className="h-5 w-5 text-goldenrod" />
+                  <h3 className="text-white font-medium text-lg">Location</h3>
+                </div>
+                {profile?.location_consent && (
+                  <button
+                    onClick={handleClearLocation}
+                    className="text-xs text-gray-400 hover:text-white transition-colors"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+              
+              {profile?.location_consent && locationDisplay ? (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-300">{locationDisplay.text}</span>
+                    <span className="text-xs text-gray-500">
+                      {locationDisplay.isManual ? 'Manual' : 'Approximate'}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setShowLocationModal(true)}
+                    className="w-full py-2 text-sm bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
+                  >
+                    Update Location
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <p className="text-gray-400 text-sm">
+                    Share your approximate location to connect with people nearby
+                  </p>
+                  <button
+                    onClick={() => setShowLocationModal(true)}
+                    className="w-full py-3 bg-goldenrod-gradient text-jet-black font-medium rounded-xl transition-all duration-300 hover:shadow-golden-glow"
+                  >
+                    Add Location
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Relational Compass Section */}
@@ -164,6 +247,13 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
           </>
         )}
       </div>
+
+      {/* Location Consent Modal */}
+      <LocationConsentModal
+        isOpen={showLocationModal}
+        onClose={() => setShowLocationModal(false)}
+        onSuccess={handleLocationUpdate}
+      />
     </div>
   );
 };
