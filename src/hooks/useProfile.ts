@@ -2,6 +2,10 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
+import type { Database } from '@/integrations/supabase/types';
+
+type GenderIdentity = Database['public']['Enums']['gender_identity'];
+type SexualOrientation = Database['public']['Enums']['sexual_orientation'];
 
 export interface UserProfile {
   id: string;
@@ -16,9 +20,9 @@ export interface UserProfile {
   location_data: any;
   location_consent: boolean;
   show_location_on_profile: boolean;
-  gender_identity: string | null;
+  gender_identity: GenderIdentity | null;
   gender_identity_custom: string | null;
-  sexual_orientation: string | null;
+  sexual_orientation: SexualOrientation | null;
   sexual_orientation_custom: string | null;
   preference_to_see: string[];
   preference_to_be_seen_by: string[];
@@ -89,6 +93,15 @@ export const useProfile = () => {
         return false;
       }
 
+      // Prepare the update data with proper typing
+      const updateData: any = {
+        ...updates,
+      };
+
+      // Remove fields that shouldn't be updated directly
+      delete updateData.id;
+      delete updateData.created_at;
+
       if (!existingProfile) {
         // Profile doesn't exist, create it
         console.log('Creating new profile');
@@ -96,7 +109,7 @@ export const useProfile = () => {
           .from('user_profiles')
           .insert({
             user_id: user.id,
-            ...updates,
+            ...updateData,
           });
 
         if (insertError) {
@@ -109,7 +122,7 @@ export const useProfile = () => {
         const { error: updateError } = await supabase
           .from('user_profiles')
           .update({
-            ...updates,
+            ...updateData,
             updated_at: new Date().toISOString(),
           })
           .eq('user_id', user.id);
@@ -137,12 +150,21 @@ export const useProfile = () => {
 
     try {
       console.log('Creating profile for user:', user.id);
+      
+      // Prepare the profile data with proper typing
+      const createData: any = {
+        user_id: user.id,
+        ...profileData,
+      };
+
+      // Remove fields that shouldn't be set directly
+      delete createData.id;
+      delete createData.created_at;
+      delete createData.updated_at;
+
       const { error } = await supabase
         .from('user_profiles')
-        .insert({
-          user_id: user.id,
-          ...profileData,
-        });
+        .insert(createData);
 
       if (error) {
         console.error('Error creating profile:', error);
