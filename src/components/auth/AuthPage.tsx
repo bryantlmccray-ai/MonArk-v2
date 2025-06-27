@@ -120,7 +120,7 @@ export const AuthPage: React.FC = () => {
           <img 
             src="/lovable-uploads/19cdbd08-40c6-4542-b75d-d8d052388a22.png" 
             alt="MonArk Logo" 
-            className="mx-auto w-48 h-48 object-contain mb-6"
+            className="mx-auto w-144 h-144 object-contain mb-6"
           />
         </div>
 
