@@ -1,5 +1,9 @@
 
 import React, { useState } from 'react';
+import { RelationalCompass } from '../rhythm/RelationalCompass';
+import { InsightsModule } from '../rhythm/InsightsModule';
+import { ReflectionPrompt } from '../rhythm/ReflectionPrompt';
+import { useRhythm } from '@/hooks/useRhythm';
 
 interface DatesJournalProps {
   onStartDebrief: () => void;
@@ -7,6 +11,7 @@ interface DatesJournalProps {
 
 export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) => {
   const [activeTab, setActiveTab] = useState('upcoming');
+  const { rifState, insights, reflections, currentPrompt, loading, saveReflection } = useRhythm();
 
   const tabs = [
     { id: 'upcoming', label: 'Upcoming & Ideas' },
@@ -108,26 +113,37 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
     </div>
   );
 
-  const renderRhythm = () => (
-    <div className="space-y-4">
-      <div className="bg-charcoal-gray rounded-xl p-4 border border-gray-800">
-        <h3 className="text-white font-medium mb-2">Insights</h3>
-        <p className="text-gray-300 text-sm">
-          Your highest-rated dates often involve Low-Key, Casual vibes.
-        </p>
+  const renderRhythm = () => {
+    if (loading) {
+      return (
+        <div className="space-y-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-charcoal-gray rounded-xl p-6 border border-gray-800 animate-pulse">
+              <div className="h-6 bg-gray-700 rounded mb-4"></div>
+              <div className="h-4 bg-gray-700 rounded w-3/4"></div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-6">
+        {/* Relational Compass */}
+        <RelationalCompass rifState={rifState} />
+        
+        {/* Insights Module */}
+        <InsightsModule insights={insights} />
+        
+        {/* Reflection Prompt */}
+        <ReflectionPrompt
+          currentPrompt={currentPrompt}
+          reflections={reflections}
+          onSaveReflection={saveReflection}
+        />
       </div>
-      
-      <div className="bg-charcoal-gray rounded-xl p-4 border border-gray-800">
-        <h3 className="text-white font-medium mb-2">Relationship Check-in</h3>
-        <p className="text-gray-400 text-sm mb-3">
-          You've had 3 dates with Maya. Ready to reflect on where things are going?
-        </p>
-        <button className="w-full py-2 bg-goldenrod-gradient text-jet-black font-medium rounded-lg text-sm">
-          Start Check-in
-        </button>
-      </div>
-    </div>
-  );
+    );
+  };
 
   const renderContent = () => {
     switch (activeTab) {

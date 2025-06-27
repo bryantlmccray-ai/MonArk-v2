@@ -33,6 +33,30 @@ export type Database = {
         }
         Relationships: []
       }
+      rif_event_log: {
+        Row: {
+          event_data: Json | null
+          event_type: string
+          id: string
+          timestamp: string
+          user_id: string
+        }
+        Insert: {
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          timestamp?: string
+          user_id: string
+        }
+        Update: {
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          timestamp?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       rif_feedback: {
         Row: {
           created_at: string
@@ -56,6 +80,39 @@ export type Database = {
           feedback_type?: string
           id?: string
           processed?: boolean | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rif_insights: {
+        Row: {
+          content: string
+          delivered: boolean | null
+          engaged: boolean | null
+          generated_at: string
+          id: string
+          insight_type: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          delivered?: boolean | null
+          engaged?: boolean | null
+          generated_at?: string
+          id?: string
+          insight_type: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          delivered?: boolean | null
+          engaged?: boolean | null
+          generated_at?: string
+          id?: string
+          insight_type?: string
+          title?: string
           user_id?: string
         }
         Relationships: []
@@ -102,6 +159,30 @@ export type Database = {
         }
         Relationships: []
       }
+      rif_prompts: {
+        Row: {
+          category: string | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          prompt_text: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          prompt_text: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          prompt_text?: string
+        }
+        Relationships: []
+      }
       rif_recommendations: {
         Row: {
           content: Json
@@ -128,6 +209,33 @@ export type Database = {
           engaged?: boolean | null
           id?: string
           recommendation_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rif_reflections: {
+        Row: {
+          created_at: string
+          id: string
+          prompt_id: string | null
+          prompt_text: string | null
+          response_text: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          prompt_id?: string | null
+          prompt_text?: string | null
+          response_text: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          prompt_id?: string | null
+          prompt_text?: string | null
+          response_text?: string
           user_id?: string
         }
         Relationships: []
@@ -218,6 +326,36 @@ export type Database = {
           photos?: string[] | null
           show_location_on_profile?: boolean | null
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_rif_state: {
+        Row: {
+          color_palette: Json | null
+          created_at: string
+          current_state: string
+          id: string
+          last_updated: string
+          state_description: string | null
+          user_id: string
+        }
+        Insert: {
+          color_palette?: Json | null
+          created_at?: string
+          current_state?: string
+          id?: string
+          last_updated?: string
+          state_description?: string | null
+          user_id: string
+        }
+        Update: {
+          color_palette?: Json | null
+          created_at?: string
+          current_state?: string
+          id?: string
+          last_updated?: string
+          state_description?: string | null
           user_id?: string
         }
         Relationships: []
