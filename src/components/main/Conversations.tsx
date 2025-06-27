@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Sparkles, Calendar, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,12 +6,16 @@ import { RIFPostDateFeedback } from '../rif/RIFPostDateFeedback';
 import { AIConciergeModal } from '../date-concierge/AIConciergeModal';
 import { DateProposalCard } from '../date-concierge/DateProposalCard';
 import { DateJournalEntryComponent } from '../date-concierge/DateJournalEntry';
+import { ConversationHelper } from '../conversation/ConversationHelper';
 import { useRIF } from '@/hooks/useRIF';
 import { useDateConcierge } from '@/hooks/useDateConcierge';
+import { useConversationNudges } from '@/hooks/useConversationNudges';
 
 export const Conversations: React.FC = () => {
   const { rifSettings } = useRIF();
   const { proposals, updateConversationEngagement } = useDateConcierge();
+  const { updateConversationActivity } = useConversationNudges();
+  
   const [showNudge, setShowNudge] = useState(false);
   const [showPostDateFeedback, setShowPostDateFeedback] = useState(false);
   const [showConciergeModal, setShowConciergeModal] = useState(false);
@@ -70,6 +73,12 @@ export const Conversations: React.FC = () => {
       updateConversationEngagement(
         conv.conversationId,
         conv.userId,
+        conv.messageCount,
+        conv.mutualEngagement
+      );
+      // Also update the new conversation activity tracking
+      updateConversationActivity(
+        conv.conversationId,
         conv.messageCount,
         conv.mutualEngagement
       );
@@ -131,6 +140,16 @@ export const Conversations: React.FC = () => {
     }
   };
 
+  const handleSendMessage = (conversationId: string, message: string) => {
+    console.log(`Sending message to ${conversationId}:`, message);
+    // In a real implementation, this would send the message through your chat system
+  };
+
+  const handleEndConversation = (conversationId: string, message: string, reason?: string) => {
+    console.log(`Ending conversation ${conversationId} with message:`, message, 'Reason:', reason);
+    // In a real implementation, this would close the conversation
+  };
+
   const relevantProposals = proposals.filter(proposal => 
     conversations.some(conv => conv.conversationId === proposal.conversation_id)
   );
@@ -173,7 +192,7 @@ export const Conversations: React.FC = () => {
           </div>
         )}
 
-        {/* Conversations List */}
+        {/* Conversations List with enhanced helper integration */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-medium text-white">Messages</h2>
@@ -190,7 +209,8 @@ export const Conversations: React.FC = () => {
                   <img
                     src={conversation.image}
                     alt={conversation.name}
-                    className="w-12 h-12 rounded-full"
+                    className="w-12 h-12 rounded-full cursor-pointer"
+                    onClick={() => handleConversationClick(conversation)}
                   />
                   {rifSettings?.rif_enabled && conversation.messageCount > 10 && (
                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-goldenrod rounded-full border border-jet-black animate-pulse" />
@@ -204,7 +224,7 @@ export const Conversations: React.FC = () => {
                 
                 <div className="flex-1">
                   <div className="flex items-center space-x-2">
-                    <h3 className="text-white font-medium">
+                    <h3 className="text-white font-medium cursor-pointer" onClick={() => handleConversationClick(conversation)}>
                       {conversation.name}
                     </h3>
                     {conversation.hadDate && (
@@ -234,6 +254,14 @@ export const Conversations: React.FC = () => {
                 </div>
                 
                 <div className="flex items-center space-x-2">
+                  {/* Conversation Helper Button */}
+                  <ConversationHelper
+                    conversationId={conversation.conversationId}
+                    matchName={conversation.name}
+                    onSendMessage={(message) => handleSendMessage(conversation.conversationId, message)}
+                    onEndConversation={(message, reason) => handleEndConversation(conversation.conversationId, message, reason)}
+                  />
+                  
                   {conversation.isNewMatch && (
                     <Sparkles className="h-5 w-5 text-goldenrod" />
                   )}

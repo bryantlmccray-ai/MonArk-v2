@@ -9,6 +9,81 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      conversation_events: {
+        Row: {
+          conversation_id: string
+          created_at: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          sentiment_score: number | null
+          user_id: string
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          sentiment_score?: number | null
+          user_id: string
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          sentiment_score?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      conversation_monitor: {
+        Row: {
+          avg_sentiment_score: number | null
+          conversation_id: string
+          created_at: string
+          graceful_exit: boolean | null
+          id: string
+          inactivity_hours: number | null
+          last_message_time: string | null
+          last_nudge_time: string | null
+          message_count: number | null
+          nudge_count: number | null
+          response_balance_score: number | null
+          updated_at: string
+        }
+        Insert: {
+          avg_sentiment_score?: number | null
+          conversation_id: string
+          created_at?: string
+          graceful_exit?: boolean | null
+          id?: string
+          inactivity_hours?: number | null
+          last_message_time?: string | null
+          last_nudge_time?: string | null
+          message_count?: number | null
+          nudge_count?: number | null
+          response_balance_score?: number | null
+          updated_at?: string
+        }
+        Update: {
+          avg_sentiment_score?: number | null
+          conversation_id?: string
+          created_at?: string
+          graceful_exit?: boolean | null
+          id?: string
+          inactivity_hours?: number | null
+          last_message_time?: string | null
+          last_nudge_time?: string | null
+          message_count?: number | null
+          nudge_count?: number | null
+          response_balance_score?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       conversation_tracker: {
         Row: {
           ai_concierge_triggered: boolean | null
@@ -158,6 +233,36 @@ export type Database = {
           title?: string
           updated_at?: string
           vibe?: string | null
+        }
+        Relationships: []
+      }
+      nudge_library: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean | null
+          nudge_type: string
+          prompt_text: string
+          response_options: Json | null
+          trigger_context: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          nudge_type: string
+          prompt_text: string
+          response_options?: Json | null
+          trigger_context: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          nudge_type?: string
+          prompt_text?: string
+          response_options?: Json | null
+          trigger_context?: string
         }
         Relationships: []
       }
