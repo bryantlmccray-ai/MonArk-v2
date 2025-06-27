@@ -7,6 +7,7 @@ import { LocationConsentModal } from '../location/LocationConsentModal';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useLocation } from '@/hooks/useLocation';
+import { useToast } from '@/hooks/use-toast';
 
 interface ProfileProps {
   onOpenTrustScore: () => void;
@@ -16,12 +17,48 @@ interface ProfileProps {
 export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettings }) => {
   const [showProfileCreation, setShowProfileCreation] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const { user, signOut } = useAuth();
   const { profile, loading } = useProfile();
   const { clearLocation } = useLocation();
+  const { toast } = useToast();
 
   const handleSignOut = async () => {
-    await signOut();
+    try {
+      setIsSigningOut(true);
+      
+      // Clear session data and sign out
+      await signOut();
+      
+      // Clear any additional local storage data
+      localStorage.removeItem('hasCompletedOnboarding');
+      localStorage.removeItem('profileData');
+      
+      // Clear any cookies if needed
+      document.cookie = 'authToken=; Max-Age=0; path=/;';
+      document.cookie = 'refreshToken=; Max-Age=0; path=/;';
+      
+      toast({
+        title: "Signed out successfully",
+        description: "You've been signed out of your account.",
+      });
+      
+      // Redirect will happen automatically through the auth state change
+    } catch (error) {
+      console.error('Sign out error:', error);
+      
+      // Even if server-side logout fails, clear local data
+      localStorage.removeItem('hasCompletedOnboarding');
+      localStorage.removeItem('profileData');
+      
+      toast({
+        title: "Signed out locally",
+        description: "You've been signed out locally. Please refresh if needed.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSigningOut(false);
+    }
   };
 
   const handleLocationUpdate = () => {
@@ -81,14 +118,21 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
             <button
               onClick={onOpenSettings}
               className="p-2 text-gray-400 hover:text-white transition-colors"
+              disabled={isSigningOut}
             >
               <Settings className="h-6 w-6" />
             </button>
             <button
               onClick={handleSignOut}
-              className="p-2 text-gray-400 hover:text-white transition-colors"
+              disabled={isSigningOut}
+              className="p-2 text-gray-400 hover:text-red-400 transition-colors disabled:opacity-50"
+              title="Sign Out"
             >
-              <LogOut className="h-6 w-6" />
+              {isSigningOut ? (
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-400 border-t-transparent"></div>
+              ) : (
+                <LogOut className="h-6 w-6" />
+              )}
             </button>
           </div>
         </div>
@@ -108,6 +152,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
             <button
               onClick={() => setShowProfileCreation(true)}
               className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow"
+              disabled={isSigningOut}
             >
               Start Profile Creation
             </button>
@@ -158,6 +203,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                   <button
                     onClick={handleClearLocation}
                     className="text-xs text-gray-400 hover:text-white transition-colors"
+                    disabled={isSigningOut}
                   >
                     Clear
                   </button>
@@ -175,6 +221,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                   <button
                     onClick={() => setShowLocationModal(true)}
                     className="w-full py-2 text-sm bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
+                    disabled={isSigningOut}
                   >
                     Update Location
                   </button>
@@ -187,6 +234,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                   <button
                     onClick={() => setShowLocationModal(true)}
                     className="w-full py-3 bg-goldenrod-gradient text-jet-black font-medium rounded-xl transition-all duration-300 hover:shadow-golden-glow"
+                    disabled={isSigningOut}
                   >
                     Add Location
                   </button>
@@ -207,6 +255,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               <button
                 onClick={onOpenTrustScore}
                 className="w-full py-3 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow"
+                disabled={isSigningOut}
               >
                 Get Verified & Build Trust
               </button>
@@ -240,9 +289,31 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               <button
                 onClick={() => setShowProfileCreation(true)}
                 className="w-full py-3 bg-charcoal-gray border border-gray-700 text-white rounded-xl transition-colors hover:border-goldenrod/50"
+                disabled={isSigningOut}
               >
                 Edit Profile
               </button>
+
+              {/* Sign Out Section */}
+              <div className="pt-6 border-t border-gray-700">
+                <button
+                  onClick={handleSignOut}
+                  disabled={isSigningOut}
+                  className="w-full py-3 bg-transparent border border-gray-600 text-gray-400 rounded-xl transition-colors hover:border-red-500 hover:text-red-400 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                >
+                  {isSigningOut ? (
+                    <>
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-400 border-t-transparent"></div>
+                      <span>Signing out...</span>
+                    </>
+                  ) : (
+                    <>
+                      <LogOut className="h-4 w-4" />
+                      <span>Sign Out</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </>
         )}
