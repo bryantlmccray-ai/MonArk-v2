@@ -49,27 +49,58 @@ export const useProfile = () => {
   };
 
   const updateProfile = async (updates: Partial<UserProfile>): Promise<boolean> => {
-    if (!user || !profile) return false;
+    if (!user) {
+      console.error('No authenticated user');
+      return false;
+    }
 
     try {
-      const { error } = await supabase
+      // Check if profile exists first
+      const { data: existingProfile, error: fetchError } = await supabase
         .from('user_profiles')
-        .update({
-          ...updates,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('user_id', user.id);
+        .select('id')
+        .eq('user_id', user.id)
+        .single();
 
-      if (error) {
-        console.error('Error updating profile:', error);
+      if (fetchError && fetchError.code !== 'PGRST116') {
+        console.error('Error checking existing profile:', fetchError);
         return false;
+      }
+
+      if (!existingProfile) {
+        // Profile doesn't exist, create it
+        const { error: insertError } = await supabase
+          .from('user_profiles')
+          .insert({
+            user_id: user.id,
+            ...updates,
+          });
+
+        if (insertError) {
+          console.error('Error creating profile:', insertError);
+          return false;
+        }
+      } else {
+        // Profile exists, update it
+        const { error: updateError } = await supabase
+          .from('user_profiles')
+          .update({
+            ...updates,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('user_id', user.id);
+
+        if (updateError) {
+          console.error('Error updating profile:', updateError);
+          return false;
+        }
       }
 
       // Refresh profile data
       await fetchProfile();
       return true;
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error in updateProfile:', error);
       return false;
     }
   };
