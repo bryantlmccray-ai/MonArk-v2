@@ -4,6 +4,7 @@ import { Settings, ShieldCheck, Edit, LogOut } from 'lucide-react';
 import { ProfileCreation } from '../profile/ProfileCreation';
 import { RelationalCompass } from '../rif/RelationalCompass';
 import { useAuth } from '@/hooks/useAuth';
+import { useProfile } from '@/hooks/useProfile';
 
 interface ProfileProps {
   onOpenTrustScore: () => void;
@@ -12,23 +13,32 @@ interface ProfileProps {
 
 export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettings }) => {
   const [showProfileCreation, setShowProfileCreation] = useState(false);
-  const [hasProfile, setHasProfile] = useState(false);
   const { user, signOut } = useAuth();
+  const { profile, loading } = useProfile();
 
   const handleSignOut = async () => {
     await signOut();
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-jet-black p-6 flex items-center justify-center">
+        <div className="text-white text-lg">Loading profile...</div>
+      </div>
+    );
+  }
+
   if (showProfileCreation) {
     return (
       <ProfileCreation 
         onComplete={() => {
-          setHasProfile(true);
           setShowProfileCreation(false);
         }} 
       />
     );
   }
+
+  const hasCompleteProfile = profile?.is_profile_complete;
 
   return (
     <div className="min-h-screen bg-jet-black p-6">
@@ -57,7 +67,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
           </div>
         </div>
 
-        {!hasProfile ? (
+        {!hasCompleteProfile ? (
           /* Profile Creation Prompt */
           <div className="text-center space-y-6 pt-16">
             <div className="w-32 h-32 rounded-full bg-charcoal-gray/50 border-2 border-dashed border-gray-600 mx-auto flex items-center justify-center">
@@ -81,14 +91,22 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
           <>
             {/* Profile Header */}
             <div className="text-center space-y-4">
-              <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face"
-                alt="Profile"
-                className="w-32 h-32 rounded-full mx-auto border-4 border-goldenrod/30"
-              />
+              {profile?.photos?.[0] ? (
+                <img
+                  src={profile.photos[0]}
+                  alt="Profile"
+                  className="w-32 h-32 rounded-full mx-auto border-4 border-goldenrod/30 object-cover"
+                />
+              ) : (
+                <div className="w-32 h-32 rounded-full mx-auto border-4 border-goldenrod/30 bg-charcoal-gray flex items-center justify-center">
+                  <Edit className="h-12 w-12 text-gray-500" />
+                </div>
+              )}
               
               <div className="flex items-center justify-center space-x-2">
-                <h2 className="text-2xl font-medium text-white">Jordan, 29</h2>
+                <h2 className="text-2xl font-medium text-white">
+                  {user?.user_metadata?.name || 'User'}{profile?.age ? `, ${profile.age}` : ''}
+                </h2>
                 <ShieldCheck className="h-6 w-6 text-goldenrod" />
               </div>
             </div>
@@ -113,19 +131,35 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
 
             {/* Profile Sections */}
             <div className="space-y-4">
-              <div className="bg-charcoal-gray rounded-xl p-4 border border-gray-800">
-                <h4 className="text-white font-medium mb-2">About Me</h4>
-                <p className="text-gray-300 text-sm">
-                  I believe in authentic connections and meaningful conversations. Looking for someone who values personal growth and genuine experiences.
-                </p>
-              </div>
+              {profile?.bio && (
+                <div className="bg-charcoal-gray rounded-xl p-4 border border-gray-800">
+                  <h4 className="text-white font-medium mb-2">About Me</h4>
+                  <p className="text-gray-300 text-sm">{profile.bio}</p>
+                </div>
+              )}
               
-              <div className="bg-charcoal-gray rounded-xl p-4 border border-gray-800">
-                <h4 className="text-white font-medium mb-2">What I'm Looking For</h4>
-                <p className="text-gray-300 text-sm">
-                  Someone who's emotionally available and ready to build something real. I value honesty, kindness, and shared adventures.
-                </p>
-              </div>
+              {profile?.interests && profile.interests.length > 0 && (
+                <div className="bg-charcoal-gray rounded-xl p-4 border border-gray-800">
+                  <h4 className="text-white font-medium mb-2">My Interests</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {profile.interests.map((interest, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 bg-goldenrod/20 text-goldenrod text-sm rounded-full"
+                      >
+                        {interest}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <button
+                onClick={() => setShowProfileCreation(true)}
+                className="w-full py-3 bg-charcoal-gray border border-gray-700 text-white rounded-xl transition-colors hover:border-goldenrod/50"
+              >
+                Edit Profile
+              </button>
             </div>
           </>
         )}

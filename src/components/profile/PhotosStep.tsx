@@ -1,7 +1,9 @@
 
-import React, { useState } from 'react';
-import { Plus, X } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Plus, X, Upload } from 'lucide-react';
 import { ProfileData } from './ProfileCreation';
+import { usePhotoUpload } from '@/hooks/usePhotoUpload';
+import { useToast } from '@/hooks/use-toast';
 
 interface PhotosStepProps {
   profileData: ProfileData;
@@ -11,6 +13,10 @@ interface PhotosStepProps {
 
 export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData, onNext }) => {
   const [photos, setPhotos] = useState<string[]>(profileData.photos);
+  const { uploadPhoto, deletePhoto, uploading } = usePhotoUpload();
+  const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [currentSlot, setCurrentSlot] = useState<number>(0);
 
   const photoSlots = [
     { id: 0, label: 'Your main photo', subtitle: '(a clear, recent shot of you)', isMain: true },
@@ -22,27 +28,93 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
   ];
 
   const handlePhotoUpload = (slotIndex: number) => {
-    // Simulate photo upload - in real app, this would open camera/gallery
-    const placeholderPhotos = [
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face',
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face',
-      'https://images.unsplash.com/photo-1494790108755-2616b612b047?w=300&h=300&fit=crop&crop=face',
-      'https://images.unsplash.com/photo-1539571696247-f4d8e4e47f66?w=300&h=300&fit=crop&crop=face',
-      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&h=300&fit=crop&crop=face',
-      'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300&h=300&fit=crop&crop=face',
-    ];
-    
-    const newPhotos = [...photos];
-    newPhotos[slotIndex] = placeholderPhotos[slotIndex % placeholderPhotos.length];
-    setPhotos(newPhotos);
-    updateData({ photos: newPhotos });
+    setCurrentSlot(slotIndex);
+    fileInputRef.current?.click();
   };
 
-  const handlePhotoRemove = (slotIndex: number) => {
-    const newPhotos = [...photos];
-    newPhotos[slotIndex] = '';
-    setPhotos(newPhotos);
-    updateData({ photos: newPhotos.filter(photo => photo) });
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please select an image file.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image smaller than 5MB.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const photoUrl = await uploadPhoto(file);
+      if (photoUrl) {
+        const newPhotos = [...photos];
+        newPhotos[currentSlot] = photoUrl;
+        setPhotos(newPhotos);
+        updateData({ photos: newPhotos });
+        
+        toast({
+          title: "Photo uploaded successfully!",
+          description: "Your photo has been added to your profile.",
+        });
+      } else {
+        toast({
+          title: "Upload failed",
+          description: "There was an error uploading your photo. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: "Upload failed",
+        description: "There was an error uploading your photo. Please try again.",
+        variant: "destructive",
+      });
+    }
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handlePhotoRemove = async (slotIndex: number) => {
+    const photoUrl = photos[slotIndex];
+    if (!photoUrl) return;
+
+    try {
+      const deleted = await deletePhoto(photoUrl);
+      if (deleted) {
+        const newPhotos = [...photos];
+        newPhotos[slotIndex] = '';
+        setPhotos(newPhotos);
+        updateData({ photos: newPhotos.filter(photo => photo) });
+        
+        toast({
+          title: "Photo removed",
+          description: "Your photo has been removed from your profile.",
+        });
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      toast({
+        title: "Delete failed",
+        description: "There was an error removing your photo. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleNext = () => {
@@ -76,7 +148,8 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
                   />
                   <button
                     onClick={() => handlePhotoRemove(slot.id)}
-                    className="absolute top-2 right-2 p-1 bg-jet-black/80 rounded-full text-white hover:bg-red-500 transition-colors"
+                    disabled={uploading}
+                    className="absolute top-2 right-2 p-1 bg-jet-black/80 rounded-full text-white hover:bg-red-500 transition-colors disabled:opacity-50"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -84,9 +157,14 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
               ) : (
                 <button
                   onClick={() => handlePhotoUpload(slot.id)}
-                  className="w-full h-full flex flex-col items-center justify-center text-gray-400 hover:text-goldenrod hover:border-goldenrod/50 transition-colors"
+                  disabled={uploading}
+                  className="w-full h-full flex flex-col items-center justify-center text-gray-400 hover:text-goldenrod hover:border-goldenrod/50 transition-colors disabled:opacity-50"
                 >
-                  <Plus className="h-8 w-8 mb-2" />
+                  {uploading && currentSlot === slot.id ? (
+                    <Upload className="h-8 w-8 mb-2 animate-pulse" />
+                  ) : (
+                    <Plus className="h-8 w-8 mb-2" />
+                  )}
                   <div className="text-center px-2">
                     <p className="text-sm font-medium">{slot.label}</p>
                     {slot.subtitle && (
@@ -98,16 +176,25 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
             </div>
           ))}
         </div>
+
+        {/* Hidden file input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="hidden"
+        />
       </div>
 
       {/* Next Button */}
       <div className="pt-6">
         <button
           onClick={handleNext}
-          disabled={!photos[0]} // Require at least main photo
+          disabled={!photos[0] || uploading} // Require at least main photo
           className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Continue
+          {uploading ? 'Uploading...' : 'Continue'}
         </button>
       </div>
     </div>

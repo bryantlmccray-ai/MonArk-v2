@@ -171,6 +171,48 @@ export type Database = {
         }
         Relationships: []
       }
+      user_profiles: {
+        Row: {
+          age: number | null
+          bio: string | null
+          created_at: string
+          date_preferences: Json | null
+          id: string
+          interests: string[] | null
+          is_profile_complete: boolean | null
+          location: string | null
+          photos: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          age?: number | null
+          bio?: string | null
+          created_at?: string
+          date_preferences?: Json | null
+          id?: string
+          interests?: string[] | null
+          is_profile_complete?: boolean | null
+          location?: string | null
+          photos?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          age?: number | null
+          bio?: string | null
+          created_at?: string
+          date_preferences?: Json | null
+          id?: string
+          interests?: string[] | null
+          is_profile_complete?: boolean | null
+          location?: string | null
+          photos?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
