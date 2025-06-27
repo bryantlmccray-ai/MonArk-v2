@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
@@ -56,7 +55,18 @@ export const useConversationNudges = () => {
         .order('created_at', { ascending: true });
 
       if (error) throw error;
-      setNudgePrompts(data || []);
+      
+      // Transform the data to match our interface
+      const transformedData = (data || []).map(item => ({
+        ...item,
+        response_options: Array.isArray(item.response_options) 
+          ? item.response_options 
+          : typeof item.response_options === 'string' 
+            ? [item.response_options]
+            : []
+      }));
+      
+      setNudgePrompts(transformedData);
     } catch (error) {
       console.error('Error fetching nudge prompts:', error);
     }
