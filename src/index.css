@@ -5,11 +5,12 @@
 
 @layer base {
   :root {
-    /* MonArk Design System Colors */
-    --color-deep-navy: 18 26 47;
-    --color-soft-ivory: 247 245 242;
-    --color-copper-accent: 181 105 62;
-    --color-dusky-lavender: 156 143 185;
+    /* Updated MonArk Design System Colors */
+    --color-midnight-navy: 11 15 26;
+    --color-soft-ivory: 249 246 240;
+    --color-copper-rose: 177 106 90;
+    --color-dusky-lavender: 167 158 179;
+    --color-charcoal-ink: 44 47 54;
     
     /* Support Tones */
     --color-sage-green: 162 181 161;
@@ -17,15 +18,15 @@
     --color-muted-coral: 222 140 134;
 
     /* Design System Tokens */
-    --color-primary-bg: var(--color-deep-navy);
+    --color-primary-bg: var(--color-midnight-navy);
     --color-secondary-bg: var(--color-soft-ivory);
-    --color-accent-1: var(--color-copper-accent);
+    --color-accent-1: var(--color-copper-rose);
     --color-accent-2: var(--color-dusky-lavender);
     --color-emotional-safety: var(--color-sage-green);
     --color-growth: var(--color-brass-gold);
     --color-warmth: var(--color-muted-coral);
 
-    /* Updated shadcn variables to match MonArk palette */
+    /* Updated shadcn variables to match new palette */
     --background: var(--color-secondary-bg);
     --foreground: var(--color-primary-bg);
 
@@ -41,7 +42,7 @@
     --secondary: var(--color-accent-2);
     --secondary-foreground: var(--color-secondary-bg);
 
-    --muted: 39 39 42;
+    --muted: var(--color-charcoal-ink);
     --muted-foreground: 161 161 170;
 
     --accent: var(--color-accent-2);
@@ -50,8 +51,8 @@
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
 
-    --border: 39 39 42;
-    --input: 39 39 42;
+    --border: var(--color-charcoal-ink);
+    --input: var(--color-charcoal-ink);
     --ring: var(--color-accent-1);
 
     --radius: 12px;
@@ -69,7 +70,7 @@
   }
 
   body {
-    @apply bg-monark-ivory text-monark-navy font-sans;
+    @apply bg-soft-ivory text-midnight-navy font-sans;
     font-family: 'Inter', system-ui, sans-serif;
     font-size: 16px;
     line-height: 1.5;
@@ -87,7 +88,7 @@
 
   /* Design System Utilities */
   .monark-card {
-    @apply bg-monark-ivory rounded-xl shadow-monark;
+    @apply bg-soft-ivory rounded-xl shadow-monark;
   }
 
   .monark-button {
@@ -95,20 +96,20 @@
   }
 
   .monark-button-primary {
-    @apply bg-monark-copper text-monark-ivory hover:bg-monark-copper/90;
+    @apply bg-copper-rose text-soft-ivory hover:bg-copper-rose/90;
   }
 
   .monark-button-secondary {
-    @apply bg-monark-lavender text-monark-ivory hover:bg-monark-lavender/90;
+    @apply bg-dusky-lavender text-soft-ivory hover:bg-dusky-lavender/90;
   }
 
   /* Micro-interaction utilities */
   .gentle-glow {
-    box-shadow: 0 0 20px rgba(181, 105, 62, 0.3);
+    box-shadow: 0 0 20px rgba(177, 106, 90, 0.3);
   }
 
   .soft-shadow {
-    box-shadow: 0px 4px 20px rgba(18, 26, 47, 0.15);
+    box-shadow: 0px 4px 20px rgba(11, 15, 26, 0.15);
   }
 }
 
@@ -123,6 +124,10 @@
 
   .animate-slide-up {
     animation: slide-up 350ms ease-out;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
   }
 }
 
@@ -152,6 +157,17 @@
   0% {
     opacity: 0;
     transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
   }
   100% {
     opacity: 1;
