@@ -1,16 +1,25 @@
 
 import React, { useState, useEffect } from 'react';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Calendar, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { RIFBehavioralNudge } from '../rif/RIFBehavioralNudge';
 import { RIFPostDateFeedback } from '../rif/RIFPostDateFeedback';
+import { AIConciergeModal } from '../date-concierge/AIConciergeModal';
+import { DateProposalCard } from '../date-concierge/DateProposalCard';
+import { DateJournalEntryComponent } from '../date-concierge/DateJournalEntry';
 import { useRIF } from '@/hooks/useRIF';
+import { useDateConcierge } from '@/hooks/useDateConcierge';
 
 export const Conversations: React.FC = () => {
   const { rifSettings } = useRIF();
+  const { proposals, updateConversationEngagement } = useDateConcierge();
   const [showNudge, setShowNudge] = useState(false);
   const [showPostDateFeedback, setShowPostDateFeedback] = useState(false);
+  const [showConciergeModal, setShowConciergeModal] = useState(false);
+  const [showJournalEntry, setShowJournalEntry] = useState(false);
   const [nudgeType, setNudgeType] = useState<'conversation_pacing' | 'emotional_check' | 'boundary_reminder' | 'reflection_prompt'>('conversation_pacing');
   const [selectedConversation, setSelectedConversation] = useState<string>('');
+  const [activeConversation, setActiveConversation] = useState<any>(null);
 
   const conversations = [
     {
@@ -20,8 +29,11 @@ export const Conversations: React.FC = () => {
       lastMessage: 'That sounds like an amazing experience!',
       time: '2h',
       isNewMatch: false,
-      lastActivity: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-      messageCount: 24
+      lastActivity: new Date(Date.now() - 2 * 60 * 60 * 1000),
+      messageCount: 24,
+      mutualEngagement: 0.8,
+      conversationId: 'conv_maya_001',
+      userId: 'user_maya_001'
     },
     {
       id: 2,
@@ -30,8 +42,11 @@ export const Conversations: React.FC = () => {
       lastMessage: 'New Match! Ready to start the chat?',
       time: '1d',
       isNewMatch: true,
-      lastActivity: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
-      messageCount: 1
+      lastActivity: new Date(Date.now() - 24 * 60 * 60 * 1000),
+      messageCount: 1,
+      mutualEngagement: 0.3,
+      conversationId: 'conv_alex_001',
+      userId: 'user_alex_001'
     },
     {
       id: 3,
@@ -40,11 +55,40 @@ export const Conversations: React.FC = () => {
       lastMessage: 'I love that idea for our first date',
       time: '3d',
       isNewMatch: false,
-      lastActivity: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+      lastActivity: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
       messageCount: 18,
-      hadDate: true // This person had a date
+      mutualEngagement: 0.9,
+      hadDate: true,
+      conversationId: 'conv_jordan_001',
+      userId: 'user_jordan_001'
     },
   ];
+
+  // Update conversation engagement scores
+  useEffect(() => {
+    conversations.forEach(conv => {
+      updateConversationEngagement(
+        conv.conversationId,
+        conv.userId,
+        conv.messageCount,
+        conv.mutualEngagement
+      );
+    });
+  }, []);
+
+  // Check for AI concierge triggers
+  useEffect(() => {
+    const highEngagementConvs = conversations.filter(
+      conv => conv.mutualEngagement > 0.7 && conv.messageCount > 15
+    );
+
+    if (highEngagementConvs.length > 0 && Math.random() > 0.6) {
+      setTimeout(() => {
+        setActiveConversation(highEngagementConvs[0]);
+        setShowConciergeModal(true);
+      }, 3000);
+    }
+  }, []);
 
   // Simulate RIF nudges based on conversation patterns
   useEffect(() => {
@@ -56,7 +100,7 @@ export const Conversations: React.FC = () => {
         setNudgeType('conversation_pacing');
         setShowNudge(true);
       }
-    }, 5000); // Show nudge after 5 seconds
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, [rifSettings]);
@@ -66,7 +110,7 @@ export const Conversations: React.FC = () => {
     if (!rifSettings?.rif_enabled) return;
 
     const dateConversation = conversations.find(c => c.hadDate);
-    if (dateConversation && Math.random() > 0.7) { // 30% chance to show feedback prompt
+    if (dateConversation && Math.random() > 0.7) {
       setTimeout(() => {
         setSelectedConversation(dateConversation.name);
         setShowPostDateFeedback(true);
@@ -75,12 +119,21 @@ export const Conversations: React.FC = () => {
   }, [rifSettings]);
 
   const handleConversationClick = (conversation: any) => {
+    // Check if this conversation should trigger AI concierge
+    if (conversation.mutualEngagement > 0.7 && conversation.messageCount > 10) {
+      setActiveConversation(conversation);
+      setShowConciergeModal(true);
+    }
+
     if (rifSettings?.rif_enabled && conversation.messageCount > 15) {
-      // Trigger emotional check-in for active conversations
       setNudgeType('emotional_check');
       setShowNudge(true);
     }
   };
+
+  const relevantProposals = proposals.filter(proposal => 
+    conversations.some(conv => conv.conversationId === proposal.conversation_id)
+  );
 
   return (
     <div className="min-h-screen bg-jet-black p-6">
@@ -98,7 +151,34 @@ export const Conversations: React.FC = () => {
           )}
         </div>
 
+        {/* Date Proposals Section */}
+        {relevantProposals.length > 0 && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-medium text-white">Active Date Proposals</h2>
+              <Button
+                onClick={() => setShowJournalEntry(true)}
+                size="sm"
+                className="bg-goldenrod/20 hover:bg-goldenrod/30 text-goldenrod border border-goldenrod/30"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Journal Entry
+              </Button>
+            </div>
+            <div className="grid gap-4">
+              {relevantProposals.slice(0, 2).map((proposal) => (
+                <DateProposalCard key={proposal.id} proposal={proposal} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Conversations List */}
         <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-medium text-white">Messages</h2>
+          </div>
+          
           {conversations.map((conversation) => (
             <div
               key={conversation.id}
@@ -115,6 +195,11 @@ export const Conversations: React.FC = () => {
                   {rifSettings?.rif_enabled && conversation.messageCount > 10 && (
                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-goldenrod rounded-full border border-jet-black animate-pulse" />
                   )}
+                  {conversation.mutualEngagement > 0.7 && conversation.messageCount > 15 && (
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border border-jet-black flex items-center justify-center">
+                      <Calendar className="h-2 w-2 text-white" />
+                    </div>
+                  )}
                 </div>
                 
                 <div className="flex-1">
@@ -125,6 +210,12 @@ export const Conversations: React.FC = () => {
                     {conversation.hadDate && (
                       <div className="px-2 py-1 bg-purple-600/20 text-purple-400 text-xs rounded-full border border-purple-600/30">
                         Date completed
+                      </div>
+                    )}
+                    {conversation.mutualEngagement > 0.7 && conversation.messageCount > 15 && (
+                      <div className="px-2 py-1 bg-goldenrod/20 text-goldenrod text-xs rounded-full border border-goldenrod/30 flex items-center space-x-1">
+                        <Sparkles className="h-3 w-3" />
+                        <span>Plan a date</span>
                       </div>
                     )}
                     {rifSettings?.rif_enabled && conversation.messageCount > 15 && (
@@ -155,6 +246,24 @@ export const Conversations: React.FC = () => {
           ))}
         </div>
       </div>
+
+      {/* AI Concierge Modal */}
+      {showConciergeModal && activeConversation && (
+        <AIConciergeModal
+          isOpen={showConciergeModal}
+          onClose={() => setShowConciergeModal(false)}
+          matchUserId={activeConversation.userId}
+          matchName={activeConversation.name}
+          conversationId={activeConversation.conversationId}
+          recentMessages={['Sample message 1', 'Sample message 2']}
+        />
+      )}
+
+      {/* Date Journal Entry Modal */}
+      <DateJournalEntryComponent
+        isOpen={showJournalEntry}
+        onClose={() => setShowJournalEntry(false)}
+      />
 
       {/* RIF Behavioral Nudge */}
       {showNudge && rifSettings?.rif_enabled && (

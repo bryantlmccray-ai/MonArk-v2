@@ -9,6 +9,158 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      conversation_tracker: {
+        Row: {
+          ai_concierge_triggered: boolean | null
+          conversation_id: string
+          created_at: string
+          id: string
+          last_activity: string | null
+          match_user_id: string
+          message_count: number | null
+          mutual_engagement_score: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_concierge_triggered?: boolean | null
+          conversation_id: string
+          created_at?: string
+          id?: string
+          last_activity?: string | null
+          match_user_id: string
+          message_count?: number | null
+          mutual_engagement_score?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_concierge_triggered?: boolean | null
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          last_activity?: string | null
+          match_user_id?: string
+          message_count?: number | null
+          mutual_engagement_score?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      date_journal: {
+        Row: {
+          created_at: string
+          date_activity: string
+          date_completed: string | null
+          date_proposal_id: string | null
+          date_title: string
+          id: string
+          learned_insights: string | null
+          partner_name: string
+          rating: number | null
+          reflection_notes: string | null
+          tags: string[] | null
+          updated_at: string
+          user_id: string
+          would_repeat: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          date_activity: string
+          date_completed?: string | null
+          date_proposal_id?: string | null
+          date_title: string
+          id?: string
+          learned_insights?: string | null
+          partner_name: string
+          rating?: number | null
+          reflection_notes?: string | null
+          tags?: string[] | null
+          updated_at?: string
+          user_id: string
+          would_repeat?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          date_activity?: string
+          date_completed?: string | null
+          date_proposal_id?: string | null
+          date_title?: string
+          id?: string
+          learned_insights?: string | null
+          partner_name?: string
+          rating?: number | null
+          reflection_notes?: string | null
+          tags?: string[] | null
+          updated_at?: string
+          user_id?: string
+          would_repeat?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "date_journal_date_proposal_id_fkey"
+            columns: ["date_proposal_id"]
+            isOneToOne: false
+            referencedRelation: "date_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      date_proposals: {
+        Row: {
+          activity: string
+          ai_generated: boolean | null
+          conversation_id: string
+          created_at: string
+          creator_user_id: string
+          id: string
+          location_type: string | null
+          proposal_data: Json | null
+          rationale: string | null
+          recipient_user_id: string
+          status: string | null
+          time_suggestion: string | null
+          title: string
+          updated_at: string
+          vibe: string | null
+        }
+        Insert: {
+          activity: string
+          ai_generated?: boolean | null
+          conversation_id: string
+          created_at?: string
+          creator_user_id: string
+          id?: string
+          location_type?: string | null
+          proposal_data?: Json | null
+          rationale?: string | null
+          recipient_user_id: string
+          status?: string | null
+          time_suggestion?: string | null
+          title: string
+          updated_at?: string
+          vibe?: string | null
+        }
+        Update: {
+          activity?: string
+          ai_generated?: boolean | null
+          conversation_id?: string
+          created_at?: string
+          creator_user_id?: string
+          id?: string
+          location_type?: string | null
+          proposal_data?: Json | null
+          rationale?: string | null
+          recipient_user_id?: string
+          status?: string | null
+          time_suggestion?: string | null
+          title?: string
+          updated_at?: string
+          vibe?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
