@@ -226,12 +226,24 @@ export const useDateConcierge = () => {
     if (!user) return;
 
     try {
+      // Ensure required fields are present and properly typed
+      const insertData = {
+        user_id: user.id,
+        partner_name: entryData.partner_name || '',
+        date_title: entryData.date_title || '',
+        date_activity: entryData.date_activity || '',
+        date_proposal_id: entryData.date_proposal_id || null,
+        date_completed: entryData.date_completed || null,
+        rating: entryData.rating || null,
+        reflection_notes: entryData.reflection_notes || null,
+        learned_insights: entryData.learned_insights || null,
+        would_repeat: entryData.would_repeat || null,
+        tags: entryData.tags || []
+      };
+
       const { error } = await supabase
         .from('date_journal')
-        .insert({
-          ...entryData,
-          user_id: user.id
-        });
+        .insert(insertData);
 
       if (error) throw error;
       await fetchJournalEntries();
