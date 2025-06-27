@@ -115,6 +115,15 @@ export const AuthPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-jet-black flex items-center justify-center px-6">
       <div className="w-full max-w-md space-y-8">
+        {/* MonArk Logo */}
+        <div className="text-center">
+          <img 
+            src="/lovable-uploads/19cdbd08-40c6-4542-b75d-d8d052388a22.png" 
+            alt="MonArk Logo" 
+            className="mx-auto w-48 h-48 object-contain mb-6"
+          />
+        </div>
+
         <div className="text-center space-y-4">
           <h1 className="text-3xl font-light text-white">
             {isLogin ? 'Welcome Back' : 'Join MonArk'}
