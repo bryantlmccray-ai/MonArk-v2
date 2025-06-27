@@ -5,35 +5,63 @@
 
 @layer base {
   :root {
-    --background: 18 18 18;
-    --foreground: 255 255 255;
+    /* MonArk Design System Colors */
+    --color-deep-navy: 18 26 47;
+    --color-soft-ivory: 247 245 242;
+    --color-copper-accent: 181 105 62;
+    --color-dusky-lavender: 156 143 185;
+    
+    /* Support Tones */
+    --color-sage-green: 162 181 161;
+    --color-brass-gold: 194 168 107;
+    --color-muted-coral: 222 140 134;
 
-    --card: 30 30 30;
-    --card-foreground: 255 255 255;
+    /* Design System Tokens */
+    --color-primary-bg: var(--color-deep-navy);
+    --color-secondary-bg: var(--color-soft-ivory);
+    --color-accent-1: var(--color-copper-accent);
+    --color-accent-2: var(--color-dusky-lavender);
+    --color-emotional-safety: var(--color-sage-green);
+    --color-growth: var(--color-brass-gold);
+    --color-warmth: var(--color-muted-coral);
 
-    --popover: 30 30 30;
-    --popover-foreground: 255 255 255;
+    /* Updated shadcn variables to match MonArk palette */
+    --background: var(--color-secondary-bg);
+    --foreground: var(--color-primary-bg);
 
-    --primary: 255 199 0;
-    --primary-foreground: 18 18 18;
+    --card: var(--color-secondary-bg);
+    --card-foreground: var(--color-primary-bg);
 
-    --secondary: 39 39 42;
-    --secondary-foreground: 255 255 255;
+    --popover: var(--color-secondary-bg);
+    --popover-foreground: var(--color-primary-bg);
+
+    --primary: var(--color-accent-1);
+    --primary-foreground: var(--color-secondary-bg);
+
+    --secondary: var(--color-accent-2);
+    --secondary-foreground: var(--color-secondary-bg);
 
     --muted: 39 39 42;
     --muted-foreground: 161 161 170;
 
-    --accent: 39 39 42;
-    --accent-foreground: 255 255 255;
+    --accent: var(--color-accent-2);
+    --accent-foreground: var(--color-secondary-bg);
 
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
 
     --border: 39 39 42;
     --input: 39 39 42;
-    --ring: 255 199 0;
+    --ring: var(--color-accent-1);
 
-    --radius: 0.5rem;
+    --radius: 12px;
+
+    /* MonArk spacing system */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
   }
 
   * {
@@ -41,24 +69,92 @@
   }
 
   body {
-    @apply bg-jet-black text-foreground font-sans;
+    @apply bg-monark-ivory text-monark-navy font-sans;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
   }
 
-  .glass-morphism {
-    @apply backdrop-blur-xl bg-opacity-90;
+  /* Typography System */
+  .font-primary {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  .font-reflection {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-style: normal;
+  }
+
+  /* Design System Utilities */
+  .monark-card {
+    @apply bg-monark-ivory rounded-xl shadow-monark;
+  }
+
+  .monark-button {
+    @apply rounded-3xl px-6 py-3 font-medium transition-all duration-300;
+  }
+
+  .monark-button-primary {
+    @apply bg-monark-copper text-monark-ivory hover:bg-monark-copper/90;
+  }
+
+  .monark-button-secondary {
+    @apply bg-monark-lavender text-monark-ivory hover:bg-monark-lavender/90;
+  }
+
+  /* Micro-interaction utilities */
+  .gentle-glow {
+    box-shadow: 0 0 20px rgba(181, 105, 62, 0.3);
+  }
+
+  .soft-shadow {
+    box-shadow: 0px 4px 20px rgba(18, 26, 47, 0.15);
   }
 }
 
 @layer utilities {
-  .animate-ping-slow {
-    animation: ping 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+  .animate-gentle-pulse {
+    animation: gentle-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
   
-  .shadow-glow {
-    box-shadow: 0 0 20px rgba(255, 199, 0, 0.3);
+  .animate-soft-fade-in {
+    animation: soft-fade-in 400ms ease-out;
   }
-  
-  .shadow-golden-glow {
-    box-shadow: 0 0 30px rgba(255, 199, 0, 0.5);
+
+  .animate-slide-up {
+    animation: slide-up 350ms ease-out;
+  }
+}
+
+@keyframes gentle-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes soft-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

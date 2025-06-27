@@ -27,15 +27,15 @@ export const ConversationNudgeModal: React.FC<ConversationNudgeModalProps> = ({
   const getNudgeIcon = (type: string) => {
     switch (type) {
       case 'meaningful_question':
-        return <MessageCircle className="h-5 w-5 text-blue-400" />;
+        return <MessageCircle className="h-5 w-5 text-monark-copper" />;
       case 'clarity':
-        return <Heart className="h-5 w-5 text-purple-400" />;
+        return <Heart className="h-5 w-5 text-monark-coral" />;
       case 'pacing':
-        return <Clock className="h-5 w-5 text-orange-400" />;
+        return <Clock className="h-5 w-5 text-monark-brass" />;
       case 'graceful_exit':
-        return <X className="h-5 w-5 text-red-400" />;
+        return <X className="h-5 w-5 text-monark-sage" />;
       default:
-        return <MessageCircle className="h-5 w-5 text-goldenrod" />;
+        return <MessageCircle className="h-5 w-5 text-monark-copper" />;
     }
   };
 
@@ -62,62 +62,62 @@ export const ConversationNudgeModal: React.FC<ConversationNudgeModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-charcoal-gray border border-gray-800 text-white max-w-md">
+      <DialogContent className="bg-monark-ivory border border-monark-navy/10 text-monark-navy max-w-md soft-shadow animate-slide-up">
         <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2 text-white">
+          <DialogTitle className="flex items-center space-x-3 text-monark-navy font-primary font-medium">
             {getNudgeIcon(nudgePrompt.nudge_type)}
             <span>Conversation Helper</span>
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
-          <p className="text-gray-300 text-sm leading-relaxed">
+        <div className="space-y-6">
+          <p className="text-monark-navy/80 text-sm leading-relaxed font-primary">
             {nudgePrompt.prompt_text}
           </p>
 
           {responseOptions.length > 0 && (
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium text-goldenrod">Suggested responses:</h4>
-              <div className="space-y-2">
+            <div className="space-y-4">
+              <h4 className="text-sm font-medium text-monark-copper font-primary">Suggested responses:</h4>
+              <div className="space-y-3">
                 {responseOptions.map((option, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedResponse(option)}
-                    className={`w-full text-left p-3 rounded-lg border transition-all ${
+                    className={`w-full text-left p-4 rounded-monark border transition-all duration-300 ${
                       selectedResponse === option
-                        ? 'border-goldenrod bg-goldenrod/10 text-goldenrod'
-                        : 'border-gray-700 bg-gray-800/50 text-gray-300 hover:border-gray-600'
+                        ? 'border-monark-copper bg-monark-copper/10 text-monark-copper gentle-glow'
+                        : 'border-monark-navy/20 bg-monark-ivory hover:border-monark-lavender/50 hover:bg-monark-lavender/5'
                     }`}
                   >
-                    <p className="text-sm">{option}</p>
+                    <p className="text-sm font-primary">{option}</p>
                   </button>
                 ))}
               </div>
             </div>
           )}
 
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium text-goldenrod">Or write your own:</h4>
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-monark-copper font-primary">Or write your own:</h4>
             <Textarea
               value={customMessage}
               onChange={(e) => setCustomMessage(e.target.value)}
               placeholder="Type your own message..."
-              className="bg-gray-800 border-gray-700 text-white placeholder-gray-400 min-h-[80px]"
+              className="bg-monark-ivory border-monark-navy/20 text-monark-navy placeholder-monark-navy/50 min-h-[80px] rounded-monark focus:border-monark-copper focus:ring-monark-copper/20 font-reflection"
             />
           </div>
 
-          <div className="flex space-x-3 pt-2">
+          <div className="flex space-x-4 pt-2">
             <Button
               onClick={handleUseResponse}
               disabled={!customMessage && !selectedResponse}
-              className="flex-1 bg-goldenrod hover:bg-goldenrod/90 text-jet-black font-medium"
+              className="flex-1 monark-button monark-button-primary font-primary transition-all duration-300 hover:gentle-glow"
             >
               Use This Message
             </Button>
             <Button
               onClick={handleDismiss}
               variant="outline" 
-              className="border-gray-600 text-gray-300 hover:bg-gray-800"
+              className="border-monark-navy/30 text-monark-navy/70 hover:bg-monark-lavender/10 hover:border-monark-lavender font-primary transition-all duration-300"
             >
               Not Now
             </Button>
