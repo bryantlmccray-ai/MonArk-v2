@@ -87,11 +87,63 @@ export const useRIF = () => {
           data: encryptedData
         });
 
+      // Process feedback immediately for behavioral types
+      if (['post_date', 'behavioral'].includes(type)) {
+        await processRIFFeedback();
+      }
+
       // Reload profile after feedback
       await loadRIFData();
     } catch (error) {
       console.error('Error submitting RIF feedback:', error);
       throw error;
+    }
+  };
+
+  const processRIFFeedback = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Call RIF engine to process feedback
+      const { data, error } = await supabase.functions.invoke('rif-engine', {
+        body: {
+          action: 'process_feedback',
+          data: { user_id: user.id }
+        }
+      });
+
+      if (error) {
+        console.error('Error processing RIF feedback:', error);
+      } else {
+        console.log('RIF feedback processed:', data);
+      }
+    } catch (error) {
+      console.error('Error calling RIF engine:', error);
+    }
+  };
+
+  const calculateCompatibility = async (matchUserId: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return null;
+
+      const { data, error } = await supabase.functions.invoke('rif-engine', {
+        body: {
+          action: 'calculate_compatibility',
+          data: { match_user_id: matchUserId }
+        }
+      });
+
+      if (error) {
+        console.error('Error calculating compatibility:', error);
+        return null;
+      }
+
+      return data.compatibility;
+    } catch (error) {
+      console.error('Error calculating compatibility:', error);
+      return null;
     }
   };
 
@@ -142,6 +194,7 @@ export const useRIF = () => {
     submitFeedback,
     updateSettings,
     getRecommendations,
+    calculateCompatibility,
     reload: loadRIFData
   };
 };
