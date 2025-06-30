@@ -19,24 +19,33 @@ export const RIFIntegration: React.FC<RIFIntegrationProps> = ({
   const { rifSettings, loading } = useRIF();
   const [showConsent, setShowConsent] = useState(false);
 
+  // Add debugging
+  console.log('RIFIntegration props:', { mode, collectionType });
+  console.log('RIF settings:', rifSettings);
+  console.log('Loading:', loading);
+
   useEffect(() => {
     if (!loading && rifSettings && !rifSettings.rif_enabled && mode === 'collect') {
+      console.log('Setting showConsent to true');
       setShowConsent(true);
     }
   }, [loading, rifSettings, mode]);
 
   if (loading) {
+    console.log('RIF Integration loading...');
     return (
       <div className="min-h-screen bg-jet-black flex items-center justify-center">
-        <div className="text-white">Loading...</div>
+        <div className="text-white">Loading RIF system...</div>
       </div>
     );
   }
 
   if (showConsent || mode === 'consent') {
+    console.log('Showing RIF consent screen');
     return (
       <RIFConsentScreen 
         onConsent={(consented) => {
+          console.log('RIF consent response:', consented);
           if (consented) {
             setShowConsent(false);
             if (mode === 'consent') onComplete?.();
@@ -49,6 +58,7 @@ export const RIFIntegration: React.FC<RIFIntegrationProps> = ({
   }
 
   if (mode === 'collect') {
+    console.log('Showing RIF data collector');
     return (
       <RIFDataCollector 
         type={collectionType} 
@@ -58,8 +68,10 @@ export const RIFIntegration: React.FC<RIFIntegrationProps> = ({
   }
 
   if (mode === 'dashboard') {
+    console.log('Showing RIF privacy dashboard');
     return <RIFPrivacyDashboard />;
   }
 
+  console.log('RIF Integration - no matching mode, returning null');
   return null;
 };
