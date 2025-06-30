@@ -266,6 +266,33 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_email_submissions: {
+        Row: {
+          email: string
+          id: string
+          ip_address: string | null
+          source_page: string | null
+          submitted_at: string
+          user_agent: string | null
+        }
+        Insert: {
+          email: string
+          id?: string
+          ip_address?: string | null
+          source_page?: string | null
+          submitted_at?: string
+          user_agent?: string | null
+        }
+        Update: {
+          email?: string
+          id?: string
+          ip_address?: string | null
+          source_page?: string | null
+          submitted_at?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -539,8 +566,11 @@ export type Database = {
       user_profiles: {
         Row: {
           age: number | null
+          age_verification_timestamp: string | null
+          age_verified: boolean | null
           bio: string | null
           created_at: string
+          date_of_birth: string | null
           date_preferences: Json | null
           discovery_privacy_mode: string | null
           gender_identity: Database["public"]["Enums"]["gender_identity"] | null
@@ -566,8 +596,11 @@ export type Database = {
         }
         Insert: {
           age?: number | null
+          age_verification_timestamp?: string | null
+          age_verified?: boolean | null
           bio?: string | null
           created_at?: string
+          date_of_birth?: string | null
           date_preferences?: Json | null
           discovery_privacy_mode?: string | null
           gender_identity?:
@@ -595,8 +628,11 @@ export type Database = {
         }
         Update: {
           age?: number | null
+          age_verification_timestamp?: string | null
+          age_verified?: boolean | null
           bio?: string | null
           created_at?: string
+          date_of_birth?: string | null
           date_preferences?: Json | null
           discovery_privacy_mode?: string | null
           gender_identity?:
@@ -659,7 +695,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      calculate_age: {
+        Args: { birth_date: string }
+        Returns: number
+      }
+      verify_age_18_plus: {
+        Args: { birth_date: string }
+        Returns: boolean
+      }
     }
     Enums: {
       gender_identity:

@@ -4,6 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { AgeVerificationStep } from './AgeVerificationStep';
+import { useProfile } from '@/hooks/useProfile';
 
 export const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,12 +13,54 @@ export const AuthPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showAgeVerification, setShowAgeVerification] = useState(false);
+  const [signupData, setSignupData] = useState<{email: string; password: string; name: string} | null>(null);
   const { signIn, signUp } = useAuth();
+  const { updateProfile } = useProfile();
   const { toast } = useToast();
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+  };
+
+  const handleAgeVerification = async (ageData: { dateOfBirth: Date; ageConfirmed: boolean }) => {
+    if (!signupData) return;
+
+    setLoading(true);
+    try {
+      // Complete the signup
+      const { error } = await signUp(signupData.email, signupData.password, signupData.name);
+      
+      if (error) {
+        toast({
+          title: "Signup failed",
+          description: error.message,
+          variant: "destructive"
+        });
+      } else {
+        // Update profile with age verification data
+        await updateProfile({
+          date_of_birth: ageData.dateOfBirth.toISOString().split('T')[0],
+          age_verified: true,
+        });
+
+        toast({
+          title: "Account created!",
+          description: "Welcome to MonArk! Please check your email to verify your account.",
+        });
+      }
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+      setShowAgeVerification(false);
+      setSignupData(null);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -79,27 +123,11 @@ export const AuthPage: React.FC = () => {
           }
         }
       } else {
-        const { error } = await signUp(email, password, name);
-        if (error) {
-          if (error.message.includes('User already registered')) {
-            toast({
-              title: "Account exists",
-              description: "An account with this email already exists. Try logging in instead.",
-              variant: "destructive"
-            });
-          } else {
-            toast({
-              title: "Signup failed",
-              description: error.message,
-              variant: "destructive"
-            });
-          }
-        } else {
-          toast({
-            title: "Account created!",
-            description: "Check your email to verify your account",
-          });
-        }
+        // For signup, show age verification first
+        setSignupData({ email, password, name });
+        setShowAgeVerification(true);
+        setLoading(false);
+        return;
       }
     } catch (err) {
       toast({
@@ -111,6 +139,10 @@ export const AuthPage: React.FC = () => {
       setLoading(false);
     }
   };
+
+  if (showAgeVerification) {
+    return <AgeVerificationStep onNext={handleAgeVerification} />;
+  }
 
   return (
     <div className="min-h-screen bg-jet-black flex items-center justify-center px-6">
@@ -210,6 +242,13 @@ export const AuthPage: React.FC = () => {
             }
           </button>
         </div>
+
+        {!isLogin && (
+          <div className="text-center text-xs text-gray-500 space-y-1">
+            <p>By creating an account, you agree to our Terms of Service</p>
+            <p>You must be 18 years or older to use MonArk</p>
+          </div>
+        )}
       </div>
     </div>
   );

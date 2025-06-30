@@ -29,6 +29,9 @@ export interface UserProfile {
   discovery_privacy_mode: string;
   identity_visibility: boolean;
   last_preference_update: string;
+  date_of_birth: string | null;
+  age_verified: boolean | null;
+  age_verification_timestamp: string | null;
   created_at: string;
   updated_at: string;
 }
