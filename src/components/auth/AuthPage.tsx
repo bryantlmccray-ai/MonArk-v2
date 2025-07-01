@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -6,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { AgeVerificationStep } from './AgeVerificationStep';
 import { useProfile } from '@/hooks/useProfile';
+import { MonArkLogo } from '@/components/MonArkLogo';
 
 export const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -149,11 +149,7 @@ export const AuthPage: React.FC = () => {
       <div className="w-full max-w-md space-y-8">
         {/* MonArk Logo */}
         <div className="text-center">
-          <img 
-            src="/lovable-uploads/19cdbd08-40c6-4542-b75d-d8d052388a22.png" 
-            alt="MonArk Logo" 
-            className="mx-auto w-144 h-144 object-contain mb-6"
-          />
+          <MonArkLogo showTitle size="xl" className="mb-6" />
         </div>
 
         <div className="text-center space-y-4">
