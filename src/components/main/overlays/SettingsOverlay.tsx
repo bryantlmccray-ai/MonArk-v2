@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { X, User, Bell, Shield, Heart, LogOut } from 'lucide-react';
+import { X, User, Bell, Shield, Heart, LogOut, Trash2, AlertTriangle } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface SettingsOverlayProps {
   onClose: () => void;
@@ -10,7 +11,9 @@ interface SettingsOverlayProps {
 
 export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => {
   const [isSigningOut, setIsSigningOut] = useState(false);
-  const { signOut } = useAuth();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { signOut, user } = useAuth();
   const { toast } = useToast();
 
   const handleSignOut = async () => {
@@ -53,6 +56,52 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
     }
   };
 
+  const handleDeleteProfile = async () => {
+    if (!user) return;
+
+    try {
+      setIsDeleting(true);
+
+      // Delete all user-related data
+      const { error } = await supabase.rpc('delete_user_completely', {
+        user_id_input: user.id
+      });
+
+      if (error) {
+        console.error('Error deleting profile:', error);
+        toast({
+          title: "Deletion failed",
+          description: "There was an error deleting your profile. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Clear local storage
+      localStorage.removeItem('hasCompletedOnboarding');
+      localStorage.removeItem('profileData');
+
+      toast({
+        title: "Profile deleted",
+        description: "Your profile and all associated data have been permanently deleted.",
+      });
+
+      // Sign out the user
+      await signOut();
+      onClose();
+    } catch (error) {
+      console.error('Delete profile error:', error);
+      toast({
+        title: "Deletion failed",
+        description: "There was an error deleting your profile. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteConfirm(false);
+    }
+  };
+
   const settingsItems = [
     { icon: User, label: 'Edit Profile', action: () => {} },
     { icon: Bell, label: 'Notifications', action: () => {} },
@@ -70,7 +119,7 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
           <button
             onClick={onClose}
             className="p-2 text-gray-400 hover:text-white transition-colors"
-            disabled={isSigningOut}
+            disabled={isSigningOut || isDeleting}
           >
             <X className="h-5 w-5" />
           </button>
@@ -82,17 +131,17 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
               key={index}
               onClick={item.action}
               className="w-full flex items-center space-x-3 p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
-              disabled={isSigningOut}
+              disabled={isSigningOut || isDeleting}
             >
               <item.icon className="h-5 w-5 text-gray-400" />
               <span className="text-white font-medium">{item.label}</span>
             </button>
           ))}
 
-          <div className="mt-8 pt-6 border-t border-gray-700">
+          <div className="mt-8 pt-6 border-t border-gray-700 space-y-3">
             <button 
               onClick={handleSignOut}
-              disabled={isSigningOut}
+              disabled={isSigningOut || isDeleting}
               className="w-full flex items-center justify-center space-x-2 p-4 bg-transparent border border-gray-600 text-gray-400 rounded-lg hover:border-red-500 hover:text-red-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSigningOut ? (
@@ -107,9 +156,70 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
                 </>
               )}
             </button>
+
+            <button 
+              onClick={() => setShowDeleteConfirm(true)}
+              disabled={isSigningOut || isDeleting}
+              className="w-full flex items-center justify-center space-x-2 p-4 bg-transparent border border-red-600 text-red-400 rounded-lg hover:bg-red-600/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Trash2 className="h-5 w-5" />
+              <span>Delete Profile</span>
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-jet-black/90 flex items-center justify-center p-4 z-60">
+          <div className="bg-charcoal-gray rounded-xl p-6 max-w-sm w-full space-y-4 border border-red-600/30">
+            <div className="flex items-center space-x-3 text-red-400">
+              <AlertTriangle className="h-6 w-6" />
+              <h3 className="text-lg font-semibold">Delete Profile</h3>
+            </div>
+            
+            <div className="space-y-3">
+              <p className="text-gray-300 text-sm">
+                This will permanently delete your entire profile and all associated data, including:
+              </p>
+              <ul className="text-gray-400 text-xs space-y-1 ml-4">
+                <li>• Your profile information and photos</li>
+                <li>• All conversations and matches</li>
+                <li>• Date journal entries</li>
+                <li>• RIF insights and reflections</li>
+                <li>• All app preferences and settings</li>
+              </ul>
+              <p className="text-red-400 text-sm font-medium">
+                This action cannot be undone.
+              </p>
+            </div>
+
+            <div className="flex space-x-3 pt-2">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={isDeleting}
+                className="flex-1 p-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteProfile}
+                disabled={isDeleting}
+                className="flex-1 p-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              >
+                {isDeleting ? (
+                  <>
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                    <span>Deleting...</span>
+                  </>
+                ) : (
+                  <span>Delete Forever</span>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
