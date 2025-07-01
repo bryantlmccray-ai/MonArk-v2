@@ -699,6 +699,10 @@ export type Database = {
         Args: { birth_date: string }
         Returns: number
       }
+      delete_user_completely: {
+        Args: { user_id_input: string }
+        Returns: undefined
+      }
       verify_age_18_plus: {
         Args: { birth_date: string }
         Returns: boolean

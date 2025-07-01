@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { X, User, Bell, Shield, Heart, LogOut, Trash2, AlertTriangle } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
@@ -62,13 +61,30 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
     try {
       setIsDeleting(true);
 
-      // Delete all user-related data
-      const { error } = await supabase.rpc('delete_user_completely', {
+      // Call the delete function using SQL query
+      const { error } = await supabase
+        .from('user_profiles')
+        .select('id')
+        .eq('user_id', user.id)
+        .limit(1);
+
+      if (error) {
+        console.error('Error checking profile:', error);
+        toast({
+          title: "Deletion failed",
+          description: "There was an error accessing your profile. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Execute the deletion function via SQL
+      const { error: deleteError } = await supabase.rpc('delete_user_completely' as any, {
         user_id_input: user.id
       });
 
-      if (error) {
-        console.error('Error deleting profile:', error);
+      if (deleteError) {
+        console.error('Error deleting profile:', deleteError);
         toast({
           title: "Deletion failed",
           description: "There was an error deleting your profile. Please try again.",
