@@ -1,18 +1,19 @@
 
 import React, { useState } from 'react';
-import { Calendar } from '@/components/ui/calendar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { format } from 'date-fns';
 
 interface AgeVerificationStepProps {
   onNext: (data: { dateOfBirth: Date; ageConfirmed: boolean }) => void;
 }
 
 export const AgeVerificationStep: React.FC<AgeVerificationStepProps> = ({ onNext }) => {
-  const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>();
+  const [month, setMonth] = useState('');
+  const [day, setDay] = useState('');
+  const [year, setYear] = useState('');
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [error, setError] = useState('');
 
@@ -28,11 +29,55 @@ export const AgeVerificationStep: React.FC<AgeVerificationStepProps> = ({ onNext
     return age;
   };
 
+  const validateDate = (month: string, day: string, year: string): { isValid: boolean; date?: Date; error?: string } => {
+    const monthNum = parseInt(month);
+    const dayNum = parseInt(day);
+    const yearNum = parseInt(year);
+
+    // Basic validation
+    if (!month || !day || !year) {
+      return { isValid: false, error: 'All fields are required' };
+    }
+
+    if (monthNum < 1 || monthNum > 12) {
+      return { isValid: false, error: 'Month must be between 1 and 12' };
+    }
+
+    if (dayNum < 1 || dayNum > 31) {
+      return { isValid: false, error: 'Day must be between 1 and 31' };
+    }
+
+    if (yearNum < 1900 || yearNum > new Date().getFullYear()) {
+      return { isValid: false, error: 'Please enter a valid year' };
+    }
+
+    if (year.length !== 4) {
+      return { isValid: false, error: 'Year must be 4 digits (YYYY)' };
+    }
+
+    // Create date and validate it's a real date
+    const date = new Date(yearNum, monthNum - 1, dayNum);
+    
+    if (date.getFullYear() !== yearNum || 
+        date.getMonth() !== monthNum - 1 || 
+        date.getDate() !== dayNum) {
+      return { isValid: false, error: 'Please enter a valid date' };
+    }
+
+    if (date > new Date()) {
+      return { isValid: false, error: 'Date of birth cannot be in the future' };
+    }
+
+    return { isValid: true, date };
+  };
+
   const handleSubmit = () => {
     setError('');
 
-    if (!dateOfBirth) {
-      setError('Please select your date of birth');
+    const validation = validateDate(month, day, year);
+    
+    if (!validation.isValid) {
+      setError(validation.error || 'Please enter a valid date');
       return;
     }
 
@@ -41,58 +86,110 @@ export const AgeVerificationStep: React.FC<AgeVerificationStepProps> = ({ onNext
       return;
     }
 
-    const age = calculateAge(dateOfBirth);
+    const age = calculateAge(validation.date!);
 
     if (age < 18) {
       setError('Sorry, MonArk is only available to users 18 years or older. Please check back when you\'re of age.');
       return;
     }
 
-    onNext({ dateOfBirth, ageConfirmed });
+    onNext({ dateOfBirth: validation.date!, ageConfirmed });
+  };
+
+  const handleMonthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 2);
+    setMonth(value);
+  };
+
+  const handleDayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 2);
+    setDay(value);
+  };
+
+  const handleYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+    setYear(value);
   };
 
   return (
-    <div className="min-h-screen bg-jet-black p-6 flex flex-col items-center justify-center">
+    <div className="min-h-screen bg-gray-900 p-6 flex flex-col items-center justify-center">
       <div className="w-full max-w-md space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-3xl font-light text-white">Age Verification</h1>
+          <h1 className="text-3xl font-light text-gray-100">Age Verification</h1>
           <p className="text-gray-400">
             To ensure a safe community, we need to verify you're 18 or older
           </p>
         </div>
 
-        {/* Date Selection */}
-        <Card className="bg-charcoal-gray border-gray-700">
+        {/* Date Input */}
+        <Card className="bg-gray-800/50 border-gray-700">
           <CardHeader>
-            <CardTitle className="text-white text-lg">Select Your Date of Birth</CardTitle>
+            <CardTitle className="text-gray-100 text-lg">Enter Your Date of Birth</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="flex justify-center">
-              <Calendar
-                mode="single"
-                selected={dateOfBirth}
-                onSelect={setDateOfBirth}
-                disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
-                initialFocus
-                className="bg-jet-black text-white"
-              />
+            <div className="grid grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="month" className="text-gray-100 text-sm">
+                  Month (MM)
+                </Label>
+                <Input
+                  id="month"
+                  type="text"
+                  value={month}
+                  onChange={handleMonthChange}
+                  placeholder="MM"
+                  className="bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 text-center"
+                  maxLength={2}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="day" className="text-gray-100 text-sm">
+                  Day (DD)
+                </Label>
+                <Input
+                  id="day"
+                  type="text"
+                  value={day}
+                  onChange={handleDayChange}
+                  placeholder="DD"
+                  className="bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 text-center"
+                  maxLength={2}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="year" className="text-gray-100 text-sm">
+                  Year (YYYY)
+                </Label>
+                <Input
+                  id="year"
+                  type="text"
+                  value={year}
+                  onChange={handleYearChange}
+                  placeholder="YYYY"
+                  className="bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 text-center"
+                  maxLength={4}
+                />
+              </div>
             </div>
 
-            {dateOfBirth && (
-              <div className="text-center text-white">
+            {/* Date Preview */}
+            {month && day && year && validateDate(month, day, year).isValid && (
+              <div className="text-center text-gray-100 p-4 bg-gray-800 rounded-lg">
                 <p className="text-sm text-gray-400">Selected date:</p>
                 <p className="text-lg font-medium">
-                  {format(dateOfBirth, 'MMMM dd, yyyy')}
+                  {month.padStart(2, '0')}/{day.padStart(2, '0')}/{year}
                 </p>
                 <p className="text-sm text-gray-400 mt-1">
-                  Age: {calculateAge(dateOfBirth)} years
+                  Age: {calculateAge(validateDate(month, day, year).date!)} years
                 </p>
               </div>
             )}
 
             {/* Age Confirmation Checkbox */}
-            <div className="flex items-start space-x-3 p-4 bg-jet-black rounded-lg">
+            <div className="flex items-start space-x-3 p-4 bg-gray-800 rounded-lg">
               <Checkbox
                 id="age-confirm"
                 checked={ageConfirmed}
@@ -102,7 +199,7 @@ export const AgeVerificationStep: React.FC<AgeVerificationStepProps> = ({ onNext
               <div className="grid gap-1.5 leading-none">
                 <Label
                   htmlFor="age-confirm"
-                  className="text-white text-sm font-medium leading-relaxed cursor-pointer"
+                  className="text-gray-100 text-sm font-medium leading-relaxed cursor-pointer"
                 >
                   I confirm that I am 18 years of age or older and agree to MonArk's Terms of Service
                 </Label>
@@ -120,8 +217,8 @@ export const AgeVerificationStep: React.FC<AgeVerificationStepProps> = ({ onNext
         {/* Continue Button */}
         <Button
           onClick={handleSubmit}
-          disabled={!dateOfBirth || !ageConfirmed}
-          className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50"
+          disabled={!month || !day || !year || !ageConfirmed}
+          className="w-full py-4 bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-900 font-semibold rounded-xl transition-all duration-300 hover:from-yellow-300 hover:to-amber-400 disabled:opacity-50"
         >
           Continue
         </Button>
