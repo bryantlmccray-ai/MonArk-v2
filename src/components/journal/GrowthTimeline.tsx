@@ -7,13 +7,13 @@ export const GrowthTimeline: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="space-y-4">
-        <h3 className="text-white font-medium text-lg">Your Growth Journey</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="space-y-6">
+        <h3 className="text-2xl font-display font-semibold text-white">Your Growth Journey</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-charcoal-gray rounded-xl p-4 border border-gray-800 animate-pulse">
-              <div className="h-4 bg-gray-700 rounded mb-2 w-3/4"></div>
-              <div className="h-6 bg-gray-700 rounded mb-2"></div>
+            <div key={i} className="journal-premium-card p-6 animate-pulse">
+              <div className="h-4 bg-gray-700 rounded mb-3 w-3/4"></div>
+              <div className="h-8 bg-gray-700 rounded mb-3"></div>
               <div className="h-3 bg-gray-700 rounded w-1/2"></div>
             </div>
           ))}
@@ -24,12 +24,12 @@ export const GrowthTimeline: React.FC = () => {
 
   if (metrics.length === 0) {
     return (
-      <div className="bg-charcoal-gray rounded-xl p-6 border border-gray-800">
-        <h3 className="text-white font-medium text-lg mb-4">Your Growth Journey</h3>
-        <div className="text-center py-8">
-          <div className="text-6xl mb-4">🌱</div>
-          <p className="text-gray-400">Your growth story starts here!</p>
-          <p className="text-gray-500 text-sm mt-2">
+      <div className="journal-premium-card p-8 text-center">
+        <h3 className="text-2xl font-display font-semibold text-white mb-4">Your Growth Journey</h3>
+        <div className="py-8 space-y-4">
+          <div className="text-7xl mb-6 animate-gentle-pulse">🌱</div>
+          <p className="text-gray-300 text-lg font-light">Your growth story starts here!</p>
+          <p className="text-gray-500 text-sm max-w-md mx-auto leading-relaxed">
             Complete a few journal entries to see how you're evolving in your dating journey.
           </p>
         </div>
@@ -60,35 +60,35 @@ export const GrowthTimeline: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-white font-medium text-lg">Your Growth Journey</h3>
-          <p className="text-gray-400 text-sm">See how you're evolving this month</p>
+          <h3 className="text-2xl font-display font-semibold text-white mb-2">Your Growth Journey</h3>
+          <p className="text-gray-400 font-light tracking-wide">See how you're evolving this month</p>
         </div>
-        <div className="text-2xl">📈</div>
+        <div className="text-3xl animate-gentle-pulse">📈</div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {metrics.map((metric) => (
           <div
             key={metric.id}
-            className="bg-charcoal-gray rounded-xl p-4 border border-gray-800 hover:border-gray-700 transition-colors group"
+            className="journal-premium-card p-6 hover:journal-metric-glow transition-all duration-500 group cursor-pointer"
           >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex items-center space-x-2">
-                <span className="text-xl">{metric.icon}</span>
-                <h4 className="text-white font-medium">{metric.title}</h4>
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <span className="text-2xl">{metric.icon}</span>
+                <h4 className="text-white font-medium tracking-wide">{metric.title}</h4>
               </div>
               {getTrendIcon(metric.trend)}
             </div>
             
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-white group-hover:text-goldenrod transition-colors">
+            <div className="space-y-3">
+              <div className="text-3xl font-display font-bold text-white group-hover:text-goldenrod transition-colors duration-300">
                 {metric.value}
               </div>
               
-              <p className={`text-sm ${getTrendColor(metric.trend)}`}>
+              <p className={`text-sm font-light tracking-wide ${getTrendColor(metric.trend)}`}>
                 {metric.description}
               </p>
             </div>
@@ -108,12 +108,12 @@ export const GrowthTimeline: React.FC = () => {
 
       {/* Motivational message */}
       {metrics.length > 0 && (
-        <div className="bg-gradient-to-r from-goldenrod/10 to-charcoal-gray rounded-xl p-4 border border-goldenrod/20">
-          <div className="flex items-center space-x-2 mb-2">
-            <span className="text-xl">💡</span>
-            <h4 className="text-goldenrod font-medium">Growth Insight</h4>
+        <div className="journal-floating-glow bg-gradient-to-r from-goldenrod/10 via-gray-800/20 to-charcoal-gray/40 rounded-2xl p-6 border border-goldenrod/20">
+          <div className="flex items-center space-x-3 mb-3">
+            <span className="text-2xl">💡</span>
+            <h4 className="text-goldenrod font-display font-medium text-lg">Growth Insight</h4>
           </div>
-          <p className="text-gray-300 text-sm">
+          <p className="text-gray-300 font-light leading-relaxed tracking-wide">
             {getMotivationalMessage(metrics)}
           </p>
         </div>

@@ -240,23 +240,25 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
   };
 
   return (
-    <div className="min-h-screen bg-jet-black p-6">
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-light text-white">Dates & Journal</h1>
-          <p className="text-gray-400 text-sm mt-1">Plan, reflect, and grow</p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 p-6">
+      <div className="max-w-6xl mx-auto space-y-8">
+        <div className="text-center space-y-2">
+          <h1 className="text-4xl font-display font-semibold journal-header-text bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+            Dates & Journal
+          </h1>
+          <p className="text-gray-400 text-lg font-light tracking-wide">Plan, reflect, and grow through mindful connection</p>
         </div>
 
         {/* Tabs */}
-        <div className="flex space-x-1 bg-charcoal-gray/50 rounded-xl p-1">
+        <div className="flex space-x-1 journal-premium-card p-1.5 backdrop-blur-lg">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 ${
                 activeTab === tab.id
-                  ? 'bg-goldenrod text-jet-black'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'bg-gradient-to-r from-goldenrod to-amber-accent text-gray-900 shadow-lg shadow-goldenrod/25 font-semibold'
+                  : 'text-gray-400 hover:text-white hover:bg-gray-700/30'
               }`}
             >
               {tab.label}

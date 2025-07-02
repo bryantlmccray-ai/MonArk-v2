@@ -23,6 +23,8 @@ export default {
 				'sans': ['Inter', 'system-ui', 'sans-serif'],
 				'primary': ['Inter', 'system-ui', 'sans-serif'],
 				'reflection': ['Georgia', 'Times New Roman', 'serif'],
+				'playfair': ['Playfair Display', 'serif'],
+				'display': ['Playfair Display', 'serif'],
 			},
 			colors: {
 				/* New Dark Gray Design System */

@@ -65,20 +65,22 @@ export const JournalEngagementFeatures: React.FC<JournalEngagementFeaturesProps>
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Streak & Progress Cards */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-4">
         {/* Current Streak */}
-        <Card className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border-orange-500/20">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2 mb-2">
+        <div className="journal-premium-card p-5 group hover:journal-metric-glow transition-all duration-300">
+          <div className="flex items-center space-x-3 mb-3">
+            <div className="p-2 bg-orange-500/10 rounded-lg">
               <Flame className="h-5 w-5 text-orange-400" />
-              <span className="text-orange-400 text-sm font-medium">Streak</span>
             </div>
-            <div className="text-2xl font-bold text-white">{currentStreak}</div>
-            <div className="text-xs text-orange-300">days in a row</div>
-          </CardContent>
-        </Card>
+            <span className="text-orange-400 font-medium tracking-wide">Streak</span>
+          </div>
+          <div className="text-3xl font-display font-bold text-white group-hover:text-orange-400 transition-colors">
+            {currentStreak}
+          </div>
+          <div className="text-sm text-orange-300/80 font-light">days in a row</div>
+        </div>
 
         {/* Weekly Goal */}
         <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/20">

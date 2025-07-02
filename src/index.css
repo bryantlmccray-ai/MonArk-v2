@@ -69,7 +69,8 @@
     @apply bg-gray-900 text-gray-100 font-sans;
     font-family: 'Inter', system-ui, sans-serif;
     font-size: 16px;
-    line-height: 1.5;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
   }
 
   /* Typography System */
@@ -119,6 +120,30 @@
 
   .yellow-glow {
     box-shadow: 0 0 20px rgba(250, 204, 21, 0.4);
+  }
+  }
+
+  /* Premium Journal Styling */
+  .journal-premium-card {
+    @apply bg-gradient-to-br from-gray-800/60 to-gray-900/80 backdrop-blur-sm rounded-2xl border border-gray-700/50;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(250, 204, 21, 0.1);
+  }
+
+  .journal-header-text {
+    @apply font-display text-white tracking-tight;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .journal-accent-border {
+    border-image: linear-gradient(135deg, rgba(250, 204, 21, 0.3), rgba(245, 158, 11, 0.3)) 1;
+  }
+
+  .journal-metric-glow {
+    box-shadow: 0 0 20px rgba(250, 204, 21, 0.15);
+  }
+
+  .journal-floating-glow {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 8px 32px rgba(250, 204, 21, 0.08);
   }
 }
 
