@@ -36,7 +36,12 @@ export const useJournalEngagement = () => {
 
   // Fetch journal entries
   const fetchJournalEntries = async () => {
-    if (!user) return;
+    if (!user) {
+      console.log('No user found, cannot fetch journal entries');
+      return;
+    }
+
+    console.log('Fetching journal entries for user:', user.id);
 
     try {
       const { data, error } = await supabase
@@ -45,8 +50,20 @@ export const useJournalEngagement = () => {
         .eq('user_id', user.id)
         .order('date_completed', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error fetching journal entries:', error);
+        throw error;
+      }
+      
+      console.log('Journal entries fetched:', data);
       setJournalEntries(data || []);
+      
+      // Generate achievements even with empty entries so locked ones show
+      if (data !== null) {
+        const generatedAchievements = generateAchievements(data || []);
+        console.log('Generated achievements:', generatedAchievements);
+        setAchievements(generatedAchievements);
+      }
     } catch (error) {
       console.error('Error fetching journal entries:', error);
     }
@@ -207,12 +224,11 @@ export const useJournalEngagement = () => {
 
   // Update calculations when entries change
   useEffect(() => {
-    if (journalEntries.length > 0) {
-      setCurrentStreak(calculateStreak(journalEntries));
-      setEntriesThisWeek(calculateEntriesThisWeek(journalEntries));
-      setAchievements(generateAchievements(journalEntries));
-      setInsights(generateInsights(journalEntries));
-    }
+    // Always generate achievements even with empty entries
+    setCurrentStreak(calculateStreak(journalEntries));
+    setEntriesThisWeek(calculateEntriesThisWeek(journalEntries));
+    setAchievements(generateAchievements(journalEntries));
+    setInsights(generateInsights(journalEntries));
   }, [journalEntries]);
 
   const setReminder = async (enabled: boolean, time?: string) => {
