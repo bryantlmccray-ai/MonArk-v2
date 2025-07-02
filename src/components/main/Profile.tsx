@@ -287,7 +287,10 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               )}
 
               <button
-                onClick={() => setShowProfileCreation(true)}
+                onClick={() => {
+                  console.log('Edit Profile button clicked');
+                  setShowProfileCreation(true);
+                }}
                 className="w-full py-3 bg-charcoal-gray border border-gray-700 text-white rounded-xl transition-colors hover:border-goldenrod/50"
                 disabled={isSigningOut}
               >
