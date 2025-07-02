@@ -6,6 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ReminderSettingsModal, ReminderSettings } from './ReminderSettingsModal';
 
 interface JournalEngagementFeaturesProps {
   totalEntries: number;
@@ -42,10 +43,17 @@ export const JournalEngagementFeatures: React.FC<JournalEngagementFeaturesProps>
 }) => {
   const [showAllAchievements, setShowAllAchievements] = useState(false);
   const [showGoalEditor, setShowGoalEditor] = useState(false);
+  const [showReminderSettings, setShowReminderSettings] = useState(false);
   const [newGoal, setNewGoal] = useState(weeklyGoal);
   
   const weeklyProgress = (entriesThisWeek / weeklyGoal) * 100;
   const recentAchievements = achievements.filter(a => a.unlocked).slice(0, 3);
+
+  const handleReminderSave = (settings: ReminderSettings) => {
+    console.log('Saving reminder settings:', settings);
+    // This would integrate with a notification system
+    onSetReminder();
+  };
 
   return (
     <div className="space-y-4">
@@ -215,7 +223,7 @@ export const JournalEngagementFeatures: React.FC<JournalEngagementFeaturesProps>
       {/* Quick Actions */}
       <div className="grid grid-cols-2 gap-3">
         <button
-          onClick={onSetReminder}
+          onClick={() => setShowReminderSettings(true)}
           className="p-4 bg-charcoal-gray border border-gray-700 rounded-xl text-left hover:border-goldenrod/50 transition-colors"
         >
           <Calendar className="h-5 w-5 text-goldenrod mb-2" />
@@ -232,6 +240,13 @@ export const JournalEngagementFeatures: React.FC<JournalEngagementFeaturesProps>
           <div className="text-gray-400 text-xs">See your progress</div>
         </button>
       </div>
+
+      {/* Reminder Settings Modal */}
+      <ReminderSettingsModal
+        isOpen={showReminderSettings}
+        onClose={() => setShowReminderSettings(false)}
+        onSave={handleReminderSave}
+      />
     </div>
   );
 };
