@@ -73,7 +73,7 @@ export const MainApp: React.FC = () => {
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-jet-black">
         {/* Desktop Header with Trigger */}
-        <header className="fixed top-0 left-0 right-0 h-12 flex items-center bg-jet-black/95 backdrop-blur-xl border-b border-gray-800 z-40">
+        <header className="fixed top-0 left-0 right-0 h-10 flex items-center bg-jet-black/95 backdrop-blur-xl border-b border-gray-800 z-40">
           <SidebarTrigger className="ml-4 text-white hover:text-goldenrod" />
         </header>
 
@@ -81,7 +81,7 @@ export const MainApp: React.FC = () => {
         <SidebarNavigation activeTab={activeTab} onTabChange={setActiveTab} />
 
         {/* Main Content */}
-        <main className="flex-1 pt-12">
+        <main className="flex-1 pt-10">
           {renderActiveScreen()}
         </main>
 
