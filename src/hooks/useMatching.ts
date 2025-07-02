@@ -85,19 +85,6 @@ export const useMatching = () => {
     }
 
     try {
-      // Check if there's mutual interest
-      const { data: match, error: matchError } = await supabase
-        .from('matches')
-        .select('is_mutual')
-        .or(`and(user_id.eq.${user.id},liked_user_id.eq.${matchUserId}),and(user_id.eq.${matchUserId},liked_user_id.eq.${user.id})`)
-        .eq('is_mutual', true)
-        .single();
-
-      if (matchError || !match) {
-        toast.error('You need mutual interest to start a conversation');
-        return null;
-      }
-
       // Generate conversation ID
       const conversationId = [user.id, matchUserId].sort().join('_');
 
@@ -115,7 +102,7 @@ export const useMatching = () => {
       }
 
       if (!existingConvo) {
-        // Create conversation when user chooses to
+        // Create conversation - open messaging allows anyone to start conversations
         const { error: createError } = await supabase
           .from('conversation_tracker')
           .insert({

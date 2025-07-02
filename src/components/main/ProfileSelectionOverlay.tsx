@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Heart, MessageCircle, X, Clock, Shield, Target, MapPin, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -249,16 +248,14 @@ export const ProfileSelectionOverlay: React.FC<ProfileSelectionOverlayProps> = (
             <Button
               onClick={onMessage}
               className="flex-1 bg-goldenrod-gradient text-jet-black font-medium py-3 hover:shadow-golden-glow transition-all duration-300"
-              disabled
-              title="Only available with mutual interest"
             >
               <MessageCircle className="h-4 w-4 mr-2" />
-              Message
+              Send Message
             </Button>
           </div>
           
           <p className="text-xs text-gray-400 text-center mt-2">
-            Messaging becomes available when there's mutual interest
+            Start a conversation and get to know each other
           </p>
         </div>
       </div>
