@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Heart, MessageCircle, X, Clock, Shield, Target, MapPin, Star, Search, SlidersHorizontal, Navigation } from 'lucide-react';
+import { Heart, MessageCircle, X, Clock, Shield, Target, MapPin, Star, Search, SlidersHorizontal, Navigation, Bell, Wifi } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -10,10 +10,14 @@ import { RIFInsightOverlay } from '../rif/RIFInsightOverlay';
 import { DiscoveryFilters, DiscoveryFilters as FilterType } from './DiscoveryFilters';
 import { ProfileSelectionOverlay } from './ProfileSelectionOverlay';
 import { ChatModal } from '../chat/ChatModal';
+import { ActivityFeed } from './ActivityFeed';
 import { useRIF } from '@/hooks/useRIF';
 import { useProfile } from '@/hooks/useProfile';
 import { useDiscoveryProfiles, DiscoveryProfile } from '@/hooks/useDiscoveryProfiles';
 import { useMatching } from '@/hooks/useMatching';
+import { useRealTimePresence } from '@/hooks/useRealTimePresence';
+import { useActivityFeed } from '@/hooks/useActivityFeed';
+import { useProximityAlerts } from '@/hooks/useProximityAlerts';
 
 // Prototype profiles for testing - structured to match database schema
 const prototypeProfiles: (DiscoveryProfile & { profiles?: { name: string } })[] = [
@@ -192,6 +196,7 @@ export const DiscoveryMap: React.FC = () => {
   const [showChat, setShowChat] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+  const [showActivityFeed, setShowActivityFeed] = useState(false);
   const [mapCenter, setMapCenter] = useState({ x: 50, y: 50 });
   const [zoomLevel, setZoomLevel] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
@@ -220,6 +225,8 @@ export const DiscoveryMap: React.FC = () => {
   const { profile } = useProfile();
   const { profiles: realProfiles, loading } = useDiscoveryProfiles();
   const { likeUser, startConversation, loading: matchingLoading } = useMatching();
+  const { onlineUsers, isUserOnline } = useRealTimePresence();
+  const { activities, addProximityAlert } = useActivityFeed();
 
   // Add user's own profile to the map
   const userOwnProfile = profile ? {
@@ -458,6 +465,13 @@ export const DiscoveryMap: React.FC = () => {
   };
 
   const filteredProfiles = getFilteredProfiles();
+
+  // Initialize proximity alerts
+  useProximityAlerts({
+    profiles: filteredProfiles,
+    userLocation: hasLocation ? profile.location_data : undefined,
+    onProximityAlert: addProximityAlert
+  });
 
   // Assign map positions to profiles
   const profilesWithPositions = filteredProfiles.map((profile, index) => ({
@@ -775,6 +789,27 @@ export const DiscoveryMap: React.FC = () => {
           </div>
           
           <div className="flex items-center space-x-3">
+            {/* Activity Feed Button */}
+            <Button
+              onClick={() => setShowActivityFeed(!showActivityFeed)}
+              variant="outline"
+              size="sm"
+              className="border-gray-600 text-gray-300 hover:text-white hover:border-goldenrod relative"
+            >
+              <Bell className="h-4 w-4" />
+              {activities.length > 0 && (
+                <span className="absolute -top-1 -right-1 w-2 h-2 bg-goldenrod rounded-full animate-pulse" />
+              )}
+            </Button>
+
+            {/* Online Users Count */}
+            <div className="bg-charcoal-gray/50 backdrop-blur-sm rounded-lg px-3 py-2 border border-green-500/30">
+              <div className="flex items-center space-x-2">
+                <Wifi className="h-3 w-3 text-green-400" />
+                <span className="text-xs text-green-400 font-medium">{onlineUsers.length} online</span>
+              </div>
+            </div>
+
             <DiscoveryFilters 
               onFiltersChange={setFilters}
               rifProfile={rifProfile}
@@ -825,6 +860,13 @@ export const DiscoveryMap: React.FC = () => {
           }}
         />
       )}
+
+      {/* Activity Feed */}
+      <ActivityFeed
+        activities={activities}
+        isOpen={showActivityFeed}
+        onClose={() => setShowActivityFeed(false)}
+      />
 
       {/* Chat Modal */}
       {showChat && chatData && (
