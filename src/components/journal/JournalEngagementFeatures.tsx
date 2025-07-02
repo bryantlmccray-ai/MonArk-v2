@@ -48,6 +48,15 @@ export const JournalEngagementFeatures: React.FC<JournalEngagementFeaturesProps>
   
   const weeklyProgress = (entriesThisWeek / weeklyGoal) * 100;
   const recentAchievements = achievements.filter(a => a.unlocked).slice(0, 3);
+  
+  // Debug logging
+  console.log('Journal Engagement Debug:', {
+    totalEntries,
+    achievements,
+    recentAchievements,
+    entriesThisWeek,
+    currentStreak
+  });
 
   const handleReminderSave = (settings: ReminderSettings) => {
     console.log('Saving reminder settings:', settings);
