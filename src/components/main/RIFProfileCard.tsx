@@ -11,7 +11,7 @@ interface RIFProfile {
 }
 
 interface RIFProfileCardProps {
-  userProfile: RIFProfile;
+  userProfile: RIFProfile | null;
   currentUserProfile?: RIFProfile;
   name: string;
   age: number;
@@ -27,7 +27,9 @@ export const RIFProfileCard: React.FC<RIFProfileCardProps> = ({
   image,
   onClick
 }) => {
-  const getRIFTags = (profile: RIFProfile) => {
+  const getRIFTags = (profile: RIFProfile | null) => {
+    if (!profile) return [];
+    
     const tags = [];
     
     if (profile.emotional_readiness >= 7) {
@@ -48,7 +50,7 @@ export const RIFProfileCard: React.FC<RIFProfileCardProps> = ({
   };
 
   const getCompatibilityInsight = () => {
-    if (!currentUserProfile) return null;
+    if (!currentUserProfile || !userProfile) return null;
     
     const pacingDiff = Math.abs(userProfile.pacing_preferences - currentUserProfile.pacing_preferences);
     const intentDiff = Math.abs(userProfile.intent_clarity - currentUserProfile.intent_clarity);
@@ -77,8 +79,10 @@ export const RIFProfileCard: React.FC<RIFProfileCardProps> = ({
           className="w-12 h-12 rounded-full border-2 border-white/30 transition-all duration-300 group-hover:border-goldenrod/50 group-hover:scale-110"
         />
         
-        {/* RIF indicator dot */}
-        <div className="absolute -top-1 -right-1 w-3 h-3 bg-goldenrod rounded-full border border-jet-black animate-pulse" />
+        {/* RIF indicator dot - only show if user has RIF profile */}
+        {userProfile && (
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-goldenrod rounded-full border border-jet-black animate-pulse" />
+        )}
       </div>
       
       {/* Enhanced profile card on hover */}
