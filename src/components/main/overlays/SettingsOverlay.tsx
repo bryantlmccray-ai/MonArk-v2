@@ -121,7 +121,7 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
   const settingsItems = [
     { icon: User, label: 'Edit Profile', action: () => {} },
     { icon: Bell, label: 'Notifications', action: () => {} },
-    { icon: Shield, label: 'Privacy & Safety', action: () => {} },
+    { icon: Shield, label: 'Privacy & Data', action: () => window.location.href = '/privacy' },
     { icon: Heart, label: 'Matching Preferences', action: () => {} },
   ];
 
