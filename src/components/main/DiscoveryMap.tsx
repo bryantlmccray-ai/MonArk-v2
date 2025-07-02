@@ -11,6 +11,118 @@ import { useDiscoveryProfiles, DiscoveryProfile } from '@/hooks/useDiscoveryProf
 import { useMatching } from '@/hooks/useMatching';
 import { MapPin } from 'lucide-react';
 
+// Prototype profiles for testing
+const prototypeProfiles: DiscoveryProfile[] = [
+  {
+    id: 'proto-1',
+    user_id: 'prototype-user-1',
+    name: 'Alex Chen',
+    age: 28,
+    bio: 'Software engineer who loves hiking and photography. Looking for genuine connections and meaningful conversations.',
+    interests: ['Photography', 'Hiking', 'Technology', 'Coffee'],
+    photos: ['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face'],
+    distance: 2.5,
+    gender_identity: 'Man',
+    preference_to_see: ['Women'],
+    is_profile_complete: true,
+    age_verified: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    rifProfile: {
+      intent_clarity: 8,
+      pacing_preferences: 6,
+      emotional_readiness: 7,
+      boundary_respect: 9,
+      user_id: 'prototype-user-1',
+      is_active: true,
+      id: 'rif-proto-1',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }
+  },
+  {
+    id: 'proto-2',
+    user_id: 'prototype-user-2',
+    name: 'Maya Rodriguez',
+    age: 26,
+    bio: 'Artist and yoga instructor. I believe in taking things slow and building authentic connections.',
+    interests: ['Art', 'Yoga', 'Meditation', 'Travel'],
+    photos: ['https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face'],
+    distance: 4.1,
+    gender_identity: 'Woman',
+    preference_to_see: ['Men', 'Nonbinary people'],
+    is_profile_complete: true,
+    age_verified: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    rifProfile: {
+      intent_clarity: 7,
+      pacing_preferences: 4,
+      emotional_readiness: 8,
+      boundary_respect: 8,
+      user_id: 'prototype-user-2',
+      is_active: true,
+      id: 'rif-proto-2',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }
+  },
+  {
+    id: 'proto-3',
+    user_id: 'prototype-user-3',
+    name: 'Jordan Kim',
+    age: 30,
+    bio: 'Product designer with a passion for sustainable living. Values open communication and emotional intelligence.',
+    interests: ['Design', 'Sustainability', 'Cooking', 'Books'],
+    photos: ['https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face'],
+    distance: 1.8,
+    gender_identity: 'Nonbinary',
+    preference_to_see: ['Everyone open to connection'],
+    is_profile_complete: true,
+    age_verified: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    rifProfile: {
+      intent_clarity: 9,
+      pacing_preferences: 7,
+      emotional_readiness: 9,
+      boundary_respect: 9,
+      user_id: 'prototype-user-3',
+      is_active: true,
+      id: 'rif-proto-3',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }
+  },
+  {
+    id: 'proto-4',
+    user_id: 'prototype-user-4',
+    name: 'Sam Thompson',
+    age: 32,
+    bio: 'Teacher and weekend musician. Looking for someone who appreciates deep conversations and quiet moments.',
+    interests: ['Music', 'Education', 'Reading', 'Nature'],
+    photos: ['https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face'],
+    distance: 6.2,
+    gender_identity: 'Man',
+    preference_to_see: ['Women', 'Nonbinary people'],
+    is_profile_complete: true,
+    age_verified: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    rifProfile: {
+      intent_clarity: 8,
+      pacing_preferences: 5,
+      emotional_readiness: 8,
+      boundary_respect: 8,
+      user_id: 'prototype-user-4',
+      is_active: true,
+      id: 'rif-proto-4',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }
+  }
+];
+
 export const DiscoveryMap: React.FC = () => {
   const [selectedPin, setSelectedPin] = useState<number | null>(null);
   const [showInsight, setShowInsight] = useState<boolean>(false);
@@ -39,8 +151,11 @@ export const DiscoveryMap: React.FC = () => {
 
   const { rifProfile } = useRIF();
   const { profile } = useProfile();
-  const { profiles, loading } = useDiscoveryProfiles();
+  const { profiles: realProfiles, loading } = useDiscoveryProfiles();
   const { likeUser, startConversation, loading: matchingLoading } = useMatching();
+
+  // Combine real profiles with prototypes for now
+  const allProfiles = [...realProfiles, ...prototypeProfiles];
 
   // Check if user has location enabled
   const hasLocation = profile?.location_consent && profile?.location_data;
@@ -90,14 +205,18 @@ export const DiscoveryMap: React.FC = () => {
 
   // Enhanced profile distance calculation
   const calculateDistance = (targetProfile: DiscoveryProfile): number => {
-    if (!hasLocation || !targetProfile.location_data) return targetProfile.distance || 0;
+    if (!hasLocation || !targetProfile.location_data) {
+      return typeof targetProfile.distance === 'number' ? targetProfile.distance : 0;
+    }
     
     const userLat = profile.location_data.lat;
     const userLng = profile.location_data.lng;
     const targetLat = targetProfile.location_data.lat;
     const targetLng = targetProfile.location_data.lng;
     
-    if (!targetLat || !targetLng) return targetProfile.distance || 0;
+    if (!targetLat || !targetLng) {
+      return typeof targetProfile.distance === 'number' ? targetProfile.distance : 0;
+    }
     
     // Haversine formula for distance calculation
     const R = 3959; // Earth's radius in miles
@@ -116,7 +235,7 @@ export const DiscoveryMap: React.FC = () => {
   const getFilteredProfiles = () => {
     if (loading) return [];
     
-    return profiles.filter(targetProfile => {
+    return allProfiles.filter(targetProfile => {
       // Identity compatibility check - this is the core filtering logic
       if (!isIdentityCompatible(targetProfile)) return false;
 
@@ -124,7 +243,7 @@ export const DiscoveryMap: React.FC = () => {
       if (targetProfile.age && (targetProfile.age < filters.ageRange[0] || targetProfile.age > filters.ageRange[1])) return false;
       
       // Distance filter - use calculated distance if available
-      const distance = hasLocation ? calculateDistance(targetProfile) : targetProfile.distance || 0;
+      const distance = hasLocation ? calculateDistance(targetProfile) : (typeof targetProfile.distance === 'number' ? targetProfile.distance : 0);
       if (distance > filters.maxDistance) return false;
       
       // Interest filter
@@ -200,7 +319,7 @@ export const DiscoveryMap: React.FC = () => {
     const conversationId = await startConversation(selectedProfile.user_id);
     if (conversationId) {
       // Get profile name
-      const profileName = (selectedProfile as any).profiles?.name || 'User';
+      const profileName = selectedProfile.name || 'User';
       const profileImage = selectedProfile.photos?.[0];
       
       setChatData({
@@ -336,7 +455,7 @@ export const DiscoveryMap: React.FC = () => {
           <RIFProfileCard
             userProfile={profile.rifProfile}
             currentUserProfile={rifProfile || undefined}
-            name={(profile as any).profiles?.name || 'User'}
+            name={profile.name || 'User'}
             age={profile.age || 0}
             image={profile.photos?.[0] || ''}
             onClick={() => handleProfileClick(profile)}
@@ -384,12 +503,12 @@ export const DiscoveryMap: React.FC = () => {
         <ProfileSelectionOverlay
           profile={{
             id: selectedProfile.id || 0,
-            name: (selectedProfile as any).profiles?.name || 'User',
+            name: selectedProfile.name || 'User',
             age: selectedProfile.age || 0,
             image: selectedProfile.photos?.[0] || '',
             bio: selectedProfile.bio || '',
             interests: selectedProfile.interests || [],
-            distance: hasLocation ? calculateDistance(selectedProfile) : selectedProfile.distance,
+            distance: hasLocation ? calculateDistance(selectedProfile) : (typeof selectedProfile.distance === 'number' ? selectedProfile.distance : 0),
             rifProfile: selectedProfile.rifProfile
           }}
           currentUserProfile={rifProfile}
