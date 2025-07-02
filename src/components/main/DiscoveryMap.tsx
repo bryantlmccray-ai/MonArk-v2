@@ -194,6 +194,9 @@ export const DiscoveryMap: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [mapCenter, setMapCenter] = useState({ x: 50, y: 50 });
   const [zoomLevel, setZoomLevel] = useState(1);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [lastPanPosition, setLastPanPosition] = useState({ x: 50, y: 50 });
   const [chatData, setChatData] = useState<{
     conversationId: string;
     matchUserId: string;
@@ -256,15 +259,73 @@ export const DiscoveryMap: React.FC = () => {
     { id: 12, name: 'EAST SIDE', x: 70, y: 40, gridX: 4, gridY: 2.5 }
   ];
 
-  // Handle location search
+  // Handle location search with smooth movement
   const handleLocationSearch = (locationName: string) => {
     const location = searchLocations.find(loc => 
       loc.name.toLowerCase().includes(locationName.toLowerCase())
     );
     if (location) {
-      setMapCenter({ x: location.x, y: location.y });
+      smoothPanTo(location.x, location.y);
       setSearchQuery('');
     }
+  };
+
+  // Smooth pan to location
+  const smoothPanTo = (targetX: number, targetY: number) => {
+    const duration = 500;
+    const startTime = Date.now();
+    const startX = mapCenter.x;
+    const startY = mapCenter.y;
+
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing function for smooth animation
+      const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+      const easedProgress = easeOutCubic(progress);
+      
+      const currentX = startX + (targetX - startX) * easedProgress;
+      const currentY = startY + (targetY - startY) * easedProgress;
+      
+      setMapCenter({ x: currentX, y: currentY });
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+    
+    requestAnimationFrame(animate);
+  };
+
+  // Handle map dragging
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setDragStart({ x: e.clientX, y: e.clientY });
+    setLastPanPosition(mapCenter);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    
+    const deltaX = (e.clientX - dragStart.x) * 0.1; // Sensitivity adjustment
+    const deltaY = (e.clientY - dragStart.y) * 0.1;
+    
+    const newX = Math.max(0, Math.min(100, lastPanPosition.x - deltaX));
+    const newY = Math.max(0, Math.min(100, lastPanPosition.y - deltaY));
+    
+    setMapCenter({ x: newX, y: newY });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // Handle zoom with wheel
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    const zoomDelta = e.deltaY > 0 ? -0.1 : 0.1;
+    setZoomLevel(prev => Math.max(0.5, Math.min(3, prev + zoomDelta)));
   };
   // Identity-based filtering function
   const isIdentityCompatible = (targetProfile: DiscoveryProfile) => {
@@ -486,44 +547,95 @@ export const DiscoveryMap: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-jet-black relative overflow-hidden">
-      {/* Enhanced grid background */}
-      <div className="absolute inset-0">
-        {/* Base dark background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-jet-black via-charcoal-gray/20 to-jet-black" />
-        
-        {/* Major grid lines */}
-        <div 
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(255,215,0,0.1) 2px, transparent 2px),
-              linear-gradient(90deg, rgba(255,215,0,0.1) 2px, transparent 2px)
-            `,
-            backgroundSize: '8rem 8rem',
-          }}
-        />
-        
-        {/* Minor grid lines */}
-        <div 
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)
-            `,
-            backgroundSize: '2rem 2rem',
-          }}
-        />
-        
-        {/* City overlay for context */}
-        <div 
-          className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1574169208507-84376144848b?w=1200&h=800&fit=crop&crop=edges')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
+      {/* Interactive Map Container */}
+      <div 
+        className={`absolute inset-0 transition-transform duration-200 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+        style={{
+          transform: `translate(${(mapCenter.x - 50) * -2}px, ${(mapCenter.y - 50) * -2}px) scale(${zoomLevel})`,
+          transformOrigin: 'center center'
+        }}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onWheel={handleWheel}
+      >
+        {/* Enhanced grid background */}
+        <div className="absolute inset-0">
+          {/* Base dark background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-jet-black via-charcoal-gray/20 to-jet-black" />
+          
+          {/* Major grid lines */}
+          <div 
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(255,215,0,0.1) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(255,215,0,0.1) 2px, transparent 2px)
+              `,
+              backgroundSize: '8rem 8rem',
+            }}
+          />
+          
+          {/* Minor grid lines */}
+          <div 
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)
+              `,
+              backgroundSize: '2rem 2rem',
+            }}
+          />
+          
+          {/* City overlay for context */}
+          <div 
+            className="absolute inset-0 opacity-5"
+            style={{
+              backgroundImage: `url('https://images.unsplash.com/photo-1574169208507-84376144848b?w=1200&h=800&fit=crop&crop=edges')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+        </div>
+
+        {/* Location Labels */}
+        {locations.map((location) => (
+          <div
+            key={location.id}
+            className="absolute text-xs font-semibold text-white/40 uppercase tracking-wider pointer-events-none"
+            style={{
+              left: `${location.x}%`,
+              top: `${location.y}%`,
+              transform: 'translate(-50%, -50%)',
+            }}
+          >
+            {location.name}
+          </div>
+        ))}
+
+        {/* Profile Pins */}
+        {profilesWithPositions.map((profile) => (
+          <div
+            key={profile.id}
+            className="absolute"
+            style={{
+              left: `${profile.x}%`,
+              top: `${profile.y}%`,
+              transform: 'translate(-50%, -50%)',
+            }}
+          >
+            <RIFProfileCard
+              userProfile={profile.rifProfile}
+              currentUserProfile={rifProfile || undefined}
+              name={(profile as any).profiles?.name || 'User'}
+              age={profile.age || 0}
+              image={profile.photos?.[0] || ''}
+              onClick={() => handleProfileClick(profile)}
+            />
+          </div>
+        ))}
       </div>
       
       {/* Search and Navigation Controls */}
@@ -642,43 +754,6 @@ export const DiscoveryMap: React.FC = () => {
           </div>
         </div>
       )}
-
-      {/* Location Labels */}
-      {locations.map((location) => (
-        <div
-          key={location.id}
-          className="absolute text-xs font-semibold text-white/40 uppercase tracking-wider pointer-events-none"
-          style={{
-            left: `${location.x}%`,
-            top: `${location.y}%`,
-            transform: 'translate(-50%, -50%)',
-          }}
-        >
-          {location.name}
-        </div>
-      ))}
-
-      {/* Profile Pins */}
-      {profilesWithPositions.map((profile) => (
-        <div
-          key={profile.id}
-          className="absolute"
-          style={{
-            left: `${profile.x}%`,
-            top: `${profile.y}%`,
-            transform: 'translate(-50%, -50%)',
-          }}
-        >
-          <RIFProfileCard
-            userProfile={profile.rifProfile}
-            currentUserProfile={rifProfile || undefined}
-            name={(profile as any).profiles?.name || 'User'}
-            age={profile.age || 0}
-            image={profile.photos?.[0] || ''}
-            onClick={() => handleProfileClick(profile)}
-          />
-        </div>
-      ))}
 
       {/* Header with filters */}
       <div className="absolute top-0 left-0 right-0 z-10 p-6">

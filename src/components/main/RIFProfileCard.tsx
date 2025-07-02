@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Heart, Clock, Shield, Target } from 'lucide-react';
+import { Heart, Clock, Shield, Target, MessageCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 interface RIFProfile {
@@ -85,38 +85,87 @@ export const RIFProfileCard: React.FC<RIFProfileCardProps> = ({
         )}
       </div>
       
-      {/* Enhanced profile card on hover */}
-      <div className="absolute -bottom-32 left-1/2 transform -translate-x-1/2 bg-charcoal-gray/95 backdrop-blur-xl rounded-lg p-4 border border-goldenrod/30 opacity-0 group-hover:opacity-100 transition-all duration-300 w-64 z-10">
-        <div className="space-y-3">
+      {/* Enhanced profile preview on hover */}
+      <div className="absolute -bottom-48 left-1/2 transform -translate-x-1/2 bg-charcoal-gray/95 backdrop-blur-xl rounded-lg p-4 border border-goldenrod/30 opacity-0 group-hover:opacity-100 transition-all duration-300 w-80 z-10 shadow-2xl">
+        <div className="space-y-4">
+          {/* Header with name and compatibility */}
           <div className="flex items-center justify-between">
-            <p className="text-white font-medium">{name}, {age}</p>
-            {compatibility && (
-              <span className={`text-xs ${compatibility.color}`}>
-                {compatibility.message}
-              </span>
-            )}
+            <div>
+              <p className="text-white font-medium text-lg">{name}, {age}</p>
+              {compatibility && (
+                <span className={`text-xs ${compatibility.color} font-medium`}>
+                  {compatibility.message}
+                </span>
+              )}
+            </div>
+            <div className="flex items-center space-x-2">
+              <Heart className="h-4 w-4 text-gray-400 hover:text-red-400 cursor-pointer transition-colors" />
+              <MessageCircle className="h-4 w-4 text-gray-400 hover:text-blue-400 cursor-pointer transition-colors" />
+            </div>
           </div>
-          
+
+          {/* Bio preview */}
+          {userProfile && (
+            <div className="text-gray-300 text-sm leading-relaxed">
+              <p className="line-clamp-2">
+                Looking for meaningful connections and genuine conversations. Values emotional intelligence and authentic communication.
+              </p>
+            </div>
+          )}
+
+          {/* RIF compatibility tags */}
           {rifTags.length > 0 && (
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-2">
               {rifTags.map((tag, index) => {
                 const Icon = tag.icon;
                 return (
                   <div
                     key={index}
-                    className="flex items-center space-x-1 px-2 py-1 bg-gray-800/50 rounded-full text-xs"
+                    className="flex items-center space-x-2 px-3 py-1.5 bg-gray-800/60 rounded-full text-xs border border-gray-700"
                   >
                     <Icon className={`h-3 w-3 ${tag.color}`} />
-                    <span className="text-gray-300">{tag.label}</span>
+                    <span className="text-gray-200 font-medium">{tag.label}</span>
                   </div>
                 );
               })}
             </div>
           )}
-          
-          <button className="w-full py-2 bg-goldenrod-gradient text-jet-black font-medium rounded-lg text-sm hover:shadow-golden-glow transition-all duration-300">
-            Proceed with Awareness
-          </button>
+
+          {/* Quick interests preview */}
+          <div className="flex flex-wrap gap-1">
+            {['Photography', 'Hiking', 'Coffee'].map((interest, index) => (
+              <span 
+                key={index}
+                className="px-2 py-1 bg-goldenrod/20 text-goldenrod text-xs rounded-md border border-goldenrod/30"
+              >
+                {interest}
+              </span>
+            ))}
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex space-x-2">
+            <button 
+              className="flex-1 py-2 bg-goldenrod-gradient text-jet-black font-medium rounded-lg text-sm hover:shadow-golden-glow transition-all duration-300 flex items-center justify-center space-x-2"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClick();
+              }}
+            >
+              <Heart className="h-4 w-4" />
+              <span>Like</span>
+            </button>
+            <button 
+              className="flex-1 py-2 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-lg text-sm transition-all duration-300 flex items-center justify-center space-x-2"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClick();
+              }}
+            >
+              <MessageCircle className="h-4 w-4" />
+              <span>Chat</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
