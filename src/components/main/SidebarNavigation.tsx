@@ -1,0 +1,71 @@
+import React from 'react';
+import { User, Map, MessageCircle, Users, BookOpen } from 'lucide-react';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+} from '@/components/ui/sidebar';
+import { MonArkLogo } from '../MonArkLogo';
+
+interface SidebarNavigationProps {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+}
+
+export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab, onTabChange }) => {
+  const tabs = [
+    { id: 'dates', icon: BookOpen, label: 'Dates' },
+    { id: 'discover', icon: Map, label: 'Discover' },
+    { id: 'profile', icon: User, label: 'Profile' },
+    { id: 'circle', icon: Users, label: 'Circle' },
+    { id: 'matches', icon: MessageCircle, label: 'Matches' },
+  ];
+
+  return (
+    <Sidebar className="border-r border-gray-800">
+      <SidebarHeader className="border-b border-gray-800 p-4">
+        <div className="flex items-center gap-2">
+          <MonArkLogo />
+          <span className="text-lg font-semibold text-white">MonArk</span>
+        </div>
+      </SidebarHeader>
+      
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                
+                return (
+                  <SidebarMenuItem key={tab.id}>
+                    <SidebarMenuButton
+                      onClick={() => onTabChange(tab.id)}
+                      isActive={isActive}
+                      className={`w-full justify-start transition-colors ${
+                        isActive 
+                          ? 'text-goldenrod bg-goldenrod/10' 
+                          : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
+                      }`}
+                    >
+                      <Icon className="h-5 w-5" />
+                      <span>{tab.label}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
+  );
+};
