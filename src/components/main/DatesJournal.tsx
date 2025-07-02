@@ -6,6 +6,7 @@ import { ReflectionPrompt } from '../rhythm/ReflectionPrompt';
 import { JournalEngagementFeatures } from '../journal/JournalEngagementFeatures';
 import { JournalInsightsDashboard } from '../journal/JournalInsightsDashboard';
 import { JournalEntryModal } from '../journal/JournalEntryModal';
+import { GrowthTimeline } from '../journal/GrowthTimeline';
 import { useRhythm } from '@/hooks/useRhythm';
 import { useJournalEngagement } from '@/hooks/useJournalEngagement';
 
@@ -96,6 +97,9 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
 
     return (
       <div className="space-y-6">
+        {/* Growth Timeline */}
+        <GrowthTimeline />
+
         {/* Engagement Features */}
         <JournalEngagementFeatures
           totalEntries={journalEntries.length}
