@@ -210,8 +210,20 @@ export const DiscoveryMap: React.FC = () => {
   const { profiles: realProfiles, loading } = useDiscoveryProfiles();
   const { likeUser, startConversation, loading: matchingLoading } = useMatching();
 
-  // Combine real profiles with prototypes for now
-  const allProfiles = [...realProfiles, ...prototypeProfiles];
+  // Add user's own profile to the map
+  const userOwnProfile = profile ? {
+    ...profile,
+    distance: 0, // User is at distance 0 from themselves
+    profiles: { name: 'You' },
+    rifProfile: rifProfile
+  } : null;
+
+  // Combine real profiles with prototypes and user's own profile
+  const allProfiles = [
+    ...realProfiles, 
+    ...prototypeProfiles,
+    ...(userOwnProfile ? [userOwnProfile] : [])
+  ];
 
   // Check if user has location enabled
   const hasLocation = profile?.location_consent && profile?.location_data;
