@@ -230,13 +230,13 @@ export const DiscoveryMap: React.FC = () => {
 
   const locations = [
     { id: 1, name: 'DOWNTOWN', x: 40, y: 30 },
-    { id: 2, name: 'OHIO CITY', x: 25, y: 45 },
-    { id: 3, name: 'TREMONT', x: 35, y: 55 },
-    { id: 4, name: 'UNIVERSITY CIRCLE', x: 65, y: 35 },
-    { id: 5, name: 'LITTLE ITALY', x: 68, y: 40 },
-    { id: 6, name: 'GORDON SQUARE', x: 22, y: 38 },
-    { id: 7, name: 'LAKEWOOD', x: 15, y: 50 },
-    { id: 8, name: 'SHAKER HEIGHTS', x: 75, y: 50 },
+    { id: 2, name: 'WICKER PARK', x: 25, y: 45 },
+    { id: 3, name: 'LINCOLN PARK', x: 35, y: 25 },
+    { id: 4, name: 'BUCKTOWN', x: 30, y: 40 },
+    { id: 5, name: 'LOGAN SQUARE', x: 20, y: 35 },
+    { id: 6, name: 'RIVER NORTH', x: 45, y: 35 },
+    { id: 7, name: 'GOLD COAST', x: 50, y: 30 },
+    { id: 8, name: 'LAKEVIEW', x: 40, y: 20 },
   ];
 
   // Identity-based filtering function
