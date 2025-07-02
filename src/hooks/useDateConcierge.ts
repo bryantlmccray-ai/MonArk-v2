@@ -3,6 +3,10 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { useConversationReadiness } from './useConversationReadiness';
+import { Tables } from '@/integrations/supabase/types';
+
+type Message = Tables<'messages'>;
 
 export interface DateProposal {
   id: string;
@@ -59,6 +63,7 @@ export const useDateConcierge = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const { toast } = useToast();
+  const { analyzeReadiness, setCooldown, updatePattern } = useConversationReadiness();
 
   // Fetch user's date proposals
   const fetchProposals = async () => {
@@ -263,7 +268,108 @@ export const useDateConcierge = () => {
     }
   };
 
-  // Update conversation engagement
+  // Check if conversation is ready for AI concierge suggestion
+  const checkConversationReadiness = async (
+    conversationId: string,
+    matchUserId: string
+  ): Promise<{ shouldTrigger: boolean; confidence: number; triggers: string[] }> => {
+    if (!user) return { shouldTrigger: false, confidence: 0, triggers: [] };
+
+    try {
+      // Fetch recent messages for analysis
+      const { data: messages, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('conversation_id', conversationId)
+        .order('created_at', { ascending: true })
+        .limit(50); // Analyze last 50 messages
+
+      if (error) throw error;
+
+      const messagesTyped = messages as Message[];
+      updatePattern(conversationId, messagesTyped);
+      
+      const readinessAnalysis = analyzeReadiness(conversationId, messagesTyped);
+      
+      // Additional checks for AI concierge triggering
+      const conversation = conversations.find(c => c.conversation_id === conversationId);
+      
+      // Don't trigger if already triggered recently
+      if (conversation?.ai_concierge_triggered) {
+        return { 
+          shouldTrigger: false, 
+          confidence: 0, 
+          triggers: ['AI concierge already triggered for this conversation'] 
+        };
+      }
+
+      // Require minimum message count and engagement
+      const messageCount = messagesTyped.length;
+      const engagementScore = conversation?.mutual_engagement_score || 0;
+      
+      if (messageCount < 8) {
+        return { 
+          shouldTrigger: false, 
+          confidence: 0, 
+          triggers: ['Insufficient conversation history (need at least 8 messages)'] 
+        };
+      }
+
+      if (engagementScore < 0.6) {
+        return { 
+          shouldTrigger: false, 
+          confidence: 0, 
+          triggers: ['Low engagement score - conversation not ready'] 
+        };
+      }
+
+      return {
+        shouldTrigger: readinessAnalysis.isReady && readinessAnalysis.confidence >= 0.7,
+        confidence: readinessAnalysis.confidence,
+        triggers: readinessAnalysis.triggers
+      };
+    } catch (error) {
+      console.error('Error checking conversation readiness:', error);
+      return { shouldTrigger: false, confidence: 0, triggers: ['Error analyzing conversation'] };
+    }
+  };
+
+  // Mark AI concierge as triggered and set cooldown
+  const markConciergeTriggered = async (conversationId: string, cooldownHours: number = 24) => {
+    try {
+      // Update conversation tracker
+      const { error } = await supabase
+        .from('conversation_tracker')
+        .update({ ai_concierge_triggered: true })
+        .eq('conversation_id', conversationId);
+
+      if (error) throw error;
+
+      // Set cooldown
+      setCooldown(conversationId, cooldownHours);
+      
+      await fetchConversations();
+    } catch (error) {
+      console.error('Error marking concierge triggered:', error);
+    }
+  };
+
+  // Reset AI concierge trigger status (for testing or if user wants to try again)
+  const resetConciergeStatus = async (conversationId: string) => {
+    try {
+      const { error } = await supabase
+        .from('conversation_tracker')
+        .update({ ai_concierge_triggered: false })
+        .eq('conversation_id', conversationId);
+
+      if (error) throw error;
+      await fetchConversations();
+    } catch (error) {
+      console.error('Error resetting concierge status:', error);
+    }
+  };
+
+  // Update conversation engagement with readiness analysis
   const updateConversationEngagement = async (
     conversationId: string,
     matchUserId: string,
@@ -340,6 +446,9 @@ export const useDateConcierge = () => {
     updateProposalStatus,
     createJournalEntry,
     updateConversationEngagement,
+    checkConversationReadiness,
+    markConciergeTriggered,
+    resetConciergeStatus,
     refetch: async () => {
       await fetchProposals();
       await fetchJournalEntries();

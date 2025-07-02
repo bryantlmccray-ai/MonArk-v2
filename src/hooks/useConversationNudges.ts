@@ -219,19 +219,42 @@ export const useConversationNudges = () => {
     sentimentScore: number = 0
   ) => {
     try {
-      // This will be handled by the database trigger, but we can also update manually
-      const { error } = await supabase
+      // Check if conversation monitor exists first
+      const { data: existingMonitor } = await supabase
         .from('conversation_monitor')
-        .upsert({
-          conversation_id: conversationId,
-          last_message_time: new Date().toISOString(),
-          message_count: messageCount,
-          avg_sentiment_score: sentimentScore,
-          inactivity_hours: 0,
-          updated_at: new Date().toISOString()
-        });
+        .select('id')
+        .eq('conversation_id', conversationId)
+        .single();
 
-      if (error) throw error;
+      if (existingMonitor) {
+        // Update existing monitor
+        const { error } = await supabase
+          .from('conversation_monitor')
+          .update({
+            last_message_time: new Date().toISOString(),
+            message_count: messageCount,
+            avg_sentiment_score: sentimentScore,
+            inactivity_hours: 0,
+            updated_at: new Date().toISOString()
+          })
+          .eq('conversation_id', conversationId);
+
+        if (error) throw error;
+      } else {
+        // Insert new monitor
+        const { error } = await supabase
+          .from('conversation_monitor')
+          .insert({
+            conversation_id: conversationId,
+            last_message_time: new Date().toISOString(),
+            message_count: messageCount,
+            avg_sentiment_score: sentimentScore,
+            inactivity_hours: 0
+          });
+
+        if (error) throw error;
+      }
+      
       await fetchConversationMonitors();
     } catch (error) {
       console.error('Error updating conversation activity:', error);
