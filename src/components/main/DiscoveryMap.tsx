@@ -229,14 +229,14 @@ export const DiscoveryMap: React.FC = () => {
   const hasLocation = profile?.location_consent && profile?.location_data;
 
   const locations = [
-    { id: 1, name: 'DOWNTOWN', x: 40, y: 30 },
-    { id: 2, name: 'WICKER PARK', x: 25, y: 45 },
-    { id: 3, name: 'LINCOLN PARK', x: 35, y: 25 },
-    { id: 4, name: 'BUCKTOWN', x: 30, y: 40 },
-    { id: 5, name: 'LOGAN SQUARE', x: 20, y: 35 },
-    { id: 6, name: 'RIVER NORTH', x: 45, y: 35 },
-    { id: 7, name: 'GOLD COAST', x: 50, y: 30 },
-    { id: 8, name: 'LAKEVIEW', x: 40, y: 20 },
+    { id: 1, name: 'DOWNTOWN', x: 48, y: 32, gridX: 3, gridY: 2 },
+    { id: 2, name: 'WICKER PARK', x: 32, y: 48, gridX: 2, gridY: 3 },
+    { id: 3, name: 'LINCOLN PARK', x: 48, y: 24, gridX: 3, gridY: 1.5 },
+    { id: 4, name: 'BUCKTOWN', x: 32, y: 40, gridX: 2, gridY: 2.5 },
+    { id: 5, name: 'LOGAN SQUARE', x: 24, y: 40, gridX: 1.5, gridY: 2.5 },
+    { id: 6, name: 'RIVER NORTH', x: 56, y: 32, gridX: 3.5, gridY: 2 },
+    { id: 7, name: 'GOLD COAST', x: 56, y: 24, gridX: 3.5, gridY: 1.5 },
+    { id: 8, name: 'LAKEVIEW', x: 48, y: 16, gridX: 3, gridY: 1 },
   ];
 
   // Identity-based filtering function
@@ -445,20 +445,45 @@ export const DiscoveryMap: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-jet-black relative overflow-hidden">
-      {/* Dark map background with grid overlay */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
-            url('https://images.unsplash.com/photo-1574169208507-84376144848b?w=1200&h=800&fit=crop&crop=edges')
-          `,
-          backgroundSize: '2rem 2rem, 2rem 2rem, cover',
-          backgroundPosition: '0 0, 0 0, center',
-          opacity: 0.1
-        }}
-      />
+      {/* Enhanced grid background */}
+      <div className="absolute inset-0">
+        {/* Base dark background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-jet-black via-charcoal-gray/20 to-jet-black" />
+        
+        {/* Major grid lines */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,215,0,0.1) 2px, transparent 2px),
+              linear-gradient(90deg, rgba(255,215,0,0.1) 2px, transparent 2px)
+            `,
+            backgroundSize: '8rem 8rem',
+          }}
+        />
+        
+        {/* Minor grid lines */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)
+            `,
+            backgroundSize: '2rem 2rem',
+          }}
+        />
+        
+        {/* City overlay for context */}
+        <div 
+          className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1574169208507-84376144848b?w=1200&h=800&fit=crop&crop=edges')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+      </div>
       
       {/* Location Prompt for new users */}
       {showLocationPrompt && !hasLocation && (
