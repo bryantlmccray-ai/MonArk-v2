@@ -236,6 +236,42 @@ export type Database = {
         }
         Relationships: []
       }
+      messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          message_type: string | null
+          read_at: string | null
+          recipient_user_id: string
+          sender_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          message_type?: string | null
+          read_at?: string | null
+          recipient_user_id: string
+          sender_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          message_type?: string | null
+          read_at?: string | null
+          recipient_user_id?: string
+          sender_user_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       nudge_library: {
         Row: {
           created_at: string
@@ -701,6 +737,10 @@ export type Database = {
       }
       delete_user_completely: {
         Args: { user_id_input: string }
+        Returns: undefined
+      }
+      mark_messages_as_read: {
+        Args: { p_conversation_id: string; p_user_id: string }
         Returns: undefined
       }
       verify_age_18_plus: {

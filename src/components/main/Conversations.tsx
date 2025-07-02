@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Calendar, Plus } from 'lucide-react';
+import { Sparkles, Calendar, Plus, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RIFBehavioralNudge } from '../rif/RIFBehavioralNudge';
 import { RIFPostDateFeedback } from '../rif/RIFPostDateFeedback';
@@ -7,11 +7,14 @@ import { AIConciergeModal } from '../date-concierge/AIConciergeModal';
 import { DateProposalCard } from '../date-concierge/DateProposalCard';
 import { DateJournalEntryComponent } from '../date-concierge/DateJournalEntry';
 import { ConversationHelper } from '../conversation/ConversationHelper';
+import { ChatModal } from '../chat/ChatModal';
 import { useRIF } from '@/hooks/useRIF';
 import { useDateConcierge } from '@/hooks/useDateConcierge';
 import { useConversationNudges } from '@/hooks/useConversationNudges';
+import { useAuth } from '@/hooks/useAuth';
 
 export const Conversations: React.FC = () => {
+  const { user } = useAuth();
   const { rifSettings } = useRIF();
   const { proposals, updateConversationEngagement } = useDateConcierge();
   const { updateConversationActivity } = useConversationNudges();
@@ -20,10 +23,13 @@ export const Conversations: React.FC = () => {
   const [showPostDateFeedback, setShowPostDateFeedback] = useState(false);
   const [showConciergeModal, setShowConciergeModal] = useState(false);
   const [showJournalEntry, setShowJournalEntry] = useState(false);
+  const [showChatModal, setShowChatModal] = useState(false);
+  const [activeChatConversation, setActiveChatConversation] = useState<any>(null);
   const [nudgeType, setNudgeType] = useState<'conversation_pacing' | 'emotional_check' | 'boundary_reminder' | 'reflection_prompt'>('conversation_pacing');
   const [selectedConversation, setSelectedConversation] = useState<string>('');
   const [activeConversation, setActiveConversation] = useState<any>(null);
 
+  // Generate proper UUIDs for mock users
   const conversations = [
     {
       id: 1,
@@ -36,7 +42,7 @@ export const Conversations: React.FC = () => {
       messageCount: 24,
       mutualEngagement: 0.8,
       conversationId: 'conv_maya_001',
-      userId: 'user_maya_001'
+      userId: user?.id || '76cc75e6-3228-4b19-97b5-f455639f6109' // Use current user or fallback
     },
     {
       id: 2,
@@ -49,7 +55,7 @@ export const Conversations: React.FC = () => {
       messageCount: 1,
       mutualEngagement: 0.3,
       conversationId: 'conv_alex_001',
-      userId: 'user_alex_001'
+      userId: user?.id || '76cc75e6-3228-4b19-97b5-f455639f6109'
     },
     {
       id: 3,
@@ -63,12 +69,14 @@ export const Conversations: React.FC = () => {
       mutualEngagement: 0.9,
       hadDate: true,
       conversationId: 'conv_jordan_001',
-      userId: 'user_jordan_001'
+      userId: user?.id || '76cc75e6-3228-4b19-97b5-f455639f6109'
     },
   ];
 
   // Update conversation engagement scores
   useEffect(() => {
+    if (!user) return;
+    
     conversations.forEach(conv => {
       updateConversationEngagement(
         conv.conversationId,
@@ -76,14 +84,13 @@ export const Conversations: React.FC = () => {
         conv.messageCount,
         conv.mutualEngagement
       );
-      // Also update the new conversation activity tracking
       updateConversationActivity(
         conv.conversationId,
         conv.messageCount,
         conv.mutualEngagement
       );
     });
-  }, []);
+  }, [user]);
 
   // Check for AI concierge triggers
   useEffect(() => {
@@ -128,31 +135,48 @@ export const Conversations: React.FC = () => {
   }, [rifSettings]);
 
   const handleConversationClick = (conversation: any) => {
+    // Open chat modal for direct messaging
+    setActiveChatConversation(conversation);
+    setShowChatModal(true);
+
     // Check if this conversation should trigger AI concierge
     if (conversation.mutualEngagement > 0.7 && conversation.messageCount > 10) {
       setActiveConversation(conversation);
-      setShowConciergeModal(true);
+      setTimeout(() => setShowConciergeModal(true), 1000);
     }
 
     if (rifSettings?.rif_enabled && conversation.messageCount > 15) {
       setNudgeType('emotional_check');
-      setShowNudge(true);
+      setTimeout(() => setShowNudge(true), 2000);
     }
   };
 
-  const handleSendMessage = (conversationId: string, message: string) => {
-    console.log(`Sending message to ${conversationId}:`, message);
-    // In a real implementation, this would send the message through your chat system
+  const handleSendMessage = async (conversationId: string, message: string) => {
+    // This is now handled by the ChatInterface component
+    console.log(`Message sent via ChatInterface for ${conversationId}`);
   };
 
   const handleEndConversation = (conversationId: string, message: string, reason?: string) => {
     console.log(`Ending conversation ${conversationId} with message:`, message, 'Reason:', reason);
-    // In a real implementation, this would close the conversation
+    setShowChatModal(false);
+    setActiveChatConversation(null);
   };
 
   const relevantProposals = proposals.filter(proposal => 
     conversations.some(conv => conv.conversationId === proposal.conversation_id)
   );
+
+  // Show authentication message if user is not logged in
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-jet-black p-6 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-light text-white mb-4">Sign In Required</h2>
+          <p className="text-gray-400">Please sign in to view your conversations and start chatting.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-jet-black p-6">
@@ -192,7 +216,7 @@ export const Conversations: React.FC = () => {
           </div>
         )}
 
-        {/* Conversations List with enhanced helper integration */}
+        {/* Conversations List */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-medium text-white">Messages</h2>
@@ -210,7 +234,6 @@ export const Conversations: React.FC = () => {
                     src={conversation.image}
                     alt={conversation.name}
                     className="w-12 h-12 rounded-full cursor-pointer"
-                    onClick={() => handleConversationClick(conversation)}
                   />
                   {rifSettings?.rif_enabled && conversation.messageCount > 10 && (
                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-goldenrod rounded-full border border-jet-black animate-pulse" />
@@ -224,7 +247,7 @@ export const Conversations: React.FC = () => {
                 
                 <div className="flex-1">
                   <div className="flex items-center space-x-2">
-                    <h3 className="text-white font-medium cursor-pointer" onClick={() => handleConversationClick(conversation)}>
+                    <h3 className="text-white font-medium cursor-pointer">
                       {conversation.name}
                     </h3>
                     {conversation.hadDate && (
@@ -254,13 +277,17 @@ export const Conversations: React.FC = () => {
                 </div>
                 
                 <div className="flex items-center space-x-2">
-                  {/* Conversation Helper Button */}
-                  <ConversationHelper
-                    conversationId={conversation.conversationId}
-                    matchName={conversation.name}
-                    onSendMessage={(message) => handleSendMessage(conversation.conversationId, message)}
-                    onEndConversation={(message, reason) => handleEndConversation(conversation.conversationId, message, reason)}
-                  />
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleConversationClick(conversation);
+                    }}
+                    size="sm"
+                    className="bg-goldenrod/20 hover:bg-goldenrod/30 text-goldenrod border border-goldenrod/30"
+                  >
+                    <MessageCircle className="h-4 w-4 mr-1" />
+                    Chat
+                  </Button>
                   
                   {conversation.isNewMatch && (
                     <Sparkles className="h-5 w-5 text-goldenrod" />
@@ -274,6 +301,21 @@ export const Conversations: React.FC = () => {
           ))}
         </div>
       </div>
+
+      {/* Chat Modal */}
+      {showChatModal && activeChatConversation && (
+        <ChatModal
+          isOpen={showChatModal}
+          onClose={() => {
+            setShowChatModal(false);
+            setActiveChatConversation(null);
+          }}
+          conversationId={activeChatConversation.conversationId}
+          matchUserId={activeChatConversation.userId}
+          matchName={activeChatConversation.name}
+          matchImage={activeChatConversation.image}
+        />
+      )}
 
       {/* AI Concierge Modal */}
       {showConciergeModal && activeConversation && (
