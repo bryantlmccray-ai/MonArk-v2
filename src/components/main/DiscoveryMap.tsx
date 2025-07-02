@@ -89,15 +89,15 @@ export const DiscoveryMap: React.FC = () => {
   };
 
   // Enhanced profile distance calculation
-  const calculateDistance = (targetProfile: DiscoveryProfile) => {
-    if (!hasLocation || !targetProfile.location_data) return targetProfile.distance;
+  const calculateDistance = (targetProfile: DiscoveryProfile): number => {
+    if (!hasLocation || !targetProfile.location_data) return targetProfile.distance || 0;
     
     const userLat = profile.location_data.lat;
     const userLng = profile.location_data.lng;
     const targetLat = targetProfile.location_data.lat;
     const targetLng = targetProfile.location_data.lng;
     
-    if (!targetLat || !targetLng) return targetProfile.distance;
+    if (!targetLat || !targetLng) return targetProfile.distance || 0;
     
     // Haversine formula for distance calculation
     const R = 3959; // Earth's radius in miles

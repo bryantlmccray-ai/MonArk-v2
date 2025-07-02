@@ -94,7 +94,7 @@ export const ProfileSelectionOverlay: React.FC<ProfileSelectionOverlayProps> = (
                   <div className="flex items-center space-x-1">
                     <Star className={`h-4 w-4 ${getCompatibilityColor(compatibilityScore)}`} />
                     <span className={`text-sm font-medium ${getCompatibilityColor(compatibilityScore)}`}>
-                      {compatibilityScore}% Match
+                      {compatibilityScore}% Compatible
                     </span>
                   </div>
                 </div>
@@ -240,10 +240,10 @@ export const ProfileSelectionOverlay: React.FC<ProfileSelectionOverlayProps> = (
           <div className="flex space-x-3">
             <Button
               onClick={onLike}
-              className="flex-1 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-medium py-3"
+              className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-medium py-3"
             >
               <Heart className="h-4 w-4 mr-2" />
-              Like
+              Connect
             </Button>
             
             <Button
