@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Flame, Target, TrendingUp, Award, Star, ChevronRight } from 'lucide-react';
+import { Calendar, Flame, Target, TrendingUp, Award, Star, ChevronRight, Edit3 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 interface JournalEngagementFeaturesProps {
   totalEntries: number;
@@ -13,6 +16,7 @@ interface JournalEngagementFeaturesProps {
   achievements: Achievement[];
   onViewInsights: () => void;
   onSetReminder: () => void;
+  onUpdateWeeklyGoal: (newGoal: number) => void;
 }
 
 interface Achievement {
@@ -33,9 +37,12 @@ export const JournalEngagementFeatures: React.FC<JournalEngagementFeaturesProps>
   insights,
   achievements,
   onViewInsights,
-  onSetReminder
+  onSetReminder,
+  onUpdateWeeklyGoal
 }) => {
   const [showAllAchievements, setShowAllAchievements] = useState(false);
+  const [showGoalEditor, setShowGoalEditor] = useState(false);
+  const [newGoal, setNewGoal] = useState(weeklyGoal);
   
   const weeklyProgress = (entriesThisWeek / weeklyGoal) * 100;
   const recentAchievements = achievements.filter(a => a.unlocked).slice(0, 3);
@@ -59,15 +66,63 @@ export const JournalEngagementFeatures: React.FC<JournalEngagementFeaturesProps>
         {/* Weekly Goal */}
         <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/20">
           <CardContent className="p-4">
-            <div className="flex items-center space-x-2 mb-2">
-              <Target className="h-5 w-5 text-green-400" />
-              <span className="text-green-400 text-sm font-medium">Weekly Goal</span>
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center space-x-2">
+                <Target className="h-5 w-5 text-green-400" />
+                <span className="text-green-400 text-sm font-medium">Weekly Goal</span>
+              </div>
+              <button
+                onClick={() => setShowGoalEditor(true)}
+                className="p-1 text-green-400 hover:text-green-300 transition-colors"
+              >
+                <Edit3 className="h-4 w-4" />
+              </button>
             </div>
             <div className="text-2xl font-bold text-white">{entriesThisWeek}/{weeklyGoal}</div>
             <Progress value={weeklyProgress} className="h-2 mt-1" />
           </CardContent>
         </Card>
       </div>
+
+      {/* Goal Editor Modal */}
+      <Dialog open={showGoalEditor} onOpenChange={setShowGoalEditor}>
+        <DialogContent className="bg-charcoal-gray border-gray-800">
+          <DialogHeader>
+            <DialogTitle className="text-white">Edit Weekly Goal</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-gray-300 text-sm">Journal entries per week</label>
+              <Input
+                type="number"
+                min="1"
+                max="7"
+                value={newGoal}
+                onChange={(e) => setNewGoal(parseInt(e.target.value) || 1)}
+                className="bg-jet-black border-gray-700 text-white mt-1"
+              />
+            </div>
+            <div className="flex space-x-3">
+              <Button
+                variant="outline"
+                onClick={() => setShowGoalEditor(false)}
+                className="flex-1 border-gray-600 text-gray-300"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  onUpdateWeeklyGoal(newGoal);
+                  setShowGoalEditor(false);
+                }}
+                className="flex-1 bg-goldenrod hover:bg-goldenrod/90 text-jet-black"
+              >
+                Save Goal
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Personal Insights Preview */}
       <Card className="bg-charcoal-gray border-gray-800">

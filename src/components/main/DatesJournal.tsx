@@ -103,6 +103,10 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
           achievements={achievements}
           onViewInsights={() => setShowInsightsDashboard(true)}
           onSetReminder={() => setReminder(true)}
+          onUpdateWeeklyGoal={(newGoal) => {
+            // This would update the goal in the hook
+            console.log('Updating weekly goal to:', newGoal);
+          }}
         />
 
         {/* Journal Entries */}
