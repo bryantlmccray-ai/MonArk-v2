@@ -9,11 +9,11 @@ interface BottomNavigationProps {
 
 export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, onTabChange }) => {
   const tabs = [
-    { id: 'profile', icon: User, label: 'Profile' },
-    { id: 'discover', icon: Map, label: 'Discover' },
-    { id: 'matches', icon: MessageCircle, label: 'Matches' },
-    { id: 'circle', icon: Users, label: 'Circle' },
     { id: 'dates', icon: BookOpen, label: 'Dates' },
+    { id: 'discover', icon: Map, label: 'Discover' },
+    { id: 'profile', icon: User, label: 'Profile' },
+    { id: 'circle', icon: Users, label: 'Circle' },
+    { id: 'matches', icon: MessageCircle, label: 'Matches' },
   ];
 
   return (
