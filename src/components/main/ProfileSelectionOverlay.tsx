@@ -243,17 +243,23 @@ export const ProfileSelectionOverlay: React.FC<ProfileSelectionOverlayProps> = (
               className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-medium py-3"
             >
               <Heart className="h-4 w-4 mr-2" />
-              Connect
+              Show Interest
             </Button>
             
             <Button
               onClick={onMessage}
               className="flex-1 bg-goldenrod-gradient text-jet-black font-medium py-3 hover:shadow-golden-glow transition-all duration-300"
+              disabled
+              title="Only available with mutual interest"
             >
               <MessageCircle className="h-4 w-4 mr-2" />
               Message
             </Button>
           </div>
+          
+          <p className="text-xs text-gray-400 text-center mt-2">
+            Messaging becomes available when there's mutual interest
+          </p>
         </div>
       </div>
     </div>

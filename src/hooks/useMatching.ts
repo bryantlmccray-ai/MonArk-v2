@@ -10,12 +10,12 @@ export const useMatching = () => {
 
   const likeUser = async (likedUserId: string) => {
     if (!user) {
-      toast.error('Please sign in to connect with profiles');
+      toast.error('Please sign in to show interest');
       return false;
     }
 
     if (user.id === likedUserId) {
-      toast.error('You cannot connect with yourself');
+      toast.error('You cannot show interest in yourself');
       return false;
     }
 
@@ -31,16 +31,16 @@ export const useMatching = () => {
 
       if (checkError && checkError.code !== 'PGRST116') {
         console.error('Error checking existing like:', checkError);
-        toast.error('Failed to connect');
+        toast.error('Failed to show interest');
         return false;
       }
 
       if (existingLike) {
-        toast.info('You already showed interest in this profile');
+        toast.info('You already showed interest in this person');
         return false;
       }
 
-      // Create the like/interest
+      // Create the interest/like
       const { error: insertError } = await supabase
         .from('matches')
         .insert({
@@ -54,7 +54,7 @@ export const useMatching = () => {
         return false;
       }
 
-      // Check if it creates a mutual connection (the trigger will handle conversation creation)
+      // Check if there's mutual interest
       const { data: mutualCheck, error: mutualError } = await supabase
         .from('matches')
         .select('is_mutual')
@@ -63,9 +63,9 @@ export const useMatching = () => {
         .single();
 
       if (mutualCheck?.is_mutual) {
-        toast.success("You can now start a conversation! 💬");
+        toast.success("There's mutual interest! You can now choose to start a conversation. 💬");
       } else {
-        toast.success('Interest shown! They\'ll be notified you\'d like to connect.');
+        toast.success('Interest shown! They\'ll be notified and can choose to connect with you.');
       }
 
       return true;
@@ -85,7 +85,7 @@ export const useMatching = () => {
     }
 
     try {
-      // Check if there's a mutual connection
+      // Check if there's mutual interest
       const { data: match, error: matchError } = await supabase
         .from('matches')
         .select('is_mutual')
@@ -94,7 +94,7 @@ export const useMatching = () => {
         .single();
 
       if (matchError || !match) {
-        toast.error('You need a mutual connection to start a conversation');
+        toast.error('You need mutual interest to start a conversation');
         return null;
       }
 
@@ -115,7 +115,7 @@ export const useMatching = () => {
       }
 
       if (!existingConvo) {
-        // Create conversation if it doesn't exist
+        // Create conversation when user chooses to
         const { error: createError } = await supabase
           .from('conversation_tracker')
           .insert({
@@ -131,7 +131,7 @@ export const useMatching = () => {
         }
       }
 
-      toast.success('Conversation started!');
+      toast.success('Conversation started! You can now chat.');
       return conversationId;
     } catch (error) {
       console.error('Error in startConversation:', error);

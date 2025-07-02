@@ -246,7 +246,7 @@ export const DiscoveryMap: React.FC = () => {
     }
   }, [rifProfile, filteredProfiles, showInsight]);
 
-  const hasIdentityPreferences = profile?.preference_to_see?.length > 0;
+  const hasIdentityPreferences = profile?.preference_to_see?.length && profile.preference_to_see.length > 0;
 
   if (loading) {
     return (
