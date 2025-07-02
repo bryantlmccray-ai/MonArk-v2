@@ -11,23 +11,37 @@ import { useDiscoveryProfiles, DiscoveryProfile } from '@/hooks/useDiscoveryProf
 import { useMatching } from '@/hooks/useMatching';
 import { MapPin } from 'lucide-react';
 
-// Prototype profiles for testing
-const prototypeProfiles: DiscoveryProfile[] = [
+// Prototype profiles for testing - structured to match database schema
+const prototypeProfiles: (DiscoveryProfile & { profiles?: { name: string } })[] = [
   {
     id: 'proto-1',
     user_id: 'prototype-user-1',
-    name: 'Alex Chen',
-    age: 28,
     bio: 'Software engineer who loves hiking and photography. Looking for genuine connections and meaningful conversations.',
+    age: 28,
+    location: null,
     interests: ['Photography', 'Hiking', 'Technology', 'Coffee'],
     photos: ['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face'],
-    distance: 2.5,
-    gender_identity: 'Man',
-    preference_to_see: ['Women'],
+    date_preferences: {},
     is_profile_complete: true,
+    location_data: null,
+    location_consent: false,
+    show_location_on_profile: true,
+    gender_identity: 'Man',
+    gender_identity_custom: null,
+    sexual_orientation: null,
+    sexual_orientation_custom: null,
+    preference_to_see: ['Women'],
+    preference_to_be_seen_by: [],
+    discovery_privacy_mode: 'open',
+    identity_visibility: true,
+    last_preference_update: new Date().toISOString(),
+    date_of_birth: null,
     age_verified: true,
+    age_verification_timestamp: new Date().toISOString(),
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
+    distance: 2.5,
+    profiles: { name: 'Alex Chen' },
     rifProfile: {
       intent_clarity: 8,
       pacing_preferences: 6,
@@ -43,18 +57,32 @@ const prototypeProfiles: DiscoveryProfile[] = [
   {
     id: 'proto-2',
     user_id: 'prototype-user-2',
-    name: 'Maya Rodriguez',
-    age: 26,
     bio: 'Artist and yoga instructor. I believe in taking things slow and building authentic connections.',
+    age: 26,
+    location: null,
     interests: ['Art', 'Yoga', 'Meditation', 'Travel'],
     photos: ['https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face'],
-    distance: 4.1,
-    gender_identity: 'Woman',
-    preference_to_see: ['Men', 'Nonbinary people'],
+    date_preferences: {},
     is_profile_complete: true,
+    location_data: null,
+    location_consent: false,
+    show_location_on_profile: true,
+    gender_identity: 'Woman',
+    gender_identity_custom: null,
+    sexual_orientation: null,
+    sexual_orientation_custom: null,
+    preference_to_see: ['Men', 'Nonbinary people'],
+    preference_to_be_seen_by: [],
+    discovery_privacy_mode: 'open',
+    identity_visibility: true,
+    last_preference_update: new Date().toISOString(),
+    date_of_birth: null,
     age_verified: true,
+    age_verification_timestamp: new Date().toISOString(),
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
+    distance: 4.1,
+    profiles: { name: 'Maya Rodriguez' },
     rifProfile: {
       intent_clarity: 7,
       pacing_preferences: 4,
@@ -70,18 +98,32 @@ const prototypeProfiles: DiscoveryProfile[] = [
   {
     id: 'proto-3',
     user_id: 'prototype-user-3',
-    name: 'Jordan Kim',
-    age: 30,
     bio: 'Product designer with a passion for sustainable living. Values open communication and emotional intelligence.',
+    age: 30,
+    location: null,
     interests: ['Design', 'Sustainability', 'Cooking', 'Books'],
     photos: ['https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face'],
-    distance: 1.8,
-    gender_identity: 'Nonbinary',
-    preference_to_see: ['Everyone open to connection'],
+    date_preferences: {},
     is_profile_complete: true,
+    location_data: null,
+    location_consent: false,
+    show_location_on_profile: true,
+    gender_identity: 'Nonbinary',
+    gender_identity_custom: null,
+    sexual_orientation: null,
+    sexual_orientation_custom: null,
+    preference_to_see: ['Everyone open to connection'],
+    preference_to_be_seen_by: [],
+    discovery_privacy_mode: 'open',
+    identity_visibility: true,
+    last_preference_update: new Date().toISOString(),
+    date_of_birth: null,
     age_verified: true,
+    age_verification_timestamp: new Date().toISOString(),
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
+    distance: 1.8,
+    profiles: { name: 'Jordan Kim' },
     rifProfile: {
       intent_clarity: 9,
       pacing_preferences: 7,
@@ -97,18 +139,32 @@ const prototypeProfiles: DiscoveryProfile[] = [
   {
     id: 'proto-4',
     user_id: 'prototype-user-4',
-    name: 'Sam Thompson',
-    age: 32,
     bio: 'Teacher and weekend musician. Looking for someone who appreciates deep conversations and quiet moments.',
+    age: 32,
+    location: null,
     interests: ['Music', 'Education', 'Reading', 'Nature'],
     photos: ['https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face'],
-    distance: 6.2,
-    gender_identity: 'Man',
-    preference_to_see: ['Women', 'Nonbinary people'],
+    date_preferences: {},
     is_profile_complete: true,
+    location_data: null,
+    location_consent: false,
+    show_location_on_profile: true,
+    gender_identity: 'Man',
+    gender_identity_custom: null,
+    sexual_orientation: null,
+    sexual_orientation_custom: null,
+    preference_to_see: ['Women', 'Nonbinary people'],
+    preference_to_be_seen_by: [],
+    discovery_privacy_mode: 'open',
+    identity_visibility: true,
+    last_preference_update: new Date().toISOString(),
+    date_of_birth: null,
     age_verified: true,
+    age_verification_timestamp: new Date().toISOString(),
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
+    distance: 6.2,
+    profiles: { name: 'Sam Thompson' },
     rifProfile: {
       intent_clarity: 8,
       pacing_preferences: 5,
@@ -319,7 +375,7 @@ export const DiscoveryMap: React.FC = () => {
     const conversationId = await startConversation(selectedProfile.user_id);
     if (conversationId) {
       // Get profile name
-      const profileName = selectedProfile.name || 'User';
+      const profileName = (selectedProfile as any).profiles?.name || 'User';
       const profileImage = selectedProfile.photos?.[0];
       
       setChatData({
@@ -455,7 +511,7 @@ export const DiscoveryMap: React.FC = () => {
           <RIFProfileCard
             userProfile={profile.rifProfile}
             currentUserProfile={rifProfile || undefined}
-            name={profile.name || 'User'}
+            name={(profile as any).profiles?.name || 'User'}
             age={profile.age || 0}
             image={profile.photos?.[0] || ''}
             onClick={() => handleProfileClick(profile)}
@@ -502,13 +558,13 @@ export const DiscoveryMap: React.FC = () => {
       {selectedProfile && (
         <ProfileSelectionOverlay
           profile={{
-            id: selectedProfile.id || 0,
-            name: selectedProfile.name || 'User',
+            id: parseInt(selectedProfile.id) || 0,
+            name: (selectedProfile as any).profiles?.name || 'User',
             age: selectedProfile.age || 0,
             image: selectedProfile.photos?.[0] || '',
             bio: selectedProfile.bio || '',
             interests: selectedProfile.interests || [],
-            distance: hasLocation ? calculateDistance(selectedProfile) : (typeof selectedProfile.distance === 'number' ? selectedProfile.distance : 0),
+            distance: hasLocation ? calculateDistance(selectedProfile) : (selectedProfile.distance || 0),
             rifProfile: selectedProfile.rifProfile
           }}
           currentUserProfile={rifProfile}
