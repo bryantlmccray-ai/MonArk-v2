@@ -20,8 +20,8 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'sans': ['Inter', 'system-ui', 'sans-serif'],
-				'primary': ['Inter', 'system-ui', 'sans-serif'],
+				'sans': ['Playfair Display', 'Georgia', 'Times New Roman', 'serif'],
+				'primary': ['Playfair Display', 'Georgia', 'Times New Roman', 'serif'],
 				'reflection': ['Georgia', 'Times New Roman', 'serif'],
 				'playfair': ['Playfair Display', 'serif'],
 				'display': ['Playfair Display', 'serif'],

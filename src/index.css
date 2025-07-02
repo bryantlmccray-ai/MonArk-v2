@@ -66,16 +66,16 @@
   }
 
   body {
-    @apply bg-gray-900 text-gray-100 font-sans;
-    font-family: 'Inter', system-ui, sans-serif;
+    @apply bg-gray-900 text-gray-100;
+    font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
     font-size: 16px;
     line-height: 1.6;
     letter-spacing: -0.01em;
   }
 
-  /* Typography System */
+  /* Typography System - Updated to use Playfair Display as primary */
   .font-primary {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
   }
 
   .font-reflection {
