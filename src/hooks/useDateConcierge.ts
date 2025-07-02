@@ -114,7 +114,7 @@ export const useDateConcierge = () => {
     }
   };
 
-  // Generate AI date proposal
+  // Generate AI date proposal using real OpenAI integration
   const generateDateProposal = async (
     matchUserId: string,
     conversationId: string,
@@ -125,39 +125,40 @@ export const useDateConcierge = () => {
     if (!user) return null;
 
     try {
-      // Mock AI generation for now - in production, this would call an AI service
-      const activities = [
-        'Coffee and art gallery walk',
-        'Cooking class together',
-        'Sunset picnic in the park',
-        'Wine tasting and conversation',
-        'Museum visit and lunch',
-        'Hiking and scenic views',
-        'Farmers market and brunch',
-        'Live music and tapas'
-      ];
+      // Get additional context for AI
+      const { data: userProfile } = await supabase
+        .from('user_profiles')
+        .select('bio, location')
+        .eq('user_id', user.id)
+        .single();
 
-      const vibes = ['Relaxed', 'Creative', 'Adventurous', 'Intimate', 'Cultural'];
-      const locationTypes = ['Indoor', 'Outdoor', 'Mixed'];
+      const { data: matchProfile } = await supabase
+        .from('user_profiles')
+        .select('bio')
+        .eq('user_id', matchUserId)
+        .single();
 
-      const activity = activities[Math.floor(Math.random() * activities.length)];
-      const vibe = vibes[Math.floor(Math.random() * vibes.length)];
-      const locationType = locationTypes[Math.floor(Math.random() * locationTypes.length)];
+      // Call AI date concierge edge function
+      const { data: aiResponse, error: aiError } = await supabase.functions.invoke('ai-date-concierge', {
+        body: {
+          matchUserId,
+          conversationId,
+          userInterests,
+          matchInterests,
+          recentMessages,
+          userLocation: userProfile?.location,
+          userProfile,
+          matchProfile
+        }
+      });
 
-      const commonInterests = userInterests.filter(interest => 
-        matchInterests.includes(interest)
-      );
+      if (aiError) {
+        console.error('AI date concierge error:', aiError);
+        throw new Error('Failed to generate AI proposal');
+      }
 
-      const rationale = commonInterests.length > 0 
-        ? `Based on your shared interests in ${commonInterests.slice(0, 2).join(' and ')}, this activity combines both of your passions while creating space for meaningful conversation.`
-        : 'This activity provides a perfect balance of engagement and conversation, allowing you both to discover new shared interests.';
-
-      const proposalData = {
-        user_interests: userInterests,
-        match_interests: matchInterests,
-        common_interests: commonInterests,
-        generation_context: recentMessages ? 'chat_analysis' : 'profile_based'
-      };
+      // Use AI response or fallback if there was an error
+      const proposalData = aiError ? aiResponse.fallback : aiResponse;
 
       const { data, error } = await supabase
         .from('date_proposals')
@@ -165,12 +166,12 @@ export const useDateConcierge = () => {
           creator_user_id: user.id,
           recipient_user_id: matchUserId,
           conversation_id: conversationId,
-          title: `${vibe} ${activity}`,
-          activity: activity,
-          location_type: locationType,
-          vibe: vibe,
-          time_suggestion: 'This weekend',
-          rationale: rationale,
+          title: proposalData.title,
+          activity: proposalData.activity,
+          location_type: proposalData.location_type,
+          vibe: proposalData.vibe,
+          time_suggestion: proposalData.time_suggestion,
+          rationale: proposalData.rationale,
           proposal_data: proposalData
         })
         .select()
