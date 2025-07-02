@@ -5,6 +5,7 @@ import { InsightsModule } from '../rhythm/InsightsModule';
 import { ReflectionPrompt } from '../rhythm/ReflectionPrompt';
 import { JournalEngagementFeatures } from '../journal/JournalEngagementFeatures';
 import { JournalInsightsDashboard } from '../journal/JournalInsightsDashboard';
+import { JournalEntryModal } from '../journal/JournalEntryModal';
 import { useRhythm } from '@/hooks/useRhythm';
 import { useJournalEngagement } from '@/hooks/useJournalEngagement';
 
@@ -15,6 +16,7 @@ interface DatesJournalProps {
 export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) => {
   const [activeTab, setActiveTab] = useState('journal');
   const [showInsightsDashboard, setShowInsightsDashboard] = useState(false);
+  const [showJournalEntryModal, setShowJournalEntryModal] = useState(false);
   const { rifState, insights, reflections, currentPrompt, loading, saveReflection } = useRhythm();
   const {
     journalEntries,
@@ -24,7 +26,8 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
     achievements,
     insights: journalInsights,
     loading: journalLoading,
-    setReminder
+    setReminder,
+    refetchEntries
   } = useJournalEngagement();
 
   const tabs = [
@@ -111,7 +114,15 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
 
         {/* Journal Entries */}
         <div className="space-y-4">
-          <h3 className="text-white font-medium text-lg">Recent Entries</h3>
+          <div className="flex justify-between items-center">
+            <h3 className="text-white font-medium text-lg">Recent Entries</h3>
+            <button
+              onClick={() => setShowJournalEntryModal(true)}
+              className="px-4 py-2 bg-goldenrod text-jet-black font-semibold rounded-lg hover:bg-goldenrod/90 transition-colors"
+            >
+              + New Entry
+            </button>
+          </div>
           {journalLoading ? (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
@@ -250,6 +261,16 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
         </div>
 
         {renderContent()}
+        
+        {/* Journal Entry Modal */}
+        <JournalEntryModal
+          isOpen={showJournalEntryModal}
+          onClose={() => setShowJournalEntryModal(false)}
+          onSaved={() => {
+            refetchEntries();
+            setShowJournalEntryModal(false);
+          }}
+        />
       </div>
     </div>
   );
