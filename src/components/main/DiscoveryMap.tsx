@@ -1,5 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
+import { Heart, MessageCircle, X, Clock, Shield, Target, MapPin, Star, Search, SlidersHorizontal, Navigation } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
 import { RIFProfileCard } from './RIFProfileCard';
 import { RIFInsightOverlay } from '../rif/RIFInsightOverlay';
 import { DiscoveryFilters, DiscoveryFilters as FilterType } from './DiscoveryFilters';
@@ -9,7 +14,6 @@ import { useRIF } from '@/hooks/useRIF';
 import { useProfile } from '@/hooks/useProfile';
 import { useDiscoveryProfiles, DiscoveryProfile } from '@/hooks/useDiscoveryProfiles';
 import { useMatching } from '@/hooks/useMatching';
-import { MapPin } from 'lucide-react';
 
 // Prototype profiles for testing - structured to match database schema
 const prototypeProfiles: (DiscoveryProfile & { profiles?: { name: string } })[] = [
@@ -186,6 +190,10 @@ export const DiscoveryMap: React.FC = () => {
   const [selectedProfile, setSelectedProfile] = useState<DiscoveryProfile | null>(null);
   const [showLocationPrompt, setShowLocationPrompt] = useState(false);
   const [showChat, setShowChat] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+  const [mapCenter, setMapCenter] = useState({ x: 50, y: 50 });
+  const [zoomLevel, setZoomLevel] = useState(1);
   const [chatData, setChatData] = useState<{
     conversationId: string;
     matchUserId: string;
@@ -239,6 +247,25 @@ export const DiscoveryMap: React.FC = () => {
     { id: 8, name: 'LAKEVIEW', x: 48, y: 16, gridX: 3, gridY: 1 },
   ];
 
+  // Search locations for navigation
+  const searchLocations = [
+    ...locations,
+    { id: 9, name: 'NORTH SIDE', x: 40, y: 20, gridX: 2.5, gridY: 1 },
+    { id: 10, name: 'SOUTH SIDE', x: 40, y: 70, gridX: 2.5, gridY: 4 },
+    { id: 11, name: 'WEST SIDE', x: 20, y: 40, gridX: 1, gridY: 2.5 },
+    { id: 12, name: 'EAST SIDE', x: 70, y: 40, gridX: 4, gridY: 2.5 }
+  ];
+
+  // Handle location search
+  const handleLocationSearch = (locationName: string) => {
+    const location = searchLocations.find(loc => 
+      loc.name.toLowerCase().includes(locationName.toLowerCase())
+    );
+    if (location) {
+      setMapCenter({ x: location.x, y: location.y });
+      setSearchQuery('');
+    }
+  };
   // Identity-based filtering function
   const isIdentityCompatible = (targetProfile: DiscoveryProfile) => {
     if (!profile?.preference_to_see || !profile?.gender_identity) return true;
@@ -299,11 +326,25 @@ export const DiscoveryMap: React.FC = () => {
     return Math.round(distance * 10) / 10;
   };
 
-  // Filter profiles based on current filters, user location, and identity preferences
+  // Enhanced filtering with search functionality
   const getFilteredProfiles = () => {
     if (loading) return [];
     
     return allProfiles.filter(targetProfile => {
+      // Exclude user's own profile from filtering (but keep it for display)
+      if (targetProfile.user_id === profile?.user_id) return true;
+      
+      // Search query filter
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesName = (targetProfile as any).profiles?.name?.toLowerCase().includes(query);
+        const matchesBio = targetProfile.bio?.toLowerCase().includes(query);
+        const matchesInterests = targetProfile.interests?.some(interest => 
+          interest.toLowerCase().includes(query)
+        );
+        if (!matchesName && !matchesBio && !matchesInterests) return false;
+      }
+      
       // Identity compatibility check - this is the core filtering logic
       if (!isIdentityCompatible(targetProfile)) return false;
 
@@ -485,9 +526,92 @@ export const DiscoveryMap: React.FC = () => {
         />
       </div>
       
+      {/* Search and Navigation Controls */}
+      <div className="absolute top-6 left-6 right-6 z-20">
+        <div className="bg-charcoal-gray/95 backdrop-blur-xl rounded-xl p-4 border border-goldenrod/30 shadow-2xl">
+          {/* Search Bar */}
+          <div className="flex items-center space-x-3 mb-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="Search people, interests, or locations..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 bg-jet-black/50 border-gray-600 text-white placeholder-gray-400 focus:border-goldenrod"
+              />
+            </div>
+            <Button
+              onClick={() => setShowFilters(!showFilters)}
+              variant="outline"
+              size="sm"
+              className="border-gray-600 text-gray-300 hover:text-white hover:border-goldenrod"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+            </Button>
+          </div>
+
+          {/* Quick Location Navigation */}
+          <div className="flex items-center space-x-2">
+            <Navigation className="h-4 w-4 text-goldenrod" />
+            <span className="text-xs text-gray-400 mr-2">Quick nav:</span>
+            {['Downtown', 'Wicker Park', 'Lincoln Park', 'Lakeview'].map((area) => (
+              <button
+                key={area}
+                onClick={() => handleLocationSearch(area)}
+                className="px-2 py-1 text-xs bg-gray-700 hover:bg-goldenrod hover:text-jet-black rounded-md text-gray-300 transition-colors"
+              >
+                {area}
+              </button>
+            ))}
+          </div>
+
+          {/* Filters Panel */}
+          {showFilters && (
+            <div className="mt-4 pt-4 border-t border-gray-700">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs text-gray-400 mb-2 block">Max Distance</label>
+                  <Input
+                    type="number"
+                    placeholder="10 miles"
+                    value={filters.maxDistance}
+                    onChange={(e) => setFilters(prev => ({
+                      ...prev,
+                      maxDistance: parseInt(e.target.value) || 10
+                    }))}
+                    className="bg-jet-black/50 border-gray-600 text-white text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-gray-400 mb-2 block">View Controls</label>
+                  <div className="flex space-x-2">
+                    <Button
+                      onClick={() => setZoomLevel(prev => Math.min(prev + 0.2, 2))}
+                      variant="outline"
+                      size="sm"
+                      className="border-gray-600 text-gray-300 text-xs"
+                    >
+                      Zoom +
+                    </Button>
+                    <Button
+                      onClick={() => setZoomLevel(prev => Math.max(prev - 0.2, 0.5))}
+                      variant="outline"
+                      size="sm"
+                      className="border-gray-600 text-gray-300 text-xs"
+                    >
+                      Zoom -
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Location Prompt for new users */}
       {showLocationPrompt && !hasLocation && (
-        <div className="absolute top-20 left-6 right-6 z-20">
+        <div className="absolute top-24 left-6 right-6 z-20">
           <div className="bg-charcoal-gray/95 backdrop-blur-xl rounded-xl p-4 border border-goldenrod/30 shadow-2xl">
             <div className="flex items-start space-x-3">
               <MapPin className="h-5 w-5 text-goldenrod mt-0.5" />
