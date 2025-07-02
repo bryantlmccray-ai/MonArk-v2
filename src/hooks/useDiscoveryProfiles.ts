@@ -27,7 +27,7 @@ export const useDiscoveryProfiles = () => {
         .from('user_profiles')
         .select(`
           *,
-          profiles:user_id (
+          profiles (
             name,
             email
           )
