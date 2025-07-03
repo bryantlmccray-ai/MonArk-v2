@@ -29,9 +29,9 @@ export const MainApp: React.FC = () => {
     }
   };
 
-  const handleArkNavigation = () => {
+  const handleJournalNavigation = () => {
     setActiveTab('dates');
-    setDatesJournalTab('ark');
+    setDatesJournalTab('journal');
   };
 
   const renderActiveScreen = () => {
@@ -92,7 +92,7 @@ export const MainApp: React.FC = () => {
         </header>
 
         {/* Sidebar Navigation */}
-        <SidebarNavigation activeTab={activeTab} onTabChange={handleTabChange} onArkNavigation={handleArkNavigation} />
+        <SidebarNavigation activeTab={activeTab} onTabChange={handleTabChange} onArkNavigation={handleJournalNavigation} />
 
         {/* Main Content */}
         <main className="flex-1 pt-8">
