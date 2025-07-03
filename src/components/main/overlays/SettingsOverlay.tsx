@@ -3,6 +3,7 @@ import { X, User, Bell, Shield, Heart, LogOut, Trash2, AlertTriangle } from 'luc
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { ProfileCreation } from '@/components/profile/ProfileCreation';
 
 interface SettingsOverlayProps {
   onClose: () => void;
@@ -12,6 +13,7 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showEditProfile, setShowEditProfile] = useState(false);
   const { signOut, user } = useAuth();
   const { toast } = useToast();
 
@@ -119,11 +121,29 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
   };
 
   const settingsItems = [
-    { icon: User, label: 'Edit Profile', action: () => {} },
+    { icon: User, label: 'Edit Profile', action: () => setShowEditProfile(true) },
     { icon: Bell, label: 'Notifications', action: () => {} },
     { icon: Shield, label: 'Privacy & Data', action: () => window.location.href = '/privacy' },
     { icon: Heart, label: 'Matching Preferences', action: () => {} },
   ];
+
+  // Handle edit profile completion
+  const handleEditProfileComplete = () => {
+    setShowEditProfile(false);
+    toast({
+      title: "Profile updated",
+      description: "Your profile has been successfully updated.",
+    });
+  };
+
+  // Show edit profile modal
+  if (showEditProfile) {
+    return (
+      <div className="fixed inset-0 z-50">
+        <ProfileCreation onComplete={handleEditProfileComplete} />
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

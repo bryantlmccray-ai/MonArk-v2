@@ -25,13 +25,7 @@ export const useDiscoveryProfiles = () => {
       // Fetch user profiles excluding current user
       const { data: userProfiles, error: profilesError } = await supabase
         .from('user_profiles')
-        .select(`
-          *,
-          profiles (
-            name,
-            email
-          )
-        `)
+        .select('*')
         .neq('user_id', user.id)
         .eq('is_profile_complete', true)
         .eq('age_verified', true);
