@@ -84,7 +84,11 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               </Button>
               
               <Button
-                onClick={() => setShowAuthForm(true)}
+                onClick={() => {
+                  if (onExitToApp) {
+                    onExitToApp();
+                  }
+                }}
                 variant="outline"
                 className="text-white border-white/30 hover:bg-white/10 px-8 py-4 text-lg"
               >
