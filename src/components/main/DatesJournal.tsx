@@ -34,7 +34,7 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, init
 
   const tabs = [
     { id: 'journal' as const, label: 'My Journal' },
-    { id: 'ark' as const, label: 'Your Ark' },
+    { id: 'ark' as const, label: 'Your RIF Ark' },
   ];
 
 
