@@ -268,7 +268,7 @@ export const useDateConcierge = () => {
     }
   };
 
-  // Check if conversation is ready for AI concierge suggestion
+  // Check if conversation is ready for AI concierge suggestion with RIF integration
   const checkConversationReadiness = async (
     conversationId: string,
     matchUserId: string
@@ -291,6 +291,22 @@ export const useDateConcierge = () => {
       
       const readinessAnalysis = analyzeReadiness(conversationId, messagesTyped);
       
+      // Get user's RIF profile for personalized timing
+      const { data: userRifProfile } = await supabase
+        .from('rif_profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('is_active', true)
+        .single();
+
+      // Get match's RIF profile for compatibility
+      const { data: matchRifProfile } = await supabase
+        .from('rif_profiles')
+        .select('*')
+        .eq('user_id', matchUserId)
+        .eq('is_active', true)
+        .single();
+
       // Additional checks for AI concierge triggering
       const conversation = conversations.find(c => c.conversation_id === conversationId);
       
@@ -303,30 +319,84 @@ export const useDateConcierge = () => {
         };
       }
 
-      // Require minimum message count and engagement
+      // RIF-based timing considerations
+      const rifTriggers: string[] = [];
+      let rifConfidenceModifier = 1.0;
+      let minMessageThreshold = 8;
+      let minEngagementThreshold = 0.6;
+
+      if (userRifProfile) {
+        // Adjust timing based on pacing preferences (1-10 scale)
+        if (userRifProfile.pacing_preferences <= 3) {
+          // Slow pacers need more time and messages
+          minMessageThreshold = 15;
+          minEngagementThreshold = 0.7;
+          rifTriggers.push('User prefers slow pacing - higher thresholds applied');
+        } else if (userRifProfile.pacing_preferences >= 8) {
+          // Fast pacers can handle earlier suggestions
+          minMessageThreshold = 6;
+          minEngagementThreshold = 0.5;
+          rifTriggers.push('User prefers fast pacing - lower thresholds applied');
+        }
+
+        // Consider emotional readiness (1-10 scale)
+        if (userRifProfile.emotional_readiness < 5) {
+          rifConfidenceModifier *= 0.8;
+          rifTriggers.push('Lower emotional readiness - reduced confidence');
+        } else if (userRifProfile.emotional_readiness >= 8) {
+          rifConfidenceModifier *= 1.2;
+          rifTriggers.push('High emotional readiness - increased confidence');
+        }
+
+        // Factor in boundary respect and intent clarity
+        if (userRifProfile.boundary_respect >= 7 && userRifProfile.intent_clarity >= 7) {
+          rifConfidenceModifier *= 1.1;
+          rifTriggers.push('High boundary respect and intent clarity');
+        } else if (userRifProfile.boundary_respect < 5) {
+          rifConfidenceModifier *= 0.9;
+          rifTriggers.push('Lower boundary comfort - proceeding cautiously');
+        }
+      }
+
+      // Consider compatibility if both RIF profiles exist
+      if (userRifProfile && matchRifProfile) {
+        const pacingDifference = Math.abs(userRifProfile.pacing_preferences - matchRifProfile.pacing_preferences);
+        if (pacingDifference <= 2) {
+          rifConfidenceModifier *= 1.15;
+          rifTriggers.push('Compatible pacing preferences detected');
+        } else if (pacingDifference >= 5) {
+          rifConfidenceModifier *= 0.85;
+          rifTriggers.push('Significant pacing differences - adjusted timing');
+        }
+      }
+
       const messageCount = messagesTyped.length;
       const engagementScore = conversation?.mutual_engagement_score || 0;
       
-      if (messageCount < 8) {
+      if (messageCount < minMessageThreshold) {
         return { 
           shouldTrigger: false, 
           confidence: 0, 
-          triggers: ['Insufficient conversation history (need at least 8 messages)'] 
+          triggers: [`Insufficient conversation history (need at least ${minMessageThreshold} messages based on RIF profile)`] 
         };
       }
 
-      if (engagementScore < 0.6) {
+      if (engagementScore < minEngagementThreshold) {
         return { 
           shouldTrigger: false, 
           confidence: 0, 
-          triggers: ['Low engagement score - conversation not ready'] 
+          triggers: [`Engagement score ${engagementScore.toFixed(2)} below RIF-adjusted threshold of ${minEngagementThreshold}`] 
         };
       }
+
+      // Apply RIF confidence modifier
+      const adjustedConfidence = readinessAnalysis.confidence * rifConfidenceModifier;
+      const confidenceThreshold = userRifProfile?.intent_clarity >= 8 ? 0.65 : 0.7;
 
       return {
-        shouldTrigger: readinessAnalysis.isReady && readinessAnalysis.confidence >= 0.7,
-        confidence: readinessAnalysis.confidence,
-        triggers: readinessAnalysis.triggers
+        shouldTrigger: readinessAnalysis.isReady && adjustedConfidence >= confidenceThreshold,
+        confidence: adjustedConfidence,
+        triggers: [...readinessAnalysis.triggers, ...rifTriggers]
       };
     } catch (error) {
       console.error('Error checking conversation readiness:', error);
