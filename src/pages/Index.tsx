@@ -18,6 +18,18 @@ const Index = () => {
   const [showDemo, setShowDemo] = React.useState(false);
   const [showDemoFromApp, setShowDemoFromApp] = React.useState(false);
 
+  // Add escape key listener to exit demo
+  React.useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowDemo(false);
+        setShowDemoFromApp(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
+
   // Demo mode from normal app - show demo directly
   if (showDemoFromApp) {
     return (
