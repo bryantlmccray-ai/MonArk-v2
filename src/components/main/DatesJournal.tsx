@@ -15,6 +15,7 @@ interface DatesJournalProps {
 }
 
 export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) => {
+  const [activeTab, setActiveTab] = useState('journal');
   const [showInsightsDashboard, setShowInsightsDashboard] = useState(false);
   const [showJournalEntryModal, setShowJournalEntryModal] = useState(false);
   const { rifState, insights, reflections, currentPrompt, loading, saveReflection } = useRhythm();
@@ -30,27 +31,19 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
     refetchEntries
   } = useJournalEngagement();
 
+  const tabs = [
+    { id: 'journal', label: 'My Journal' },
+    { id: 'ark', label: 'Your Ark' },
+  ];
 
-  const renderContent = () => {
+
+  const renderJournal = () => {
     if (showInsightsDashboard) {
       return (
         <JournalInsightsDashboard
           onBack={() => setShowInsightsDashboard(false)}
           journalEntries={journalEntries}
         />
-      );
-    }
-
-    if (loading) {
-      return (
-        <div className="space-y-6">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="bg-charcoal-gray rounded-xl p-6 border border-gray-800 animate-pulse">
-              <div className="h-6 bg-gray-700 rounded mb-4"></div>
-              <div className="h-4 bg-gray-700 rounded w-3/4"></div>
-            </div>
-          ))}
-        </div>
       );
     }
 
@@ -149,13 +142,32 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
             console.log('Updating weekly goal to:', newGoal);
           }}
         />
+      </div>
+    );
+  };
 
+  const renderArk = () => {
+    if (loading) {
+      return (
+        <div className="space-y-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-charcoal-gray rounded-xl p-6 border border-gray-800 animate-pulse">
+              <div className="h-6 bg-gray-700 rounded mb-4"></div>
+              <div className="h-4 bg-gray-700 rounded w-3/4"></div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-6">
         {/* Relational Compass */}
         <RelationalCompass rifState={rifState} />
         
         {/* Insights Module */}
         <InsightsModule insights={insights} />
-
+        
         {/* Reflection Prompt */}
         <ReflectionPrompt
           currentPrompt={currentPrompt}
@@ -166,6 +178,17 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
     );
   };
 
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'journal':
+        return renderJournal();
+      case 'ark':
+        return renderArk();
+      default:
+        return renderJournal();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 p-6">
       <div className="max-w-6xl mx-auto space-y-8">
@@ -174,6 +197,23 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
             Dates & Insights
           </h1>
           <p className="text-gray-400 text-lg font-light tracking-wide">Reflect, grow, and understand your dating journey</p>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex space-x-1 journal-premium-card p-1.5 backdrop-blur-lg">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 ${
+                activeTab === tab.id
+                  ? 'bg-gradient-to-r from-goldenrod to-amber-accent text-gray-900 shadow-lg shadow-goldenrod/25 font-semibold'
+                  : 'text-gray-400 hover:text-white hover:bg-gray-700/30'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
 
         {renderContent()}
