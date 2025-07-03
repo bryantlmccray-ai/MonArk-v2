@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { BioStep } from './BioStep';
 import { InterestsStep } from './InterestsStep';
 import { PhotosStep } from './PhotosStep';
+import { LifestyleStep } from './LifestyleStep';
 import { DatePaletteStep } from './DatePaletteStep';
 import { IdentityPreferencesStep } from './IdentityPreferencesStep';
 import { ProfileReviewStep } from './ProfileReviewStep';
@@ -21,6 +22,14 @@ export interface ProfileData {
   budget: string;
   timeOfDay: string[];
   activityType: string[];
+  // Lifestyle fields
+  occupation: string;
+  education_level: string;
+  relationship_goals: string[];
+  exercise_habits: string;
+  smoking_status: string;
+  drinking_status: string;
+  height_cm: number | null;
   identityPreferences?: {
     genderIdentity: string;
     genderIdentityCustom?: string;
@@ -46,6 +55,14 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
     budget: '$',
     timeOfDay: [],
     activityType: [],
+    // Initialize lifestyle fields
+    occupation: '',
+    education_level: '',
+    relationship_goals: [],
+    exercise_habits: '',
+    smoking_status: '',
+    drinking_status: '',
+    height_cm: null,
   });
 
   // Load existing profile data if available
@@ -60,6 +77,14 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
         budget: profile.date_preferences?.budget || '$',
         timeOfDay: profile.date_preferences?.timeOfDay || [],
         activityType: profile.date_preferences?.activityType || [],
+        // Load lifestyle fields (with type casting until types are regenerated)
+        occupation: (profile as any).occupation || '',
+        education_level: (profile as any).education_level || '',
+        relationship_goals: (profile as any).relationship_goals || [],
+        exercise_habits: (profile as any).exercise_habits || '',
+        smoking_status: (profile as any).smoking_status || '',
+        drinking_status: (profile as any).drinking_status || '',
+        height_cm: (profile as any).height_cm || null,
         identityPreferences: {
           genderIdentity: profile.gender_identity || '',
           genderIdentityCustom: profile.gender_identity_custom || '',
@@ -101,6 +126,14 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
           timeOfDay: profileData.timeOfDay,
           activityType: profileData.activityType,
         },
+        // Add lifestyle fields
+        occupation: profileData.occupation,
+        education_level: profileData.education_level,
+        relationship_goals: profileData.relationship_goals,
+        exercise_habits: profileData.exercise_habits,
+        smoking_status: profileData.smoking_status,
+        drinking_status: profileData.drinking_status,
+        height_cm: profileData.height_cm,
         is_profile_complete: true,
       };
 
@@ -161,10 +194,27 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
       case 2:
         return <PhotosStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
       case 3:
-        return <DatePaletteStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
+        return (
+          <LifestyleStep 
+            data={{
+              occupation: profileData.occupation,
+              education_level: profileData.education_level,
+              relationship_goals: profileData.relationship_goals,
+              exercise_habits: profileData.exercise_habits,
+              smoking_status: profileData.smoking_status,
+              drinking_status: profileData.drinking_status,
+              height_cm: profileData.height_cm,
+            }}
+            onUpdate={updateProfileData}
+            onNext={nextStep}
+            onBack={() => setCurrentStep(2)}
+          />
+        );
       case 4:
-        return <IdentityPreferencesStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
+        return <DatePaletteStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
       case 5:
+        return <IdentityPreferencesStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
+      case 6:
         return <ProfileReviewStep profileData={profileData} onEdit={goToStep} onComplete={handleComplete} />;
       default:
         return <BioStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;

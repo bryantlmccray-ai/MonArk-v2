@@ -636,8 +636,12 @@ export type Database = {
           date_of_birth: string | null
           date_preferences: Json | null
           discovery_privacy_mode: string | null
+          drinking_status: string | null
+          education_level: string | null
+          exercise_habits: string | null
           gender_identity: Database["public"]["Enums"]["gender_identity"] | null
           gender_identity_custom: string | null
+          height_cm: number | null
           id: string
           identity_visibility: boolean | null
           interests: string[] | null
@@ -646,14 +650,17 @@ export type Database = {
           location: string | null
           location_consent: boolean | null
           location_data: Json | null
+          occupation: string | null
           photos: string[] | null
           preference_to_be_seen_by: string[] | null
           preference_to_see: string[] | null
+          relationship_goals: string[] | null
           sexual_orientation:
             | Database["public"]["Enums"]["sexual_orientation"]
             | null
           sexual_orientation_custom: string | null
           show_location_on_profile: boolean | null
+          smoking_status: string | null
           updated_at: string
           user_id: string
         }
@@ -666,10 +673,14 @@ export type Database = {
           date_of_birth?: string | null
           date_preferences?: Json | null
           discovery_privacy_mode?: string | null
+          drinking_status?: string | null
+          education_level?: string | null
+          exercise_habits?: string | null
           gender_identity?:
             | Database["public"]["Enums"]["gender_identity"]
             | null
           gender_identity_custom?: string | null
+          height_cm?: number | null
           id?: string
           identity_visibility?: boolean | null
           interests?: string[] | null
@@ -678,14 +689,17 @@ export type Database = {
           location?: string | null
           location_consent?: boolean | null
           location_data?: Json | null
+          occupation?: string | null
           photos?: string[] | null
           preference_to_be_seen_by?: string[] | null
           preference_to_see?: string[] | null
+          relationship_goals?: string[] | null
           sexual_orientation?:
             | Database["public"]["Enums"]["sexual_orientation"]
             | null
           sexual_orientation_custom?: string | null
           show_location_on_profile?: boolean | null
+          smoking_status?: string | null
           updated_at?: string
           user_id: string
         }
@@ -698,10 +712,14 @@ export type Database = {
           date_of_birth?: string | null
           date_preferences?: Json | null
           discovery_privacy_mode?: string | null
+          drinking_status?: string | null
+          education_level?: string | null
+          exercise_habits?: string | null
           gender_identity?:
             | Database["public"]["Enums"]["gender_identity"]
             | null
           gender_identity_custom?: string | null
+          height_cm?: number | null
           id?: string
           identity_visibility?: boolean | null
           interests?: string[] | null
@@ -710,14 +728,17 @@ export type Database = {
           location?: string | null
           location_consent?: boolean | null
           location_data?: Json | null
+          occupation?: string | null
           photos?: string[] | null
           preference_to_be_seen_by?: string[] | null
           preference_to_see?: string[] | null
+          relationship_goals?: string[] | null
           sexual_orientation?:
             | Database["public"]["Enums"]["sexual_orientation"]
             | null
           sexual_orientation_custom?: string | null
           show_location_on_profile?: boolean | null
+          smoking_status?: string | null
           updated_at?: string
           user_id?: string
         }
