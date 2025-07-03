@@ -22,7 +22,10 @@ const Index = () => {
   if (showDemoFromApp) {
     return (
       <div className="fixed inset-0 bg-jet-black z-50">
-        <DemoMainApp onClose={() => setShowDemoFromApp(false)} />
+        <DemoMainApp onClose={() => {
+          console.log('Exit demo button clicked');
+          setShowDemoFromApp(false);
+        }} />
       </div>
     );
   }
