@@ -143,7 +143,7 @@ export const useDateConcierge = () => {
         .eq('user_id', matchUserId)
         .single();
 
-      // Call AI date concierge edge function
+      // Call AI date concierge edge function with enhanced context
       const { data: aiResponse, error: aiError } = await supabase.functions.invoke('ai-date-concierge', {
         body: {
           matchUserId,
@@ -153,7 +153,8 @@ export const useDateConcierge = () => {
           recentMessages,
           userLocation: userProfile?.location,
           userProfile,
-          matchProfile
+          matchProfile,
+          currentUserId: user.id // Added for journal analysis
         }
       });
 
