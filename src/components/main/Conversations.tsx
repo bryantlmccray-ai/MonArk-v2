@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Calendar, Plus, MessageCircle } from 'lucide-react';
+import { Sparkles, Calendar, Plus, MessageCircle, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RIFBehavioralNudge } from '../rif/RIFBehavioralNudge';
 import { RIFPostDateFeedback } from '../rif/RIFPostDateFeedback';
@@ -121,18 +121,7 @@ export const Conversations: React.FC = () => {
     return () => clearTimeout(timer);
   }, [rifSettings]);
 
-  // Show post-date feedback for conversations that had dates
-  useEffect(() => {
-    if (!rifSettings?.rif_enabled) return;
-
-    const dateConversation = conversations.find(c => c.hadDate);
-    if (dateConversation && Math.random() > 0.7) {
-      setTimeout(() => {
-        setSelectedConversation(dateConversation.name);
-        setShowPostDateFeedback(true);
-      }, 2000);
-    }
-  }, [rifSettings]);
+  // Removed automatic post-date feedback trigger - now manual via button
 
   const handleConversationClick = (conversation: any) => {
     // Open chat modal for direct messaging
@@ -288,6 +277,21 @@ export const Conversations: React.FC = () => {
                     <MessageCircle className="h-4 w-4 mr-1" />
                     Chat
                   </Button>
+                  
+                  {conversation.hadDate && rifSettings?.rif_enabled && (
+                    <Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedConversation(conversation.name);
+                        setShowPostDateFeedback(true);
+                      }}
+                      size="sm"
+                      className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 border border-purple-500/30"
+                      title="Post-Date Reflection"
+                    >
+                      <Heart className="h-4 w-4" />
+                    </Button>
+                  )}
                   
                   {conversation.isNewMatch && (
                     <Sparkles className="h-5 w-5 text-goldenrod" />
