@@ -21,7 +21,9 @@ const Index = () => {
   // Add escape key listener to exit demo
   React.useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
+      console.log('Key pressed:', e.key); // Debug log
       if (e.key === 'Escape') {
+        console.log('Exiting demo via Escape key'); // Debug log
         setShowDemo(false);
         setShowDemoFromApp(false);
       }
@@ -35,8 +37,9 @@ const Index = () => {
     return (
       <div className="fixed inset-0 bg-jet-black z-50">
         <DemoMainApp onClose={() => {
-          console.log('Exit demo button clicked');
+          console.log('Exit demo button clicked from app');
           setShowDemoFromApp(false);
+          setShowDemo(false);
         }} />
       </div>
     );
@@ -48,13 +51,21 @@ const Index = () => {
       <div className="min-h-screen bg-jet-black">
         <div className="fixed top-4 right-4 z-50">
           <button
-            onClick={() => setShowDemo(false)}
+            onClick={() => {
+              console.log('Exit demo button clicked from landing');
+              setShowDemo(false);
+              setShowDemoFromApp(false);
+            }}
             className="px-4 py-2 bg-charcoal-gray/80 text-white rounded-lg border border-goldenrod/30 hover:bg-charcoal-gray transition-colors"
           >
             Exit Demo
           </button>
         </div>
-        <EnhancedLandingPage onExitToApp={() => setShowDemo(false)} />
+        <EnhancedLandingPage onExitToApp={() => {
+          console.log('Exit to app from landing page');
+          setShowDemo(false);
+          setShowDemoFromApp(false);
+        }} />
       </div>
     );
   }
