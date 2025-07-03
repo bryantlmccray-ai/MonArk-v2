@@ -9,7 +9,7 @@ import { useProfile } from '@/hooks/useProfile';
 
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
-  const { profile, loading: profileLoading } = useProfile();
+  const { profile, loading: profileLoading, refetchProfile } = useProfile();
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = React.useState(false);
 
   // Show loading screen while checking auth state
@@ -33,7 +33,7 @@ const Index = () => {
 
   // If user has a profile but it's not complete, show profile creation
   if (profile && !profile.is_profile_complete) {
-    return <ProfileCreation onComplete={() => window.location.reload()} />;
+    return <ProfileCreation onComplete={() => refetchProfile()} />;
   }
 
   // Show onboarding if user hasn't completed it yet
@@ -42,7 +42,7 @@ const Index = () => {
   }
 
   // Show profile creation after onboarding
-  return <ProfileCreation onComplete={() => window.location.reload()} />;
+  return <ProfileCreation onComplete={() => refetchProfile()} />;
 };
 
 export default Index;
