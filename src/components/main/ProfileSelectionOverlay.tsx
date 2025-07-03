@@ -155,80 +155,107 @@ export const ProfileSelectionOverlay: React.FC<ProfileSelectionOverlayProps> = (
           )}
 
           {selectedTab === 'compatibility' && profile.rifProfile && currentUserProfile && (
-            <div className="space-y-4">
-              <div className="text-center mb-4">
-                <div className={`text-3xl font-bold ${getCompatibilityColor(compatibilityScore || 0)}`}>
+            <div className="space-y-6">
+              {/* Section 1: Overall Score */}
+              <div className="bg-gradient-to-br from-charcoal-gray/50 to-jet-black/50 rounded-xl p-6 border border-goldenrod/20 text-center">
+                <div className={`text-5xl font-bold mb-2 ${getCompatibilityColor(compatibilityScore || 0)}`}>
                   {compatibilityScore}%
                 </div>
-                <p className="text-gray-400 text-sm">Overall Compatibility</p>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Clock className="h-4 w-4 text-blue-400" />
-                    <span className="text-sm text-gray-300">Pacing</span>
-                  </div>
-                  <div className={`text-sm ${
-                    Math.abs(currentUserProfile.pacing_preferences - profile.rifProfile.pacing_preferences) <= 2
-                      ? 'text-green-400' : 'text-orange-400'
-                  }`}>
-                    {Math.abs(currentUserProfile.pacing_preferences - profile.rifProfile.pacing_preferences) <= 2
-                      ? 'Aligned' : 'Different'}
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Heart className="h-4 w-4 text-red-400" />
-                    <span className="text-sm text-gray-300">Emotional Readiness</span>
-                  </div>
-                  <div className={`text-sm ${
-                    Math.abs(currentUserProfile.emotional_readiness - profile.rifProfile.emotional_readiness) <= 2
-                      ? 'text-green-400' : 'text-orange-400'
-                  }`}>
-                    {Math.abs(currentUserProfile.emotional_readiness - profile.rifProfile.emotional_readiness) <= 2
-                      ? 'Compatible' : 'Variable'}
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Shield className="h-4 w-4 text-purple-400" />
-                    <span className="text-sm text-gray-300">Boundaries</span>
-                  </div>
-                  <div className={`text-sm ${
-                    Math.abs(currentUserProfile.boundary_respect - profile.rifProfile.boundary_respect) <= 2
-                      ? 'text-green-400' : 'text-orange-400'
-                  }`}>
-                    {Math.abs(currentUserProfile.boundary_respect - profile.rifProfile.boundary_respect) <= 2
-                      ? 'Respectful' : 'Different'}
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Target className="h-4 w-4 text-green-400" />
-                    <span className="text-sm text-gray-300">Intent Clarity</span>
-                  </div>
-                  <div className={`text-sm ${
-                    Math.abs(currentUserProfile.intent_clarity - profile.rifProfile.intent_clarity) <= 2
-                      ? 'text-green-400' : 'text-orange-400'
-                  }`}>
-                    {Math.abs(currentUserProfile.intent_clarity - profile.rifProfile.intent_clarity) <= 2
-                      ? 'Clear' : 'Varies'}
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gray-800/50 rounded-lg p-3 mt-4">
-                <p className="text-xs text-gray-400 leading-relaxed">
+                <p className="text-white text-sm font-medium mb-3">Overall Compatibility</p>
+                <p className="text-gray-300 text-xs leading-relaxed">
                   {compatibilityScore >= 80
-                    ? "High compatibility suggests you share similar relationship approaches and values."
+                    ? "High compatibility suggests you share similar relationship approaches and values for meaningful connections."
                     : compatibilityScore >= 60
-                    ? "Good compatibility with some areas to explore together."
-                    : "Different approaches that could complement each other with open communication."}
+                    ? "Good compatibility with some areas to explore together through open communication."
+                    : "Different approaches that could complement each other with understanding and respect."}
                 </p>
+              </div>
+
+              {/* Section 2: RIF Emotional Compatibility */}
+              <div className="space-y-1">
+                <h4 className="text-white font-medium text-sm mb-3">Emotional Compatibility</h4>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center space-x-3">
+                      <Clock className="h-4 w-4 text-blue-400" />
+                      <span className="text-sm text-gray-300">Pacing Style</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      {Math.abs(currentUserProfile.pacing_preferences - profile.rifProfile.pacing_preferences) <= 2 ? (
+                        <>
+                          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                          <span className="text-sm text-green-400 font-medium">Aligned</span>
+                        </>
+                      ) : (
+                        <>
+                          <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                          <span className="text-sm text-orange-400 font-medium">Different</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center space-x-3">
+                      <Heart className="h-4 w-4 text-red-400" />
+                      <span className="text-sm text-gray-300">Emotional Readiness</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      {Math.abs(currentUserProfile.emotional_readiness - profile.rifProfile.emotional_readiness) <= 2 ? (
+                        <>
+                          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                          <span className="text-sm text-green-400 font-medium">Compatible</span>
+                        </>
+                      ) : (
+                        <>
+                          <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                          <span className="text-sm text-orange-400 font-medium">Variable</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center space-x-3">
+                      <Shield className="h-4 w-4 text-purple-400" />
+                      <span className="text-sm text-gray-300">Boundary Respect</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      {Math.abs(currentUserProfile.boundary_respect - profile.rifProfile.boundary_respect) <= 2 ? (
+                        <>
+                          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                          <span className="text-sm text-green-400 font-medium">Respectful</span>
+                        </>
+                      ) : (
+                        <>
+                          <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                          <span className="text-sm text-orange-400 font-medium">Different</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center space-x-3">
+                      <Target className="h-4 w-4 text-green-400" />
+                      <span className="text-sm text-gray-300">Intent Clarity</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      {Math.abs(currentUserProfile.intent_clarity - profile.rifProfile.intent_clarity) <= 2 ? (
+                        <>
+                          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                          <span className="text-sm text-green-400 font-medium">Clear</span>
+                        </>
+                      ) : (
+                        <>
+                          <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                          <span className="text-sm text-orange-400 font-medium">Varies</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
