@@ -12,10 +12,11 @@ import { useJournalEngagement } from '@/hooks/useJournalEngagement';
 
 interface DatesJournalProps {
   onStartDebrief: () => void;
+  initialTab?: 'journal' | 'ark';
 }
 
-export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) => {
-  const [activeTab, setActiveTab] = useState('journal');
+export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, initialTab = 'journal' }) => {
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [showInsightsDashboard, setShowInsightsDashboard] = useState(false);
   const [showJournalEntryModal, setShowJournalEntryModal] = useState(false);
   const { rifState, insights, reflections, currentPrompt, loading, saveReflection } = useRhythm();
@@ -32,8 +33,8 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
   } = useJournalEngagement();
 
   const tabs = [
-    { id: 'journal', label: 'My Journal' },
-    { id: 'ark', label: 'Your Ark' },
+    { id: 'journal' as const, label: 'My Journal' },
+    { id: 'ark' as const, label: 'Your Ark' },
   ];
 
 

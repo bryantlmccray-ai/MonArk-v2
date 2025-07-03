@@ -15,10 +15,24 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 export const MainApp: React.FC = () => {
   const [activeTab, setActiveTab] = useState('discover');
+  const [datesJournalTab, setDatesJournalTab] = useState<'journal' | 'ark'>('journal');
   const [showDebrief, setShowDebrief] = useState(false);
   const [showTrustScore, setShowTrustScore] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const isMobile = useIsMobile();
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    // Reset journal tab to default when leaving dates tab
+    if (tab !== 'dates') {
+      setDatesJournalTab('journal');
+    }
+  };
+
+  const handleArkNavigation = () => {
+    setActiveTab('dates');
+    setDatesJournalTab('ark');
+  };
 
   const renderActiveScreen = () => {
     switch (activeTab) {
@@ -29,7 +43,7 @@ export const MainApp: React.FC = () => {
       case 'matches':
         return <Conversations />;
       case 'dates':
-        return <DatesJournal onStartDebrief={() => setShowDebrief(true)} />;
+        return <DatesJournal onStartDebrief={() => setShowDebrief(true)} initialTab={datesJournalTab} />;
       case 'profile':
         return (
           <Profile
@@ -51,7 +65,7 @@ export const MainApp: React.FC = () => {
         </div>
 
         {/* Bottom Navigation */}
-        <BottomNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+        <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
 
         {/* Overlays */}
         {showDebrief && (
@@ -78,7 +92,7 @@ export const MainApp: React.FC = () => {
         </header>
 
         {/* Sidebar Navigation */}
-        <SidebarNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+        <SidebarNavigation activeTab={activeTab} onTabChange={handleTabChange} onArkNavigation={handleArkNavigation} />
 
         {/* Main Content */}
         <main className="flex-1 pt-8">

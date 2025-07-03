@@ -17,9 +17,10 @@ import { MonArkLogo } from '../MonArkLogo';
 interface SidebarNavigationProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  onArkNavigation?: () => void;
 }
 
-export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab, onTabChange }) => {
+export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab, onTabChange, onArkNavigation }) => {
   const tabs = [
     { id: 'dates', icon: BookOpen, label: 'Dates & Journal' },
     { id: 'discover', icon: Map, label: 'Discover' },
@@ -32,7 +33,10 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
     <Sidebar className="border-r border-gray-800">
       <SidebarHeader className="border-b border-gray-800 p-4">
         <div className="flex items-center gap-2">
-          <MonArkLogo />
+          <MonArkLogo 
+            clickable={true}
+            onClick={onArkNavigation || (() => onTabChange('dates'))}
+          />
           <span className="text-lg font-semibold text-white">MonArk</span>
         </div>
       </SidebarHeader>

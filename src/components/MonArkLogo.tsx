@@ -5,12 +5,16 @@ interface MonArkLogoProps {
   className?: string;
   showTitle?: boolean;
   size?: 'sm' | 'md' | 'lg' | 'xl';
+  onClick?: () => void;
+  clickable?: boolean;
 }
 
 export const MonArkLogo: React.FC<MonArkLogoProps> = ({ 
   className = "", 
   showTitle = false,
-  size = 'lg'
+  size = 'lg',
+  onClick,
+  clickable = false
 }) => {
   const sizeClasses = {
     sm: 'h-12 w-12',
@@ -26,12 +30,15 @@ export const MonArkLogo: React.FC<MonArkLogoProps> = ({
       )}
       
       {/* The Logo Component */}
-      <div className="relative">
+      <div 
+        className={`relative ${clickable ? 'cursor-pointer transform transition-transform hover:scale-105' : ''}`}
+        onClick={clickable ? onClick : undefined}
+      >
         {/* Visual Effects Container: The glowing, pulsing backdrop */}
         <div className="absolute -inset-2 bg-yellow-400 rounded-full blur-xl opacity-25 animate-pulse"></div>
 
         {/* SVG Logo Container: Defines size and color */}
-        <div className={`relative ${sizeClasses[size]} text-yellow-400 flex items-center justify-center bg-gray-900/50 rounded-full backdrop-blur-sm`}>
+        <div className={`relative ${sizeClasses[size]} text-yellow-400 flex items-center justify-center bg-gray-900/50 rounded-full backdrop-blur-sm ${clickable ? 'hover:bg-gray-800/70 transition-colors' : ''}`}>
           {/* SVG element with a 100x100 coordinate system */}
           <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
             {/* 
