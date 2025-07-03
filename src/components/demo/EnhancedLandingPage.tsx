@@ -85,8 +85,12 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               
               <Button
                 onClick={() => {
+                  console.log('Join waitlist clicked, onExitToApp:', !!onExitToApp);
                   if (onExitToApp) {
+                    console.log('Calling onExitToApp');
                     onExitToApp();
+                  } else {
+                    console.log('No onExitToApp function provided');
                   }
                 }}
                 variant="outline"

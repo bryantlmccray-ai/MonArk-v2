@@ -82,7 +82,11 @@ const Index = () => {
 
   // Show enhanced landing page if user is not logged in
   if (!user) {
-    return <EnhancedLandingPage />;
+    return <EnhancedLandingPage onExitToApp={() => {
+      console.log('onExitToApp called from Index.tsx');
+      setShowDemo(false);
+      setShowDemoFromApp(false);
+    }} />;
   }
 
   // If user has a complete profile, show main app with demo access
