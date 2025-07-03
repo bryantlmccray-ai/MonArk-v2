@@ -7,10 +7,9 @@ interface DatePaletteStepProps {
   profileData: ProfileData;
   updateData: (data: Partial<ProfileData>) => void;
   onNext: () => void;
-  onCancel?: () => void;
 }
 
-export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, updateData, onNext, onCancel }) => {
+export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, updateData, onNext }) => {
   const [vibe, setVibe] = useState<string[]>(profileData.vibe);
   const [budget, setBudget] = useState<string>(profileData.budget);
   const [timeOfDay, setTimeOfDay] = useState<string[]>(profileData.timeOfDay);
@@ -135,16 +134,8 @@ export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, u
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="pt-6 space-y-3">
-        {onCancel && (
-          <button
-            onClick={onCancel}
-            className="w-full py-4 bg-transparent border border-gray-600 text-gray-400 font-semibold rounded-xl transition-all duration-300 hover:border-gray-500 hover:text-gray-300"
-          >
-            Cancel
-          </button>
-        )}
+      {/* Next Button */}
+      <div className="pt-6">
         <button
           onClick={handleNext}
           className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow"

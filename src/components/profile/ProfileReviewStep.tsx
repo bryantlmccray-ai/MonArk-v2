@@ -7,10 +7,9 @@ interface ProfileReviewStepProps {
   profileData: ProfileData;
   onEdit: (step: number) => void;
   onComplete: () => void;
-  onCancel?: () => void;
 }
 
-export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileData, onEdit, onComplete, onCancel }) => {
+export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileData, onEdit, onComplete }) => {
   return (
     <div className="min-h-screen bg-jet-black p-6 flex flex-col">
       <div className="flex-1 max-w-2xl mx-auto w-full space-y-6">
@@ -100,16 +99,8 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="pt-6 space-y-3">
-        {onCancel && (
-          <button
-            onClick={onCancel}
-            className="w-full py-4 bg-transparent border border-gray-600 text-gray-400 font-semibold rounded-xl transition-all duration-300 hover:border-gray-500 hover:text-gray-300"
-          >
-            Cancel
-          </button>
-        )}
+      {/* Complete Button */}
+      <div className="pt-6">
         <button
           onClick={onComplete}
           className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow"

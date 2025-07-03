@@ -6,10 +6,9 @@ interface InterestsStepProps {
   profileData: ProfileData;
   updateData: (data: Partial<ProfileData>) => void;
   onNext: () => void;
-  onCancel?: () => void;
 }
 
-export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updateData, onNext, onCancel }) => {
+export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updateData, onNext }) => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>(profileData.interests);
 
   const interestCategories = {
@@ -83,16 +82,8 @@ export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updat
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="pt-6 space-y-3">
-        {onCancel && (
-          <button
-            onClick={onCancel}
-            className="w-full py-4 bg-transparent border border-gray-600 text-gray-400 font-semibold rounded-xl transition-all duration-300 hover:border-gray-500 hover:text-gray-300"
-          >
-            Cancel
-          </button>
-        )}
+      {/* Next Button */}
+      <div className="pt-6">
         <button
           onClick={handleNext}
           disabled={selectedInterests.length === 0}

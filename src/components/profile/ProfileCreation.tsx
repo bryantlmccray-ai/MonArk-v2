@@ -12,7 +12,6 @@ import { useToast } from '@/hooks/use-toast';
 
 interface ProfileCreationProps {
   onComplete: () => void;
-  onCancel?: () => void;
 }
 
 export interface ProfileData {
@@ -43,7 +42,7 @@ export interface ProfileData {
   };
 }
 
-export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, onCancel }) => {
+export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const { profile, updateProfile, loading } = useProfile();
   const { toast } = useToast();
@@ -189,11 +188,11 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <BioStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} onCancel={onCancel} />;
+        return <BioStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
       case 1:
-        return <InterestsStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} onCancel={onCancel} />;
+        return <InterestsStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
       case 2:
-        return <PhotosStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} onCancel={onCancel} />;
+        return <PhotosStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
       case 3:
         return (
           <LifestyleStep 
@@ -212,13 +211,13 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
           />
         );
       case 4:
-        return <DatePaletteStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} onCancel={onCancel} />;
+        return <DatePaletteStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
       case 5:
-        return <IdentityPreferencesStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} onCancel={onCancel} />;
+        return <IdentityPreferencesStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
       case 6:
-        return <ProfileReviewStep profileData={profileData} onEdit={goToStep} onComplete={handleComplete} onCancel={onCancel} />;
+        return <ProfileReviewStep profileData={profileData} onEdit={goToStep} onComplete={handleComplete} />;
       default:
-        return <BioStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} onCancel={onCancel} />;
+        return <BioStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
     }
   };
 

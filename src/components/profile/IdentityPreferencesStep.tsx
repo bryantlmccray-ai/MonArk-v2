@@ -7,7 +7,6 @@ interface IdentityPreferencesStepProps {
   profileData: ProfileData;
   updateData: (data: Partial<ProfileData>) => void;
   onNext: () => void;
-  onCancel?: () => void;
 }
 
 interface IdentityData {
@@ -41,7 +40,6 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
   profileData,
   updateData,
   onNext,
-  onCancel,
 }) => {
   const [identityData, setIdentityData] = useState<IdentityData>({
     genderIdentity: '',
@@ -189,23 +187,13 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
         </div>
       </div>
 
-      <div className="space-y-3">
-        {onCancel && (
-          <button
-            onClick={onCancel}
-            className="w-full py-4 bg-transparent border border-gray-600 text-gray-400 font-semibold rounded-xl transition-all duration-300 hover:border-gray-500 hover:text-gray-300"
-          >
-            Cancel
-          </button>
-        )}
-        <button
-          onClick={() => setCurrentStep(1)}
-          disabled={!identityData.genderIdentity || !identityData.sexualOrientation}
-          className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Continue
-        </button>
-      </div>
+      <button
+        onClick={() => setCurrentStep(1)}
+        disabled={!identityData.genderIdentity || !identityData.sexualOrientation}
+        className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Continue
+      </button>
     </div>
   );
 
@@ -276,30 +264,20 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
         </div>
       </div>
 
-      <div className="space-y-3">
-        {onCancel && (
-          <button
-            onClick={onCancel}
-            className="w-full py-4 bg-transparent border border-gray-600 text-gray-400 font-semibold rounded-xl transition-all duration-300 hover:border-gray-500 hover:text-gray-300"
-          >
-            Cancel
-          </button>
-        )}
-        <div className="flex space-x-4">
-          <button
-            onClick={() => setCurrentStep(0)}
-            className="flex-1 py-4 bg-gray-700 text-white rounded-xl hover:bg-gray-600 transition-colors"
-          >
-            Back
-          </button>
-          <button
-            onClick={handleNext}
-            disabled={!canProceed}
-            className="flex-1 py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Complete Setup
-          </button>
-        </div>
+      <div className="flex space-x-4">
+        <button
+          onClick={() => setCurrentStep(0)}
+          className="flex-1 py-4 bg-gray-700 text-white rounded-xl hover:bg-gray-600 transition-colors"
+        >
+          Back
+        </button>
+        <button
+          onClick={handleNext}
+          disabled={!canProceed}
+          className="flex-1 py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Complete Setup
+        </button>
       </div>
     </div>
   );

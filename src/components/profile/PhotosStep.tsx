@@ -9,10 +9,9 @@ interface PhotosStepProps {
   profileData: ProfileData;
   updateData: (data: Partial<ProfileData>) => void;
   onNext: () => void;
-  onCancel?: () => void;
 }
 
-export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData, onNext, onCancel }) => {
+export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData, onNext }) => {
   const [photos, setPhotos] = useState<string[]>(profileData.photos);
   const { uploadPhoto, deletePhoto, uploading } = usePhotoUpload();
   const { toast } = useToast();
@@ -188,16 +187,8 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
         />
       </div>
 
-      {/* Action Buttons */}
-      <div className="pt-6 space-y-3">
-        {onCancel && (
-          <button
-            onClick={onCancel}
-            className="w-full py-4 bg-transparent border border-gray-600 text-gray-400 font-semibold rounded-xl transition-all duration-300 hover:border-gray-500 hover:text-gray-300"
-          >
-            Cancel
-          </button>
-        )}
+      {/* Next Button */}
+      <div className="pt-6">
         <button
           onClick={handleNext}
           disabled={!photos[0] || uploading} // Require at least main photo
