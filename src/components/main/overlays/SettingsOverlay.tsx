@@ -127,7 +127,7 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
     { icon: Heart, label: 'Matching Preferences', action: () => {} },
   ];
 
-  // Handle edit profile completion
+  // Handle edit profile completion and cancellation
   const handleEditProfileComplete = () => {
     setShowEditProfile(false);
     toast({
@@ -136,11 +136,15 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
     });
   };
 
+  const handleEditProfileCancel = () => {
+    setShowEditProfile(false);
+  };
+
   // Show edit profile modal
   if (showEditProfile) {
     return (
       <div className="fixed inset-0 z-50">
-        <ProfileCreation onComplete={handleEditProfileComplete} />
+        <ProfileCreation onComplete={handleEditProfileComplete} onCancel={handleEditProfileCancel} />
       </div>
     );
   }

@@ -7,9 +7,10 @@ interface BioStepProps {
   profileData: ProfileData;
   updateData: (data: Partial<ProfileData>) => void;
   onNext: () => void;
+  onCancel?: () => void;
 }
 
-export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNext }) => {
+export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNext, onCancel }) => {
   const [bio, setBio] = useState(profileData.bio);
 
   const prompts = [
@@ -72,8 +73,16 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
         </div>
       </div>
 
-      {/* Next Button */}
-      <div className="pt-6">
+      {/* Action Buttons */}
+      <div className="pt-6 space-y-3">
+        {onCancel && (
+          <button
+            onClick={onCancel}
+            className="w-full py-4 bg-transparent border border-gray-600 text-gray-400 font-semibold rounded-xl transition-all duration-300 hover:border-gray-500 hover:text-gray-300"
+          >
+            Cancel
+          </button>
+        )}
         <button
           onClick={handleNext}
           disabled={bio.trim().length === 0}
