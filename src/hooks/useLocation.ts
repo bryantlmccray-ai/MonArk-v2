@@ -25,10 +25,10 @@ export interface CityData {
   country: string;
   lat: number;
   lng: number;
-  timezone: string;
-  population: number;
-  metro_area: string;
-  transit_systems: string[];
+  timezone: string | null;
+  population: number | null;
+  metro_area: string | null;
+  transit_systems: any; // JSONB type from database
 }
 
 export interface NeighborhoodData {
@@ -233,10 +233,65 @@ export const useLocation = () => {
     }
   }, [updateProfile]);
 
+  // Calculate distance between two points using Haversine formula
+  const calculateDistance = useCallback((lat1: number, lng1: number, lat2: number, lng2: number): number => {
+    const R = 6371; // Earth's radius in kilometers
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+      Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c; // Distance in kilometers
+  }, []);
+
+  // Estimate travel time based on distance and mode
+  const estimateTravelTime = useCallback((distance: number, mode: DistanceMode): number => {
+    // Returns time in minutes
+    switch (mode) {
+      case 'walking':
+        return Math.round(distance * 12); // ~5 km/h walking speed
+      case 'driving':
+        return Math.round(distance * 2); // ~30 km/h average city driving
+      case 'transit':
+        return Math.round(distance * 3.5); // ~17 km/h average transit speed
+      default:
+        return Math.round(distance * 12);
+    }
+  }, []);
+
+  // Get travel info between two locations
+  const getTravelInfo = useCallback((
+    fromLat: number, 
+    fromLng: number, 
+    toLat: number, 
+    toLng: number,
+    modes: DistanceMode[] = ['walking', 'driving', 'transit']
+  ) => {
+    const distance = calculateDistance(fromLat, fromLng, toLat, toLng);
+    
+    return modes.reduce((info, mode) => {
+      info[mode] = {
+        distance,
+        time: estimateTravelTime(distance, mode)
+      };
+      return info;
+    }, {} as Record<DistanceMode, { distance: number; time: number }>);
+  }, [calculateDistance, estimateTravelTime]);
+
   return {
     loading,
     requestLocationAccess,
     setManualLocation,
     clearLocation,
+    // New city detection and neighborhood functions
+    detectCity,
+    getNeighborhoodsInCity,
+    findNearestNeighborhood,
+    // Distance and travel functions
+    calculateDistance,
+    estimateTravelTime,
+    getTravelInfo,
   };
 };

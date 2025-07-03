@@ -967,6 +967,21 @@ export type Database = {
         Args: { user_id_input: string }
         Returns: undefined
       }
+      find_nearest_neighborhood: {
+        Args: { user_lat: number; user_lng: number }
+        Returns: {
+          id: string
+          name: string
+          city: string
+          state: string
+          country: string
+          lat: number
+          lng: number
+          transit_score: number
+          walkability_score: number
+          distance_km: number
+        }[]
+      }
       mark_messages_as_read: {
         Args: { p_conversation_id: string; p_user_id: string }
         Returns: undefined

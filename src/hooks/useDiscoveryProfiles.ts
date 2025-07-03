@@ -2,17 +2,23 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useLocation, DistanceMode } from '@/hooks/useLocation';
 import { UserProfile } from '@/hooks/useProfile';
 
 export interface DiscoveryProfile extends UserProfile {
   distance?: number;
   rifProfile?: any;
+  travelInfo?: Record<DistanceMode, { distance: number; time: number }>;
+  neighborhood?: string;
+  transitScore?: number;
+  walkabilityScore?: number;
 }
 
 export const useDiscoveryProfiles = () => {
   const [profiles, setProfiles] = useState<DiscoveryProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const { getTravelInfo } = useLocation();
 
   const fetchProfiles = async () => {
     if (!user) {
@@ -22,6 +28,15 @@ export const useDiscoveryProfiles = () => {
     }
 
     try {
+      // Get current user's location data
+      const { data: currentUserProfile } = await supabase
+        .from('user_profiles')
+        .select('location_data')
+        .eq('user_id', user.id)
+        .single();
+
+      const currentUserLocation = currentUserProfile?.location_data as any;
+
       // Fetch user profiles excluding current user
       const { data: userProfiles, error: profilesError } = await supabase
         .from('user_profiles')
@@ -43,19 +58,45 @@ export const useDiscoveryProfiles = () => {
         .in('user_id', userIds)
         .eq('is_active', true);
 
-      // Combine profile data with RIF data
+      // Combine profile data with RIF data and calculate distances
       const enrichedProfiles: DiscoveryProfile[] = (userProfiles || [])
         .filter(profile => profile.photos && profile.photos.length > 0)
         .map(profile => {
           const rifProfile = rifProfiles?.find(rif => rif.user_id === profile.user_id);
+          const profileLocation = profile.location_data as any;
+          
+          let distance: number | undefined;
+          let travelInfo: Record<DistanceMode, { distance: number; time: number }> | undefined;
+          
+          // Calculate real distance if both users have location data
+          if (currentUserLocation && profileLocation && 
+              currentUserLocation.lat && currentUserLocation.lng && 
+              profileLocation.lat && profileLocation.lng) {
+            
+            travelInfo = getTravelInfo(
+              currentUserLocation.lat,
+              currentUserLocation.lng,
+              profileLocation.lat,
+              profileLocation.lng
+            );
+            distance = travelInfo.walking.distance;
+          } else {
+            // Fallback to mock distance if no location data
+            distance = Math.round((Math.random() * 10 + 1) * 10) / 10;
+          }
           
           return {
             ...profile,
             rifProfile,
-            // Calculate mock distance for now - will be replaced with real GPS calculation
-            distance: Math.round((Math.random() * 10 + 1) * 10) / 10
+            distance,
+            travelInfo,
+            neighborhood: profileLocation?.neighborhood,
+            transitScore: profileLocation?.transit_score,
+            walkabilityScore: profileLocation?.walkability_score,
           };
-        });
+        })
+        // Sort by distance (closest first)
+        .sort((a, b) => (a.distance || 999) - (b.distance || 999));
 
       setProfiles(enrichedProfiles);
     } catch (error) {
