@@ -9,6 +9,51 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      cities: {
+        Row: {
+          country: string
+          created_at: string
+          id: string
+          lat: number
+          lng: number
+          metro_area: string | null
+          name: string
+          population: number | null
+          state: string
+          timezone: string | null
+          transit_systems: Json | null
+          updated_at: string
+        }
+        Insert: {
+          country: string
+          created_at?: string
+          id?: string
+          lat: number
+          lng: number
+          metro_area?: string | null
+          name: string
+          population?: number | null
+          state: string
+          timezone?: string | null
+          transit_systems?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          country?: string
+          created_at?: string
+          id?: string
+          lat?: number
+          lng?: number
+          metro_area?: string | null
+          name?: string
+          population?: number | null
+          state?: string
+          timezone?: string | null
+          transit_systems?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       conversation_events: {
         Row: {
           conversation_id: string
@@ -296,6 +341,54 @@ export type Database = {
           recipient_user_id?: string
           sender_user_id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      neighborhoods: {
+        Row: {
+          bounds: Json | null
+          city: string
+          country: string
+          created_at: string
+          id: string
+          lat: number
+          lng: number
+          name: string
+          population: number | null
+          state: string
+          transit_score: number | null
+          updated_at: string
+          walkability_score: number | null
+        }
+        Insert: {
+          bounds?: Json | null
+          city: string
+          country: string
+          created_at?: string
+          id?: string
+          lat: number
+          lng: number
+          name: string
+          population?: number | null
+          state: string
+          transit_score?: number | null
+          updated_at?: string
+          walkability_score?: number | null
+        }
+        Update: {
+          bounds?: Json | null
+          city?: string
+          country?: string
+          created_at?: string
+          id?: string
+          lat?: number
+          lng?: number
+          name?: string
+          population?: number | null
+          state?: string
+          transit_score?: number | null
+          updated_at?: string
+          walkability_score?: number | null
         }
         Relationships: []
       }
@@ -773,6 +866,93 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      venue_types: {
+        Row: {
+          category: string
+          created_at: string
+          icon: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      venues: {
+        Row: {
+          address: string | null
+          created_at: string
+          id: string
+          is_lgbtq_friendly: boolean | null
+          lat: number
+          lng: number
+          name: string
+          neighborhood_id: string | null
+          operating_hours: Json | null
+          price_level: number | null
+          rating: number | null
+          updated_at: string
+          venue_type_id: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          is_lgbtq_friendly?: boolean | null
+          lat: number
+          lng: number
+          name: string
+          neighborhood_id?: string | null
+          operating_hours?: Json | null
+          price_level?: number | null
+          rating?: number | null
+          updated_at?: string
+          venue_type_id?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          is_lgbtq_friendly?: boolean | null
+          lat?: number
+          lng?: number
+          name?: string
+          neighborhood_id?: string | null
+          operating_hours?: Json | null
+          price_level?: number | null
+          rating?: number | null
+          updated_at?: string
+          venue_type_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "venues_neighborhood_id_fkey"
+            columns: ["neighborhood_id"]
+            isOneToOne: false
+            referencedRelation: "neighborhoods"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "venues_venue_type_id_fkey"
+            columns: ["venue_type_id"]
+            isOneToOne: false
+            referencedRelation: "venue_types"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
