@@ -26,7 +26,10 @@ export const MonArkLogo: React.FC<MonArkLogoProps> = ({
   return (
     <div className={`flex flex-col items-center gap-4 ${className}`}>
       {showTitle && (
-        <h1 className="text-2xl font-bold text-yellow-400 tracking-wider">MonArk</h1>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-yellow-400 tracking-wider">MonArk</h1>
+          <p className="text-sm text-yellow-400/80 tracking-wide animate-pulse">date well.</p>
+        </div>
       )}
       
       {/* The Logo Component */}
