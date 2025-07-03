@@ -209,6 +209,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
             onUpdate={updateProfileData}
             onNext={nextStep}
             onBack={() => setCurrentStep(2)}
+            onCancel={onCancel}
           />
         );
       case 4:
