@@ -11,6 +11,7 @@ const Index = () => {
   const { user, loading: authLoading } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = React.useState(false);
+  const [forceRefresh, setForceRefresh] = React.useState(0);
 
   // Show loading screen while checking auth state
   if (authLoading || profileLoading) {
@@ -33,7 +34,13 @@ const Index = () => {
 
   // If user has a profile but it's not complete, show profile creation
   if (profile && !profile.is_profile_complete) {
-    return <ProfileCreation onComplete={() => window.location.reload()} />;
+    return <ProfileCreation 
+      key={`profile-creation-${forceRefresh}`}
+      onComplete={() => {
+        console.log('Profile creation completed, forcing refresh...');
+        setForceRefresh(prev => prev + 1);
+      }} 
+    />;
   }
 
   // Show onboarding if user hasn't completed it yet
@@ -42,7 +49,13 @@ const Index = () => {
   }
 
   // Show profile creation after onboarding
-  return <ProfileCreation onComplete={() => window.location.reload()} />;
+  return <ProfileCreation 
+    key={`profile-creation-onboarding-${forceRefresh}`}
+    onComplete={() => {
+      console.log('Profile creation after onboarding completed, forcing refresh...');
+      setForceRefresh(prev => prev + 1);
+    }} 
+  />;
 };
 
 export default Index;
