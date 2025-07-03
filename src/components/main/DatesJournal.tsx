@@ -59,28 +59,6 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
         {/* Growth Timeline */}
         <GrowthTimeline />
 
-        {/* Engagement Features */}
-        <JournalEngagementFeatures
-          totalEntries={journalEntries.length}
-          currentStreak={currentStreak}
-          weeklyGoal={weeklyGoal}
-          entriesThisWeek={entriesThisWeek}
-          insights={journalInsights}
-          achievements={achievements}
-          onViewInsights={() => setShowInsightsDashboard(true)}
-          onSetReminder={() => setReminder(true)}
-          onUpdateWeeklyGoal={(newGoal) => {
-            // This would update the goal in the hook
-            console.log('Updating weekly goal to:', newGoal);
-          }}
-        />
-
-        {/* Relational Compass */}
-        <RelationalCompass rifState={rifState} />
-        
-        {/* Insights Module */}
-        <InsightsModule insights={insights} />
-
         {/* Journal Entries */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
@@ -155,6 +133,28 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
             </div>
           )}
         </div>
+
+        {/* Engagement Features */}
+        <JournalEngagementFeatures
+          totalEntries={journalEntries.length}
+          currentStreak={currentStreak}
+          weeklyGoal={weeklyGoal}
+          entriesThisWeek={entriesThisWeek}
+          insights={journalInsights}
+          achievements={achievements}
+          onViewInsights={() => setShowInsightsDashboard(true)}
+          onSetReminder={() => setReminder(true)}
+          onUpdateWeeklyGoal={(newGoal) => {
+            // This would update the goal in the hook
+            console.log('Updating weekly goal to:', newGoal);
+          }}
+        />
+
+        {/* Relational Compass */}
+        <RelationalCompass rifState={rifState} />
+        
+        {/* Insights Module */}
+        <InsightsModule insights={insights} />
 
         {/* Reflection Prompt */}
         <ReflectionPrompt
