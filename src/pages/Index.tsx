@@ -12,8 +12,26 @@ import { useDemo } from '@/contexts/DemoContext';
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
   const { profile, loading: profileLoading, refetchProfile } = useProfile();
-  const { demoData } = useDemo();
+  const { demoData, setDemoMode } = useDemo();
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = React.useState(false);
+  const [showDemo, setShowDemo] = React.useState(false);
+
+  // Demo mode override - accessible regardless of auth status
+  if (showDemo) {
+    return (
+      <div className="min-h-screen bg-jet-black">
+        <div className="fixed top-4 right-4 z-50">
+          <button
+            onClick={() => setShowDemo(false)}
+            className="px-4 py-2 bg-charcoal-gray/80 text-white rounded-lg border border-goldenrod/30 hover:bg-charcoal-gray transition-colors"
+          >
+            Exit Demo
+          </button>
+        </div>
+        <EnhancedLandingPage />
+      </div>
+    );
+  }
 
 
   // Show loading screen while checking auth state
@@ -30,9 +48,26 @@ const Index = () => {
     return <EnhancedLandingPage />;
   }
 
-  // If user has a complete profile, skip to main app
+  // Add demo access for authenticated users
+  const handleShowDemo = () => {
+    setShowDemo(true);
+  };
+
+  // If user has a complete profile, show main app with demo access
   if (profile?.is_profile_complete) {
-    return <MainApp />;
+    return (
+      <div className="relative">
+        <div className="fixed top-4 left-4 z-50">
+          <button
+            onClick={handleShowDemo}
+            className="px-4 py-2 bg-goldenrod-gradient text-jet-black font-medium rounded-lg hover:shadow-golden-glow transition-all duration-300"
+          >
+            View Demo
+          </button>
+        </div>
+        <MainApp />
+      </div>
+    );
   }
 
   // If user has a profile but it's not complete, show profile creation
