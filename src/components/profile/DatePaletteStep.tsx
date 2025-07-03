@@ -7,9 +7,11 @@ interface DatePaletteStepProps {
   profileData: ProfileData;
   updateData: (data: Partial<ProfileData>) => void;
   onNext: () => void;
+  onSkip: () => void;
+  stepRequirement: 'critical' | 'important' | 'optional';
 }
 
-export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, updateData, onNext }) => {
+export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, updateData, onNext, onSkip, stepRequirement }) => {
   const [vibe, setVibe] = useState<string[]>(profileData.vibe);
   const [budget, setBudget] = useState<string>(profileData.budget);
   const [timeOfDay, setTimeOfDay] = useState<string[]>(profileData.timeOfDay);
@@ -134,14 +136,23 @@ export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, u
         </div>
       </div>
 
-      {/* Next Button */}
-      <div className="pt-6">
+      {/* Action Buttons */}
+      <div className="pt-6 space-y-3">
         <button
           onClick={handleNext}
           className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow"
         >
           Continue
         </button>
+        
+        {stepRequirement !== 'critical' && (
+          <button
+            onClick={onSkip}
+            className="w-full py-3 text-gray-400 hover:text-white transition-colors border border-gray-600 hover:border-gray-500 rounded-xl"
+          >
+            Skip for now
+          </button>
+        )}
       </div>
     </div>
   );

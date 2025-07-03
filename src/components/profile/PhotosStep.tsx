@@ -9,9 +9,11 @@ interface PhotosStepProps {
   profileData: ProfileData;
   updateData: (data: Partial<ProfileData>) => void;
   onNext: () => void;
+  onSkip: () => void;
+  stepRequirement: 'critical' | 'important' | 'optional';
 }
 
-export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData, onNext }) => {
+export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData, onNext, onSkip, stepRequirement }) => {
   const [photos, setPhotos] = useState<string[]>(profileData.photos);
   const { uploadPhoto, deletePhoto, uploading } = usePhotoUpload();
   const { toast } = useToast();
@@ -187,8 +189,8 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
         />
       </div>
 
-      {/* Next Button */}
-      <div className="pt-6">
+      {/* Action Buttons */}
+      <div className="pt-6 space-y-3">
         <button
           onClick={handleNext}
           disabled={!photos[0] || uploading} // Require at least main photo
@@ -196,6 +198,16 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
         >
           {uploading ? 'Uploading...' : 'Continue'}
         </button>
+        
+        {stepRequirement !== 'critical' && (
+          <button
+            onClick={onSkip}
+            disabled={uploading}
+            className="w-full py-3 text-gray-400 hover:text-white transition-colors border border-gray-600 hover:border-gray-500 rounded-xl disabled:opacity-50"
+          >
+            Skip for now
+          </button>
+        )}
       </div>
     </div>
   );

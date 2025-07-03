@@ -7,6 +7,7 @@ interface IdentityPreferencesStepProps {
   profileData: ProfileData;
   updateData: (data: Partial<ProfileData>) => void;
   onNext: () => void;
+  stepRequirement: 'critical' | 'important' | 'optional';
 }
 
 interface IdentityData {

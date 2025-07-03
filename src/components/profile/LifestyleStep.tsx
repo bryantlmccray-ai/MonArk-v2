@@ -18,14 +18,18 @@ interface LifestyleStepProps {
   };
   onUpdate: (data: any) => void;
   onNext: () => void;
+  onSkip: () => void;
   onBack: () => void;
+  stepRequirement: 'critical' | 'important' | 'optional';
 }
 
 export const LifestyleStep: React.FC<LifestyleStepProps> = ({
   data,
   onUpdate,
   onNext,
+  onSkip,
   onBack,
+  stepRequirement,
 }) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -311,20 +315,32 @@ export const LifestyleStep: React.FC<LifestyleStepProps> = ({
         </div>
       </div>
 
-      <div className="flex space-x-4">
-        <Button
-          onClick={onBack}
-          variant="outline"
-          className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800"
-        >
-          Back
-        </Button>
-        <Button
-          onClick={handleNext}
-          className="flex-1 bg-goldenrod-gradient text-jet-black font-semibold hover:shadow-golden-glow"
-        >
-          Continue
-        </Button>
+      <div className="space-y-3">
+        <div className="flex space-x-4">
+          <Button
+            onClick={onBack}
+            variant="outline"
+            className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800"
+          >
+            Back
+          </Button>
+          <Button
+            onClick={handleNext}
+            className="flex-1 bg-goldenrod-gradient text-jet-black font-semibold hover:shadow-golden-glow"
+          >
+            Continue
+          </Button>
+        </div>
+        
+        {stepRequirement !== 'critical' && (
+          <Button
+            onClick={onSkip}
+            variant="outline"
+            className="w-full border-gray-600 text-gray-400 hover:text-white hover:border-gray-500"
+          >
+            Skip for now
+          </Button>
+        )}
       </div>
     </div>
   );

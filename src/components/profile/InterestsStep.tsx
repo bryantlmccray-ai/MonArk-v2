@@ -6,9 +6,11 @@ interface InterestsStepProps {
   profileData: ProfileData;
   updateData: (data: Partial<ProfileData>) => void;
   onNext: () => void;
+  onSkip: () => void;
+  stepRequirement: 'critical' | 'important' | 'optional';
 }
 
-export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updateData, onNext }) => {
+export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updateData, onNext, onSkip, stepRequirement }) => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>(profileData.interests);
 
   const interestCategories = {
@@ -82,8 +84,8 @@ export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updat
         </div>
       </div>
 
-      {/* Next Button */}
-      <div className="pt-6">
+      {/* Action Buttons */}
+      <div className="pt-6 space-y-3">
         <button
           onClick={handleNext}
           disabled={selectedInterests.length === 0}
@@ -91,6 +93,15 @@ export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updat
         >
           Continue
         </button>
+        
+        {stepRequirement !== 'critical' && (
+          <button
+            onClick={onSkip}
+            className="w-full py-3 text-gray-400 hover:text-white transition-colors border border-gray-600 hover:border-gray-500 rounded-xl"
+          >
+            Skip for now
+          </button>
+        )}
       </div>
     </div>
   );

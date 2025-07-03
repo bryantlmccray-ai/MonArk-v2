@@ -7,9 +7,11 @@ interface BioStepProps {
   profileData: ProfileData;
   updateData: (data: Partial<ProfileData>) => void;
   onNext: () => void;
+  onSkip: () => void;
+  stepRequirement: 'critical' | 'important' | 'optional';
 }
 
-export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNext }) => {
+export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNext, onSkip, stepRequirement }) => {
   const [bio, setBio] = useState(profileData.bio);
 
   const prompts = [
@@ -72,8 +74,8 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
         </div>
       </div>
 
-      {/* Next Button */}
-      <div className="pt-6">
+      {/* Action Buttons */}
+      <div className="pt-6 space-y-3">
         <button
           onClick={handleNext}
           disabled={bio.trim().length === 0}
@@ -81,6 +83,15 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
         >
           Continue
         </button>
+        
+        {stepRequirement !== 'critical' && (
+          <button
+            onClick={onSkip}
+            className="w-full py-3 text-gray-400 hover:text-white transition-colors border border-gray-600 hover:border-gray-500 rounded-xl"
+          >
+            Skip for now
+          </button>
+        )}
       </div>
     </div>
   );

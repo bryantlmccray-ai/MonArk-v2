@@ -42,10 +42,48 @@ export interface ProfileData {
   };
 }
 
+export interface StepCompletionStatus {
+  bio: boolean;
+  interests: boolean;
+  photos: boolean;
+  lifestyle: boolean;
+  datePalette: boolean;
+  identityPreferences: boolean;
+}
+
+export interface StepRequirements {
+  bio: 'optional';
+  interests: 'important';
+  photos: 'important'; 
+  lifestyle: 'optional';
+  datePalette: 'optional';
+  identityPreferences: 'critical';
+}
+
 export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const { profile, updateProfile, loading } = useProfile();
   const { toast } = useToast();
+  
+  // Track which steps have been completed vs skipped
+  const [stepCompletion, setStepCompletion] = useState<StepCompletionStatus>({
+    bio: false,
+    interests: false,
+    photos: false,
+    lifestyle: false,
+    datePalette: false,
+    identityPreferences: false,
+  });
+  
+  // Define step requirements (critical, important, optional)
+  const stepRequirements: StepRequirements = {
+    bio: 'optional',
+    interests: 'important',
+    photos: 'important',
+    lifestyle: 'optional', 
+    datePalette: 'optional',
+    identityPreferences: 'critical',
+  };
   
   const [profileData, setProfileData] = useState<ProfileData>({
     bio: '',
@@ -101,6 +139,14 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
 
   const updateProfileData = (data: Partial<ProfileData>) => {
     setProfileData(prev => ({ ...prev, ...data }));
+  };
+  
+  const markStepCompleted = (stepKey: keyof StepCompletionStatus) => {
+    setStepCompletion(prev => ({ ...prev, [stepKey]: true }));
+  };
+  
+  const markStepSkipped = (stepKey: keyof StepCompletionStatus) => {
+    setStepCompletion(prev => ({ ...prev, [stepKey]: false }));
   };
 
   const nextStep = () => {
@@ -190,11 +236,35 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <BioStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
+        return (
+          <BioStep 
+            profileData={profileData} 
+            updateData={updateProfileData} 
+            onNext={() => { markStepCompleted('bio'); nextStep(); }}
+            onSkip={() => { markStepSkipped('bio'); nextStep(); }}
+            stepRequirement={stepRequirements.bio}
+          />
+        );
       case 1:
-        return <InterestsStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
+        return (
+          <InterestsStep 
+            profileData={profileData} 
+            updateData={updateProfileData} 
+            onNext={() => { markStepCompleted('interests'); nextStep(); }}
+            onSkip={() => { markStepSkipped('interests'); nextStep(); }}
+            stepRequirement={stepRequirements.interests}
+          />
+        );
       case 2:
-        return <PhotosStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
+        return (
+          <PhotosStep 
+            profileData={profileData} 
+            updateData={updateProfileData} 
+            onNext={() => { markStepCompleted('photos'); nextStep(); }}
+            onSkip={() => { markStepSkipped('photos'); nextStep(); }}
+            stepRequirement={stepRequirements.photos}
+          />
+        );
       case 3:
         return (
           <LifestyleStep 
@@ -208,18 +278,51 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
               height_cm: profileData.height_cm,
             }}
             onUpdate={updateProfileData}
-            onNext={nextStep}
+            onNext={() => { markStepCompleted('lifestyle'); nextStep(); }}
+            onSkip={() => { markStepSkipped('lifestyle'); nextStep(); }}
             onBack={() => setCurrentStep(2)}
+            stepRequirement={stepRequirements.lifestyle}
           />
         );
       case 4:
-        return <DatePaletteStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
+        return (
+          <DatePaletteStep 
+            profileData={profileData} 
+            updateData={updateProfileData} 
+            onNext={() => { markStepCompleted('datePalette'); nextStep(); }}
+            onSkip={() => { markStepSkipped('datePalette'); nextStep(); }}
+            stepRequirement={stepRequirements.datePalette}
+          />
+        );
       case 5:
-        return <IdentityPreferencesStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
+        return (
+          <IdentityPreferencesStep 
+            profileData={profileData} 
+            updateData={updateProfileData} 
+            onNext={() => { markStepCompleted('identityPreferences'); nextStep(); }}
+            stepRequirement={stepRequirements.identityPreferences}
+          />
+        );
       case 6:
-        return <ProfileReviewStep profileData={profileData} onEdit={goToStep} onComplete={handleComplete} />;
+        return (
+          <ProfileReviewStep 
+            profileData={profileData} 
+            stepCompletion={stepCompletion}
+            stepRequirements={stepRequirements}
+            onEdit={goToStep} 
+            onComplete={handleComplete} 
+          />
+        );
       default:
-        return <BioStep profileData={profileData} updateData={updateProfileData} onNext={nextStep} />;
+        return (
+          <BioStep 
+            profileData={profileData} 
+            updateData={updateProfileData} 
+            onNext={() => { markStepCompleted('bio'); nextStep(); }}
+            onSkip={() => { markStepSkipped('bio'); nextStep(); }}
+            stepRequirement={stepRequirements.bio}
+          />
+        );
     }
   };
 
