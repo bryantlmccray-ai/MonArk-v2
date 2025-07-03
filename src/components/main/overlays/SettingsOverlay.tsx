@@ -130,6 +130,8 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
   // Handle edit profile completion and cancellation
   const handleEditProfileComplete = () => {
     setShowEditProfile(false);
+    // Close the entire settings overlay after profile update
+    onClose();
     toast({
       title: "Profile updated",
       description: "Your profile has been successfully updated.",
@@ -138,6 +140,7 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
 
   const handleEditProfileCancel = () => {
     setShowEditProfile(false);
+    // Don't close settings, just return to settings menu
   };
 
   // Show edit profile modal
