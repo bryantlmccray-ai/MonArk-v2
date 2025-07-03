@@ -127,6 +127,24 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
     { icon: Heart, label: 'Matching Preferences', action: () => {} },
   ];
 
+  // Handle edit profile completion
+  const handleEditProfileComplete = () => {
+    setShowEditProfile(false);
+    toast({
+      title: "Profile updated",
+      description: "Your profile has been successfully updated.",
+    });
+  };
+
+  // Show edit profile modal
+  if (showEditProfile) {
+    return (
+      <div className="fixed inset-0 z-50">
+        <ProfileCreation onComplete={handleEditProfileComplete} />
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-jet-black/80 backdrop-blur-sm" onClick={onClose} />
@@ -236,22 +254,6 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
               </button>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Edit Profile Modal */}
-      {showEditProfile && (
-        <div className="fixed inset-0 bg-jet-black z-60">
-          <ProfileCreation 
-            onComplete={() => {
-              setShowEditProfile(false);
-              onClose(); // Close the entire settings overlay
-              toast({
-                title: "Profile updated!",
-                description: "Your profile changes have been saved successfully.",
-              });
-            }} 
-          />
         </div>
       )}
     </div>
