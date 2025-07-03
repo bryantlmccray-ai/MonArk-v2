@@ -121,10 +121,7 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
   };
 
   const settingsItems = [
-    { icon: User, label: 'Edit Profile', action: () => {
-      console.log('Edit Profile clicked');
-      setShowEditProfile(true);
-    }},
+    { icon: User, label: 'Edit Profile', action: () => setShowEditProfile(true) },
     { icon: Bell, label: 'Notifications', action: () => {} },
     { icon: Shield, label: 'Privacy & Data', action: () => window.location.href = '/privacy' },
     { icon: Heart, label: 'Matching Preferences', action: () => {} },
@@ -132,10 +129,7 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
 
   // Handle edit profile completion and cancellation
   const handleEditProfileComplete = () => {
-    console.log('Profile edit completed');
     setShowEditProfile(false);
-    // Close the entire settings overlay after profile update
-    onClose();
     toast({
       title: "Profile updated",
       description: "Your profile has been successfully updated.",
@@ -143,14 +137,11 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
   };
 
   const handleEditProfileCancel = () => {
-    console.log('Profile edit cancelled');
     setShowEditProfile(false);
-    // Don't close settings, just return to settings menu
   };
 
   // Show edit profile modal
   if (showEditProfile) {
-    console.log('Rendering ProfileCreation modal');
     return (
       <div className="fixed inset-0 z-50">
         <ProfileCreation onComplete={handleEditProfileComplete} onCancel={handleEditProfileCancel} />
