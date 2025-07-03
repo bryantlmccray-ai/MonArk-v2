@@ -28,7 +28,7 @@ const Index = () => {
             Exit Demo
           </button>
         </div>
-        <EnhancedLandingPage />
+        <EnhancedLandingPage onExitToApp={() => setShowDemo(false)} />
       </div>
     );
   }
@@ -48,18 +48,13 @@ const Index = () => {
     return <EnhancedLandingPage />;
   }
 
-  // Add demo access for authenticated users
-  const handleShowDemo = () => {
-    setShowDemo(true);
-  };
-
   // If user has a complete profile, show main app with demo access
   if (profile?.is_profile_complete) {
     return (
       <div className="relative">
         <div className="fixed top-4 left-4 z-50">
           <button
-            onClick={handleShowDemo}
+            onClick={() => setShowDemo(true)}
             className="px-4 py-2 bg-goldenrod-gradient text-jet-black font-medium rounded-lg hover:shadow-golden-glow transition-all duration-300"
           >
             View Demo

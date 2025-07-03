@@ -5,7 +5,11 @@ import { Heart, MessageCircle, Calendar, Shield, Star, MapPin, Users, Zap } from
 import { useDemo } from '@/contexts/DemoContext';
 import { DemoMainApp } from './DemoMainApp';
 
-export const EnhancedLandingPage: React.FC = () => {
+interface EnhancedLandingPageProps {
+  onExitToApp?: () => void;
+}
+
+export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExitToApp }) => {
   const { demoData, setDemoMode } = useDemo();
   const [showAuthForm, setShowAuthForm] = useState(false);
   const [showFullDemo, setShowFullDemo] = useState(false);
@@ -16,7 +20,7 @@ export const EnhancedLandingPage: React.FC = () => {
   };
 
   if (showFullDemo) {
-    return <DemoMainApp onClose={() => setShowFullDemo(false)} />;
+    return <DemoMainApp onClose={onExitToApp ? onExitToApp : () => setShowFullDemo(false)} />;
   }
 
   if (showAuthForm) {
