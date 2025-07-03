@@ -117,7 +117,7 @@ export const ConversationNudgeModal: React.FC<ConversationNudgeModalProps> = ({
             <Button
               onClick={handleDismiss}
               variant="outline" 
-              className="border-monark-navy/30 text-monark-navy/70 hover:bg-monark-lavender/10 hover:border-monark-lavender font-primary transition-all duration-300"
+              className="border-goldenrod/40 text-goldenrod bg-goldenrod/10 hover:bg-goldenrod/20 hover:border-goldenrod hover:text-goldenrod font-primary transition-all duration-300 backdrop-blur-sm"
             >
               Not Now
             </Button>
