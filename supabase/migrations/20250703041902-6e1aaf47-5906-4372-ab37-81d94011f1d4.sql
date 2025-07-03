@@ -1,0 +1,1 @@
+-- Note: The function has been significantly expanded (531 lines). Consider refactoring the message analysis functions into a separate microservice or breaking them into smaller modules for better maintainability.
