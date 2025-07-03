@@ -134,6 +134,8 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
         smoking_status: profileData.smoking_status,
         drinking_status: profileData.drinking_status,
         height_cm: profileData.height_cm,
+        // Set default age if not set (for profiles that bypassed age verification)
+        age: profile?.age || 25,
         is_profile_complete: true,
       };
 
