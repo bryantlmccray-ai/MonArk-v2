@@ -5,6 +5,7 @@ import { MainApp } from '../components/main/MainApp';
 import { AuthPage } from '../components/auth/AuthPage';
 import { ProfileCreation } from '../components/profile/ProfileCreation';
 import { EnhancedLandingPage } from '@/components/demo/EnhancedLandingPage';
+import { DemoMainApp } from '@/components/demo/DemoMainApp';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useDemo } from '@/contexts/DemoContext';
@@ -15,8 +16,18 @@ const Index = () => {
   const { demoData, setDemoMode } = useDemo();
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = React.useState(false);
   const [showDemo, setShowDemo] = React.useState(false);
+  const [showDemoFromApp, setShowDemoFromApp] = React.useState(false);
 
-  // Demo mode override - accessible regardless of auth status
+  // Demo mode from normal app - show demo directly
+  if (showDemoFromApp) {
+    return (
+      <div className="fixed inset-0 bg-jet-black z-50">
+        <DemoMainApp onClose={() => setShowDemoFromApp(false)} />
+      </div>
+    );
+  }
+
+  // Demo mode override - accessible regardless of auth status  
   if (showDemo) {
     return (
       <div className="min-h-screen bg-jet-black">
@@ -54,7 +65,7 @@ const Index = () => {
       <div className="relative">
         <div className="fixed top-4 left-4 z-50">
           <button
-            onClick={() => setShowDemo(true)}
+            onClick={() => setShowDemoFromApp(true)}
             className="px-4 py-2 bg-goldenrod-gradient text-jet-black font-medium rounded-lg hover:shadow-golden-glow transition-all duration-300"
           >
             View Demo
