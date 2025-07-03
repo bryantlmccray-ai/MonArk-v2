@@ -15,7 +15,6 @@ interface DatesJournalProps {
 }
 
 export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) => {
-  const [activeTab, setActiveTab] = useState('journal');
   const [showInsightsDashboard, setShowInsightsDashboard] = useState(false);
   const [showJournalEntryModal, setShowJournalEntryModal] = useState(false);
   const { rifState, insights, reflections, currentPrompt, loading, saveReflection } = useRhythm();
@@ -31,61 +30,8 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
     refetchEntries
   } = useJournalEngagement();
 
-  const tabs = [
-    { id: 'upcoming', label: 'Upcoming & Ideas' },
-    { id: 'journal', label: 'My Journal' },
-    { id: 'rhythm', label: 'My Rhythm' },
-  ];
 
-  const pastDates = [
-    {
-      id: 1,
-      name: 'Maya',
-      date: 'March 10',
-      activity: 'Coffee & Art Gallery',
-      hasDebrief: true,
-      vibe: 4,
-      learned: 'I really value deep conversations about art and creativity.',
-    },
-    {
-      id: 2,
-      name: 'Jordan',
-      date: 'March 8',
-      activity: 'Hiking & Picnic',
-      hasDebrief: false,
-    },
-  ];
-
-  const renderUpcoming = () => (
-    <div className="space-y-6">
-      <div className="bg-charcoal-gray rounded-xl p-6 border border-gray-800">
-        <h3 className="text-white font-medium text-lg mb-4">AI Date Concierge</h3>
-        <p className="text-gray-400 mb-6">Let's design your next meaningful experience</p>
-        
-        <div className="space-y-4">
-          <div>
-            <label className="text-white text-sm mb-2 block">AI Collaboration Level</label>
-            <div className="flex space-x-2">
-              {['Guided', 'Balanced', 'Creative'].map((level) => (
-                <button
-                  key={level}
-                  className="px-4 py-2 bg-gray-700 text-white rounded-lg text-sm hover:bg-goldenrod hover:text-jet-black transition-colors"
-                >
-                  {level}
-                </button>
-              ))}
-            </div>
-          </div>
-          
-          <button className="w-full py-3 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow">
-            Start Planning
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderJournal = () => {
+  const renderContent = () => {
     if (showInsightsDashboard) {
       return (
         <JournalInsightsDashboard
@@ -95,8 +41,21 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
       );
     }
 
+    if (loading) {
+      return (
+        <div className="space-y-6">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="bg-charcoal-gray rounded-xl p-6 border border-gray-800 animate-pulse">
+              <div className="h-6 bg-gray-700 rounded mb-4"></div>
+              <div className="h-4 bg-gray-700 rounded w-3/4"></div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
     return (
-      <div className="space-y-6">
+      <div className="space-y-8">
         {/* Growth Timeline */}
         <GrowthTimeline />
 
@@ -115,6 +74,12 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
             console.log('Updating weekly goal to:', newGoal);
           }}
         />
+
+        {/* Relational Compass */}
+        <RelationalCompass rifState={rifState} />
+        
+        {/* Insights Module */}
+        <InsightsModule insights={insights} />
 
         {/* Journal Entries */}
         <div className="space-y-4">
@@ -190,32 +155,7 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
             </div>
           )}
         </div>
-      </div>
-    );
-  };
 
-  const renderRhythm = () => {
-    if (loading) {
-      return (
-        <div className="space-y-6">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-charcoal-gray rounded-xl p-6 border border-gray-800 animate-pulse">
-              <div className="h-6 bg-gray-700 rounded mb-4"></div>
-              <div className="h-4 bg-gray-700 rounded w-3/4"></div>
-            </div>
-          ))}
-        </div>
-      );
-    }
-
-    return (
-      <div className="space-y-6">
-        {/* Relational Compass */}
-        <RelationalCompass rifState={rifState} />
-        
-        {/* Insights Module */}
-        <InsightsModule insights={insights} />
-        
         {/* Reflection Prompt */}
         <ReflectionPrompt
           currentPrompt={currentPrompt}
@@ -226,44 +166,14 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
     );
   };
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'upcoming':
-        return renderUpcoming();
-      case 'journal':
-        return renderJournal();
-      case 'rhythm':
-        return renderRhythm();
-      default:
-        return renderUpcoming();
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 p-6">
       <div className="max-w-6xl mx-auto space-y-8">
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-display font-semibold journal-header-text bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
-            Dates & Journal
+            Dates & Insights
           </h1>
-          <p className="text-gray-400 text-lg font-light tracking-wide">Plan, reflect, and grow through mindful connection</p>
-        </div>
-
-        {/* Tabs */}
-        <div className="flex space-x-1 journal-premium-card p-1.5 backdrop-blur-lg">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 ${
-                activeTab === tab.id
-                  ? 'bg-gradient-to-r from-goldenrod to-amber-accent text-gray-900 shadow-lg shadow-goldenrod/25 font-semibold'
-                  : 'text-gray-400 hover:text-white hover:bg-gray-700/30'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+          <p className="text-gray-400 text-lg font-light tracking-wide">Reflect, grow, and understand your dating journey</p>
         </div>
 
         {renderContent()}
