@@ -28,7 +28,7 @@ export const MonArkLogo: React.FC<MonArkLogoProps> = ({
       {showTitle && (
         <div className="text-center">
           <h1 className="text-2xl font-bold text-yellow-400 tracking-wider">MonArk</h1>
-          <p className="text-sm text-yellow-400/80 tracking-wide animate-pulse">date well.</p>
+          <p className="text-sm text-yellow-400/80 tracking-wide animate-pulse">Date well.</p>
         </div>
       )}
       
