@@ -954,6 +954,39 @@ export type Database = {
           },
         ]
       }
+      waitlist_submissions: {
+        Row: {
+          email: string
+          first_name: string
+          id: string
+          ip_address: string | null
+          last_name: string
+          source_page: string | null
+          submitted_at: string
+          user_agent: string | null
+        }
+        Insert: {
+          email: string
+          first_name: string
+          id?: string
+          ip_address?: string | null
+          last_name: string
+          source_page?: string | null
+          submitted_at?: string
+          user_agent?: string | null
+        }
+        Update: {
+          email?: string
+          first_name?: string
+          id?: string
+          ip_address?: string | null
+          last_name?: string
+          source_page?: string | null
+          submitted_at?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -4,6 +4,7 @@ import { MonArkLogo } from '@/components/MonArkLogo';
 import { Heart, MessageCircle, Calendar, Shield, Star, MapPin, Users, Zap } from 'lucide-react';
 import { useDemo } from '@/contexts/DemoContext';
 import { DemoMainApp } from './DemoMainApp';
+import { WaitlistModal } from './WaitlistModal';
 
 interface EnhancedLandingPageProps {
   onExitToApp?: () => void;
@@ -14,6 +15,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
   const { demoData, setDemoMode } = useDemo();
   const [showAuthForm, setShowAuthForm] = useState(false);
   const [showFullDemo, setShowFullDemo] = useState(false);
+  const [showWaitlistModal, setShowWaitlistModal] = useState(false);
 
   const startFullDemo = () => {
     if (onStartDemo) {
@@ -89,19 +91,11 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               </Button>
               
               <Button
-                onClick={() => {
-                  console.log('Join waitlist clicked, onExitToApp:', !!onExitToApp);
-                  if (onExitToApp) {
-                    console.log('Calling onExitToApp');
-                    onExitToApp();
-                  } else {
-                    console.log('No onExitToApp function provided');
-                  }
-                }}
+                onClick={() => setShowWaitlistModal(true)}
                 variant="outline"
                 className="text-white border-white/30 hover:bg-white/10 px-8 py-4 text-lg"
               >
-                Return to main page
+                Join the Waitlist
               </Button>
             </div>
 
@@ -209,6 +203,12 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           </div>
         </div>
       </footer>
+      
+      {/* Waitlist Modal */}
+      <WaitlistModal 
+        isOpen={showWaitlistModal} 
+        onClose={() => setShowWaitlistModal(false)} 
+      />
     </div>
   );
 };
