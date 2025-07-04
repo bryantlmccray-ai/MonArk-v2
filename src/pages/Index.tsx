@@ -17,6 +17,7 @@ const Index = () => {
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = React.useState(false);
   const [showDemo, setShowDemo] = React.useState(false);
   const [showDemoFromApp, setShowDemoFromApp] = React.useState(false);
+  const [showAuth, setShowAuth] = React.useState(false);
 
   // Add escape key listener to exit demo
   React.useEffect(() => {
@@ -80,12 +81,16 @@ const Index = () => {
     );
   }
 
+  // Show auth page if requested
+  if (showAuth) {
+    return <AuthPage />;
+  }
+
   // Show enhanced landing page if user is not logged in
   if (!user) {
     return <EnhancedLandingPage onExitToApp={() => {
-      console.log('onExitToApp called from Index.tsx');
-      setShowDemo(false);
-      setShowDemoFromApp(false);
+      console.log('onExitToApp called - going to auth');
+      setShowAuth(true);
     }} />;
   }
 
