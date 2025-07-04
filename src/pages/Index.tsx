@@ -16,7 +16,6 @@ const Index = () => {
   const { demoData, setDemoMode } = useDemo();
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = React.useState(false);
   const [showDemo, setShowDemo] = React.useState(false);
-  const [showDemoFromApp, setShowDemoFromApp] = React.useState(false);
   const [showAuth, setShowAuth] = React.useState(false);
 
   // Add escape key listener to exit demo
@@ -26,25 +25,11 @@ const Index = () => {
       if (e.key === 'Escape') {
         console.log('Exiting demo via Escape key'); // Debug log
         setShowDemo(false);
-        setShowDemoFromApp(false);
       }
     };
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, []);
-
-  // Demo mode from normal app - show demo directly
-  if (showDemoFromApp) {
-    return (
-      <div className="fixed inset-0 bg-jet-black z-50">
-        <DemoMainApp onClose={() => {
-          console.log('Exit demo button clicked from app');
-          setShowDemoFromApp(false);
-          setShowDemo(false);
-        }} />
-      </div>
-    );
-  }
 
   // Demo mode override - accessible regardless of auth status  
   if (showDemo) {
@@ -55,7 +40,6 @@ const Index = () => {
             onClick={() => {
               console.log('Exit demo button clicked from landing');
               setShowDemo(false);
-              setShowDemoFromApp(false);
             }}
             className="px-4 py-2 bg-charcoal-gray/80 text-white rounded-lg border border-goldenrod/30 hover:bg-charcoal-gray transition-colors"
           >
@@ -65,7 +49,6 @@ const Index = () => {
         <EnhancedLandingPage onExitToApp={() => {
           console.log('Exit to app from landing page');
           setShowDemo(false);
-          setShowDemoFromApp(false);
         }} />
       </div>
     );
@@ -100,21 +83,9 @@ const Index = () => {
     />;
   }
 
-  // If user has a complete profile, show main app with demo access
+  // If user has a complete profile, show main app
   if (profile?.is_profile_complete) {
-    return (
-      <div className="relative">
-        <div className="fixed top-4 left-4 z-50">
-          <button
-            onClick={() => setShowDemoFromApp(true)}
-            className="px-4 py-2 bg-goldenrod-gradient text-jet-black font-medium rounded-lg hover:shadow-golden-glow transition-all duration-300"
-          >
-            View Demo
-          </button>
-        </div>
-        <MainApp />
-      </div>
-    );
+    return <MainApp />;
   }
 
   // If user has a profile but it's not complete, show profile creation
