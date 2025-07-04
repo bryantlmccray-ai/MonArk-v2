@@ -9,6 +9,33 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      blocked_users: {
+        Row: {
+          blocked_user_id: string
+          blocker_user_id: string
+          created_at: string
+          id: string
+          reason: string | null
+          updated_at: string
+        }
+        Insert: {
+          blocked_user_id: string
+          blocker_user_id: string
+          created_at?: string
+          id?: string
+          reason?: string | null
+          updated_at?: string
+        }
+        Update: {
+          blocked_user_id?: string
+          blocker_user_id?: string
+          created_at?: string
+          id?: string
+          reason?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       cities: {
         Row: {
           country: string
@@ -837,6 +864,45 @@ export type Database = {
         }
         Relationships: []
       }
+      user_reports: {
+        Row: {
+          conversation_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          reason: string
+          report_type: string
+          reported_user_id: string
+          reporter_user_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          conversation_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          reason: string
+          report_type: string
+          reported_user_id: string
+          reporter_user_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          conversation_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          reason?: string
+          report_type?: string
+          reported_user_id?: string
+          reporter_user_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_rif_state: {
         Row: {
           color_palette: Json | null
@@ -863,6 +929,45 @@ export type Database = {
           id?: string
           last_updated?: string
           state_description?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_safety_settings: {
+        Row: {
+          allow_messages_from_strangers: boolean
+          auto_decline_inappropriate_content: boolean
+          created_at: string
+          emergency_contacts: Json | null
+          id: string
+          location_sharing_enabled: boolean
+          require_mutual_match_for_messaging: boolean
+          show_online_status: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          allow_messages_from_strangers?: boolean
+          auto_decline_inappropriate_content?: boolean
+          created_at?: string
+          emergency_contacts?: Json | null
+          id?: string
+          location_sharing_enabled?: boolean
+          require_mutual_match_for_messaging?: boolean
+          show_online_status?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          allow_messages_from_strangers?: boolean
+          auto_decline_inappropriate_content?: boolean
+          created_at?: string
+          emergency_contacts?: Json | null
+          id?: string
+          location_sharing_enabled?: boolean
+          require_mutual_match_for_messaging?: boolean
+          show_online_status?: boolean
+          updated_at?: string
           user_id?: string
         }
         Relationships: []

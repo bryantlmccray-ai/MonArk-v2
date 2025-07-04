@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { ProfileCreation } from '@/components/profile/ProfileCreation';
+import { UserSafetyOverlay } from '@/components/safety/UserSafetyOverlay';
 
 interface SettingsOverlayProps {
   onClose: () => void;
@@ -14,6 +15,7 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
+  const [showSafetyCenter, setShowSafetyCenter] = useState(false);
   const { signOut, user } = useAuth();
   const { toast } = useToast();
 
@@ -123,7 +125,7 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
   const settingsItems = [
     { icon: User, label: 'Edit Profile', action: () => setShowEditProfile(true) },
     { icon: Bell, label: 'Notifications', action: () => {} },
-    { icon: Shield, label: 'Privacy & Data', action: () => window.location.href = '/privacy' },
+    { icon: Shield, label: 'Safety Center', action: () => setShowSafetyCenter(true) },
     { icon: Heart, label: 'Matching Preferences', action: () => {} },
   ];
 
@@ -135,6 +137,11 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
       description: "Your profile has been successfully updated.",
     });
   };
+
+  // Show safety center
+  if (showSafetyCenter) {
+    return <UserSafetyOverlay onClose={() => setShowSafetyCenter(false)} />;
+  }
 
   // Show edit profile modal
   if (showEditProfile) {
