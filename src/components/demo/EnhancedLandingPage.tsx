@@ -101,7 +101,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 variant="outline"
                 className="text-white border-white/30 hover:bg-white/10 px-8 py-4 text-lg"
               >
-                Join the Waitlist
+                Return to main page
               </Button>
             </div>
 
