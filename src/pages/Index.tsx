@@ -88,10 +88,16 @@ const Index = () => {
 
   // Show enhanced landing page if user is not logged in
   if (!user) {
-    return <EnhancedLandingPage onExitToApp={() => {
-      console.log('onExitToApp called - going to auth');
-      setShowAuth(true);
-    }} />;
+    return <EnhancedLandingPage 
+      onExitToApp={() => {
+        console.log('onExitToApp called - going to auth');
+        setShowAuth(true);
+      }}
+      onStartDemo={() => {
+        console.log('Starting demo mode');
+        setShowDemo(true);
+      }}
+    />;
   }
 
   // If user has a complete profile, show main app with demo access

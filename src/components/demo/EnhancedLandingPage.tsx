@@ -7,16 +7,21 @@ import { DemoMainApp } from './DemoMainApp';
 
 interface EnhancedLandingPageProps {
   onExitToApp?: () => void;
+  onStartDemo?: () => void;
 }
 
-export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExitToApp }) => {
+export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExitToApp, onStartDemo }) => {
   const { demoData, setDemoMode } = useDemo();
   const [showAuthForm, setShowAuthForm] = useState(false);
   const [showFullDemo, setShowFullDemo] = useState(false);
 
   const startFullDemo = () => {
-    setDemoMode(true);
-    setShowFullDemo(true);
+    if (onStartDemo) {
+      onStartDemo();
+    } else {
+      setDemoMode(true);
+      setShowFullDemo(true);
+    }
   };
 
   if (showFullDemo) {
