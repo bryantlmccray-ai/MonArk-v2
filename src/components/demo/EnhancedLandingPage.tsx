@@ -97,6 +97,16 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               >
                 Join the Waitlist
               </Button>
+              
+              {onExitToApp && (
+                <Button
+                  onClick={onExitToApp}
+                  variant="ghost"
+                  className="text-gray-400 hover:text-white hover:bg-white/5 px-8 py-4 text-lg"
+                >
+                  Return to Home Page
+                </Button>
+              )}
             </div>
 
             <div className="text-sm text-gray-400 pt-4">
