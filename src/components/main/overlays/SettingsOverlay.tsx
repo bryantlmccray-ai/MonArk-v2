@@ -5,6 +5,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { ProfileCreation } from '@/components/profile/ProfileCreation';
 import { UserSafetyOverlay } from '@/components/safety/UserSafetyOverlay';
+import { NotificationSettings } from '../../notifications/NotificationSettings';
 
 interface SettingsOverlayProps {
   onClose: () => void;
@@ -263,6 +264,14 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
             </div>
           </div>
         </div>
+      )}
+      
+      {/* Notification Settings Modal */}
+      {showNotificationSettings && (
+        <NotificationSettings 
+          isOpen={showNotificationSettings} 
+          onClose={() => setShowNotificationSettings(false)} 
+        />
       )}
     </div>
   );
