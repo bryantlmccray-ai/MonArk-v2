@@ -28,32 +28,32 @@ export default {
 			},
 			colors: {
 				/* Luxurious Color System - Deep Navy & Metallic Gold */
-				'deep-navy': '#0B0B45',
+				'deep-navy': '#1a1f2e',
 				'metallic-gold': '#D4AF37',
 				'gold-light': '#E0C547',
 				'gold-dark': '#B8951D',
 				'warm-ivory': '#F8F8F8',
-				'charcoal': '#2C2C54',
-				'graphite': '#40405A',
-				'midnight': '#070735',
+				'charcoal': '#3a3f4f',
+				'graphite': '#5a6070',
+				'midnight': '#0f1419',
 
 				/* Legacy color updates for new luxury theme */
-				'midnight-navy': '#0B0B45',
+				'midnight-navy': '#1a1f2e',
 				'soft-ivory': '#F8F8F8',
 				'copper-rose': '#D4AF37',
-				'dusky-lavender': '#40405A',
-				'charcoal-ink': '#2C2C54',
+				'dusky-lavender': '#5a6070',
+				'charcoal-ink': '#3a3f4f',
 
 				/* Updated MonArk brand colors */
-				'monark-navy': '#0B0B45',
+				'monark-navy': '#1a1f2e',
 				'monark-ivory': '#F8F8F8',
 				'monark-copper': '#D4AF37',
-				'monark-lavender': '#40405A',
-				'monark-sage': '#2C2C54',
+				'monark-lavender': '#5a6070',
+				'monark-sage': '#3a3f4f',
 				'monark-brass': '#B8951D',
 				'monark-coral': '#D4AF37',
-				'charcoal-gray': '#2C2C54',
-				'jet-black': '#0B0B45',
+				'charcoal-gray': '#3a3f4f',
+				'jet-black': '#1a1f2e',
 				'goldenrod': '#D4AF37',
 
 				/* Shadcn integration */
@@ -112,7 +112,7 @@ export default {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
 				'gold-gradient': 'linear-gradient(135deg, #D4AF37 0%, #E0C547 100%)',
 				'metallic-gradient': 'linear-gradient(135deg, #D4AF37 0%, #B8951D 100%)',
-				'luxury-gradient': 'linear-gradient(135deg, #2C2C54 0%, #0B0B45 100%)',
+				'luxury-gradient': 'linear-gradient(135deg, #3a3f4f 0%, #1a1f2e 100%)',
 				'goldenrod-gradient': 'linear-gradient(135deg, #D4AF37 0%, #E0C547 100%)',
 				'premium-gradient': 'linear-gradient(135deg, #D4AF37 0%, #E0C547 50%, #D4AF37 100%)',
 			},

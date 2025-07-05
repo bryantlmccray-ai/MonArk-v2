@@ -6,14 +6,14 @@
 @layer base {
   :root {
     /* Luxurious Color System - Deep Navy & Metallic Gold */
-    --color-deep-navy: 240 71% 16%; /* #0B0B45 - rich navy background */
+    --color-deep-navy: 220 25% 12%; /* #1a1f2e - rich navy background */
     --color-metallic-gold: 45 67% 53%; /* #D4AF37 - luxurious metallic gold */
     --color-gold-light: 45 67% 63%; /* lighter gold for gradients */
     --color-gold-dark: 45 67% 43%; /* darker gold for gradients */
     --color-warm-ivory: 0 0% 97%; /* #F8F8F8 - soft off-white text */
-    --color-charcoal: 240 20% 20%; /* premium charcoal */
-    --color-graphite: 240 15% 35%; /* elegant borders */
-    --color-midnight: 240 71% 12%; /* deeper navy for accents */
+    --color-charcoal: 220 15% 25%; /* premium charcoal */
+    --color-graphite: 220 10% 40%; /* elegant borders */
+    --color-midnight: 220 30% 8%; /* deeper navy for accents */
 
     /* Design System Tokens - Updated */
     --color-primary-bg: var(--color-deep-navy);
