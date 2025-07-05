@@ -5,21 +5,21 @@
 
 @layer base {
   :root {
-    /* Luxurious Color System - Deep Sapphire & Gold */
-    --color-deep-navy: 15 23 42; /* slate-900 - rich navy background */
-    --color-sapphire: 30 58 138; /* blue-800 - luxurious sapphire primary */
-    --color-rich-gold: 212 175 55; /* classic gold accent */
-    --color-warm-ivory: 254 247 205; /* warm ivory text */
-    --color-soft-gray: 148 163 184; /* slate-400 - refined gray */
-    --color-charcoal: 30 41 59; /* slate-800 - premium charcoal */
-    --color-graphite: 51 65 85; /* slate-700 - elegant borders */
-    --color-midnight: 15 23 42; /* slate-900 - deep backgrounds */
+    /* Luxurious Color System - Deep Navy & Metallic Gold */
+    --color-deep-navy: 240 71% 16%; /* #0B0B45 - rich navy background */
+    --color-metallic-gold: 45 67% 53%; /* #D4AF37 - luxurious metallic gold */
+    --color-gold-light: 45 67% 63%; /* lighter gold for gradients */
+    --color-gold-dark: 45 67% 43%; /* darker gold for gradients */
+    --color-warm-ivory: 0 0% 97%; /* #F8F8F8 - soft off-white text */
+    --color-charcoal: 240 20% 20%; /* premium charcoal */
+    --color-graphite: 240 15% 35%; /* elegant borders */
+    --color-midnight: 240 71% 12%; /* deeper navy for accents */
 
-    /* Design System Tokens - Luxury Edition */
+    /* Design System Tokens - Updated */
     --color-primary-bg: var(--color-deep-navy);
     --color-secondary-bg: var(--color-charcoal);
-    --color-accent-1: var(--color-rich-gold);
-    --color-accent-2: var(--color-sapphire);
+    --color-accent-1: var(--color-metallic-gold);
+    --color-accent-2: var(--color-gold-dark);
 
     /* Updated shadcn variables for luxury theme */
     --background: var(--color-deep-navy);
@@ -31,24 +31,24 @@
     --popover: var(--color-charcoal);
     --popover-foreground: var(--color-warm-ivory);
 
-    --primary: var(--color-rich-gold);
-    --primary-foreground: var(--color-deep-navy);
+    --primary: var(--color-metallic-gold);
+    --primary-foreground: 0 0% 0%;
 
     --secondary: var(--color-charcoal);
     --secondary-foreground: var(--color-warm-ivory);
 
     --muted: var(--color-midnight);
-    --muted-foreground: var(--color-soft-gray);
+    --muted-foreground: var(--color-graphite);
 
-    --accent: var(--color-sapphire);
-    --accent-foreground: var(--color-warm-ivory);
+    --accent: var(--color-gold-light);
+    --accent-foreground: 0 0% 0%;
 
-    --destructive: 239 68 68;
-    --destructive-foreground: 255 255 255;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: var(--color-warm-ivory);
 
     --border: var(--color-graphite);
     --input: var(--color-midnight);
-    --ring: var(--color-rich-gold);
+    --ring: var(--color-metallic-gold);
 
     --radius: 12px;
 
@@ -65,7 +65,7 @@
   }
 
   body {
-    @apply bg-slate-900 text-amber-50;
+    @apply bg-deep-navy text-warm-ivory;
     font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
     font-size: 16px;
     line-height: 1.6;
@@ -108,7 +108,7 @@
     @apply bg-input border border-border text-foreground placeholder-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring;
   }
 
-  /* Micro-interaction utilities - Updated for Luxury */
+  /* Micro-interaction utilities - Updated for Metallic Gold */
   .gentle-glow {
     box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
   }
@@ -121,8 +121,12 @@
     box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
   }
 
-  .sapphire-glow {
-    box-shadow: 0 0 20px rgba(30, 58, 138, 0.4);
+  .golden-glow {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  }
+
+  .metallic-glow {
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
   }
 
   /* Premium Journal Styling - Updated */

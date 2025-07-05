@@ -27,34 +27,34 @@ export default {
 				'display': ['Playfair Display', 'serif'],
 			},
 			colors: {
-				/* Luxurious Color System - Deep Sapphire & Gold */
-				'deep-navy': 'rgb(15 23 42)', // slate-900
-				'sapphire': 'rgb(30 58 138)', // blue-800 
-				'rich-gold': 'rgb(212 175 55)', // classic gold
-				'warm-ivory': 'rgb(254 247 205)', // amber-50
-				'soft-gray': 'rgb(148 163 184)', // slate-400
-				'charcoal': 'rgb(30 41 59)', // slate-800
-				'graphite': 'rgb(51 65 85)', // slate-700
-				'midnight': 'rgb(15 23 42)', // slate-900
+				/* Luxurious Color System - Deep Navy & Metallic Gold */
+				'deep-navy': '#0B0B45',
+				'metallic-gold': '#D4AF37',
+				'gold-light': '#E0C547',
+				'gold-dark': '#B8951D',
+				'warm-ivory': '#F8F8F8',
+				'charcoal': '#2C2C54',
+				'graphite': '#40405A',
+				'midnight': '#070735',
 
-				/* Legacy color updates for luxury theme */
-				'midnight-navy': 'rgb(15 23 42)',
-				'soft-ivory': 'rgb(254 247 205)',
-				'copper-rose': 'rgb(212 175 55)', // Updated to rich gold
-				'dusky-lavender': 'rgb(148 163 184)', // Updated to soft gray
-				'charcoal-ink': 'rgb(30 41 59)',
+				/* Legacy color updates for new luxury theme */
+				'midnight-navy': '#0B0B45',
+				'soft-ivory': '#F8F8F8',
+				'copper-rose': '#D4AF37',
+				'dusky-lavender': '#40405A',
+				'charcoal-ink': '#2C2C54',
 
 				/* Updated MonArk brand colors */
-				'monark-navy': 'rgb(15 23 42)',
-				'monark-ivory': 'rgb(254 247 205)',
-				'monark-copper': 'rgb(212 175 55)',
-				'monark-lavender': 'rgb(148 163 184)',
-				'monark-sage': 'rgb(51 65 85)',
-				'monark-brass': 'rgb(30 58 138)',
-				'monark-coral': 'rgb(212 175 55)',
-				'charcoal-gray': 'rgb(30 41 59)',
-				'jet-black': 'rgb(15 23 42)',
-				'goldenrod': 'rgb(212 175 55)',
+				'monark-navy': '#0B0B45',
+				'monark-ivory': '#F8F8F8',
+				'monark-copper': '#D4AF37',
+				'monark-lavender': '#40405A',
+				'monark-sage': '#2C2C54',
+				'monark-brass': '#B8951D',
+				'monark-coral': '#D4AF37',
+				'charcoal-gray': '#2C2C54',
+				'jet-black': '#0B0B45',
+				'goldenrod': '#D4AF37',
 
 				/* Shadcn integration */
 				border: 'hsl(var(--border))',
@@ -110,9 +110,11 @@ export default {
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-				'gold-gradient': 'linear-gradient(135deg, rgb(212 175 55) 0%, rgb(30 58 138) 100%)',
-				'luxury-gradient': 'linear-gradient(135deg, rgb(30 41 59) 0%, rgb(15 23 42) 100%)',
-				'goldenrod-gradient': 'linear-gradient(135deg, rgb(212 175 55) 0%, rgb(30 58 138) 100%)',
+				'gold-gradient': 'linear-gradient(135deg, #D4AF37 0%, #E0C547 100%)',
+				'metallic-gradient': 'linear-gradient(135deg, #D4AF37 0%, #B8951D 100%)',
+				'luxury-gradient': 'linear-gradient(135deg, #2C2C54 0%, #0B0B45 100%)',
+				'goldenrod-gradient': 'linear-gradient(135deg, #D4AF37 0%, #E0C547 100%)',
+				'premium-gradient': 'linear-gradient(135deg, #D4AF37 0%, #E0C547 50%, #D4AF37 100%)',
 			},
 			boxShadow: {
 				'monark': '0px 4px 20px rgba(0, 0, 0, 0.3)',

@@ -10,16 +10,19 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-yellow-400 text-gray-900 hover:bg-yellow-300",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-gray-700 bg-gray-800 hover:bg-gray-700 hover:text-gray-100 text-gray-100",
+          "border border-border bg-background hover:bg-accent hover:text-accent-foreground",
         secondary:
-          "bg-gray-800 text-gray-100 hover:bg-gray-700 border border-gray-700",
-        ghost: "hover:bg-gray-800 hover:text-gray-100 text-gray-100",
-        link: "text-yellow-400 underline-offset-4 hover:underline",
-        gradient: "bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-900 hover:from-yellow-300 hover:to-amber-400",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+        gradient: "bg-gold-gradient text-black hover:shadow-golden-glow transition-all duration-300",
+        metallic: "bg-metallic-gradient text-black hover:shadow-golden-glow transition-all duration-300",
+        premium: "bg-premium-gradient text-black hover:shadow-golden-glow transition-all duration-300",
+        luxury: "bg-luxury-gradient text-warm-ivory hover:bg-opacity-90 transition-all duration-300",
       },
       size: {
         default: "h-10 px-4 py-2",
