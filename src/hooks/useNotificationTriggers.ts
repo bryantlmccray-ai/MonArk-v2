@@ -1,18 +1,40 @@
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
-import { useNotifications } from './useNotifications';
 
 export const useNotificationTriggers = () => {
   const { user } = useAuth();
-  const { createNotification, preferences } = useNotifications();
 
-  // Listen for new matches
+  // Create notifications for various events
   useEffect(() => {
-    if (!user || !preferences?.new_matches) return;
+    if (!user) return;
 
+    const createNotification = async (
+      type: 'match' | 'message' | 'date_proposal' | 'system' | 'safety',
+      title: string,
+      message: string,
+      data?: any,
+      actionUrl?: string
+    ) => {
+      try {
+        await supabase
+          .from('notifications')
+          .insert({
+            user_id: user.id,
+            type,
+            title,
+            message,
+            data: data || {},
+            action_url: actionUrl
+          });
+      } catch (error) {
+        console.error('Error creating notification:', error);
+      }
+    };
+
+    // Single channel for all notification triggers
     const channel = supabase
-      .channel(`match-notifications-${user.id}`)
+      .channel(`notification-triggers-${user.id}`)
       .on(
         'postgres_changes',
         {
@@ -23,7 +45,7 @@ export const useNotificationTriggers = () => {
         },
         (payload) => {
           const match = payload.new as any;
-          if (match.is_mutual) {
+          if (match.is_mutual && !payload.old?.is_mutual) {
             createNotification(
               'match',
               '🎉 New Match!',
@@ -31,37 +53,9 @@ export const useNotificationTriggers = () => {
               { match_id: match.id },
               '/matches'
             );
-
-            // Send email notification if enabled
-            if (preferences?.email_enabled) {
-              fetch('/functions/v1/send-notification-email', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  to: user.email,
-                  type: 'match',
-                  title: '🎉 New Match!',
-                  message: 'You have a new mutual match. Start a conversation!',
-                  actionUrl: `${window.location.origin}/matches`
-                })
-              }).catch(console.error);
-            }
           }
         }
       )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [user, preferences, createNotification]);
-
-  // Listen for new messages
-  useEffect(() => {
-    if (!user || !preferences?.new_messages) return;
-
-    const channel = supabase
-      .channel(`message-notifications-${user.id}`)
       .on(
         'postgres_changes',
         {
@@ -82,36 +76,8 @@ export const useNotificationTriggers = () => {
             },
             `/matches?conversation=${message.conversation_id}`
           );
-
-          // Send email notification if enabled
-          if (preferences?.email_enabled) {
-            fetch('/functions/v1/send-notification-email', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                to: user.email,
-                type: 'message',
-                title: '💬 New Message',
-                message: 'You have a new message waiting for you.',
-                actionUrl: `${window.location.origin}/matches?conversation=${message.conversation_id}`
-              })
-            }).catch(console.error);
-          }
         }
       )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [user, preferences, createNotification]);
-
-  // Listen for date proposals
-  useEffect(() => {
-    if (!user || !preferences?.date_proposals) return;
-
-    const channel = supabase
-      .channel(`proposal-notifications-${user.id}`)
       .on(
         'postgres_changes',
         {
@@ -132,21 +98,6 @@ export const useNotificationTriggers = () => {
             },
             `/matches?conversation=${proposal.conversation_id}`
           );
-
-          // Send email notification if enabled
-          if (preferences?.email_enabled) {
-            fetch('/functions/v1/send-notification-email', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                to: user.email,
-                type: 'date_proposal',
-                title: '📅 Date Proposal',
-                message: `Someone proposed a date: ${proposal.title}`,
-                actionUrl: `${window.location.origin}/matches?conversation=${proposal.conversation_id}`
-              })
-            }).catch(console.error);
-          }
         }
       )
       .subscribe();
@@ -154,39 +105,7 @@ export const useNotificationTriggers = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user, preferences, createNotification]);
-
-  // Listen for RIF insights
-  useEffect(() => {
-    if (!user || !preferences?.rif_insights) return;
-
-    const channel = supabase
-      .channel(`rif-insights-notifications-${user.id}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'rif_insights',
-          filter: `user_id=eq.${user.id}`
-        },
-        (payload) => {
-          const insight = payload.new as any;
-          createNotification(
-            'system',
-            '💡 New Insight',
-            `${insight.title}: ${insight.content.substring(0, 100)}...`,
-            { insight_id: insight.id },
-            '/profile'
-          );
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [user, preferences, createNotification]);
+  }, [user]);
 
   return null;
 };
