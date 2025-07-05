@@ -848,6 +848,45 @@ export type Database = {
         }
         Relationships: []
       }
+      user_actions: {
+        Row: {
+          action_type: string
+          admin_user_id: string
+          created_at: string
+          duration_hours: number | null
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          reason: string
+          target_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          action_type: string
+          admin_user_id: string
+          created_at?: string
+          duration_hours?: number | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          reason: string
+          target_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          action_type?: string
+          admin_user_id?: string
+          created_at?: string
+          duration_hours?: number | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          reason?: string
+          target_user_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_compatibility_feedback: {
         Row: {
           created_at: string
@@ -1107,6 +1146,36 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          assigned_at: string
+          assigned_by: string | null
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by?: string | null
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string | null
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_safety_settings: {
         Row: {
           allow_messages_from_strangers: boolean
@@ -1294,6 +1363,13 @@ export type Database = {
           distance_km: number
         }[]
       }
+      has_role: {
+        Args: {
+          _user_id: string
+          _role: Database["public"]["Enums"]["app_role"]
+        }
+        Returns: boolean
+      }
       mark_messages_as_read: {
         Args: { p_conversation_id: string; p_user_id: string }
         Returns: undefined
@@ -1304,6 +1380,7 @@ export type Database = {
       }
     }
     Enums: {
+      app_role: "admin" | "moderator" | "user"
       gender_identity:
         | "Man"
         | "Woman"
@@ -1440,6 +1517,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "moderator", "user"],
       gender_identity: [
         "Man",
         "Woman",
