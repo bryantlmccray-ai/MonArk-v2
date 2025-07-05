@@ -371,6 +371,21 @@ export type Database = {
         }
         Relationships: []
       }
+      "MonArk RFP": {
+        Row: {
+          created_at: string
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+        }
+        Relationships: []
+      }
       neighborhoods: {
         Row: {
           bounds: Json | null
@@ -416,6 +431,93 @@ export type Database = {
           transit_score?: number | null
           updated_at?: string
           walkability_score?: number | null
+        }
+        Relationships: []
+      }
+      notification_preferences: {
+        Row: {
+          created_at: string
+          date_proposals: boolean
+          date_reminders: boolean
+          email_enabled: boolean
+          id: string
+          new_matches: boolean
+          new_messages: boolean
+          push_enabled: boolean
+          rif_insights: boolean
+          safety_alerts: boolean
+          system_updates: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date_proposals?: boolean
+          date_reminders?: boolean
+          email_enabled?: boolean
+          id?: string
+          new_matches?: boolean
+          new_messages?: boolean
+          push_enabled?: boolean
+          rif_insights?: boolean
+          safety_alerts?: boolean
+          system_updates?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date_proposals?: boolean
+          date_reminders?: boolean
+          email_enabled?: boolean
+          id?: string
+          new_matches?: boolean
+          new_messages?: boolean
+          push_enabled?: boolean
+          rif_insights?: boolean
+          safety_alerts?: boolean
+          system_updates?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          action_url: string | null
+          created_at: string
+          data: Json | null
+          id: string
+          message: string
+          read_at: string | null
+          title: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_url?: string | null
+          created_at?: string
+          data?: Json | null
+          id?: string
+          message: string
+          read_at?: string | null
+          title: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_url?: string | null
+          created_at?: string
+          data?: Json | null
+          id?: string
+          message?: string
+          read_at?: string | null
+          title?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

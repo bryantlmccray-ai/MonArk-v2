@@ -16,6 +16,7 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
   const [isDeleting, setIsDeleting] = useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [showSafetyCenter, setShowSafetyCenter] = useState(false);
+  const [showNotificationSettings, setShowNotificationSettings] = useState(false);
   const { signOut, user } = useAuth();
   const { toast } = useToast();
 
@@ -124,7 +125,7 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
 
   const settingsItems = [
     { icon: User, label: 'Edit Profile', action: () => setShowEditProfile(true) },
-    { icon: Bell, label: 'Notifications', action: () => {} },
+    { icon: Bell, label: 'Notifications', action: () => setShowNotificationSettings(true) },
     { icon: Shield, label: 'Safety Center', action: () => setShowSafetyCenter(true) },
     { icon: Heart, label: 'Matching Preferences', action: () => {} },
   ];
