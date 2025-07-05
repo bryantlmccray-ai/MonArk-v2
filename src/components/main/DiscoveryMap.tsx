@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Heart, MessageCircle, X, Clock, Shield, Target, MapPin, Star, Search, SlidersHorizontal, Navigation, Bell, Wifi } from 'lucide-react';
+import { Heart, MessageCircle, X, Clock, Shield, Target, MapPin, Star, Search, SlidersHorizontal, Navigation, Bell, Wifi, ChevronUp, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -199,6 +199,7 @@ export const DiscoveryMap: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [showActivityFeed, setShowActivityFeed] = useState(false);
+  const [searchCollapsed, setSearchCollapsed] = useState(false);
   const [mapCenter, setMapCenter] = useState({ x: 50, y: 50 });
   const [zoomLevel, setZoomLevel] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
@@ -653,82 +654,126 @@ export const DiscoveryMap: React.FC = () => {
       
       {/* Search and Navigation Controls */}
       <div className="absolute top-6 left-6 right-6 z-20">
-        <div className="bg-charcoal-gray/95 backdrop-blur-xl rounded-xl p-4 border border-goldenrod/30 shadow-2xl">
-          {/* Search Bar */}
-          <div className="flex items-center space-x-3 mb-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder="Search people, interests, or locations..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-jet-black/50 border-gray-600 text-white placeholder-gray-400 focus:border-goldenrod"
-              />
-            </div>
-            <Button
-              onClick={() => setShowFilters(!showFilters)}
-              variant="outline"
-              size="sm"
-              className="border-gray-600 text-gray-300 hover:text-white hover:border-goldenrod"
-            >
-              <SlidersHorizontal className="h-4 w-4" />
-            </Button>
-          </div>
-
-          {/* Quick Location Navigation */}
-          <div className="flex items-center space-x-2">
-            <Navigation className="h-4 w-4 text-goldenrod" />
-            <span className="text-xs text-gray-400 mr-2">Quick nav:</span>
-            {['Downtown', 'Wicker Park', 'Lincoln Park', 'Lakeview'].map((area) => (
-              <button
-                key={area}
-                onClick={() => handleLocationSearch(area)}
-                className="px-2 py-1 text-xs bg-gray-700 hover:bg-goldenrod hover:text-jet-black rounded-md text-gray-300 transition-colors"
+        <div className="bg-charcoal-gray/95 backdrop-blur-xl rounded-xl border border-goldenrod/30 shadow-2xl transition-all duration-300">
+          {searchCollapsed ? (
+            /* Minimized Search Bar */
+            <div className="p-2 flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Search className="h-4 w-4 text-goldenrod" />
+                <span className="text-sm text-gray-300">
+                  {searchQuery ? `"${searchQuery}"` : 'Search & Navigation'}
+                </span>
+                {filteredProfiles.length > 0 && (
+                  <Badge variant="secondary" className="text-xs">
+                    {filteredProfiles.length}
+                  </Badge>
+                )}
+              </div>
+              <Button
+                onClick={() => setSearchCollapsed(false)}
+                variant="ghost"
+                size="sm"
+                className="text-gray-400 hover:text-white"
               >
-                {area}
-              </button>
-            ))}
-          </div>
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </div>
+          ) : (
+            /* Full Search Panel */
+            <div className="p-4">
+              {/* Header with collapse button */}
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <Search className="h-4 w-4 text-goldenrod" />
+                  <span className="text-sm font-medium text-white">Search & Navigation</span>
+                </div>
+                <Button
+                  onClick={() => setSearchCollapsed(true)}
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-400 hover:text-white"
+                >
+                  <ChevronUp className="h-4 w-4" />
+                </Button>
+              </div>
 
-          {/* Filters Panel */}
-          {showFilters && (
-            <div className="mt-4 pt-4 border-t border-gray-700">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs text-gray-400 mb-2 block">Max Distance</label>
+              {/* Search Bar */}
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
-                    type="number"
-                    placeholder="10 miles"
-                    value={filters.maxDistance}
-                    onChange={(e) => setFilters(prev => ({
-                      ...prev,
-                      maxDistance: parseInt(e.target.value) || 10
-                    }))}
-                    className="bg-jet-black/50 border-gray-600 text-white text-sm"
+                    placeholder="Search people, interests, or locations..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10 bg-jet-black/50 border-gray-600 text-white placeholder-gray-400 focus:border-goldenrod"
                   />
                 </div>
-                <div>
-                  <label className="text-xs text-gray-400 mb-2 block">View Controls</label>
-                  <div className="flex space-x-2">
-                    <Button
-                      onClick={() => setZoomLevel(prev => Math.min(prev + 0.2, 2))}
-                      variant="outline"
-                      size="sm"
-                      className="border-gray-600 text-gray-300 text-xs"
-                    >
-                      Zoom +
-                    </Button>
-                    <Button
-                      onClick={() => setZoomLevel(prev => Math.max(prev - 0.2, 0.5))}
-                      variant="outline"
-                      size="sm"
-                      className="border-gray-600 text-gray-300 text-xs"
-                    >
-                      Zoom -
-                    </Button>
+                <Button
+                  onClick={() => setShowFilters(!showFilters)}
+                  variant="outline"
+                  size="sm"
+                  className="border-gray-600 text-gray-300 hover:text-white hover:border-goldenrod"
+                >
+                  <SlidersHorizontal className="h-4 w-4" />
+                </Button>
+              </div>
+
+              {/* Quick Location Navigation */}
+              <div className="flex items-center space-x-2">
+                <Navigation className="h-4 w-4 text-goldenrod" />
+                <span className="text-xs text-gray-400 mr-2">Quick nav:</span>
+                {['Downtown', 'Wicker Park', 'Lincoln Park', 'Lakeview'].map((area) => (
+                  <button
+                    key={area}
+                    onClick={() => handleLocationSearch(area)}
+                    className="px-2 py-1 text-xs bg-gray-700 hover:bg-goldenrod hover:text-jet-black rounded-md text-gray-300 transition-colors"
+                  >
+                    {area}
+                  </button>
+                ))}
+              </div>
+
+              {/* Filters Panel */}
+              {showFilters && (
+                <div className="mt-4 pt-4 border-t border-gray-700">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs text-gray-400 mb-2 block">Max Distance</label>
+                      <Input
+                        type="number"
+                        placeholder="10 miles"
+                        value={filters.maxDistance}
+                        onChange={(e) => setFilters(prev => ({
+                          ...prev,
+                          maxDistance: parseInt(e.target.value) || 10
+                        }))}
+                        className="bg-jet-black/50 border-gray-600 text-white text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-gray-400 mb-2 block">View Controls</label>
+                      <div className="flex space-x-2">
+                        <Button
+                          onClick={() => setZoomLevel(prev => Math.min(prev + 0.2, 2))}
+                          variant="outline"
+                          size="sm"
+                          className="border-gray-600 text-gray-300 text-xs"
+                        >
+                          Zoom +
+                        </Button>
+                        <Button
+                          onClick={() => setZoomLevel(prev => Math.max(prev - 0.2, 0.5))}
+                          variant="outline"
+                          size="sm"
+                          className="border-gray-600 text-gray-300 text-xs"
+                        >
+                          Zoom -
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
         </div>
