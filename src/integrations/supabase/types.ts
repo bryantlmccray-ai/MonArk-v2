@@ -881,6 +881,45 @@ export type Database = {
         }
         Relationships: []
       }
+      user_ml_preferences: {
+        Row: {
+          activity_preference: string | null
+          behavioral_weight: number | null
+          confidence_level: number | null
+          created_at: string
+          id: string
+          interaction_style: string | null
+          interest_weight: number | null
+          rif_weight: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          activity_preference?: string | null
+          behavioral_weight?: number | null
+          confidence_level?: number | null
+          created_at?: string
+          id?: string
+          interaction_style?: string | null
+          interest_weight?: number | null
+          rif_weight?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          activity_preference?: string | null
+          behavioral_weight?: number | null
+          confidence_level?: number | null
+          created_at?: string
+          id?: string
+          interaction_style?: string | null
+          interest_weight?: number | null
+          rif_weight?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_profiles: {
         Row: {
           age: number | null

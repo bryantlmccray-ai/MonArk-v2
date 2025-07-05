@@ -6,6 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { RIFProfileCard } from './RIFProfileCard';
+import { EnhancedProfileCard } from './EnhancedProfileCard';
+import { MLInsightsPanel } from './MLInsightsPanel';
 import { RIFInsightOverlay } from '../rif/RIFInsightOverlay';
 import { DiscoveryFilters, DiscoveryFilters as FilterType } from './DiscoveryFilters';
 import { ProfileSelectionOverlay } from './ProfileSelectionOverlay';
@@ -479,12 +481,12 @@ export const DiscoveryMap: React.FC = () => {
     // Distribute profiles across the map with some randomization
     x: 20 + (index * 15) % 60 + Math.random() * 10,
     y: 25 + (index * 12) % 50 + Math.random() * 10,
-    id: index + 1
+    mapId: index + 1 // Use mapId to avoid conflict with profile.id
   }));
 
   const handleProfileClick = (profile: any) => {
     setSelectedProfile(profile);
-    setSelectedPin(profile.id);
+    setSelectedPin(profile.mapId);
   };
 
   const handleLike = async () => {
@@ -632,7 +634,7 @@ export const DiscoveryMap: React.FC = () => {
         {/* Profile Pins */}
         {profilesWithPositions.map((profile) => (
           <div
-            key={profile.id}
+            key={profile.mapId}
             className="absolute"
             style={{
               left: `${profile.x}%`,
@@ -640,12 +642,9 @@ export const DiscoveryMap: React.FC = () => {
               transform: 'translate(-50%, -50%)',
             }}
           >
-            <RIFProfileCard
-              userProfile={profile.rifProfile}
-              currentUserProfile={rifProfile || undefined}
-              name={(profile as any).profiles?.name || 'User'}
-              age={profile.age || 0}
-              image={profile.photos?.[0] || ''}
+            <EnhancedProfileCard
+              profile={profile}
+              currentUserRIF={rifProfile || undefined}
               onClick={() => handleProfileClick(profile)}
             />
           </div>
@@ -829,7 +828,7 @@ export const DiscoveryMap: React.FC = () => {
       {selectedProfile && (
         <ProfileSelectionOverlay
           profile={{
-            id: parseInt(selectedProfile.id) || 0,
+            id: (selectedProfile as any).mapId || 0,
             name: (selectedProfile as any).profiles?.name || 'User',
             age: selectedProfile.age || 0,
             image: selectedProfile.photos?.[0] || '',
@@ -847,6 +846,9 @@ export const DiscoveryMap: React.FC = () => {
           onMessage={handleMessage}
         />
       )}
+
+      {/* ML Insights Panel */}
+      <MLInsightsPanel />
 
       {/* RIF Insight Overlay */}
       {showInsight && insightTarget && (

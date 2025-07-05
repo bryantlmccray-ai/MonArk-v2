@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useLocation, DistanceMode } from '@/hooks/useLocation';
 import { UserProfile } from '@/hooks/useProfile';
+import { useCompatibilityScoring, CompatibilityScore } from '@/hooks/useCompatibilityScoring';
 
 export interface DiscoveryProfile extends UserProfile {
   distance?: number;
@@ -12,6 +13,8 @@ export interface DiscoveryProfile extends UserProfile {
   neighborhood?: string;
   transitScore?: number;
   walkabilityScore?: number;
+  compatibilityScore?: CompatibilityScore;
+  isHighlighted?: boolean;
 }
 
 export const useDiscoveryProfiles = () => {
@@ -19,6 +22,7 @@ export const useDiscoveryProfiles = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const { getTravelInfo } = useLocation();
+  const { batchCalculateCompatibility } = useCompatibilityScoring();
 
   const fetchProfiles = async () => {
     if (!user) {
@@ -94,11 +98,36 @@ export const useDiscoveryProfiles = () => {
             transitScore: profileLocation?.transit_score,
             walkabilityScore: profileLocation?.walkability_score,
           };
-        })
-        // Sort by distance (closest first)
-        .sort((a, b) => (a.distance || 999) - (b.distance || 999));
+        });
 
-      setProfiles(enrichedProfiles);
+      // Calculate ML-based compatibility scores for all profiles
+      const compatibilityScores = await batchCalculateCompatibility(enrichedProfiles);
+      
+      // Add compatibility scores and highlight high-compatibility profiles
+      const profilesWithCompatibility = enrichedProfiles.map(profile => {
+        const compatibilityScore = compatibilityScores.get(profile.user_id);
+        const isHighlighted = compatibilityScore ? compatibilityScore.overall_score > 0.75 : false;
+        
+        return {
+          ...profile,
+          compatibilityScore,
+          isHighlighted
+        };
+      });
+
+      // Sort by compatibility score (highest first), then by distance
+      profilesWithCompatibility.sort((a, b) => {
+        const scoreA = a.compatibilityScore?.overall_score || 0;
+        const scoreB = b.compatibilityScore?.overall_score || 0;
+        
+        if (Math.abs(scoreA - scoreB) > 0.1) {
+          return scoreB - scoreA; // Higher scores first
+        }
+        
+        return (a.distance || 999) - (b.distance || 999); // Then by distance
+      });
+
+      setProfiles(profilesWithCompatibility);
     } catch (error) {
       console.error('Error in fetchProfiles:', error);
     } finally {
