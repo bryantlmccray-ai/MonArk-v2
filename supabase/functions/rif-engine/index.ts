@@ -34,6 +34,12 @@ serve(async (req) => {
         return await generateRecommendations(supabaseClient, user.id, data)
       case 'calculate_compatibility':
         return await calculateCompatibility(supabaseClient, user.id, data)
+      case 'ml_compatibility_score':
+        return await calculateMLCompatibility(supabaseClient, user.id, data)
+      case 'cluster_interests':
+        return await clusterInterests(supabaseClient, user.id, data)
+      case 'behavioral_analysis':
+        return await analyzeBehavioralPatterns(supabaseClient, user.id, data)
       default:
         throw new Error('Invalid action')
     }
@@ -276,4 +282,302 @@ function calculateRIFCompatibility(profile1: any, profile2: any): any {
     recommendation: totalCompatibility / dimensions.length > 0.7 ? 'high_compatibility' : 
                    totalCompatibility / dimensions.length > 0.5 ? 'moderate_compatibility' : 'low_compatibility'
   }
+}
+
+// ML-Enhanced Compatibility Scoring
+async function calculateMLCompatibility(supabaseClient: any, userId: string, data: any) {
+  console.log('Calculating ML-enhanced compatibility for user:', userId)
+  
+  // Get user profiles and RIF data
+  const { data: userProfile } = await supabaseClient
+    .from('user_profiles')
+    .select('*')
+    .eq('user_id', userId)
+    .single()
+
+  const { data: targetProfile } = await supabaseClient
+    .from('user_profiles')
+    .select('*')
+    .eq('user_id', data.target_user_id)
+    .single()
+
+  const { data: userRIF } = await supabaseClient
+    .from('rif_profiles')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('is_active', true)
+    .single()
+
+  const { data: targetRIF } = await supabaseClient
+    .from('rif_profiles')
+    .select('*')
+    .eq('user_id', data.target_user_id)
+    .eq('is_active', true)
+    .single()
+
+  // Get historical feedback for learning
+  const { data: feedback } = await supabaseClient
+    .from('user_compatibility_feedback')
+    .select('*')
+    .eq('user_id', userId)
+
+  // Calculate enhanced compatibility scores
+  const interestSimilarity = calculateInterestSimilarity(
+    userProfile?.interests || [], 
+    targetProfile?.interests || []
+  )
+
+  const behavioralAlignment = calculateBehavioralAlignment(userRIF, targetRIF)
+  const rifCompatibility = userRIF && targetRIF ? 
+    calculateRIFCompatibility(userRIF, targetRIF).overall_compatibility : 0.5
+
+  // Apply ML learning weights based on historical feedback
+  const personalizedWeights = calculatePersonalizedWeights(feedback)
+  
+  const mlScore = 
+    (rifCompatibility * personalizedWeights.rif) +
+    (interestSimilarity * personalizedWeights.interests) +
+    (behavioralAlignment * personalizedWeights.behavioral)
+
+  return new Response(
+    JSON.stringify({
+      success: true,
+      ml_compatibility: {
+        overall_score: mlScore,
+        rif_compatibility: rifCompatibility,
+        interest_similarity: interestSimilarity,
+        behavioral_alignment: behavioralAlignment,
+        confidence: calculateConfidence(userProfile, targetProfile, userRIF, targetRIF),
+        personalized_weights: personalizedWeights
+      }
+    }),
+    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+  )
+}
+
+// Interest-based clustering
+async function clusterInterests(supabaseClient: any, userId: string, data: any) {
+  console.log('Clustering interests for user:', userId)
+  
+  // Get all users' interests
+  const { data: allProfiles } = await supabaseClient
+    .from('user_profiles')
+    .select('user_id, interests')
+    .neq('user_id', userId)
+    .not('interests', 'is', null)
+
+  const { data: userProfile } = await supabaseClient
+    .from('user_profiles')
+    .select('interests')
+    .eq('user_id', userId)
+    .single()
+
+  if (!userProfile?.interests || !allProfiles) {
+    return new Response(
+      JSON.stringify({ error: 'Insufficient data for clustering' }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+    )
+  }
+
+  // Simple k-means clustering based on interest similarity
+  const clusters = performInterestClustering(userProfile.interests, allProfiles)
+  
+  return new Response(
+    JSON.stringify({
+      success: true,
+      clusters: clusters,
+      user_cluster: findUserCluster(userProfile.interests, clusters)
+    }),
+    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+  )
+}
+
+// Behavioral pattern analysis
+async function analyzeBehavioralPatterns(supabaseClient: any, userId: string, data: any) {
+  console.log('Analyzing behavioral patterns for user:', userId)
+  
+  // Get user's RIF feedback history
+  const { data: feedback } = await supabaseClient
+    .from('rif_feedback')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+
+  // Get user's interaction patterns
+  const { data: interactions } = await supabaseClient
+    .from('user_compatibility_feedback')
+    .select('*')
+    .eq('user_id', userId)
+
+  if (!feedback?.length && !interactions?.length) {
+    return new Response(
+      JSON.stringify({ error: 'Insufficient behavioral data' }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+    )
+  }
+
+  const patterns = analyzeBehavioralData(feedback, interactions)
+  
+  return new Response(
+    JSON.stringify({
+      success: true,
+      behavioral_patterns: patterns
+    }),
+    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+  )
+}
+
+// Helper functions for ML calculations
+function calculateInterestSimilarity(interests1: string[], interests2: string[]): number {
+  if (!interests1?.length || !interests2?.length) return 0
+  
+  const set1 = new Set(interests1.map(i => i.toLowerCase()))
+  const set2 = new Set(interests2.map(i => i.toLowerCase()))
+  
+  const intersection = new Set([...set1].filter(x => set2.has(x)))
+  const union = new Set([...set1, ...set2])
+  
+  return intersection.size / union.size
+}
+
+function calculateBehavioralAlignment(rif1: any, rif2: any): number {
+  if (!rif1 || !rif2) return 0.5
+
+  const dimensions = ['intent_clarity', 'pacing_preferences', 'emotional_readiness', 'boundary_respect']
+  let totalAlignment = 0
+  let weightSum = 0
+
+  dimensions.forEach(dim => {
+    const score1 = rif1[dim] || 0
+    const score2 = rif2[dim] || 0
+    const alignment = 1 - Math.abs(score1 - score2) / 10
+    const weight = dim === 'boundary_respect' ? 1.5 : dim === 'emotional_readiness' ? 1.3 : 1.0
+    
+    totalAlignment += alignment * weight
+    weightSum += weight
+  })
+
+  return totalAlignment / weightSum
+}
+
+function calculatePersonalizedWeights(feedback: any[]): any {
+  // Default weights
+  const defaultWeights = { rif: 0.4, interests: 0.3, behavioral: 0.3 }
+  
+  if (!feedback?.length) return defaultWeights
+
+  // Analyze user's historical preferences to adjust weights
+  const interactionTypes = feedback.reduce((acc, f) => {
+    acc[f.interaction_type] = (acc[f.interaction_type] || 0) + 1
+    return acc
+  }, {})
+
+  // Adjust weights based on user behavior patterns
+  if (interactionTypes.message > interactionTypes.like) {
+    return { rif: 0.5, interests: 0.3, behavioral: 0.2 } // Values deeper connections
+  } else if (interactionTypes.like > interactionTypes.message * 2) {
+    return { rif: 0.3, interests: 0.4, behavioral: 0.3 } // Values shared interests
+  }
+
+  return defaultWeights
+}
+
+function calculateConfidence(userProfile: any, targetProfile: any, userRIF: any, targetRIF: any): number {
+  const dataPoints = [
+    userProfile?.interests?.length > 0,
+    targetProfile?.interests?.length > 0,
+    userRIF !== null,
+    targetRIF !== null,
+    userProfile?.photos?.length > 0,
+    targetProfile?.photos?.length > 0
+  ]
+  
+  return dataPoints.filter(Boolean).length / dataPoints.length
+}
+
+function performInterestClustering(userInterests: string[], allProfiles: any[]): any[] {
+  // Simple clustering algorithm - group users by interest similarity
+  const clusters = []
+  const processed = new Set()
+  
+  allProfiles.forEach(profile => {
+    if (processed.has(profile.user_id)) return
+    
+    const similarity = calculateInterestSimilarity(userInterests, profile.interests || [])
+    
+    // Find or create cluster
+    let cluster = clusters.find(c => 
+      Math.abs(c.averageSimilarity - similarity) < 0.2
+    )
+    
+    if (!cluster) {
+      cluster = {
+        id: clusters.length,
+        members: [],
+        averageSimilarity: similarity,
+        commonInterests: []
+      }
+      clusters.push(cluster)
+    }
+    
+    cluster.members.push(profile.user_id)
+    processed.add(profile.user_id)
+  })
+  
+  return clusters
+}
+
+function findUserCluster(userInterests: string[], clusters: any[]): number {
+  let bestCluster = 0
+  let bestSimilarity = 0
+  
+  clusters.forEach((cluster, index) => {
+    if (cluster.averageSimilarity > bestSimilarity) {
+      bestSimilarity = cluster.averageSimilarity
+      bestCluster = index
+    }
+  })
+  
+  return bestCluster
+}
+
+function analyzeBehavioralData(feedback: any[], interactions: any[]): any {
+  const patterns = {
+    dating_pace: 'moderate',
+    communication_style: 'balanced',
+    commitment_readiness: 'exploring',
+    interaction_preferences: {},
+    growth_trajectory: 'stable'
+  }
+  
+  if (feedback?.length) {
+    // Analyze RIF feedback patterns
+    const avgPacing = feedback.reduce((sum, f) => 
+      sum + (f.data?.responses?.pacing_comfort || 5), 0) / feedback.length
+    
+    patterns.dating_pace = avgPacing < 4 ? 'slow' : avgPacing > 7 ? 'fast' : 'moderate'
+    
+    const recentFeedback = feedback.slice(0, 5)
+    const olderFeedback = feedback.slice(5, 10)
+    
+    if (recentFeedback.length && olderFeedback.length) {
+      const recentAvg = recentFeedback.reduce((sum, f) => 
+        sum + (f.data?.responses?.emotional_readiness || 5), 0) / recentFeedback.length
+      const olderAvg = olderFeedback.reduce((sum, f) => 
+        sum + (f.data?.responses?.emotional_readiness || 5), 0) / olderFeedback.length
+      
+      patterns.growth_trajectory = recentAvg > olderAvg ? 'improving' : 
+                                   recentAvg < olderAvg ? 'declining' : 'stable'
+    }
+  }
+  
+  if (interactions?.length) {
+    // Analyze interaction patterns
+    patterns.interaction_preferences = interactions.reduce((acc, i) => {
+      acc[i.interaction_type] = (acc[i.interaction_type] || 0) + 1
+      return acc
+    }, {})
+  }
+  
+  return patterns
 }

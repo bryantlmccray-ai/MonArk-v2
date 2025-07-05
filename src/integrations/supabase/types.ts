@@ -848,6 +848,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_compatibility_feedback: {
+        Row: {
+          created_at: string
+          feedback_score: number
+          id: string
+          interaction_context: string | null
+          interaction_type: string
+          target_user_id: string
+          timestamp: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          feedback_score: number
+          id?: string
+          interaction_context?: string | null
+          interaction_type: string
+          target_user_id: string
+          timestamp?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          feedback_score?: number
+          id?: string
+          interaction_context?: string | null
+          interaction_type?: string
+          target_user_id?: string
+          timestamp?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_profiles: {
         Row: {
           age: number | null
