@@ -27,34 +27,34 @@ export default {
 				'display': ['Playfair Display', 'serif'],
 			},
 			colors: {
-				/* New Dark Gray Design System */
-				'dark-charcoal': 'rgb(17 24 39)', // gray-900
-				'near-white': 'rgb(243 244 246)', // gray-100
-				'medium-gray': 'rgb(156 163 175)', // gray-400
-				'yellow-accent': 'rgb(250 204 21)', // yellow-400
-				'amber-accent': 'rgb(245 158 11)', // amber-500
-				'card-dark': 'rgb(31 41 55)', // gray-800
-				'border-dark': 'rgb(55 65 81)', // gray-700
-				'input-dark': 'rgb(31 41 55)', // gray-800
+				/* Luxurious Color System - Deep Sapphire & Gold */
+				'deep-navy': 'rgb(15 23 42)', // slate-900
+				'sapphire': 'rgb(30 58 138)', // blue-800 
+				'rich-gold': 'rgb(212 175 55)', // classic gold
+				'warm-ivory': 'rgb(254 247 205)', // amber-50
+				'soft-gray': 'rgb(148 163 184)', // slate-400
+				'charcoal': 'rgb(30 41 59)', // slate-800
+				'graphite': 'rgb(51 65 85)', // slate-700
+				'midnight': 'rgb(15 23 42)', // slate-900
 
-				/* Legacy colors updated for dark theme compatibility */
-				'midnight-navy': 'rgb(17 24 39)',
-				'soft-ivory': 'rgb(243 244 246)',
-				'copper-rose': 'rgb(250 204 21)', // Updated to yellow
-				'dusky-lavender': 'rgb(156 163 175)', // Updated to medium gray
-				'charcoal-ink': 'rgb(31 41 55)',
+				/* Legacy color updates for luxury theme */
+				'midnight-navy': 'rgb(15 23 42)',
+				'soft-ivory': 'rgb(254 247 205)',
+				'copper-rose': 'rgb(212 175 55)', // Updated to rich gold
+				'dusky-lavender': 'rgb(148 163 184)', // Updated to soft gray
+				'charcoal-ink': 'rgb(30 41 59)',
 
-				/* Updated legacy colors */
-				'monark-navy': 'rgb(17 24 39)',
-				'monark-ivory': 'rgb(243 244 246)',
-				'monark-copper': 'rgb(250 204 21)',
-				'monark-lavender': 'rgb(156 163 175)',
-				'monark-sage': 'rgb(55 65 81)',
-				'monark-brass': 'rgb(245 158 11)',
-				'monark-coral': 'rgb(250 204 21)',
-				'charcoal-gray': 'rgb(31 41 55)',
-				'jet-black': 'rgb(17 24 39)',
-				'goldenrod': 'rgb(250 204 21)',
+				/* Updated MonArk brand colors */
+				'monark-navy': 'rgb(15 23 42)',
+				'monark-ivory': 'rgb(254 247 205)',
+				'monark-copper': 'rgb(212 175 55)',
+				'monark-lavender': 'rgb(148 163 184)',
+				'monark-sage': 'rgb(51 65 85)',
+				'monark-brass': 'rgb(30 58 138)',
+				'monark-coral': 'rgb(212 175 55)',
+				'charcoal-gray': 'rgb(30 41 59)',
+				'jet-black': 'rgb(15 23 42)',
+				'goldenrod': 'rgb(212 175 55)',
 
 				/* Shadcn integration */
 				border: 'hsl(var(--border))',
@@ -110,16 +110,17 @@ export default {
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-				'yellow-gradient': 'linear-gradient(135deg, rgb(250 204 21) 0%, rgb(245 158 11) 100%)',
-				'dark-gradient': 'linear-gradient(135deg, rgb(31 41 55) 0%, rgb(17 24 39) 100%)',
-				'goldenrod-gradient': 'linear-gradient(135deg, rgb(250 204 21) 0%, rgb(245 158 11) 100%)',
+				'gold-gradient': 'linear-gradient(135deg, rgb(212 175 55) 0%, rgb(30 58 138) 100%)',
+				'luxury-gradient': 'linear-gradient(135deg, rgb(30 41 59) 0%, rgb(15 23 42) 100%)',
+				'goldenrod-gradient': 'linear-gradient(135deg, rgb(212 175 55) 0%, rgb(30 58 138) 100%)',
 			},
 			boxShadow: {
 				'monark': '0px 4px 20px rgba(0, 0, 0, 0.3)',
-				'monark-glow': '0 0 20px rgba(250, 204, 21, 0.3)',
+				'monark-glow': '0 0 20px rgba(212, 175, 55, 0.3)',
 				'gentle': '0 2px 8px rgba(0, 0, 0, 0.2)',
-				'golden-glow': '0 0 20px rgba(250, 204, 21, 0.4)',
-				'yellow-glow': '0 0 20px rgba(250, 204, 21, 0.4)',
+				'golden-glow': '0 0 20px rgba(212, 175, 55, 0.4)',
+				'gold-glow': '0 0 20px rgba(212, 175, 55, 0.4)',
+				'sapphire-glow': '0 0 20px rgba(30, 58, 138, 0.4)',
 			},
 			animation: {
 				'gentle-pulse': 'gentle-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',

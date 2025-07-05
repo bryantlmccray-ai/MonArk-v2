@@ -5,51 +5,50 @@
 
 @layer base {
   :root {
-    /* New Dark Gray Color System */
-    --color-dark-charcoal: 17 24 39; /* bg-gray-900 */
-    --color-near-white: 243 244 246; /* text-gray-100 */
-    --color-medium-gray: 156 163 175; /* text-gray-400 */
-    --color-yellow-accent: 250 204 21; /* yellow-400 */
-    --color-amber-accent: 245 158 11; /* amber-500 */
-    --color-card-dark: 31 41 55; /* gray-800 */
-    --color-border-dark: 55 65 81; /* gray-700 */
-    --color-border-darker: 31 41 55; /* gray-800 */
-    --color-input-dark: 31 41 55; /* gray-800 */
+    /* Luxurious Color System - Deep Sapphire & Gold */
+    --color-deep-navy: 15 23 42; /* slate-900 - rich navy background */
+    --color-sapphire: 30 58 138; /* blue-800 - luxurious sapphire primary */
+    --color-rich-gold: 212 175 55; /* classic gold accent */
+    --color-warm-ivory: 254 247 205; /* warm ivory text */
+    --color-soft-gray: 148 163 184; /* slate-400 - refined gray */
+    --color-charcoal: 30 41 59; /* slate-800 - premium charcoal */
+    --color-graphite: 51 65 85; /* slate-700 - elegant borders */
+    --color-midnight: 15 23 42; /* slate-900 - deep backgrounds */
 
-    /* Design System Tokens - Updated */
-    --color-primary-bg: var(--color-dark-charcoal);
-    --color-secondary-bg: var(--color-card-dark);
-    --color-accent-1: var(--color-yellow-accent);
-    --color-accent-2: var(--color-amber-accent);
+    /* Design System Tokens - Luxury Edition */
+    --color-primary-bg: var(--color-deep-navy);
+    --color-secondary-bg: var(--color-charcoal);
+    --color-accent-1: var(--color-rich-gold);
+    --color-accent-2: var(--color-sapphire);
 
-    /* Updated shadcn variables to match new dark palette */
-    --background: var(--color-dark-charcoal);
-    --foreground: var(--color-near-white);
+    /* Updated shadcn variables for luxury theme */
+    --background: var(--color-deep-navy);
+    --foreground: var(--color-warm-ivory);
 
-    --card: var(--color-card-dark);
-    --card-foreground: var(--color-near-white);
+    --card: var(--color-charcoal);
+    --card-foreground: var(--color-warm-ivory);
 
-    --popover: var(--color-card-dark);
-    --popover-foreground: var(--color-near-white);
+    --popover: var(--color-charcoal);
+    --popover-foreground: var(--color-warm-ivory);
 
-    --primary: var(--color-yellow-accent);
-    --primary-foreground: var(--color-dark-charcoal);
+    --primary: var(--color-rich-gold);
+    --primary-foreground: var(--color-deep-navy);
 
-    --secondary: var(--color-card-dark);
-    --secondary-foreground: var(--color-near-white);
+    --secondary: var(--color-charcoal);
+    --secondary-foreground: var(--color-warm-ivory);
 
-    --muted: var(--color-input-dark);
-    --muted-foreground: var(--color-medium-gray);
+    --muted: var(--color-midnight);
+    --muted-foreground: var(--color-soft-gray);
 
-    --accent: var(--color-yellow-accent);
-    --accent-foreground: var(--color-dark-charcoal);
+    --accent: var(--color-sapphire);
+    --accent-foreground: var(--color-warm-ivory);
 
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
 
-    --border: var(--color-border-dark);
-    --input: var(--color-input-dark);
-    --ring: var(--color-yellow-accent);
+    --border: var(--color-graphite);
+    --input: var(--color-midnight);
+    --ring: var(--color-rich-gold);
 
     --radius: 12px;
 
@@ -66,7 +65,7 @@
   }
 
   body {
-    @apply bg-gray-900 text-gray-100;
+    @apply bg-slate-900 text-amber-50;
     font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
     font-size: 16px;
     line-height: 1.6;
@@ -83,9 +82,9 @@
     font-style: normal;
   }
 
-  /* Design System Utilities - Updated for Dark Theme */
+  /* Design System Utilities - Updated for Luxury Theme */
   .monark-card {
-    @apply bg-gray-800/50 rounded-xl shadow-lg border border-gray-700;
+    @apply bg-slate-800/50 rounded-xl shadow-lg border border-slate-700;
   }
 
   .monark-button {
@@ -93,56 +92,60 @@
   }
 
   .monark-button-primary {
-    @apply bg-yellow-400 text-gray-900 hover:bg-yellow-300;
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
   }
 
   .monark-button-secondary {
-    @apply bg-gray-800 text-gray-100 hover:bg-gray-700 border border-gray-700;
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border;
   }
 
   .monark-button-gradient {
-    @apply bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-900 hover:from-yellow-300 hover:to-amber-400;
+    @apply bg-gradient-to-r from-primary to-accent text-primary-foreground hover:from-primary/90 hover:to-accent/90;
   }
 
   /* Input styles */
   .monark-input {
-    @apply bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400;
+    @apply bg-input border border-border text-foreground placeholder-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring;
   }
 
-  /* Micro-interaction utilities - Updated */
+  /* Micro-interaction utilities - Updated for Luxury */
   .gentle-glow {
-    box-shadow: 0 0 20px rgba(250, 204, 21, 0.3);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
   }
 
   .soft-shadow {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
   }
 
-  .yellow-glow {
-    box-shadow: 0 0 20px rgba(250, 204, 21, 0.4);
+  .gold-glow {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
   }
 
-  /* Premium Journal Styling */
+  .sapphire-glow {
+    box-shadow: 0 0 20px rgba(30, 58, 138, 0.4);
+  }
+
+  /* Premium Journal Styling - Updated */
   .journal-premium-card {
-    @apply bg-gradient-to-br from-gray-800/60 to-gray-900/80 backdrop-blur-sm rounded-2xl border border-gray-700/50;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(250, 204, 21, 0.1);
+    @apply bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-700/50;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(212, 175, 55, 0.1);
   }
 
   .journal-header-text {
-    @apply font-display text-white tracking-tight;
+    @apply font-display text-foreground tracking-tight;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
   .journal-accent-border {
-    border-image: linear-gradient(135deg, rgba(250, 204, 21, 0.3), rgba(245, 158, 11, 0.3)) 1;
+    border-image: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(30, 58, 138, 0.3)) 1;
   }
 
   .journal-metric-glow {
-    box-shadow: 0 0 20px rgba(250, 204, 21, 0.15);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
   }
 
   .journal-floating-glow {
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 8px 32px rgba(250, 204, 21, 0.08);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 8px 32px rgba(212, 175, 55, 0.08);
   }
 }
 
