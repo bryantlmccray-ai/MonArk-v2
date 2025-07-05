@@ -81,12 +81,12 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-hidden">
+      <DialogContent className="bg-charcoal-gray border-goldenrod/20 sm:max-w-[600px] max-h-[80vh] overflow-hidden">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Bell className="h-5 w-5 text-goldenrod" />
-              <DialogTitle className="text-white">Notifications</DialogTitle>
+              <DialogTitle className="text-2xl font-light text-white">Notifications</DialogTitle>
               {unreadCount > 0 && (
                 <Badge variant="secondary" className="bg-goldenrod text-jet-black">
                   {unreadCount}
@@ -106,7 +106,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
               </Button>
             )}
           </div>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription className="text-gray-300 text-center">
             Stay updated with your latest activity
           </DialogDescription>
         </DialogHeader>
