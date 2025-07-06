@@ -27,10 +27,11 @@ export const MainApp: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const isMobile = useIsMobile();
-  const { unreadCount } = useNotifications();
   
-  // Set up notification triggers
-  useNotificationTriggers();
+  // Temporarily disable notification hooks to prevent crashes
+  // const { unreadCount } = useNotifications();
+  // useNotificationTriggers();
+  const unreadCount = 0;
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
