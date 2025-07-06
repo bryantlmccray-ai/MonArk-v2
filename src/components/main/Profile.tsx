@@ -248,71 +248,6 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               )}
             </div>
 
-            {/* Relational Compass Section */}
-            <RelationalCompass />
-
-            {/* MonArk Moments Section */}
-            <div className="bg-charcoal-gray rounded-xl p-6 border border-gray-800">
-              <div className="flex items-center space-x-2 mb-2">
-                <TrendingUp className="h-5 w-5 text-goldenrod" />
-                <h3 className="text-white font-medium text-lg">MonArk Moments</h3>
-              </div>
-              <p className="text-gray-400 text-sm mb-4">
-                Get personalized monthly insights about your dating journey
-              </p>
-              
-              <div className="space-y-3">
-                {analyticsEnabled ? (
-                  <>
-                    <div className="flex items-center justify-between p-3 bg-goldenrod/10 rounded-lg border border-goldenrod/30">
-                      <div className="flex items-center space-x-2">
-                        <Calendar className="h-4 w-4 text-goldenrod" />
-                        <span className="text-white text-sm">Analytics Enabled</span>
-                      </div>
-                      <button
-                        onClick={() => setShowAnalyticsModal(true)}
-                        className="text-xs text-goldenrod hover:text-goldenrod/80 transition-colors"
-                        disabled={isSigningOut}
-                      >
-                        Manage
-                      </button>
-                    </div>
-                    <button
-                      onClick={() => setShowRecapModal(true)}
-                      className="w-full py-3 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow"
-                      disabled={isSigningOut}
-                    >
-                      View This Month's Recap
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    onClick={() => setShowAnalyticsModal(true)}
-                    className="w-full py-3 bg-transparent border border-goldenrod text-goldenrod rounded-xl transition-colors hover:bg-goldenrod/10"
-                    disabled={isSigningOut}
-                  >
-                    Enable MonArk Moments
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* Trust Score Section */}
-            <div className="bg-charcoal-gray rounded-xl p-6 border border-gray-800">
-              <h3 className="text-white font-medium text-lg mb-2">MonArk Trust Score</h3>
-              <p className="text-gray-400 text-sm mb-4">
-                Build trust through verification and authentic connections
-              </p>
-              
-              <button
-                onClick={onOpenTrustScore}
-                className="w-full py-3 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow"
-                disabled={isSigningOut}
-              >
-                Get Verified & Build Trust
-              </button>
-            </div>
-
             {/* Cohesive Profile Overview */}
             <div className="bg-gradient-to-br from-charcoal-gray via-charcoal-gray/95 to-charcoal-gray/90 rounded-2xl p-6 border border-gray-800/50 backdrop-blur-sm">
               <div className="space-y-6">
@@ -453,6 +388,71 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Relational Compass Section */}
+            <RelationalCompass />
+
+            {/* MonArk Moments Section */}
+            <div className="bg-charcoal-gray rounded-xl p-6 border border-gray-800">
+              <div className="flex items-center space-x-2 mb-2">
+                <TrendingUp className="h-5 w-5 text-goldenrod" />
+                <h3 className="text-white font-medium text-lg">MonArk Moments</h3>
+              </div>
+              <p className="text-gray-400 text-sm mb-4">
+                Get personalized monthly insights about your dating journey
+              </p>
+              
+              <div className="space-y-3">
+                {analyticsEnabled ? (
+                  <>
+                    <div className="flex items-center justify-between p-3 bg-goldenrod/10 rounded-lg border border-goldenrod/30">
+                      <div className="flex items-center space-x-2">
+                        <Calendar className="h-4 w-4 text-goldenrod" />
+                        <span className="text-white text-sm">Analytics Enabled</span>
+                      </div>
+                      <button
+                        onClick={() => setShowAnalyticsModal(true)}
+                        className="text-xs text-goldenrod hover:text-goldenrod/80 transition-colors"
+                        disabled={isSigningOut}
+                      >
+                        Manage
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => setShowRecapModal(true)}
+                      className="w-full py-3 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow"
+                      disabled={isSigningOut}
+                    >
+                      View This Month's Recap
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => setShowAnalyticsModal(true)}
+                    className="w-full py-3 bg-transparent border border-goldenrod text-goldenrod rounded-xl transition-colors hover:bg-goldenrod/10"
+                    disabled={isSigningOut}
+                  >
+                    Enable MonArk Moments
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Trust Score Section */}
+            <div className="bg-charcoal-gray rounded-xl p-6 border border-gray-800">
+              <h3 className="text-white font-medium text-lg mb-2">MonArk Trust Score</h3>
+              <p className="text-gray-400 text-sm mb-4">
+                Build trust through verification and authentic connections
+              </p>
+              
+              <button
+                onClick={onOpenTrustScore}
+                className="w-full py-3 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow"
+                disabled={isSigningOut}
+              >
+                Get Verified & Build Trust
+              </button>
             </div>
 
             <button
