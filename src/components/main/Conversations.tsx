@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Calendar, Plus, MessageCircle, Heart, Zap } from 'lucide-react';
+import { Sparkles, Calendar, Plus, MessageCircle, Heart, Zap, RotateCcw, Archive } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RIFBehavioralNudge } from '../rif/RIFBehavioralNudge';
 import { RIFPostDateFeedback } from '../rif/RIFPostDateFeedback';
 import { AIConciergeModal } from '../date-concierge/AIConciergeModal';
@@ -17,7 +18,7 @@ import { useAuth } from '@/hooks/useAuth';
 export const Conversations: React.FC = () => {
   const { user } = useAuth();
   const { rifSettings } = useRIF();
-  const { proposals, updateConversationEngagement, dismissProposal } = useDateConcierge();
+  const { proposals, updateConversationEngagement, dismissProposal, restoreProposal } = useDateConcierge();
   const { updateConversationActivity } = useConversationNudges();
   
   const [showNudge, setShowNudge] = useState(false);
@@ -163,6 +164,17 @@ export const Conversations: React.FC = () => {
     return !dismissedField && (proposal.status === 'proposed' || proposal.status === 'accepted');
   });
 
+  const dismissedProposals = proposals.filter(proposal => {
+    const isInvolvedConversation = conversations.some(conv => conv.conversationId === proposal.conversation_id);
+    if (!isInvolvedConversation) return false;
+    
+    // Check if dismissed by current user
+    const isCreator = proposal.creator_user_id === user?.id;
+    const dismissedField = isCreator ? (proposal as any).dismissed_by_creator_at : (proposal as any).dismissed_by_recipient_at;
+    
+    return !!dismissedField;
+  });
+
   // Show authentication message if user is not logged in
   if (!user) {
     return (
@@ -192,10 +204,10 @@ export const Conversations: React.FC = () => {
         </div>
 
         {/* Date Proposals Section */}
-        {relevantProposals.length > 0 && (
+        {(relevantProposals.length > 0 || dismissedProposals.length > 0) && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-medium text-white">Active Date Proposals</h2>
+              <h2 className="text-lg font-medium text-white">Date Proposals</h2>
               <Button
                 onClick={() => setShowJournalEntry(true)}
                 size="sm"
@@ -205,15 +217,72 @@ export const Conversations: React.FC = () => {
                 Add Journal Entry
               </Button>
             </div>
-            <div className="grid gap-4">
-              {relevantProposals.slice(0, 2).map((proposal) => (
-                <DateProposalCard 
-                  key={proposal.id} 
-                  proposal={proposal}
-                  onDismiss={dismissProposal}
-                />
-              ))}
-            </div>
+            
+            <Tabs defaultValue="active" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 bg-charcoal-gray/50">
+                <TabsTrigger 
+                  value="active" 
+                  className="data-[state=active]:bg-goldenrod/20 data-[state=active]:text-goldenrod"
+                >
+                  Active ({relevantProposals.length})
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="dismissed"
+                  className="data-[state=active]:bg-goldenrod/20 data-[state=active]:text-goldenrod"
+                >
+                  <Archive className="h-4 w-4 mr-1" />
+                  Dismissed ({dismissedProposals.length})
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="active" className="mt-4">
+                {relevantProposals.length > 0 ? (
+                  <div className="grid gap-4">
+                    {relevantProposals.slice(0, 2).map((proposal) => (
+                      <DateProposalCard 
+                        key={proposal.id} 
+                        proposal={proposal}
+                        onDismiss={dismissProposal}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-gray-400">
+                    <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>No active date proposals</p>
+                  </div>
+                )}
+              </TabsContent>
+              
+              <TabsContent value="dismissed" className="mt-4">
+                {dismissedProposals.length > 0 ? (
+                  <div className="grid gap-4">
+                    {dismissedProposals.map((proposal) => (
+                      <div key={proposal.id} className="relative">
+                        <DateProposalCard 
+                          proposal={proposal}
+                        />
+                        <div className="absolute top-4 right-4">
+                          <Button
+                            onClick={() => restoreProposal(proposal.id)}
+                            size="sm"
+                            className="bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/30"
+                            title="Restore proposal"
+                          >
+                            <RotateCcw className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-gray-400">
+                    <Archive className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>No dismissed proposals</p>
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
           </div>
         )}
 

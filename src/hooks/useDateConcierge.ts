@@ -556,6 +556,53 @@ export const useDateConcierge = () => {
     }
   };
 
+  // Restore dismissed proposal
+  const restoreProposal = async (proposalId: string) => {
+    if (!user) return;
+
+    try {
+      const { data: proposal } = await supabase
+        .from('date_proposals')
+        .select('creator_user_id, recipient_user_id')
+        .eq('id', proposalId)
+        .single();
+
+      if (!proposal) throw new Error('Proposal not found');
+
+      const isCreator = proposal.creator_user_id === user.id;
+      const isRecipient = proposal.recipient_user_id === user.id;
+
+      if (!isCreator && !isRecipient) {
+        throw new Error('Not authorized to restore this proposal');
+      }
+
+      const updateField = isCreator ? 'dismissed_by_creator_at' : 'dismissed_by_recipient_at';
+      
+      const { error } = await supabase
+        .from('date_proposals')
+        .update({ 
+          [updateField]: null,
+          updated_at: new Date().toISOString() 
+        })
+        .eq('id', proposalId);
+
+      if (error) throw error;
+      await fetchProposals();
+
+      toast({
+        title: "Proposal restored",
+        description: "Date proposal has been restored to your active list."
+      });
+    } catch (error) {
+      console.error('Error restoring proposal:', error);
+      toast({
+        title: "Restore failed",
+        description: "Unable to restore proposal. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
   return {
     proposals,
     journalEntries,
@@ -564,6 +611,7 @@ export const useDateConcierge = () => {
     generateDateProposal,
     updateProposalStatus,
     dismissProposal,
+    restoreProposal,
     createJournalEntry,
     updateConversationEngagement,
     checkConversationReadiness,
