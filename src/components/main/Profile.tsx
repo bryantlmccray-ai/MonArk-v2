@@ -1,12 +1,15 @@
 
 import React, { useState } from 'react';
-import { Settings, ShieldCheck, Edit, LogOut, MapPin } from 'lucide-react';
+import { Settings, ShieldCheck, Edit, LogOut, MapPin, TrendingUp, Calendar } from 'lucide-react';
 import { ProfileCreation } from '../profile/ProfileCreation';
 import { RelationalCompass } from '../rif/RelationalCompass';
 import { LocationConsentModal } from '../location/LocationConsentModal';
+import { AnalyticsConsentModal } from '../analytics/AnalyticsConsentModal';
+import { MonthlyRecapModal } from '../analytics/MonthlyRecapModal';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useLocation } from '@/hooks/useLocation';
+import { useMonthlyAnalytics } from '@/hooks/useMonthlyAnalytics';
 import { useToast } from '@/hooks/use-toast';
 
 interface ProfileProps {
@@ -17,10 +20,13 @@ interface ProfileProps {
 export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettings }) => {
   const [showProfileCreation, setShowProfileCreation] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
+  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
+  const [showRecapModal, setShowRecapModal] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const { user, signOut } = useAuth();
   const { profile, loading } = useProfile();
   const { clearLocation } = useLocation();
+  const { analyticsEnabled } = useMonthlyAnalytics();
   const { toast } = useToast();
 
   const handleSignOut = async () => {
@@ -245,6 +251,52 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
             {/* Relational Compass Section */}
             <RelationalCompass />
 
+            {/* MonArk Moments Section */}
+            <div className="bg-charcoal-gray rounded-xl p-6 border border-gray-800">
+              <div className="flex items-center space-x-2 mb-2">
+                <TrendingUp className="h-5 w-5 text-goldenrod" />
+                <h3 className="text-white font-medium text-lg">MonArk Moments</h3>
+              </div>
+              <p className="text-gray-400 text-sm mb-4">
+                Get personalized monthly insights about your dating journey
+              </p>
+              
+              <div className="space-y-3">
+                {analyticsEnabled ? (
+                  <>
+                    <div className="flex items-center justify-between p-3 bg-goldenrod/10 rounded-lg border border-goldenrod/30">
+                      <div className="flex items-center space-x-2">
+                        <Calendar className="h-4 w-4 text-goldenrod" />
+                        <span className="text-white text-sm">Analytics Enabled</span>
+                      </div>
+                      <button
+                        onClick={() => setShowAnalyticsModal(true)}
+                        className="text-xs text-goldenrod hover:text-goldenrod/80 transition-colors"
+                        disabled={isSigningOut}
+                      >
+                        Manage
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => setShowRecapModal(true)}
+                      className="w-full py-3 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow"
+                      disabled={isSigningOut}
+                    >
+                      View This Month's Recap
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => setShowAnalyticsModal(true)}
+                    className="w-full py-3 bg-transparent border border-goldenrod text-goldenrod rounded-xl transition-colors hover:bg-goldenrod/10"
+                    disabled={isSigningOut}
+                  >
+                    Enable MonArk Moments
+                  </button>
+                )}
+              </div>
+            </div>
+
             {/* Trust Score Section */}
             <div className="bg-charcoal-gray rounded-xl p-6 border border-gray-800">
               <h3 className="text-white font-medium text-lg mb-2">MonArk Trust Score</h3>
@@ -327,6 +379,18 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
         isOpen={showLocationModal}
         onClose={() => setShowLocationModal(false)}
         onSuccess={handleLocationUpdate}
+      />
+
+      {/* Analytics Consent Modal */}
+      <AnalyticsConsentModal
+        isOpen={showAnalyticsModal}
+        onClose={() => setShowAnalyticsModal(false)}
+      />
+
+      {/* Monthly Recap Modal */}
+      <MonthlyRecapModal
+        isOpen={showRecapModal}
+        onClose={() => setShowRecapModal(false)}
       />
     </div>
   );
