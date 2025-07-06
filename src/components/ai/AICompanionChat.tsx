@@ -30,7 +30,6 @@ export const AICompanionChat: React.FC<AICompanionChatProps> = ({ onClose }) => 
   const [messages, setMessages] = useState<AIMessage[]>([]);
   const [userInput, setUserInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
@@ -38,6 +37,9 @@ export const AICompanionChat: React.FC<AICompanionChatProps> = ({ onClose }) => 
   const { profile } = useProfile();
   const { generateDateProposal, journalEntries } = useDateConcierge();
   const { toast } = useToast();
+
+  // Always show the modal when this component is rendered
+  // Remove the isOpen state since we're controlling it externally
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -48,10 +50,23 @@ export const AICompanionChat: React.FC<AICompanionChatProps> = ({ onClose }) => 
   }, [messages]);
 
   useEffect(() => {
-    if (user && isOpen) {
+    if (user) {
       generatePersonalizedInsights();
     }
-  }, [user, isOpen]);
+  }, [user]);
+
+  // Add welcome message when chat opens
+  useEffect(() => {
+    if (messages.length === 0) {
+      const welcomeMessage: AIMessage = {
+        id: `welcome_${Date.now()}`,
+        type: 'conversation',
+        content: `Hi there! I'm your AI dating companion. I'm here to help you grow and succeed in your dating journey. Feel free to ask me anything - whether it's about dating strategies, reflecting on experiences, or just need someone to chat with! 😊`,
+        timestamp: new Date().toISOString()
+      };
+      setMessages([welcomeMessage]);
+    }
+  }, []);
 
   const generatePersonalizedInsights = async () => {
     if (!user || !profile) return;
@@ -85,9 +100,6 @@ export const AICompanionChat: React.FC<AICompanionChatProps> = ({ onClose }) => 
       for (let i = 0; i < insights.length; i++) {
         setTimeout(() => {
           setMessages(prev => [...prev, insights[i]]);
-          if (!isOpen) {
-            setUnreadCount(prev => prev + 1);
-          }
         }, i * 2000);
       }
     } catch (error) {
@@ -252,25 +264,6 @@ export const AICompanionChat: React.FC<AICompanionChatProps> = ({ onClose }) => 
     }
   };
 
-  if (!isOpen) {
-    return (
-      <button
-        onClick={() => {
-          setIsOpen(true);
-          setUnreadCount(0);
-        }}
-        className="fixed bottom-20 right-4 bg-goldenrod hover:bg-goldenrod/90 text-jet-black rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110"
-      >
-        <MessageCircle className="h-6 w-6" />
-        {unreadCount > 0 && (
-          <Badge className="absolute -top-2 -right-2 bg-red-500 text-white text-xs min-w-[20px] h-5 flex items-center justify-center p-0">
-            {unreadCount}
-          </Badge>
-        )}
-      </button>
-    );
-  }
-
   return (
     <div className="fixed bottom-4 right-4 w-80 h-96 bg-charcoal-gray border border-goldenrod/30 rounded-lg shadow-xl flex flex-col z-50">
       {/* Header */}
@@ -285,10 +278,7 @@ export const AICompanionChat: React.FC<AICompanionChatProps> = ({ onClose }) => 
           </div>
         </div>
         <button
-          onClick={() => {
-            setIsOpen(false);
-            onClose?.();
-          }}
+          onClick={onClose}
           className="text-gray-400 hover:text-white transition-colors"
         >
           <X className="h-4 w-4" />
