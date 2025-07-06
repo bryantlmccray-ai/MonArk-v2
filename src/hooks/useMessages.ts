@@ -68,7 +68,13 @@ export const useMessages = (conversationId: string) => {
           try {
             const newMessage = payload.new as MessageWithStatus;
             newMessage.delivery_status = 'delivered';
-            setMessages(prev => [...prev, newMessage]);
+            
+            // Don't add if it's already in the messages (avoid duplicates from optimistic updates)
+            setMessages(prev => {
+              const exists = prev.find(msg => msg.id === newMessage.id);
+              if (exists) return prev;
+              return [...prev, newMessage];
+            });
             
             // Mark as read if user is recipient and chat is active
             if (newMessage.recipient_user_id === user.id) {
@@ -122,7 +128,7 @@ export const useMessages = (conversationId: string) => {
     if (!user || !content.trim()) return false;
 
     // Add optimistic message
-    const tempId = `temp_${Date.now()}`;
+    const tempId = `temp_${Date.now()}_${Math.random()}`;
     const optimisticMessage: MessageWithStatus = {
       id: tempId,
       conversation_id: conversationId,
