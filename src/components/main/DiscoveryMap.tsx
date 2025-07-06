@@ -21,6 +21,7 @@ import { useMatching } from '@/hooks/useMatching';
 import { useRealTimePresence } from '@/hooks/useRealTimePresence';
 import { useActivityFeed } from '@/hooks/useActivityFeed';
 import { useProximityAlerts } from '@/hooks/useProximityAlerts';
+import { useCompatibilityScoring } from '@/hooks/useCompatibilityScoring';
 
 // Prototype profiles for testing - structured to match database schema
 const prototypeProfiles: (DiscoveryProfile & { profiles?: { name: string } })[] = [
@@ -233,6 +234,7 @@ export const DiscoveryMap: React.FC = () => {
   const { likeUser, startConversation, loading: matchingLoading } = useMatching();
   const { onlineUsers, isUserOnline } = useRealTimePresence();
   const { activities, addProximityAlert } = useActivityFeed();
+  const { batchCalculateCompatibility, compatibilityCache } = useCompatibilityScoring();
 
   // Add user's own profile to the map
   const userOwnProfile = profile ? {
@@ -490,14 +492,41 @@ export const DiscoveryMap: React.FC = () => {
     onProximityAlert: addProximityAlert
   });
 
-  // Assign map positions to profiles
-  const profilesWithPositions = filteredProfiles.map((profile, index) => ({
-    ...profile,
-    // Distribute profiles across the map with some randomization
-    x: 20 + (index * 15) % 60 + Math.random() * 10,
-    y: 25 + (index * 12) % 50 + Math.random() * 10,
-    mapId: index + 1 // Use mapId to avoid conflict with profile.id
-  }));
+  // Calculate compatibility scores and enhance profiles with visual data
+  const profilesWithPositions = filteredProfiles.map((profile, index) => {
+    const compatibilityScore = compatibilityCache.get(profile.user_id);
+    const overallScore = compatibilityScore?.overall_score || 0;
+    
+    // Determine if profile should be highlighted (highly compatible)
+    const isHighlighted = overallScore > 0.8;
+    const isVeryHighlighted = overallScore > 0.9;
+    
+    // Enhanced positioning for highly compatible users (more visible spots)
+    let x, y;
+    if (isVeryHighlighted) {
+      // Place very high compatibility users in prime spots
+      x = 30 + (index * 20) % 40;
+      y = 20 + (index * 15) % 30;
+    } else if (isHighlighted) {
+      // Place high compatibility users in good spots
+      x = 25 + (index * 18) % 50;
+      y = 25 + (index * 16) % 40;
+    } else {
+      // Regular positioning for other users
+      x = 20 + (index * 15) % 60 + Math.random() * 10;
+      y = 25 + (index * 12) % 50 + Math.random() * 10;
+    }
+    
+    return {
+      ...profile,
+      x,
+      y,
+      mapId: index + 1,
+      compatibilityScore,
+      isHighlighted,
+      isVeryHighlighted
+    };
+  });
 
   const handleProfileClick = (profile: any) => {
     setSelectedProfile(profile);
@@ -545,6 +574,20 @@ export const DiscoveryMap: React.FC = () => {
       return () => clearTimeout(timer);
     }
   }, [hasLocation, showLocationPrompt]);
+
+  // Calculate compatibility scores for all profiles
+  useEffect(() => {
+    if (filteredProfiles.length > 0 && profile?.user_id) {
+      // Only calculate for profiles we don't have cached scores for
+      const profilesToScore = filteredProfiles.filter(p => 
+        p.user_id !== profile.user_id && !compatibilityCache.has(p.user_id)
+      );
+      
+      if (profilesToScore.length > 0) {
+        batchCalculateCompatibility(profilesToScore);
+      }
+    }
+  }, [filteredProfiles, profile?.user_id, batchCalculateCompatibility, compatibilityCache]);
 
   // Auto-show insights for high compatibility matches
   useEffect(() => {
@@ -862,6 +905,25 @@ export const DiscoveryMap: React.FC = () => {
                 <span> • Emotional compatibility enabled</span>
               )}
             </p>
+            
+            {/* Compatibility Legend */}
+            {rifProfile && (
+              <div className="flex items-center gap-4 mt-3 text-xs">
+                <span className="text-gray-400">Compatibility:</span>
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                  <span className="text-primary">Exceptional (90%+)</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-primary/70 rounded-full"></div>
+                  <span className="text-primary/70">High (80%+)</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-secondary rounded-full"></div>
+                  <span className="text-gray-300">Good (65%+)</span>
+                </div>
+              </div>
+            )}
           </div>
           
           <div className="flex items-center space-x-3">
