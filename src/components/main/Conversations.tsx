@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Calendar, Plus, MessageCircle, Heart } from 'lucide-react';
+import { Sparkles, Calendar, Plus, MessageCircle, Heart, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { RIFBehavioralNudge } from '../rif/RIFBehavioralNudge';
 import { RIFPostDateFeedback } from '../rif/RIFPostDateFeedback';
 import { AIConciergeModal } from '../date-concierge/AIConciergeModal';
@@ -244,11 +245,14 @@ export const Conversations: React.FC = () => {
                         Date completed
                       </div>
                     )}
-                    {conversation.mutualEngagement > 0.7 && conversation.messageCount > 15 && (
-                      <div className="px-2 py-1 bg-goldenrod/20 text-goldenrod text-xs rounded-full border border-goldenrod/30 flex items-center space-x-1">
-                        <Sparkles className="h-3 w-3" />
-                        <span>Plan a date</span>
-                      </div>
+                    {conversation.mutualEngagement > 0.7 && conversation.messageCount > 15 && !conversation.hadDate && (
+                      <Badge 
+                        variant="secondary" 
+                        className="px-2 py-1 bg-goldenrod/20 text-goldenrod text-xs rounded-full border border-goldenrod/30 flex items-center space-x-1 animate-pulse"
+                      >
+                        <Zap className="h-3 w-3" />
+                        <span>Ready for date!</span>
+                      </Badge>
                     )}
                     {rifSettings?.rif_enabled && conversation.messageCount > 15 && (
                       <div className="px-2 py-1 bg-goldenrod/20 text-goldenrod text-xs rounded-full border border-goldenrod/30">
@@ -277,6 +281,22 @@ export const Conversations: React.FC = () => {
                     <MessageCircle className="h-4 w-4 mr-1" />
                     Chat
                   </Button>
+                  
+                  {conversation.mutualEngagement > 0.7 && conversation.messageCount > 15 && !conversation.hadDate && (
+                    <Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveConversation(conversation);
+                        setShowConciergeModal(true);
+                      }}
+                      size="sm"
+                      className="bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/30"
+                      title="AI Date Concierge Ready"
+                    >
+                      <Calendar className="h-4 w-4 mr-1" />
+                      Plan Date
+                    </Button>
+                  )}
                   
                   {conversation.hadDate && rifSettings?.rif_enabled && (
                     <Button

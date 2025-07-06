@@ -1,12 +1,17 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, MoreVertical } from 'lucide-react';
+import { Send, MoreVertical, Shield, Video, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ConversationHelper } from '@/components/conversation/ConversationHelper';
+import { UserActionsModal } from '@/components/safety/UserActionsModal';
+import { AIConciergeModal } from '@/components/date-concierge/AIConciergeModal';
+import { VideoCallModal } from '@/components/video/VideoCallModal';
 import { useMessages } from '@/hooks/useMessages';
 import { useAuth } from '@/hooks/useAuth';
+import { useDateConcierge } from '@/hooks/useDateConcierge';
 import { format } from 'date-fns';
 
 interface ChatInterfaceProps {
@@ -26,16 +31,32 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
 }) => {
   const [messageText, setMessageText] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [showUserActions, setShowUserActions] = useState(false);
+  const [showConcierge, setShowConcierge] = useState(false);
+  const [showVideoCall, setShowVideoCall] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   
   const { messages, loading, sendMessage } = useMessages(conversationId);
   const { user } = useAuth();
+  const { checkConversationReadiness } = useDateConcierge();
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Check if conversation is ready for AI concierge
+  useEffect(() => {
+    if (messages.length > 15 && user) {
+      checkConversationReadiness(conversationId, matchUserId).then((readiness) => {
+        if (readiness.shouldTrigger && readiness.confidence > 0.7) {
+          // Could show a subtle prompt or notification
+          console.log('Conversation ready for AI concierge:', readiness);
+        }
+      });
+    }
+  }, [messages.length, conversationId, matchUserId, user]);
 
   const handleSendMessage = async () => {
     if (!messageText.trim() || isSending) return;
@@ -109,13 +130,45 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             onSendMessage={handleConversationHelperSend}
             onEndConversation={handleConversationHelperEnd}
           />
-          <Button 
-            variant="ghost" 
-            size="sm"
-            className="text-gray-400 hover:text-white"
-          >
-            <MoreVertical className="h-4 w-4" />
-          </Button>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="text-gray-400 hover:text-white"
+              >
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-charcoal-gray border-gray-700">
+              <DropdownMenuItem
+                onClick={() => setShowConcierge(true)}
+                className="text-white hover:bg-goldenrod/20 cursor-pointer"
+              >
+                <Calendar className="h-4 w-4 mr-2" />
+                Plan a Date
+              </DropdownMenuItem>
+              
+              <DropdownMenuItem
+                onClick={() => setShowVideoCall(true)}
+                className="text-white hover:bg-blue-500/20 cursor-pointer"
+              >
+                <Video className="h-4 w-4 mr-2" />
+                Video Call
+              </DropdownMenuItem>
+              
+              <DropdownMenuSeparator className="bg-gray-600" />
+              
+              <DropdownMenuItem
+                onClick={() => setShowUserActions(true)}
+                className="text-red-400 hover:bg-red-500/20 cursor-pointer"
+              >
+                <Shield className="h-4 w-4 mr-2" />
+                Report or Block
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
@@ -200,6 +253,34 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           </Button>
         </div>
       </div>
+
+      {/* Safety Actions Modal */}
+      <UserActionsModal
+        isOpen={showUserActions}
+        onClose={() => setShowUserActions(false)}
+        userId={matchUserId}
+        userName={matchName}
+        conversationId={conversationId}
+      />
+
+      {/* AI Date Concierge Modal */}
+      <AIConciergeModal
+        isOpen={showConcierge}
+        onClose={() => setShowConcierge(false)}
+        matchUserId={matchUserId}
+        matchName={matchName}
+        conversationId={conversationId}
+        recentMessages={messages.slice(-10).map(m => m.content)}
+      />
+
+      {/* Video Call Modal */}
+      <VideoCallModal
+        isOpen={showVideoCall}
+        onClose={() => setShowVideoCall(false)}
+        matchName={matchName}
+        matchImage={matchImage}
+        conversationId={conversationId}
+      />
     </div>
   );
 };
