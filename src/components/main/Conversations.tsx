@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Calendar, Plus, MessageCircle, Heart, Zap, RotateCcw, Archive } from 'lucide-react';
+import { Sparkles, Calendar, MessageCircle, Heart, Zap, RotateCcw, Archive } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -7,7 +7,6 @@ import { RIFBehavioralNudge } from '../rif/RIFBehavioralNudge';
 import { RIFPostDateFeedback } from '../rif/RIFPostDateFeedback';
 import { AIConciergeModal } from '../date-concierge/AIConciergeModal';
 import { DateProposalCard } from '../date-concierge/DateProposalCard';
-import { DateJournalEntryComponent } from '../date-concierge/DateJournalEntry';
 import { ConversationHelper } from '../conversation/ConversationHelper';
 import { ChatModal } from '../chat/ChatModal';
 import { useRIF } from '@/hooks/useRIF';
@@ -24,7 +23,6 @@ export const Conversations: React.FC = () => {
   const [showNudge, setShowNudge] = useState(false);
   const [showPostDateFeedback, setShowPostDateFeedback] = useState(false);
   const [showConciergeModal, setShowConciergeModal] = useState(false);
-  const [showJournalEntry, setShowJournalEntry] = useState(false);
   const [showChatModal, setShowChatModal] = useState(false);
   const [activeChatConversation, setActiveChatConversation] = useState<any>(null);
   const [nudgeType, setNudgeType] = useState<'conversation_pacing' | 'emotional_check' | 'boundary_reminder' | 'reflection_prompt'>('conversation_pacing');
@@ -208,14 +206,6 @@ export const Conversations: React.FC = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-medium text-white">Date Proposals</h2>
-              <Button
-                onClick={() => setShowJournalEntry(true)}
-                size="sm"
-                className="bg-goldenrod/20 hover:bg-goldenrod/30 text-goldenrod border border-goldenrod/30"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Journal Entry
-              </Button>
             </div>
             
             <Tabs defaultValue="active" className="w-full">
@@ -432,12 +422,6 @@ export const Conversations: React.FC = () => {
           recentMessages={['Sample message 1', 'Sample message 2']}
         />
       )}
-
-      {/* Date Journal Entry Modal */}
-      <DateJournalEntryComponent
-        isOpen={showJournalEntry}
-        onClose={() => setShowJournalEntry(false)}
-      />
 
       {/* RIF Behavioral Nudge */}
       {showNudge && rifSettings?.rif_enabled && (
