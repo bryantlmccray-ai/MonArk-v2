@@ -108,7 +108,7 @@ export const DemoMainApp: React.FC<DemoMainAppProps> = ({ onClose }) => {
       </div>
 
       {selectedConversation && (
-        <div className="fixed inset-0 bg-jet-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-jet-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-[10000]">
           <div className="bg-charcoal-gray/95 rounded-2xl w-full max-w-md h-96 border border-goldenrod/30 flex flex-col">
             <div className="p-4 border-b border-gray-700 flex items-center justify-between">
               <h3 className="font-medium text-white">{selectedConversation.matchName}</h3>
@@ -252,7 +252,7 @@ export const DemoMainApp: React.FC<DemoMainAppProps> = ({ onClose }) => {
   );
 
   return (
-    <div className="fixed inset-0 bg-jet-black z-50 flex flex-col">
+    <div className="fixed inset-0 bg-jet-black z-[9999] flex flex-col">
       {/* Header */}
       <div className="bg-charcoal-gray/50 border-b border-goldenrod/30 p-4">
         <div className="flex items-center justify-between max-w-4xl mx-auto">

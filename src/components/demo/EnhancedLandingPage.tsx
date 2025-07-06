@@ -21,15 +21,19 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const startFullDemo = () => {
+    console.log('startFullDemo called'); // Debug log
     if (onStartDemo) {
+      console.log('Calling onStartDemo callback');
       onStartDemo();
     } else {
+      console.log('Setting demo mode true and showFullDemo true');
       setDemoMode(true);
       setShowFullDemo(true);
     }
   };
 
   if (showFullDemo) {
+    console.log('Rendering DemoMainApp');
     return <DemoMainApp onClose={onExitToApp ? onExitToApp : () => setShowFullDemo(false)} />;
   }
 
