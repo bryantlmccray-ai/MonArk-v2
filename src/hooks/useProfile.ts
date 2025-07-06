@@ -89,9 +89,9 @@ export const useProfile = () => {
         .from('user_profiles')
         .select('id')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
-      if (fetchError && fetchError.code !== 'PGRST116') {
+      if (fetchError) {
         console.error('Error checking existing profile:', fetchError);
         return false;
       }
@@ -183,8 +183,34 @@ export const useProfile = () => {
   };
 
   useEffect(() => {
-    fetchProfile();
-  }, [user]);
+    let mounted = true;
+    
+    const fetchProfileIfNeeded = async () => {
+      if (!user) {
+        if (mounted) {
+          setProfile(null);
+          setLoading(false);
+        }
+        return;
+      }
+
+      // Avoid refetching if we already have a profile for this user
+      if (profile && profile.user_id === user.id) {
+        if (mounted) {
+          setLoading(false);
+        }
+        return;
+      }
+
+      await fetchProfile();
+    };
+
+    fetchProfileIfNeeded();
+
+    return () => {
+      mounted = false;
+    };
+  }, [user?.id]); // Only depend on user.id, not the entire user object
 
   return {
     profile,
