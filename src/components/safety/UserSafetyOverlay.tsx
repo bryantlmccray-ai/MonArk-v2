@@ -247,6 +247,32 @@ export const UserSafetyOverlay: React.FC<UserSafetyOverlayProps> = ({ onClose })
                   </Button>
                 </CardContent>
               </Card>
+
+              {/* Legal Information */}
+              <Card className="bg-charcoal-gray/50 border-gray-700">
+                <CardHeader>
+                  <CardTitle className="text-white text-sm flex items-center gap-2">
+                    <FileText className="h-4 w-4" />
+                    Legal Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="grid grid-cols-1 gap-3 text-xs">
+                    <a href="/terms" className="text-goldenrod hover:underline flex items-center justify-between">
+                      Terms of Service
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                    <a href="/privacy" className="text-goldenrod hover:underline flex items-center justify-between">
+                      Privacy Policy
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </div>
+                  <Separator className="bg-gray-600" />
+                  <p className="text-gray-400 text-xs">
+                    Review our policies to understand your rights and responsibilities on MonArk
+                  </p>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
