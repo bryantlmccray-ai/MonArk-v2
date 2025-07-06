@@ -292,12 +292,12 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                     }`}
                   >
                     <p className="text-sm">{message.content}</p>
-                     <p className={`text-xs mt-1 flex items-center justify-between ${
+                     <div className={`text-xs mt-1 flex items-center justify-between ${
                        isOwnMessage ? 'text-jet-black/70' : 'text-gray-400'
                      }`}>
                        <span>{format(new Date(message.created_at), 'HH:mm')}</span>
                        {getDeliveryStatusIcon(message)}
-                     </p>
+                     </div>
                   </div>
                 </div>
               </div>
