@@ -75,7 +75,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           <div className="absolute top-20 left-10 w-2 h-2 bg-goldenrod/30 rounded-full animate-pulse"></div>
           <div className="absolute top-40 right-20 w-1 h-1 bg-purple-400/40 rounded-full animate-ping"></div>
           <div className="absolute bottom-40 left-20 w-3 h-3 bg-goldenrod/20 rounded-full animate-bounce"></div>
-          <div className="absolute top-60 right-10 w-1.5 h-1.5 bg-blue-400/30 rounded-full animate-pulse"></div>
+          <div className="absolute top-60 right-10 w-1.5 h-1.5 bg-purple-400/30 rounded-full animate-pulse"></div>
         </div>
         
         <div className="relative max-w-7xl mx-auto px-6 py-20">
@@ -106,7 +106,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <div className="text-sm text-gray-400">Deeper Conversations</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-400">24/7</div>
+                <div className="text-2xl font-bold text-goldenrod">24/7</div>
                 <div className="text-sm text-gray-400">AI Guidance</div>
               </div>
             </div>
@@ -176,7 +176,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   <Sparkles className="h-3 w-3 mr-1" />
                   Interactive Demo
                 </Badge>
-                <Badge variant="secondary" className="bg-green-500/20 text-green-400 border-green-500/30">
+                <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 border-purple-500/30">
                   <CheckCircle className="h-3 w-3 mr-1" />
                   No Signup Required
                 </Badge>
@@ -217,14 +217,14 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   </div>
                   
                   <div className="grid grid-cols-3 gap-4">
-                    <div className="aspect-square bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-lg flex items-center justify-center">
+                    <div className="aspect-square bg-gradient-to-br from-purple-500/20 to-purple-400/20 rounded-lg flex items-center justify-center">
                       <Users className="h-6 w-6 text-purple-300" />
                     </div>
-                    <div className="aspect-square bg-gradient-to-br from-goldenrod/20 to-orange-500/20 rounded-lg flex items-center justify-center">
+                    <div className="aspect-square bg-gradient-to-br from-goldenrod/20 to-goldenrod/30 rounded-lg flex items-center justify-center">
                       <Heart className="h-6 w-6 text-goldenrod" />
                     </div>
-                    <div className="aspect-square bg-gradient-to-br from-green-500/20 to-teal-500/20 rounded-lg flex items-center justify-center">
-                      <MessageCircle className="h-6 w-6 text-green-300" />
+                    <div className="aspect-square bg-gradient-to-br from-purple-400/20 to-purple-500/20 rounded-lg flex items-center justify-center">
+                      <MessageCircle className="h-6 w-6 text-purple-300" />
                     </div>
                   </div>
                   
