@@ -1,212 +1,185 @@
-import React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import React, { useState } from 'react';
+import { Bell, X, MessageCircle, Heart, Calendar, Shield, Settings, Trash2, Check, CheckCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Bell, 
-  Heart, 
-  MessageCircle, 
-  Calendar, 
-  Shield, 
-  Settings,
-  Check,
-  CheckCheck,
-  Trash2,
-  ExternalLink
-} from 'lucide-react';
-import { useNotifications, Notification } from '@/hooks/useNotifications';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Separator } from '@/components/ui/separator';
+import { useNotifications } from '@/hooks/useNotifications';
 import { format } from 'date-fns';
 
-interface NotificationCenterProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+const getNotificationIcon = (type: string) => {
+  switch (type) {
+    case 'match':
+      return <Heart className="h-4 w-4 text-red-500" />;
+    case 'message':
+      return <MessageCircle className="h-4 w-4 text-blue-500" />;
+    case 'date_proposal':
+      return <Calendar className="h-4 w-4 text-green-500" />;
+    case 'safety':
+      return <Shield className="h-4 w-4 text-orange-500" />;
+    default:
+      return <Bell className="h-4 w-4 text-gray-500" />;
+  }
+};
 
-export const NotificationCenter: React.FC<NotificationCenterProps> = ({
-  isOpen,
-  onClose
-}) => {
-  const { notifications, unreadCount, markAsRead, markAllAsRead, deleteNotification } = useNotifications();
+const getNotificationBg = (type: string, isRead: boolean) => {
+  const opacity = isRead ? '20' : '40';
+  switch (type) {
+    case 'match':
+      return `bg-red-500/${opacity}`;
+    case 'message':
+      return `bg-blue-500/${opacity}`;
+    case 'date_proposal':
+      return `bg-green-500/${opacity}`;
+    case 'safety':
+      return `bg-orange-500/${opacity}`;
+    default:
+      return `bg-gray-500/${opacity}`;
+  }
+};
 
-  const getNotificationIcon = (type: Notification['type']) => {
-    switch (type) {
-      case 'match':
-        return <Heart className="h-4 w-4 text-pink-400" />;
-      case 'message':
-        return <MessageCircle className="h-4 w-4 text-blue-400" />;
-      case 'date_proposal':
-        return <Calendar className="h-4 w-4 text-goldenrod" />;
-      case 'safety':
-        return <Shield className="h-4 w-4 text-red-400" />;
-      case 'system':
-        return <Settings className="h-4 w-4 text-gray-400" />;
-      default:
-        return <Bell className="h-4 w-4 text-gray-400" />;
+export const NotificationCenter: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const {
+    notifications,
+    unreadCount,
+    markAsRead,
+    markAllAsRead,
+    deleteNotification,
+    loading
+  } = useNotifications();
+
+  const handleNotificationClick = async (notificationId: string, actionUrl?: string | null) => {
+    await markAsRead(notificationId);
+    if (actionUrl) {
+      window.location.href = actionUrl;
     }
   };
 
-  const getNotificationColor = (type: Notification['type']) => {
-    switch (type) {
-      case 'match':
-        return 'border-pink-500/30 bg-pink-500/5';
-      case 'message':
-        return 'border-blue-500/30 bg-blue-500/5';
-      case 'date_proposal':
-        return 'border-goldenrod/30 bg-goldenrod/5';
-      case 'safety':
-        return 'border-red-500/30 bg-red-500/5';
-      case 'system':
-        return 'border-gray-500/30 bg-gray-500/5';
-      default:
-        return 'border-gray-500/30 bg-gray-500/5';
-    }
+  const handleMarkAllRead = async () => {
+    await markAllAsRead();
   };
 
-  const handleNotificationClick = (notification: Notification) => {
-    if (!notification.read_at) {
-      markAsRead(notification.id);
-    }
-    
-    if (notification.action_url) {
-      // Navigate to the action URL
-      window.location.href = notification.action_url;
-    }
+  const handleDeleteNotification = async (notificationId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    await deleteNotification(notificationId);
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-charcoal-gray border-goldenrod/20 sm:max-w-[600px] max-h-[80vh] overflow-hidden">
-        <DialogHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Bell className="h-5 w-5 text-goldenrod" />
-              <DialogTitle className="text-2xl font-light text-white">Notifications</DialogTitle>
-              {unreadCount > 0 && (
-                <Badge variant="secondary" className="bg-goldenrod text-jet-black">
-                  {unreadCount}
-                </Badge>
-              )}
-            </div>
-            
-            {unreadCount > 0 && (
-              <Button
-                onClick={markAllAsRead}
-                variant="ghost"
-                size="sm"
-                className="text-goldenrod hover:bg-goldenrod/10"
-              >
-                <CheckCheck className="h-4 w-4 mr-1" />
-                Mark all read
-              </Button>
-            )}
-          </div>
-          <DialogDescription className="text-gray-300 text-center">
-            Stay updated with your latest activity
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="space-y-2">
-          {notifications.length === 0 ? (
-            <div className="text-center py-8">
-              <Bell className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-              <p className="text-gray-400">No notifications yet</p>
-              <p className="text-sm text-gray-500">
-                You'll see updates about matches, messages, and more here
-              </p>
-            </div>
-          ) : (
-            <div className="max-h-[500px] overflow-y-auto space-y-2">
-              {notifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className={`
-                    relative p-4 rounded-lg border cursor-pointer transition-all hover:bg-gray-800/30
-                    ${getNotificationColor(notification.type)}
-                    ${!notification.read_at ? 'ring-1 ring-goldenrod/30' : ''}
-                  `}
-                  onClick={() => handleNotificationClick(notification)}
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="relative text-white hover:bg-white/10"
+        >
+          <Bell className="h-5 w-5" />
+          {unreadCount > 0 && (
+            <Badge
+              variant="destructive"
+              className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
+            >
+              {unreadCount > 99 ? '99+' : unreadCount}
+            </Badge>
+          )}
+        </Button>
+      </PopoverTrigger>
+      
+      <PopoverContent className="w-80 p-0 bg-charcoal-gray border-goldenrod/20" align="end">
+        <Card className="bg-transparent border-none">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-white flex items-center gap-2">
+                <Bell className="h-5 w-5 text-goldenrod" />
+                Notifications
+              </CardTitle>
+              <div className="flex items-center gap-2">
+                {unreadCount > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleMarkAllRead}
+                    className="text-xs text-goldenrod hover:bg-goldenrod/10"
+                  >
+                    <CheckCheck className="h-3 w-3 mr-1" />
+                    Mark all read
+                  </Button>
+                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowSettings(!showSettings)}
+                  className="text-goldenrod hover:bg-goldenrod/10"
                 >
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 mt-1">
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          
+          <Separator className="bg-gray-600" />
+          
+          <CardContent className="p-0 max-h-96 overflow-y-auto">
+            {loading ? (
+              <div className="p-4 text-center text-gray-400">
+                Loading notifications...
+              </div>
+            ) : notifications.length === 0 ? (
+              <div className="p-4 text-center text-gray-400">
+                No notifications yet
+              </div>
+            ) : (
+              <div className="space-y-1">
+                {notifications.map((notification) => (
+                  <div
+                    key={notification.id}
+                    className={`p-3 cursor-pointer hover:bg-white/5 transition-colors ${
+                      getNotificationBg(notification.type, !!notification.read_at)
+                    } ${!notification.read_at ? 'border-l-2 border-goldenrod' : ''}`}
+                    onClick={() => handleNotificationClick(notification.id, notification.action_url)}
+                  >
+                    <div className="flex items-start gap-3">
                       {getNotificationIcon(notification.type)}
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h4 className="text-white font-medium text-sm">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className={`text-sm font-medium ${
+                            notification.read_at ? 'text-gray-300' : 'text-white'
+                          }`}>
                             {notification.title}
-                          </h4>
-                          <p className="text-gray-300 text-sm mt-1">
-                            {notification.message}
                           </p>
-                        </div>
-
-                        <div className="flex items-center gap-2 ml-4">
-                          {!notification.read_at && (
+                          <div className="flex items-center gap-1">
+                            {!notification.read_at && (
+                              <div className="w-2 h-2 bg-goldenrod rounded-full"></div>
+                            )}
                             <Button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                markAsRead(notification.id);
-                              }}
                               variant="ghost"
                               size="sm"
-                              className="text-goldenrod hover:bg-goldenrod/10 p-1"
+                              onClick={(e) => handleDeleteNotification(notification.id, e)}
+                              className="h-6 w-6 p-0 text-gray-400 hover:text-red-400 hover:bg-red-400/10"
                             >
-                              <Check className="h-3 w-3" />
+                              <Trash2 className="h-3 w-3" />
                             </Button>
-                          )}
-                          
-                          <Button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deleteNotification(notification.id);
-                            }}
-                            variant="ghost"
-                            size="sm"
-                            className="text-gray-400 hover:text-red-400 hover:bg-red-400/10 p-1"
-                          >
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between mt-3">
-                        <span className="text-xs text-gray-500">
-                          {format(new Date(notification.created_at), 'MMM d, h:mm a')}
-                        </span>
-                        
-                        {notification.action_url && (
-                          <div className="flex items-center text-xs text-goldenrod">
-                            <ExternalLink className="h-3 w-3 mr-1" />
-                            View
                           </div>
-                        )}
+                        </div>
+                        <p className={`text-xs mt-1 ${
+                          notification.read_at ? 'text-gray-400' : 'text-gray-200'
+                        }`}>
+                          {notification.message}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {format(new Date(notification.created_at), 'MMM d, h:mm a')}
+                        </p>
                       </div>
                     </div>
-
-                    {!notification.read_at && (
-                      <div className="absolute top-3 right-3 w-2 h-2 bg-goldenrod rounded-full"></div>
-                    )}
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="flex justify-end pt-4 border-t border-gray-700">
-          <Button onClick={onClose} variant="outline">
-            Close
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </PopoverContent>
+    </Popover>
   );
 };

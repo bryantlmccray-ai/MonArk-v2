@@ -110,12 +110,7 @@ export const MainApp: React.FC = () => {
           <SettingsOverlay onClose={() => setShowSettings(false)} />
         )}
         
-        {showNotifications && (
-          <NotificationCenter 
-            isOpen={showNotifications} 
-            onClose={() => setShowNotifications(false)} 
-          />
-        )}
+        <NotificationCenter />
       </div>
     );
   }
@@ -166,12 +161,7 @@ export const MainApp: React.FC = () => {
           <SettingsOverlay onClose={() => setShowSettings(false)} />
         )}
         
-        {showNotifications && (
-          <NotificationCenter 
-            isOpen={showNotifications} 
-            onClose={() => setShowNotifications(false)} 
-          />
-        )}
+        <NotificationCenter />
       </div>
     </SidebarProvider>
   );
