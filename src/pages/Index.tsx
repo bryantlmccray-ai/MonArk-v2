@@ -18,6 +18,17 @@ const Index = () => {
   const [showDemo, setShowDemo] = React.useState(false);
   const [showAuth, setShowAuth] = React.useState(false);
 
+  // Listen for auth state changes to update UI immediately
+  React.useEffect(() => {
+    const handleAuthChange = () => {
+      // Force component re-render on auth change
+      console.log('Auth state changed in Index, user:', user?.id);
+    };
+
+    window.addEventListener('auth-change', handleAuthChange);
+    return () => window.removeEventListener('auth-change', handleAuthChange);
+  }, [user]);
+
   // Add escape key listener to exit demo
   React.useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {

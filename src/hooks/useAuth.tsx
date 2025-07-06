@@ -24,19 +24,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         if (!mounted) return;
         
         console.log('Auth state changed:', event, session?.user?.id);
         
-        // Update session and user state
+        // Update session and user state immediately
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+        
+        // Force a state update to ensure UI refreshes
+        if (event === 'SIGNED_IN' && session) {
+          // Small delay to ensure all state is updated
+          setTimeout(() => {
+            window.dispatchEvent(new Event('auth-change'));
+          }, 100);
+        }
       }
     );
 
-    // Get initial session only once
+    // Get initial session
     const getInitialSession = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -94,6 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (email: string, password: string) => {
     try {
+      setLoading(true);
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -101,11 +110,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (error) {
         console.error('Signin error:', error);
+        setLoading(false);
+        return { error };
       }
       
-      return { error };
+      // Don't set loading to false here - let the auth state change handle it
+      return { error: null };
     } catch (error) {
       console.error('Signin exception:', error);
+      setLoading(false);
       return { error };
     }
   };

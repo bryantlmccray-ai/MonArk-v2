@@ -21,9 +21,25 @@ export const AuthPage: React.FC = () => {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [resetSent, setResetSent] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const { user, signIn, signUp } = useAuth();
   const { updateProfile } = useProfile();
   const { toast } = useToast();
+
+  // Add effect to listen for successful authentication
+  React.useEffect(() => {
+    const handleAuthChange = () => {
+      // This will be triggered when auth state changes
+      if (user) {
+        toast({
+          title: "Welcome back!",
+          description: "You have successfully signed in to MonArk.",
+        });
+      }
+    };
+
+    window.addEventListener('auth-change', handleAuthChange);
+    return () => window.removeEventListener('auth-change', handleAuthChange);
+  }, [user, toast]);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -186,10 +202,8 @@ export const AuthPage: React.FC = () => {
             });
           }
         } else {
-          toast({
-            title: "Welcome back!",
-            description: "You have successfully signed in to MonArk.",
-          });
+          // Sign in successful - don't show toast yet, let auth state handle UI update
+          console.log('Sign in successful, waiting for auth state change');
         }
       } else {
         // For signup, show age verification first
@@ -315,7 +329,12 @@ export const AuthPage: React.FC = () => {
             }`}
           >
             {loading 
-              ? (isLogin ? 'Signing in...' : 'Creating account...') 
+              ? (
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-4 h-4 border-2 border-jet-black/30 border-t-jet-black rounded-full animate-spin"></div>
+                  <span>{isLogin ? 'Signing in...' : 'Creating account...'}</span>
+                </div>
+              )
               : (isLogin ? 'Sign In' : 'Create Account')
             }
           </button>
