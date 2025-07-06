@@ -338,6 +338,79 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                 </div>
               )}
 
+              {/* Lifestyle Info */}
+              {((profile as any)?.occupation || (profile as any)?.education_level || (profile as any)?.height_cm) && (
+                <div className="bg-charcoal-gray rounded-xl p-4 border border-gray-800">
+                  <h4 className="text-white font-medium mb-3">About Me</h4>
+                  <div className="space-y-2">
+                    {(profile as any)?.occupation && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400 text-sm">Work</span>
+                        <span className="text-gray-300 text-sm">{(profile as any).occupation}</span>
+                      </div>
+                    )}
+                    {(profile as any)?.education_level && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400 text-sm">Education</span>
+                        <span className="text-gray-300 text-sm">{(profile as any).education_level}</span>
+                      </div>
+                    )}
+                    {(profile as any)?.height_cm && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400 text-sm">Height</span>
+                        <span className="text-gray-300 text-sm">
+                          {Math.floor((profile as any).height_cm / 30.48)}'{Math.round(((profile as any).height_cm / 2.54) % 12)}" ({(profile as any).height_cm}cm)
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Relationship Goals */}
+              {(profile as any)?.relationship_goals && (profile as any).relationship_goals.length > 0 && (
+                <div className="bg-charcoal-gray rounded-xl p-4 border border-gray-800">
+                  <h4 className="text-white font-medium mb-2">Looking For</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {(profile as any).relationship_goals.map((goal: string, index: number) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 bg-goldenrod/20 text-goldenrod text-sm rounded-full"
+                      >
+                        {goal}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Lifestyle Habits */}
+              {((profile as any)?.exercise_habits || (profile as any)?.smoking_status || (profile as any)?.drinking_status) && (
+                <div className="bg-charcoal-gray rounded-xl p-4 border border-gray-800">
+                  <h4 className="text-white font-medium mb-3">Lifestyle</h4>
+                  <div className="space-y-2">
+                    {(profile as any)?.exercise_habits && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400 text-sm">Exercise</span>
+                        <span className="text-gray-300 text-sm">{(profile as any).exercise_habits}</span>
+                      </div>
+                    )}
+                    {(profile as any)?.smoking_status && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400 text-sm">Smoking</span>
+                        <span className="text-gray-300 text-sm">{(profile as any).smoking_status}</span>
+                      </div>
+                    )}
+                    {(profile as any)?.drinking_status && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400 text-sm">Drinking</span>
+                        <span className="text-gray-300 text-sm">{(profile as any).drinking_status}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               <button
                 onClick={() => {
                   console.log('Edit Profile button clicked');
