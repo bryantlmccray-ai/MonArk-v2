@@ -153,6 +153,10 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
     setCurrentStep(prev => prev + 1);
   };
 
+  const prevStep = () => {
+    setCurrentStep(prev => Math.max(0, prev - 1));
+  };
+
   const goToStep = (step: number) => {
     setCurrentStep(step);
   };
@@ -252,6 +256,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
             updateData={updateProfileData} 
             onNext={() => { markStepCompleted('interests'); nextStep(); }}
             onSkip={() => { markStepSkipped('interests'); nextStep(); }}
+            onBack={prevStep}
             stepRequirement={stepRequirements.interests}
           />
         );
@@ -262,6 +267,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
             updateData={updateProfileData} 
             onNext={() => { markStepCompleted('photos'); nextStep(); }}
             onSkip={() => { markStepSkipped('photos'); nextStep(); }}
+            onBack={prevStep}
             stepRequirement={stepRequirements.photos}
           />
         );

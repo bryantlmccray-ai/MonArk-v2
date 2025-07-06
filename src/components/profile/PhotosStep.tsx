@@ -10,10 +10,11 @@ interface PhotosStepProps {
   updateData: (data: Partial<ProfileData>) => void;
   onNext: () => void;
   onSkip: () => void;
+  onBack?: () => void;
   stepRequirement: 'critical' | 'important' | 'optional';
 }
 
-export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData, onNext, onSkip, stepRequirement }) => {
+export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, stepRequirement }) => {
   const [photos, setPhotos] = useState<string[]>(profileData.photos);
   const { uploadPhoto, deletePhoto, uploading } = usePhotoUpload();
   const { toast } = useToast();
@@ -191,13 +192,34 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
 
       {/* Action Buttons */}
       <div className="pt-6 space-y-3">
-        <button
-          onClick={handleNext}
-          disabled={!photos[0] || uploading} // Require at least main photo
-          className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {uploading ? 'Uploading...' : 'Continue'}
-        </button>
+        {onBack && (
+          <div className="flex space-x-3">
+            <button
+              onClick={onBack}
+              disabled={uploading}
+              className="flex-1 py-3 text-gray-400 hover:text-white transition-colors border border-gray-600 hover:border-gray-500 rounded-xl disabled:opacity-50"
+            >
+              Back
+            </button>
+            <button
+              onClick={handleNext}
+              disabled={!photos[0] || uploading} // Require at least main photo
+              className="flex-1 py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {uploading ? 'Uploading...' : 'Continue'}
+            </button>
+          </div>
+        )}
+        
+        {!onBack && (
+          <button
+            onClick={handleNext}
+            disabled={!photos[0] || uploading} // Require at least main photo
+            className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {uploading ? 'Uploading...' : 'Continue'}
+          </button>
+        )}
         
         {stepRequirement !== 'critical' && (
           <button

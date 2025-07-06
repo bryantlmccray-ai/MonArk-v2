@@ -7,10 +7,11 @@ interface InterestsStepProps {
   updateData: (data: Partial<ProfileData>) => void;
   onNext: () => void;
   onSkip: () => void;
+  onBack?: () => void;
   stepRequirement: 'critical' | 'important' | 'optional';
 }
 
-export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updateData, onNext, onSkip, stepRequirement }) => {
+export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, stepRequirement }) => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>(profileData.interests);
 
   const interestCategories = {
@@ -86,13 +87,33 @@ export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updat
 
       {/* Action Buttons */}
       <div className="pt-6 space-y-3">
-        <button
-          onClick={handleNext}
-          disabled={selectedInterests.length === 0}
-          className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Continue
-        </button>
+        {onBack && (
+          <div className="flex space-x-3">
+            <button
+              onClick={onBack}
+              className="flex-1 py-3 text-gray-400 hover:text-white transition-colors border border-gray-600 hover:border-gray-500 rounded-xl"
+            >
+              Back
+            </button>
+            <button
+              onClick={handleNext}
+              disabled={selectedInterests.length === 0}
+              className="flex-1 py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Continue
+            </button>
+          </div>
+        )}
+        
+        {!onBack && (
+          <button
+            onClick={handleNext}
+            disabled={selectedInterests.length === 0}
+            className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Continue
+          </button>
+        )}
         
         {stepRequirement !== 'critical' && (
           <button
