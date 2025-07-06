@@ -60,14 +60,14 @@ export class AIInsightsService {
   static hasInterestingPatterns(entries: any[]): boolean {
     if (entries.length < 3) return false;
 
-    const ratings = entries.map(e => e.rating).filter(r => r !== null);
+    const ratings = entries.map(e => e.rating).filter((r): r is number => r !== null && typeof r === 'number');
     const activities = entries.map(e => e.date_activity?.toLowerCase()).filter(Boolean);
 
     // Pattern 1: All dates rated very high (4.5+)
-    const highRatingStreak = ratings.length >= 3 && ratings.every((r: number) => r >= 4.5);
+    const highRatingStreak = ratings.length >= 3 && ratings.every(r => r >= 4.5);
     
     // Pattern 2: All dates rated low (below 3)
-    const lowRatingStreak = ratings.length >= 3 && ratings.every((r: number) => r < 3);
+    const lowRatingStreak = ratings.length >= 3 && ratings.every(r => r < 3);
     
     // Pattern 3: Same activity type repeated 4+ times
     const activityCounts = activities.reduce((acc, activity) => {
@@ -75,7 +75,7 @@ export class AIInsightsService {
       return acc;
     }, {} as Record<string, number>);
     
-    const hasActivityPattern = Object.values(activityCounts).some(count => count >= 4);
+    const hasActivityPattern = Object.values(activityCounts).some((count: number) => count >= 4);
     
     // Pattern 4: Rapid dating (5+ dates in 2 weeks)
     const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
@@ -150,9 +150,9 @@ export class AIInsightsService {
         .maybeSingle();
 
       // Calculate patterns
-      const ratings = entries.map(e => e.rating).filter(r => r !== null);
+      const ratings = entries.map(e => e.rating).filter((r): r is number => r !== null && typeof r === 'number');
       const averageRating = ratings.length > 0 
-        ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length 
+        ? ratings.reduce((sum: number, rating: number) => sum + rating, 0) / ratings.length 
         : 0;
 
       const activities = entries.map(e => e.date_activity).filter(Boolean);
