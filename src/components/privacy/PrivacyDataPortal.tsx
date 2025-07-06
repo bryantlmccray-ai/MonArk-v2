@@ -28,11 +28,11 @@ export const PrivacyDataPortal: React.FC = () => {
         rifState
       ] = await Promise.all([
         supabase.from('user_profiles').select('*').eq('user_id', user.id).single(),
-        supabase.from('rif_profiles').select('*').eq('user_id', user.id).single(),
-        supabase.from('rif_settings').select('*').eq('user_id', user.id).single(),
+        supabase.from('rif_profiles').select('*').eq('user_id', user.id).maybeSingle(),
+        supabase.from('rif_settings').select('*').eq('user_id', user.id).maybeSingle(),
         supabase.from('rif_reflections').select('*').eq('user_id', user.id),
         supabase.from('date_journal').select('*').eq('user_id', user.id),
-        supabase.from('user_rif_state').select('*').eq('user_id', user.id).single()
+        supabase.from('user_rif_state').select('*').eq('user_id', user.id).maybeSingle()
       ]);
 
       const userData = {

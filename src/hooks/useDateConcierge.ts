@@ -298,7 +298,7 @@ export const useDateConcierge = () => {
         .select('*')
         .eq('user_id', user.id)
         .eq('is_active', true)
-        .single();
+        .maybeSingle();
 
       // Get match's RIF profile for compatibility
       const { data: matchRifProfile } = await supabase
@@ -306,7 +306,7 @@ export const useDateConcierge = () => {
         .select('*')
         .eq('user_id', matchUserId)
         .eq('is_active', true)
-        .single();
+        .maybeSingle();
 
       // Additional checks for AI concierge triggering
       const conversation = conversations.find(c => c.conversation_id === conversationId);

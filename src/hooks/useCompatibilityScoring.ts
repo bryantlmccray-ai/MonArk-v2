@@ -79,7 +79,7 @@ export const useCompatibilityScoring = () => {
         .select('*')
         .eq('user_id', user?.id)
         .eq('is_active', true)
-        .single();
+        .maybeSingle();
 
       // Calculate individual compatibility components
       const interestSimilarity = calculateInterestSimilarity(

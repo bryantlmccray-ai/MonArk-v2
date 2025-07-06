@@ -49,7 +49,7 @@ export const useRIF = () => {
         .select('*')
         .eq('user_id', user.id)
         .eq('is_active', true)
-        .single();
+        .maybeSingle();
 
       // Load RIF settings
       const { data: settingsData } = await supabase
