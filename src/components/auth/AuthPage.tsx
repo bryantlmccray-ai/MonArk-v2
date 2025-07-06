@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { AgeVerificationStep } from './AgeVerificationStep';
 import { useProfile } from '@/hooks/useProfile';
 import { MonArkLogo } from '@/components/MonArkLogo';
+import { supabase } from '@/integrations/supabase/client';
 
 export const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -17,6 +18,9 @@ export const AuthPage: React.FC = () => {
   const [showAgeVerification, setShowAgeVerification] = useState(false);
   const [signupData, setSignupData] = useState<{email: string; password: string; name: string} | null>(null);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetSent, setResetSent] = useState(false);
   const { signIn, signUp } = useAuth();
   const { updateProfile } = useProfile();
   const { toast } = useToast();
@@ -24,6 +28,42 @@ export const AuthPage: React.FC = () => {
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+  };
+
+  const handlePasswordReset = async () => {
+    if (!resetEmail || !validateEmail(resetEmail)) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      setResetSent(true);
+      toast({
+        title: "Reset email sent",
+        description: "Check your email for password reset instructions",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Reset failed",
+        description: error.message || "Failed to send reset email",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAgeVerification = async (ageData: { dateOfBirth: Date; ageConfirmed: boolean }) => {
@@ -119,10 +159,23 @@ export const AuthPage: React.FC = () => {
       if (isLogin) {
         const { error } = await signIn(email, password);
         if (error) {
+          // More specific error handling
           if (error.message.includes('Invalid login credentials')) {
             toast({
               title: "Login failed",
-              description: "Invalid email or password",
+              description: "The email or password you entered is incorrect. Please try again.",
+              variant: "destructive"
+            });
+          } else if (error.message.includes('Email not confirmed')) {
+            toast({
+              title: "Email not verified",
+              description: "Please check your email and click the verification link before signing in.",
+              variant: "destructive"
+            });
+          } else if (error.message.includes('Too many requests')) {
+            toast({
+              title: "Too many attempts",
+              description: "Please wait a moment before trying again.",
               variant: "destructive"
             });
           } else {
@@ -132,6 +185,11 @@ export const AuthPage: React.FC = () => {
               variant: "destructive"
             });
           }
+        } else {
+          toast({
+            title: "Welcome back!",
+            description: "You have successfully signed in to MonArk.",
+          });
         }
       } else {
         // For signup, show age verification first
@@ -265,7 +323,11 @@ export const AuthPage: React.FC = () => {
 
         <div className="text-center">
           <button
-            onClick={() => setIsLogin(!isLogin)}
+            onClick={() => {
+              setIsLogin(!isLogin);
+              setShowForgotPassword(false);
+              setResetSent(false);
+            }}
             className="text-goldenrod hover:text-goldenrod/80 transition-colors"
           >
             {isLogin 
@@ -273,7 +335,80 @@ export const AuthPage: React.FC = () => {
               : "Already have an account? Sign in"
             }
           </button>
+          
+          {isLogin && (
+            <div className="mt-2">
+              <button
+                onClick={() => {
+                  setShowForgotPassword(!showForgotPassword);
+                  setResetEmail(email);
+                }}
+                className="text-sm text-gray-400 hover:text-goldenrod transition-colors"
+              >
+                Forgot your password?
+              </button>
+            </div>
+          )}
         </div>
+
+        {/* Forgot Password Form */}
+        {showForgotPassword && (
+          <div className="border-t border-gray-700 pt-6 space-y-4">
+            <div className="text-center">
+              <h3 className="text-white font-medium mb-2">Reset Password</h3>
+              <p className="text-gray-400 text-sm">
+                Enter your email address and we'll send you a link to reset your password.
+              </p>
+            </div>
+            
+            {!resetSent ? (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="reset-email" className="text-white text-sm font-medium">
+                    Email Address
+                  </Label>
+                  <Input
+                    id="reset-email"
+                    type="email"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    className="bg-charcoal-gray border-gray-700 text-white placeholder:text-gray-500 focus:border-goldenrod"
+                  />
+                </div>
+                
+                <div className="flex gap-3">
+                  <button
+                    onClick={handlePasswordReset}
+                    disabled={loading}
+                    className="flex-1 py-3 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50"
+                  >
+                    {loading ? 'Sending...' : 'Send Reset Link'}
+                  </button>
+                  
+                  <button
+                    onClick={() => setShowForgotPassword(false)}
+                    className="px-4 py-3 text-gray-400 hover:text-white transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-4">
+                <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <p className="text-white font-medium mb-1">Reset email sent!</p>
+                <p className="text-gray-400 text-sm">
+                  Check your email for instructions to reset your password.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
 
         {!isLogin && (
           <div className="text-center text-xs text-gray-500">
