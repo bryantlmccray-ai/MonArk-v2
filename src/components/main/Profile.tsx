@@ -341,7 +341,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               {/* Lifestyle Info */}
               {((profile as any)?.occupation || (profile as any)?.education_level || (profile as any)?.height_cm) && (
                 <div className="bg-charcoal-gray rounded-xl p-4 border border-gray-800">
-                  <h4 className="text-white font-medium mb-3">About Me</h4>
+                  <h4 className="text-white font-medium mb-3">Details</h4>
                   <div className="space-y-2">
                     {(profile as any)?.occupation && (
                       <div className="flex justify-between">
