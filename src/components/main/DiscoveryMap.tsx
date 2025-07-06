@@ -13,6 +13,7 @@ import { DiscoveryFilters, DiscoveryFilters as FilterType } from './DiscoveryFil
 import { ProfileSelectionOverlay } from './ProfileSelectionOverlay';
 import { ChatModal } from '../chat/ChatModal';
 import { ActivityFeed } from './ActivityFeed';
+import { LocationConsentModal } from '../location/LocationConsentModal';
 import { useRIF } from '@/hooks/useRIF';
 import { useProfile } from '@/hooks/useProfile';
 import { useDiscoveryProfiles, DiscoveryProfile } from '@/hooks/useDiscoveryProfiles';
@@ -195,6 +196,7 @@ export const DiscoveryMap: React.FC = () => {
   const [insightTarget, setInsightTarget] = useState<any>(null);
   const [selectedProfile, setSelectedProfile] = useState<DiscoveryProfile | null>(null);
   const [showLocationPrompt, setShowLocationPrompt] = useState(false);
+  const [showLocationModal, setShowLocationModal] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
@@ -794,7 +796,7 @@ export const DiscoveryMap: React.FC = () => {
                   <button
                     onClick={() => {
                       setShowLocationPrompt(false);
-                      // Could trigger location modal here
+                      setShowLocationModal(true);
                     }}
                     className="px-3 py-1 bg-goldenrod-gradient text-jet-black text-sm rounded-lg font-medium"
                   >
@@ -926,6 +928,16 @@ export const DiscoveryMap: React.FC = () => {
           matchImage={chatData.matchImage}
         />
       )}
+
+      {/* Location Consent Modal */}
+      <LocationConsentModal
+        isOpen={showLocationModal}
+        onClose={() => setShowLocationModal(false)}
+        onSuccess={() => {
+          setShowLocationModal(false);
+          setShowLocationPrompt(false);
+        }}
+      />
     </div>
   );
 };
