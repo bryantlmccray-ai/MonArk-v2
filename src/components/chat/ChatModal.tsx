@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { ChatInterface } from './ChatInterface';
 
 interface ChatModalProps {
@@ -23,6 +24,10 @@ export const ChatModal: React.FC<ChatModalProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md h-[600px] p-0 bg-jet-black border-gray-800">
+        <VisuallyHidden>
+          <DialogTitle>Chat with {matchName}</DialogTitle>
+          <DialogDescription>Real-time conversation with your match</DialogDescription>
+        </VisuallyHidden>
         <ChatInterface
           conversationId={conversationId}
           matchUserId={matchUserId}
