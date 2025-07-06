@@ -207,6 +207,7 @@ export const DiscoveryMap: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [lastPanPosition, setLastPanPosition] = useState({ x: 50, y: 50 });
+  const [hasMoved, setHasMoved] = useState(false);
   const [chatData, setChatData] = useState<{
     conversationId: string;
     matchUserId: string;
@@ -313,6 +314,7 @@ export const DiscoveryMap: React.FC = () => {
   // Handle map dragging
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
+    setHasMoved(false);
     setDragStart({ x: e.clientX, y: e.clientY });
     setLastPanPosition(mapCenter);
   };
@@ -320,17 +322,27 @@ export const DiscoveryMap: React.FC = () => {
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging) return;
     
-    const deltaX = (e.clientX - dragStart.x) * 0.1; // Sensitivity adjustment
-    const deltaY = (e.clientY - dragStart.y) * 0.1;
+    const deltaX = e.clientX - dragStart.x;
+    const deltaY = e.clientY - dragStart.y;
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     
-    const newX = Math.max(0, Math.min(100, lastPanPosition.x - deltaX));
-    const newY = Math.max(0, Math.min(100, lastPanPosition.y - deltaY));
-    
-    setMapCenter({ x: newX, y: newY });
+    // Only start dragging if mouse moved more than 5 pixels
+    if (distance > 5) {
+      setHasMoved(true);
+      
+      const panDeltaX = deltaX * 0.1; // Sensitivity adjustment
+      const panDeltaY = deltaY * 0.1;
+      
+      const newX = Math.max(0, Math.min(100, lastPanPosition.x - panDeltaX));
+      const newY = Math.max(0, Math.min(100, lastPanPosition.y - panDeltaY));
+      
+      setMapCenter({ x: newX, y: newY });
+    }
   };
 
   const handleMouseUp = () => {
     setIsDragging(false);
+    setHasMoved(false);
   };
 
   // Handle zoom with wheel
@@ -568,12 +580,16 @@ export const DiscoveryMap: React.FC = () => {
     <div className="min-h-screen bg-jet-black relative overflow-hidden">
       {/* Interactive Map Container */}
       <div 
-        className={`absolute inset-0 transition-transform duration-200 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+        className={`absolute inset-0 transition-transform duration-200 ${hasMoved ? 'cursor-grabbing' : 'cursor-grab'}`}
         style={{
           transform: `translate(${(mapCenter.x - 50) * -2}px, ${(mapCenter.y - 50) * -2}px) scale(${zoomLevel})`,
           transformOrigin: 'center center'
         }}
-        onMouseDown={handleMouseDown}
+        onMouseDown={(e) => {
+          // Don't interfere with profile clicks
+          if ((e.target as HTMLElement).closest('.z-30')) return;
+          handleMouseDown(e);
+        }}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
