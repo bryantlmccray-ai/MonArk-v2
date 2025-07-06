@@ -68,14 +68,14 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
     <div className="min-h-screen bg-jet-black">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-goldenrod/10 via-transparent to-purple-900/10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-goldenrod/10 via-transparent to-blue-900/10" />
         
         {/* Floating Elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 left-10 w-2 h-2 bg-goldenrod/30 rounded-full animate-pulse"></div>
-          <div className="absolute top-40 right-20 w-1 h-1 bg-purple-400/40 rounded-full animate-ping"></div>
+          <div className="absolute top-40 right-20 w-1 h-1 bg-blue-400/40 rounded-full animate-ping"></div>
           <div className="absolute bottom-40 left-20 w-3 h-3 bg-goldenrod/20 rounded-full animate-bounce"></div>
-          <div className="absolute top-60 right-10 w-1.5 h-1.5 bg-purple-400/30 rounded-full animate-pulse"></div>
+          <div className="absolute top-60 right-10 w-1.5 h-1.5 bg-blue-400/30 rounded-full animate-pulse"></div>
         </div>
         
         <div className="relative max-w-7xl mx-auto px-6 py-20">
@@ -102,7 +102,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <div className="text-sm text-gray-400">Better Matches</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-400">3x</div>
+                <div className="text-2xl font-bold text-blue-400">3x</div>
                 <div className="text-sm text-gray-400">Deeper Conversations</div>
               </div>
               <div className="text-center">
@@ -176,7 +176,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   <Sparkles className="h-3 w-3 mr-1" />
                   Interactive Demo
                 </Badge>
-                <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 border-purple-500/30">
+                <Badge variant="secondary" className="bg-blue-500/20 text-blue-400 border-blue-500/30">
                   <CheckCircle className="h-3 w-3 mr-1" />
                   No Signup Required
                 </Badge>
@@ -217,14 +217,14 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   </div>
                   
                   <div className="grid grid-cols-3 gap-4">
-                    <div className="aspect-square bg-gradient-to-br from-purple-500/20 to-purple-400/20 rounded-lg flex items-center justify-center">
-                      <Users className="h-6 w-6 text-purple-300" />
+                    <div className="aspect-square bg-gradient-to-br from-blue-500/20 to-blue-400/20 rounded-lg flex items-center justify-center">
+                      <Users className="h-6 w-6 text-blue-300" />
                     </div>
                     <div className="aspect-square bg-gradient-to-br from-goldenrod/20 to-goldenrod/30 rounded-lg flex items-center justify-center">
                       <Heart className="h-6 w-6 text-goldenrod" />
                     </div>
-                    <div className="aspect-square bg-gradient-to-br from-purple-400/20 to-purple-500/20 rounded-lg flex items-center justify-center">
-                      <MessageCircle className="h-6 w-6 text-purple-300" />
+                    <div className="aspect-square bg-gradient-to-br from-blue-400/20 to-blue-500/20 rounded-lg flex items-center justify-center">
+                      <MessageCircle className="h-6 w-6 text-blue-300" />
                     </div>
                   </div>
                   
@@ -244,9 +244,9 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             </div>
 
             <div className="space-y-6">
-              <div className="bg-charcoal-gray/60 rounded-xl p-6 border border-purple-500/20">
+              <div className="bg-charcoal-gray/60 rounded-xl p-6 border border-blue-500/20">
                 <div className="flex items-center space-x-3 mb-4">
-                  <Shield className="h-5 w-5 text-purple-400" />
+                  <Shield className="h-5 w-5 text-blue-400" />
                   <h4 className="text-white font-medium">RIF Matching</h4>
                 </div>
                 <p className="text-gray-300 text-sm mb-4">
@@ -255,10 +255,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <div className="space-y-2">
                   <div className="flex justify-between text-xs">
                     <span className="text-gray-400">Intent Clarity</span>
-                    <span className="text-purple-400">92%</span>
+                    <span className="text-blue-400">92%</span>
                   </div>
                   <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div className="bg-gradient-to-r from-purple-600 to-purple-400 h-2 rounded-full w-[92%]"></div>
+                    <div className="bg-gradient-to-r from-blue-600 to-blue-400 h-2 rounded-full w-[92%]"></div>
                   </div>
                 </div>
               </div>
@@ -421,7 +421,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       {/* Demo CTA */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <div className="bg-gradient-to-r from-goldenrod/10 to-purple-900/10 rounded-2xl p-12 border border-goldenrod/20">
+          <div className="bg-gradient-to-r from-goldenrod/10 to-blue-900/10 rounded-2xl p-12 border border-goldenrod/20">
             <h3 className="text-3xl font-light text-white mb-4">
               Ready to Experience the Future of Dating?
             </h3>
@@ -516,7 +516,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ quote, author, role, 
     <p className="text-gray-300 leading-relaxed mb-6 italic">"{quote}"</p>
     
     <div className="flex items-center space-x-3">
-      <div className="w-10 h-10 bg-gradient-to-br from-goldenrod/30 to-purple-500/30 rounded-full flex items-center justify-center">
+      <div className="w-10 h-10 bg-gradient-to-br from-goldenrod/30 to-blue-500/30 rounded-full flex items-center justify-center">
         <span className="text-white font-medium text-sm">{author.charAt(0)}</span>
       </div>
       <div>
