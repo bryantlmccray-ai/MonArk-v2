@@ -1,13 +1,55 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { PrivacyPolicyContent } from '@/components/legal/PrivacyPolicyContent';
 import { PrivacyDataPortal } from '@/components/privacy/PrivacyDataPortal';
 import { DataDeletionManager } from '@/components/privacy/DataDeletionManager';
+import { Button } from '@/components/ui/button';
+import { FileText, Settings } from 'lucide-react';
 
 export default function Privacy() {
+  const [activeTab, setActiveTab] = useState<'policy' | 'data'>('policy');
+
   return (
     <div className="min-h-screen bg-jet-black">
-      <div className="container mx-auto px-4 py-8 space-y-8">
-        <PrivacyDataPortal />
-        <DataDeletionManager />
+      <div className="container mx-auto px-4 py-8">
+        {/* Tab Navigation */}
+        <div className="flex justify-center mb-8">
+          <div className="bg-charcoal-gray rounded-lg p-1 border border-goldenrod/20">
+            <Button
+              variant={activeTab === 'policy' ? 'default' : 'ghost'}
+              onClick={() => setActiveTab('policy')}
+              className={`${
+                activeTab === 'policy'
+                  ? 'bg-goldenrod-gradient text-jet-black'
+                  : 'text-gray-300 hover:text-white'
+              }`}
+            >
+              <FileText className="h-4 w-4 mr-2" />
+              Privacy Policy
+            </Button>
+            <Button
+              variant={activeTab === 'data' ? 'default' : 'ghost'}
+              onClick={() => setActiveTab('data')}
+              className={`${
+                activeTab === 'data'
+                  ? 'bg-goldenrod-gradient text-jet-black'
+                  : 'text-gray-300 hover:text-white'
+              }`}
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Data Management
+            </Button>
+          </div>
+        </div>
+
+        {/* Content */}
+        {activeTab === 'policy' ? (
+          <PrivacyPolicyContent />
+        ) : (
+          <div className="space-y-8">
+            <PrivacyDataPortal />
+            <DataDeletionManager />
+          </div>
+        )}
       </div>
     </div>
   );
