@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, TrendingUp, Users, Target, X } from 'lucide-react';
+import { Brain, TrendingUp, Users, Target, X, MessageCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useAICompanion } from '@/hooks/useAICompanion';
 import { Badge } from '@/components/ui/badge';
+import { AICompanionChat } from '@/components/ai/AICompanionChat';
 
 interface MLInsight {
   id: string;
@@ -16,8 +18,10 @@ interface MLInsight {
 export const MLInsightsPanel: React.FC = () => {
   const [insights, setInsights] = useState<MLInsight[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [showAIChat, setShowAIChat] = useState(false);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
+  const { hasNewInsights, markInsightsAsRead } = useAICompanion();
 
   useEffect(() => {
     if (user && isOpen) {
@@ -74,22 +78,49 @@ export const MLInsightsPanel: React.FC = () => {
     }
   };
 
-  if (!insights.length) return null;
+  // Show AI chat button if there are new insights
+  if (!insights.length && !hasNewInsights) return null;
 
   return (
     <>
-      {/* Trigger button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-20 right-4 bg-primary/20 border border-primary/30 backdrop-blur-xl rounded-full p-3 hover:bg-primary/30 transition-all duration-300 shadow-lg z-40"
-      >
-        <Brain className="h-5 w-5 text-primary" />
-        <Badge className="absolute -top-2 -right-2 bg-goldenrod text-jet-black text-xs min-w-[20px] h-5 flex items-center justify-center p-0">
-          {insights.length}
-        </Badge>
-      </button>
+      {/* AI Companion Chat */}
+      {showAIChat && (
+        <AICompanionChat onClose={() => setShowAIChat(false)} />
+      )}
 
-      {/* Insights panel */}
+      {/* Enhanced trigger button with AI chat option */}
+      <div className="fixed bottom-20 right-4 flex flex-col items-end space-y-2 z-40">
+        {/* AI Companion Button */}
+        <button
+          onClick={() => {
+            setShowAIChat(true);
+            markInsightsAsRead();
+          }}
+          className="bg-goldenrod hover:bg-goldenrod/90 text-jet-black rounded-full p-3 shadow-lg transition-all duration-300 hover:scale-110"
+        >
+          <MessageCircle className="h-5 w-5" />
+          {hasNewInsights && (
+            <Badge className="absolute -top-2 -right-2 bg-red-500 text-white text-xs min-w-[20px] h-5 flex items-center justify-center p-0">
+              •
+            </Badge>
+          )}
+        </button>
+
+        {/* Traditional ML Insights Button (if there are technical insights) */}
+        {insights.length > 0 && (
+          <button
+            onClick={() => setIsOpen(true)}
+            className="bg-primary/20 border border-primary/30 backdrop-blur-xl rounded-full p-3 hover:bg-primary/30 transition-all duration-300 shadow-lg"
+          >
+            <Brain className="h-5 w-5 text-primary" />
+            <Badge className="absolute -top-2 -right-2 bg-goldenrod text-jet-black text-xs min-w-[20px] h-5 flex items-center justify-center p-0">
+              {insights.length}
+            </Badge>
+          </button>
+        )}
+      </div>
+
+      {/* Technical ML Insights panel */}
       {isOpen && (
         <div className="fixed inset-0 bg-jet-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-charcoal-gray border border-goldenrod/30 rounded-lg max-w-md w-full max-h-[80vh] overflow-hidden">
@@ -97,7 +128,7 @@ export const MLInsightsPanel: React.FC = () => {
             <div className="flex items-center justify-between p-4 border-b border-gray-700">
               <div className="flex items-center space-x-2">
                 <Brain className="h-5 w-5 text-primary" />
-                <h3 className="text-lg font-semibold text-white">ML Insights</h3>
+                <h3 className="text-lg font-semibold text-white">Technical Insights</h3>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
@@ -148,7 +179,7 @@ export const MLInsightsPanel: React.FC = () => {
             {/* Footer */}
             <div className="p-4 border-t border-gray-700 bg-gray-800/50">
               <p className="text-xs text-gray-400 text-center">
-                Our AI learns from your interactions to improve match suggestions
+                Technical insights from our ML algorithms. For personalized guidance, try the AI Companion!
               </p>
             </div>
           </div>
