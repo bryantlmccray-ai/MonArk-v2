@@ -227,7 +227,7 @@ export const DiscoveryMap: React.FC = () => {
   });
 
   const { rifProfile } = useRIF();
-  const { profile } = useProfile();
+  const { profile, refetchProfile } = useProfile();
   const { profiles: realProfiles, loading } = useDiscoveryProfiles();
   const { likeUser, startConversation, loading: matchingLoading } = useMatching();
   const { onlineUsers, isUserOnline } = useRealTimePresence();
@@ -933,9 +933,11 @@ export const DiscoveryMap: React.FC = () => {
       <LocationConsentModal
         isOpen={showLocationModal}
         onClose={() => setShowLocationModal(false)}
-        onSuccess={() => {
+        onSuccess={async () => {
           setShowLocationModal(false);
           setShowLocationPrompt(false);
+          // Refresh profile to get updated location data
+          await refetchProfile();
         }}
       />
     </div>
