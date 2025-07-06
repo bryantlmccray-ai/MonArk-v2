@@ -61,10 +61,34 @@ export const AICompanionChat: React.FC<AICompanionChatProps> = ({ onClose }) => 
       const welcomeMessage: AIMessage = {
         id: `welcome_${Date.now()}`,
         type: 'conversation',
-        content: `Hi there! I'm your AI dating companion. I'm here to help you grow and succeed in your dating journey. Feel free to ask me anything - whether it's about dating strategies, reflecting on experiences, or just need someone to chat with! 😊`,
+        content: `Hi there! I'm your AI dating companion. I'm here to help you grow and succeed in your dating journey. 
+
+I can help you with:
+• Processing your dating experiences and feelings
+• Understanding your compatibility scores and matches
+• Explaining why certain dates or people were suggested
+• Giving personalized advice based on your RIF profile
+
+What would you like to talk about? 😊`,
         timestamp: new Date().toISOString()
       };
       setMessages([welcomeMessage]);
+
+      // Add some quick conversation starters after a delay
+      setTimeout(() => {
+        const quickStarters: AIMessage = {
+          id: `starters_${Date.now()}`,
+          type: 'suggestion',
+          content: `Here are some things you might want to ask me about:`,
+          timestamp: new Date().toISOString(),
+          actionable: true,
+          action: {
+            label: 'Try these conversation starters',
+            type: 'view_insights'
+          }
+        };
+        setMessages(prev => [...prev, quickStarters]);
+      }, 2000);
     }
   }, []);
 
@@ -203,45 +227,111 @@ export const AICompanionChat: React.FC<AICompanionChatProps> = ({ onClose }) => 
     setUserInput('');
     setIsTyping(true);
 
-    // Simulate AI response (in production, this would call your OpenAI edge function)
-    setTimeout(() => {
+    try {
+      const aiResponseContent = await generateContextualResponse(userInput);
       const aiResponse: AIMessage = {
         id: `ai_${Date.now()}`,
         type: 'conversation',
-        content: generateContextualResponse(userInput),
+        content: aiResponseContent,
         timestamp: new Date().toISOString()
       };
       setMessages(prev => [...prev, aiResponse]);
+    } catch (error) {
+      console.error('Error getting AI response:', error);
+      const fallbackResponse: AIMessage = {
+        id: `ai_${Date.now()}`,
+        type: 'conversation',
+        content: "I'm having trouble thinking right now, but I'm here for you! Try asking again in a moment.",
+        timestamp: new Date().toISOString()
+      };
+      setMessages(prev => [...prev, fallbackResponse]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
-  const generateContextualResponse = (input: string): string => {
-    const responses = [
-      "I hear you! Dating can definitely feel overwhelming sometimes. Remember, every experience is teaching you something valuable about what you're looking for.",
-      "That's a great question! Based on what I know about your preferences, I think focusing on authentic connections rather than perfect outcomes might help.",
-      "You're being really thoughtful about this, which I love. Your self-awareness is actually one of your biggest strengths in dating.",
-      "I can tell you're someone who values meaningful connections. That's going to serve you well - the right person will appreciate your depth.",
-    ];
-    return responses[Math.floor(Math.random() * responses.length)];
+  const generateContextualResponse = async (input: string): Promise<string> => {
+    if (!user) return "I'd love to help, but it seems you're not logged in!";
+
+    try {
+      // Get user's RIF profile for personalization
+      const { data: rifProfile } = await supabase
+        .from('rif_profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('is_active', true)
+        .maybeSingle();
+
+      const userContext = {
+        recentDates: journalEntries.slice(0, 3),
+        rifProfile,
+        interests: profile?.interests || [],
+        userMessage: input,
+        totalDates: journalEntries.length,
+        averageRating: journalEntries.length > 0 
+          ? journalEntries.reduce((sum, entry) => sum + (entry.rating || 0), 0) / journalEntries.length
+          : 0
+      };
+
+      const { data, error } = await supabase.functions.invoke('ai-companion-chat', {
+        body: {
+          type: 'chat_response',
+          userContext
+        }
+      });
+
+      if (error) throw error;
+
+      return data.message || "I'm here to help you with your dating journey! What's on your mind?";
+    } catch (error) {
+      console.error('Error generating AI response:', error);
+      return "I'm having trouble thinking right now, but I'm here for you! Try asking again in a moment.";
+    }
   };
 
-  const handleAction = async (action: AIMessage['action']) => {
+  const handleAction = async (action: AIMessage['action'], messageContent?: string) => {
     if (!action) return;
 
     switch (action.type) {
       case 'generate_date':
-        // This would integrate with your existing date concierge
         toast({
           title: "Generating date idea...",
           description: "I'm crafting something perfect for you!"
         });
         break;
       case 'view_insights':
-        // Navigate to insights dashboard
+        // Show conversation starters
+        const starterQuestions = [
+          "How can I improve my dating approach?",
+          "Why do you think I'm attracted to certain types?", 
+          "What do my RIF scores say about my dating style?",
+          "How should I interpret my recent date ratings?",
+          "What compatibility factors matter most for me?"
+        ];
+        
+        starterQuestions.forEach((question, index) => {
+          setTimeout(() => {
+            const starterMessage: AIMessage = {
+              id: `starter_${Date.now()}_${index}`,
+              type: 'suggestion',
+              content: `💭 "${question}"`,
+              timestamp: new Date().toISOString(),
+              actionable: true,
+              action: {
+                label: 'Ask this',
+                type: 'update_preferences'
+              }
+            };
+            setMessages(prev => [...prev, starterMessage]);
+          }, index * 500);
+        });
         break;
       case 'update_preferences':
-        // Navigate to preferences
+        // Extract question from message content and set it as input
+        if (messageContent) {
+          const question = messageContent.replace('💭 "', '').replace('"', '');
+          setUserInput(question);
+        }
         break;
     }
   };
@@ -302,7 +392,7 @@ export const AICompanionChat: React.FC<AICompanionChatProps> = ({ onClose }) => 
                 </p>
                 {message.actionable && message.action && (
                   <Button
-                    onClick={() => handleAction(message.action)}
+                    onClick={() => handleAction(message.action, message.content)}
                     size="sm"
                     className="mt-2 bg-goldenrod hover:bg-goldenrod/90 text-jet-black text-xs"
                   >
