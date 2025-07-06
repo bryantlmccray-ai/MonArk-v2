@@ -78,8 +78,9 @@ export const MLInsightsPanel: React.FC = () => {
     }
   };
 
-  // Show AI chat button if there are new insights
-  if (!insights.length && !hasNewInsights) return null;
+  // Always show AI companion chat button
+  // Only hide if user is not logged in
+  if (!user) return null;
 
   return (
     <>
