@@ -313,135 +313,178 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               </button>
             </div>
 
-            {/* Profile Sections */}
-            <div className="space-y-4">
-              {profile?.bio && (
-                <div className="bg-charcoal-gray rounded-xl p-4 border border-gray-800">
-                  <h4 className="text-white font-medium mb-2">About Me</h4>
-                  <p className="text-gray-300 text-sm">{profile.bio}</p>
-                </div>
-              )}
-              
-              {profile?.interests && profile.interests.length > 0 && (
-                <div className="bg-charcoal-gray rounded-xl p-4 border border-gray-800">
-                  <h4 className="text-white font-medium mb-2">My Interests</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {profile.interests.map((interest, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 bg-goldenrod/20 text-goldenrod text-sm rounded-full"
-                      >
-                        {interest}
-                      </span>
-                    ))}
+            {/* Cohesive Profile Overview */}
+            <div className="bg-gradient-to-br from-charcoal-gray via-charcoal-gray/95 to-charcoal-gray/90 rounded-2xl p-6 border border-gray-800/50 backdrop-blur-sm">
+              <div className="space-y-6">
+                {/* Bio Section */}
+                {profile?.bio && (
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-1 h-6 bg-gradient-to-b from-goldenrod to-goldenrod/60 rounded-full"></div>
+                      <h3 className="text-white font-light text-lg">About</h3>
+                    </div>
+                    <p className="text-gray-300 text-sm leading-relaxed pl-5 italic">
+                      "{profile.bio}"
+                    </p>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Lifestyle Info */}
-              {((profile as any)?.occupation || (profile as any)?.education_level || (profile as any)?.height_cm) && (
-                <div className="bg-charcoal-gray rounded-xl p-4 border border-gray-800">
-                  <h4 className="text-white font-medium mb-3">Details</h4>
-                  <div className="space-y-2">
-                    {(profile as any)?.occupation && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-400 text-sm">Work</span>
-                        <span className="text-gray-300 text-sm">{(profile as any).occupation}</span>
+                {/* Interests & Goals Row */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Interests */}
+                  {profile?.interests && profile.interests.length > 0 && (
+                    <div className="space-y-3">
+                      <h4 className="text-white font-medium text-sm uppercase tracking-wide opacity-90">
+                        Passions
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {profile.interests.map((interest, index) => (
+                          <span
+                            key={index}
+                            className="px-3 py-1.5 bg-gradient-to-r from-goldenrod/20 to-goldenrod/10 text-goldenrod text-xs rounded-full border border-goldenrod/20 hover:border-goldenrod/40 transition-all duration-200"
+                          >
+                            {interest}
+                          </span>
+                        ))}
                       </div>
-                    )}
-                    {(profile as any)?.education_level && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-400 text-sm">Education</span>
-                        <span className="text-gray-300 text-sm">{(profile as any).education_level}</span>
-                      </div>
-                    )}
-                    {(profile as any)?.height_cm && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-400 text-sm">Height</span>
-                        <span className="text-gray-300 text-sm">
-                          {Math.floor((profile as any).height_cm / 30.48)}'{Math.round(((profile as any).height_cm / 2.54) % 12)}" ({(profile as any).height_cm}cm)
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Relationship Goals */}
-              {(profile as any)?.relationship_goals && (profile as any).relationship_goals.length > 0 && (
-                <div className="bg-charcoal-gray rounded-xl p-4 border border-gray-800">
-                  <h4 className="text-white font-medium mb-2">Looking For</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {(profile as any).relationship_goals.map((goal: string, index: number) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 bg-goldenrod/20 text-goldenrod text-sm rounded-full"
-                      >
-                        {goal}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Lifestyle Habits */}
-              {((profile as any)?.exercise_habits || (profile as any)?.smoking_status || (profile as any)?.drinking_status) && (
-                <div className="bg-charcoal-gray rounded-xl p-4 border border-gray-800">
-                  <h4 className="text-white font-medium mb-3">Lifestyle</h4>
-                  <div className="space-y-2">
-                    {(profile as any)?.exercise_habits && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-400 text-sm">Exercise</span>
-                        <span className="text-gray-300 text-sm">{(profile as any).exercise_habits}</span>
-                      </div>
-                    )}
-                    {(profile as any)?.smoking_status && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-400 text-sm">Smoking</span>
-                        <span className="text-gray-300 text-sm">{(profile as any).smoking_status}</span>
-                      </div>
-                    )}
-                    {(profile as any)?.drinking_status && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-400 text-sm">Drinking</span>
-                        <span className="text-gray-300 text-sm">{(profile as any).drinking_status}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              <button
-                onClick={() => {
-                  console.log('Edit Profile button clicked');
-                  setShowProfileCreation(true);
-                }}
-                className="w-full py-3 bg-charcoal-gray border border-gray-700 text-white rounded-xl transition-colors hover:border-goldenrod/50"
-                disabled={isSigningOut}
-              >
-                Edit Profile
-              </button>
-
-              {/* Sign Out Section */}
-              <div className="pt-6 border-t border-gray-700">
-                <button
-                  onClick={handleSignOut}
-                  disabled={isSigningOut}
-                  className="w-full py-3 bg-transparent border border-gray-600 text-gray-400 rounded-xl transition-colors hover:border-red-500 hover:text-red-400 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-                >
-                  {isSigningOut ? (
-                    <>
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-400 border-t-transparent"></div>
-                      <span>Signing out...</span>
-                    </>
-                  ) : (
-                    <>
-                      <LogOut className="h-4 w-4" />
-                      <span>Sign Out</span>
-                    </>
+                    </div>
                   )}
-                </button>
+
+                  {/* Relationship Goals */}
+                  {(profile as any)?.relationship_goals && (profile as any).relationship_goals.length > 0 && (
+                    <div className="space-y-3">
+                      <h4 className="text-white font-medium text-sm uppercase tracking-wide opacity-90">
+                        Looking For
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {(profile as any).relationship_goals.map((goal: string, index: number) => (
+                          <span
+                            key={index}
+                            className="px-3 py-1.5 bg-gradient-to-r from-rose-500/20 to-purple-500/20 text-rose-300 text-xs rounded-full border border-rose-500/20 hover:border-rose-500/40 transition-all duration-200"
+                          >
+                            {goal}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Details Grid */}
+                {((profile as any)?.occupation || (profile as any)?.education_level || (profile as any)?.height_cm || (profile as any)?.exercise_habits || (profile as any)?.smoking_status || (profile as any)?.drinking_status) && (
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-8 h-px bg-gradient-to-r from-transparent via-goldenrod/50 to-transparent"></div>
+                      <h4 className="text-white font-medium text-sm uppercase tracking-wide opacity-90 px-2">
+                        Details
+                      </h4>
+                      <div className="flex-1 h-px bg-gradient-to-r from-goldenrod/50 via-transparent to-transparent"></div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Professional Info */}
+                      {((profile as any)?.occupation || (profile as any)?.education_level || (profile as any)?.height_cm) && (
+                        <div className="space-y-3">
+                          {(profile as any)?.occupation && (
+                            <div className="flex items-center justify-between py-2 border-b border-gray-700/30">
+                              <span className="text-gray-400 text-sm flex items-center space-x-2">
+                                <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
+                                <span>Work</span>
+                              </span>
+                              <span className="text-gray-200 text-sm font-medium">{(profile as any).occupation}</span>
+                            </div>
+                          )}
+                          {(profile as any)?.education_level && (
+                            <div className="flex items-center justify-between py-2 border-b border-gray-700/30">
+                              <span className="text-gray-400 text-sm flex items-center space-x-2">
+                                <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
+                                <span>Education</span>
+                              </span>
+                              <span className="text-gray-200 text-sm font-medium">{(profile as any).education_level}</span>
+                            </div>
+                          )}
+                          {(profile as any)?.height_cm && (
+                            <div className="flex items-center justify-between py-2">
+                              <span className="text-gray-400 text-sm flex items-center space-x-2">
+                                <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
+                                <span>Height</span>
+                              </span>
+                              <span className="text-gray-200 text-sm font-medium">
+                                {Math.floor((profile as any).height_cm / 30.48)}'{Math.round(((profile as any).height_cm / 2.54) % 12)}"
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Lifestyle Info */}
+                      {((profile as any)?.exercise_habits || (profile as any)?.smoking_status || (profile as any)?.drinking_status) && (
+                        <div className="space-y-3">
+                          {(profile as any)?.exercise_habits && (
+                            <div className="flex items-center justify-between py-2 border-b border-gray-700/30">
+                              <span className="text-gray-400 text-sm flex items-center space-x-2">
+                                <div className="w-1.5 h-1.5 bg-orange-400 rounded-full"></div>
+                                <span>Exercise</span>
+                              </span>
+                              <span className="text-gray-200 text-sm font-medium">{(profile as any).exercise_habits}</span>
+                            </div>
+                          )}
+                          {(profile as any)?.smoking_status && (
+                            <div className="flex items-center justify-between py-2 border-b border-gray-700/30">
+                              <span className="text-gray-400 text-sm flex items-center space-x-2">
+                                <div className="w-1.5 h-1.5 bg-red-400 rounded-full"></div>
+                                <span>Smoking</span>
+                              </span>
+                              <span className="text-gray-200 text-sm font-medium">{(profile as any).smoking_status}</span>
+                            </div>
+                          )}
+                          {(profile as any)?.drinking_status && (
+                            <div className="flex items-center justify-between py-2">
+                              <span className="text-gray-400 text-sm flex items-center space-x-2">
+                                <div className="w-1.5 h-1.5 bg-amber-400 rounded-full"></div>
+                                <span>Drinking</span>
+                              </span>
+                              <span className="text-gray-200 text-sm font-medium">{(profile as any).drinking_status}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
+            </div>
+
+            <button
+              onClick={() => {
+                console.log('Edit Profile button clicked');
+                setShowProfileCreation(true);
+              }}
+              className="w-full py-3 bg-charcoal-gray border border-gray-700 text-white rounded-xl transition-colors hover:border-goldenrod/50"
+              disabled={isSigningOut}
+            >
+              Edit Profile
+            </button>
+
+            {/* Sign Out Section */}
+            <div className="pt-6 border-t border-gray-700">
+              <button
+                onClick={handleSignOut}
+                disabled={isSigningOut}
+                className="w-full py-3 bg-transparent border border-gray-600 text-gray-400 rounded-xl transition-colors hover:border-red-500 hover:text-red-400 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              >
+                {isSigningOut ? (
+                  <>
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-400 border-t-transparent"></div>
+                    <span>Signing out...</span>
+                  </>
+                ) : (
+                  <>
+                    <LogOut className="h-4 w-4" />
+                    <span>Sign Out</span>
+                  </>
+                )}
+              </button>
             </div>
           </>
         )}
