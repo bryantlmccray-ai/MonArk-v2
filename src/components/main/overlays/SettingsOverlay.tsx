@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, User, Bell, Shield, Heart, LogOut, Trash2, AlertTriangle } from 'lucide-react';
+import { X, User, Bell, Shield, LogOut, Trash2, AlertTriangle } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -128,7 +128,6 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
     { icon: User, label: 'Edit Profile', action: () => setShowEditProfile(true) },
     { icon: Bell, label: 'Notifications', action: () => setShowNotificationSettings(true) },
     { icon: Shield, label: 'Safety Center', action: () => setShowSafetyCenter(true) },
-    { icon: Heart, label: 'Matching Preferences', action: () => {} },
   ];
 
   // Handle edit profile completion
