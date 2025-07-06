@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { AgeVerificationStep } from './AgeVerificationStep';
@@ -15,6 +16,7 @@ export const AuthPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showAgeVerification, setShowAgeVerification] = useState(false);
   const [signupData, setSignupData] = useState<{email: string; password: string; name: string} | null>(null);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const { signIn, signUp } = useAuth();
   const { updateProfile } = useProfile();
   const { toast } = useToast();
@@ -97,6 +99,15 @@ export const AuthPage: React.FC = () => {
       toast({
         title: "Name required",
         description: "Please enter your name",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!isLogin && !agreedToTerms) {
+      toast({
+        title: "Agreement required",
+        description: "Please agree to the Terms of Service and Privacy Policy",
         variant: "destructive"
       });
       return;
@@ -215,10 +226,35 @@ export const AuthPage: React.FC = () => {
             )}
           </div>
 
+          {!isLogin && (
+            <div className="flex items-start gap-3 pt-2">
+              <Checkbox
+                checked={agreedToTerms}
+                onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                className="mt-1 border-goldenrod/50 data-[state=checked]:bg-goldenrod data-[state=checked]:border-goldenrod"
+              />
+              <p className="text-sm text-gray-400 leading-relaxed">
+                I agree to MonArk's{' '}
+                <a href="/terms" className="text-goldenrod hover:underline" target="_blank" rel="noopener noreferrer">
+                  Terms of Service
+                </a>{' '}
+                and{' '}
+                <a href="/privacy" className="text-goldenrod hover:underline" target="_blank" rel="noopener noreferrer">
+                  Privacy Policy
+                </a>
+                . I consent to the collection and use of my data as described in these policies.
+              </p>
+            </div>
+          )}
+
           <button
             type="submit"
-            disabled={loading}
-            className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50"
+            disabled={loading || (!isLogin && !agreedToTerms)}
+            className={`w-full py-4 font-semibold rounded-xl transition-all duration-300 ${
+              loading || (!isLogin && !agreedToTerms)
+                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                : 'bg-goldenrod-gradient text-jet-black hover:shadow-golden-glow'
+            }`}
           >
             {loading 
               ? (isLogin ? 'Signing in...' : 'Creating account...') 
@@ -240,8 +276,7 @@ export const AuthPage: React.FC = () => {
         </div>
 
         {!isLogin && (
-          <div className="text-center text-xs text-gray-500 space-y-1">
-            <p>By creating an account, you agree to our Terms of Service</p>
+          <div className="text-center text-xs text-gray-500">
             <p>You must be 18 years or older to use MonArk</p>
           </div>
         )}
