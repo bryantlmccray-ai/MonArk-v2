@@ -638,11 +638,15 @@ export const DiscoveryMap: React.FC = () => {
         {profilesWithPositions.map((profile) => (
           <div
             key={profile.mapId}
-            className="absolute"
+            className="absolute z-30 pointer-events-auto"
             style={{
               left: `${profile.x}%`,
               top: `${profile.y}%`,
               transform: 'translate(-50%, -50%)',
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleProfileClick(profile);
             }}
           >
             <EnhancedProfileCard
