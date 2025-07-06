@@ -17,8 +17,8 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, o
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-charcoal-gray/95 backdrop-blur-xl border-t border-gray-800">
-      <div className="flex justify-around items-center py-2">
+    <div className="fixed bottom-0 left-0 right-0 bg-charcoal-gray/95 backdrop-blur-xl border-t border-gray-800 safe-area-pb">
+      <div className="flex justify-around items-center py-4 px-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -27,14 +27,14 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, o
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={`flex flex-col items-center justify-center p-3 transition-colors ${
+              className={`flex flex-col items-center justify-center p-2 min-w-0 transition-colors ${
                 isActive 
                   ? 'text-goldenrod' 
                   : 'text-gray-400 hover:text-white'
               }`}
             >
-              <Icon className="h-6 w-6 mb-1" />
-              <span className="text-xs font-medium">{tab.label}</span>
+              <Icon className="h-7 w-7 mb-2" />
+              <span className="text-xs font-medium leading-tight text-center">{tab.label}</span>
             </button>
           );
         })}

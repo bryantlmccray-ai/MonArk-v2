@@ -72,7 +72,7 @@ export const MainApp: React.FC = () => {
     return (
       <div className="min-h-screen bg-jet-black relative">
         {/* Main Content */}
-        <div className="pb-24">
+        <div className="pb-32 px-4">
           {renderActiveScreen()}
         </div>
 
@@ -80,7 +80,7 @@ export const MainApp: React.FC = () => {
         <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
         
         {/* Notification Bell for Mobile */}
-        <div className="fixed bottom-28 right-4 z-30">
+        <div className="fixed bottom-36 right-4 z-30">
           <Button
             onClick={() => setShowNotifications(true)}
             size="sm"
