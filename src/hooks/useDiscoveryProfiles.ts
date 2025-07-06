@@ -20,6 +20,7 @@ export interface DiscoveryProfile extends UserProfile {
 export const useDiscoveryProfiles = () => {
   const [profiles, setProfiles] = useState<DiscoveryProfile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
   const { getTravelInfo } = useLocation();
   const { batchCalculateCompatibility } = useCompatibilityScoring();
@@ -28,10 +29,12 @@ export const useDiscoveryProfiles = () => {
     if (!user) {
       setProfiles([]);
       setLoading(false);
+      setError(null);
       return;
     }
 
     try {
+      setError(null);
       // Get current user's location data
       const { data: currentUserProfile } = await supabase
         .from('user_profiles')
@@ -51,6 +54,7 @@ export const useDiscoveryProfiles = () => {
 
       if (profilesError) {
         console.error('Error fetching profiles:', profilesError);
+        setError('Failed to load profiles. Please try again.');
         return;
       }
 
@@ -130,6 +134,7 @@ export const useDiscoveryProfiles = () => {
       setProfiles(profilesWithCompatibility);
     } catch (error) {
       console.error('Error in fetchProfiles:', error);
+      setError('An unexpected error occurred. Please refresh and try again.');
     } finally {
       setLoading(false);
     }
@@ -142,6 +147,7 @@ export const useDiscoveryProfiles = () => {
   return {
     profiles,
     loading,
+    error,
     refetch: fetchProfiles
   };
 };

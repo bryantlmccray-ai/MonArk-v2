@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Heart, MessageCircle, X, Clock, Shield, Target, MapPin, Star, Search, SlidersHorizontal, Navigation, Bell, Wifi, ChevronUp, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +14,8 @@ import { ProfileSelectionOverlay } from './ProfileSelectionOverlay';
 import { ChatModal } from '../chat/ChatModal';
 import { ActivityFeed } from './ActivityFeed';
 import { LocationConsentModal } from '../location/LocationConsentModal';
+import { ErrorState } from '../common/ErrorState';
+import { LoadingSpinner } from '../common/LoadingSpinner';
 import { useRIF } from '@/hooks/useRIF';
 import { useProfile } from '@/hooks/useProfile';
 import { useDiscoveryProfiles, DiscoveryProfile } from '@/hooks/useDiscoveryProfiles';
@@ -22,6 +24,8 @@ import { useRealTimePresence } from '@/hooks/useRealTimePresence';
 import { useActivityFeed } from '@/hooks/useActivityFeed';
 import { useProximityAlerts } from '@/hooks/useProximityAlerts';
 import { useCompatibilityScoring } from '@/hooks/useCompatibilityScoring';
+import { useTouchGestures } from '@/hooks/useTouchGestures';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Prototype profiles for testing - structured to match database schema
 const prototypeProfiles: (DiscoveryProfile & { profiles?: { name: string } })[] = [
@@ -230,11 +234,13 @@ export const DiscoveryMap: React.FC = () => {
 
   const { rifProfile } = useRIF();
   const { profile, refetchProfile } = useProfile();
-  const { profiles: realProfiles, loading } = useDiscoveryProfiles();
+  const { profiles: realProfiles, loading, error } = useDiscoveryProfiles();
   const { likeUser, startConversation, loading: matchingLoading } = useMatching();
   const { onlineUsers, isUserOnline } = useRealTimePresence();
   const { activities, addProximityAlert } = useActivityFeed();
   const { batchCalculateCompatibility, compatibilityCache } = useCompatibilityScoring();
+  const isMobile = useIsMobile();
+  const mapRef = useRef<HTMLDivElement>(null);
 
   // Add user's own profile to the map
   const userOwnProfile = profile ? {
@@ -353,6 +359,26 @@ export const DiscoveryMap: React.FC = () => {
     const zoomDelta = e.deltaY > 0 ? -0.1 : 0.1;
     setZoomLevel(prev => Math.max(0.5, Math.min(3, prev + zoomDelta)));
   };
+
+  // Touch gesture handling for mobile
+  const { isDragging: isTouchDragging } = useTouchGestures(mapRef, {
+    onDrag: (deltaX, deltaY) => {
+      const panDeltaX = deltaX * 0.1;
+      const panDeltaY = deltaY * 0.1;
+      
+      const newX = Math.max(0, Math.min(100, mapCenter.x - panDeltaX));
+      const newY = Math.max(0, Math.min(100, mapCenter.y - panDeltaY));
+      
+      setMapCenter({ x: newX, y: newY });
+    },
+    onZoom: (scale) => {
+      setZoomLevel(Math.max(0.5, Math.min(3, scale)));
+    },
+    onDoubleTap: (x, y) => {
+      // Double tap to zoom in/out
+      setZoomLevel(prev => prev === 1 ? 1.5 : 1);
+    }
+  });
   // Identity-based filtering function
   const isIdentityCompatible = (targetProfile: DiscoveryProfile) => {
     if (!profile?.preference_to_see || !profile?.gender_identity) return true;
@@ -415,7 +441,7 @@ export const DiscoveryMap: React.FC = () => {
 
   // Enhanced filtering with search functionality
   const getFilteredProfiles = () => {
-    if (loading) return [];
+    if (loading || error) return [];
     
     return allProfiles.filter(targetProfile => {
       // Exclude user's own profile from filtering (but keep it for display)
@@ -614,7 +640,20 @@ export const DiscoveryMap: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-jet-black flex items-center justify-center">
-        <div className="text-white">Loading profiles...</div>
+        <LoadingSpinner size="lg" text="Loading profiles..." />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-jet-black flex items-center justify-center p-4">
+        <ErrorState
+          title="Unable to load profiles"
+          message={error}
+          onRetry={() => window.location.reload()}
+          className="max-w-md mx-auto"
+        />
       </div>
     );
   }
@@ -623,20 +662,23 @@ export const DiscoveryMap: React.FC = () => {
     <div className="min-h-screen bg-jet-black relative overflow-hidden">
       {/* Interactive Map Container */}
       <div 
-        className={`absolute inset-0 transition-transform duration-200 ${hasMoved ? 'cursor-grabbing' : 'cursor-grab'}`}
+        ref={mapRef}
+        className={`absolute inset-0 transition-transform duration-200 ${
+          (hasMoved || isTouchDragging) ? 'cursor-grabbing' : 'cursor-grab'
+        } ${isMobile ? 'touch-none' : ''}`}
         style={{
           transform: `translate(${(mapCenter.x - 50) * -2}px, ${(mapCenter.y - 50) * -2}px) scale(${zoomLevel})`,
           transformOrigin: 'center center'
         }}
         onMouseDown={(e) => {
-          // Don't interfere with profile clicks
-          if ((e.target as HTMLElement).closest('.z-30')) return;
+          // Don't interfere with profile clicks or on mobile
+          if ((e.target as HTMLElement).closest('.z-30') || isMobile) return;
           handleMouseDown(e);
         }}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onWheel={handleWheel}
+        onMouseMove={!isMobile ? handleMouseMove : undefined}
+        onMouseUp={!isMobile ? handleMouseUp : undefined}
+        onMouseLeave={!isMobile ? handleMouseUp : undefined}
+        onWheel={!isMobile ? handleWheel : undefined}
       >
         {/* Enhanced grid background */}
         <div className="absolute inset-0">
