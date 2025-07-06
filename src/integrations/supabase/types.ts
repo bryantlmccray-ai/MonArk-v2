@@ -261,6 +261,8 @@ export type Database = {
           conversation_id: string
           created_at: string
           creator_user_id: string
+          dismissed_by_creator_at: string | null
+          dismissed_by_recipient_at: string | null
           id: string
           location_type: string | null
           proposal_data: Json | null
@@ -278,6 +280,8 @@ export type Database = {
           conversation_id: string
           created_at?: string
           creator_user_id: string
+          dismissed_by_creator_at?: string | null
+          dismissed_by_recipient_at?: string | null
           id?: string
           location_type?: string | null
           proposal_data?: Json | null
@@ -295,6 +299,8 @@ export type Database = {
           conversation_id?: string
           created_at?: string
           creator_user_id?: string
+          dismissed_by_creator_at?: string | null
+          dismissed_by_recipient_at?: string | null
           id?: string
           location_type?: string | null
           proposal_data?: Json | null

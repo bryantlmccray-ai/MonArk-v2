@@ -17,7 +17,7 @@ import { useAuth } from '@/hooks/useAuth';
 export const Conversations: React.FC = () => {
   const { user } = useAuth();
   const { rifSettings } = useRIF();
-  const { proposals, updateConversationEngagement } = useDateConcierge();
+  const { proposals, updateConversationEngagement, dismissProposal } = useDateConcierge();
   const { updateConversationActivity } = useConversationNudges();
   
   const [showNudge, setShowNudge] = useState(false);
@@ -152,9 +152,16 @@ export const Conversations: React.FC = () => {
     setActiveChatConversation(null);
   };
 
-  const relevantProposals = proposals.filter(proposal => 
-    conversations.some(conv => conv.conversationId === proposal.conversation_id)
-  );
+  const relevantProposals = proposals.filter(proposal => {
+    const isInvolvedConversation = conversations.some(conv => conv.conversationId === proposal.conversation_id);
+    if (!isInvolvedConversation) return false;
+    
+    // Check if dismissed by current user
+    const isCreator = proposal.creator_user_id === user?.id;
+    const dismissedField = isCreator ? (proposal as any).dismissed_by_creator_at : (proposal as any).dismissed_by_recipient_at;
+    
+    return !dismissedField && (proposal.status === 'proposed' || proposal.status === 'accepted');
+  });
 
   // Show authentication message if user is not logged in
   if (!user) {
@@ -200,7 +207,11 @@ export const Conversations: React.FC = () => {
             </div>
             <div className="grid gap-4">
               {relevantProposals.slice(0, 2).map((proposal) => (
-                <DateProposalCard key={proposal.id} proposal={proposal} />
+                <DateProposalCard 
+                  key={proposal.id} 
+                  proposal={proposal}
+                  onDismiss={dismissProposal}
+                />
               ))}
             </div>
           </div>

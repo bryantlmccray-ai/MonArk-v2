@@ -3,18 +3,20 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Heart, MapPin, Clock, Sparkles, Check, X, Edit } from 'lucide-react';
+import { Heart, MapPin, Clock, Sparkles, Check, X, Edit, EyeOff } from 'lucide-react';
 import { DateProposal, useDateConcierge } from '@/hooks/useDateConcierge';
 import { useAuth } from '@/hooks/useAuth';
 
 interface DateProposalCardProps {
   proposal: DateProposal;
   onEdit?: () => void;
+  onDismiss?: (proposalId: string) => void;
 }
 
 export const DateProposalCard: React.FC<DateProposalCardProps> = ({ 
   proposal, 
-  onEdit 
+  onEdit,
+  onDismiss 
 }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const { updateProposalStatus } = useDateConcierge();
@@ -73,9 +75,22 @@ export const DateProposalCard: React.FC<DateProposalCardProps> = ({
               <span>{new Date(proposal.created_at).toLocaleDateString()}</span>
             </div>
           </div>
-          <Badge className={`${getStatusColor(proposal.status)} border`}>
-            {getStatusText(proposal.status)}
-          </Badge>
+          <div className="flex items-center space-x-2">
+            <Badge className={`${getStatusColor(proposal.status)} border`}>
+              {getStatusText(proposal.status)}
+            </Badge>
+            {onDismiss && (
+              <Button
+                onClick={() => onDismiss(proposal.id)}
+                size="sm"
+                variant="ghost"
+                className="h-8 w-8 p-0 text-gray-400 hover:text-white hover:bg-gray-800"
+                title="Dismiss proposal"
+              >
+                <EyeOff className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
         </div>
       </CardHeader>
 

@@ -508,6 +508,54 @@ export const useDateConcierge = () => {
     }
   }, [user]);
 
+  // Dismiss proposal for current user
+  const dismissProposal = async (proposalId: string) => {
+    if (!user) return;
+
+    try {
+      // Determine which field to update based on user role
+      const { data: proposal } = await supabase
+        .from('date_proposals')
+        .select('creator_user_id, recipient_user_id')
+        .eq('id', proposalId)
+        .single();
+
+      if (!proposal) throw new Error('Proposal not found');
+
+      const isCreator = proposal.creator_user_id === user.id;
+      const isRecipient = proposal.recipient_user_id === user.id;
+
+      if (!isCreator && !isRecipient) {
+        throw new Error('Not authorized to dismiss this proposal');
+      }
+
+      const updateField = isCreator ? 'dismissed_by_creator_at' : 'dismissed_by_recipient_at';
+      
+      const { error } = await supabase
+        .from('date_proposals')
+        .update({ 
+          [updateField]: new Date().toISOString(),
+          updated_at: new Date().toISOString() 
+        })
+        .eq('id', proposalId);
+
+      if (error) throw error;
+      await fetchProposals();
+
+      toast({
+        title: "Proposal dismissed",
+        description: "Date proposal has been hidden from your active list."
+      });
+    } catch (error) {
+      console.error('Error dismissing proposal:', error);
+      toast({
+        title: "Dismiss failed",
+        description: "Unable to dismiss proposal. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
   return {
     proposals,
     journalEntries,
@@ -515,6 +563,7 @@ export const useDateConcierge = () => {
     loading,
     generateDateProposal,
     updateProposalStatus,
+    dismissProposal,
     createJournalEntry,
     updateConversationEngagement,
     checkConversationReadiness,
