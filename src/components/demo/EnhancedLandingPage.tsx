@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
 import { MonArkLogo } from '@/components/MonArkLogo';
-import { Heart, MessageCircle, Calendar, Shield, Star, MapPin, Users, Zap } from 'lucide-react';
+import { Heart, MessageCircle, Calendar, Shield, Star, MapPin, Users, Zap, ArrowRight, Play, CheckCircle, Quote, TrendingUp, Sparkles } from 'lucide-react';
 import { useDemo } from '@/contexts/DemoContext';
 import { DemoMainApp } from './DemoMainApp';
 import { WaitlistModal } from './WaitlistModal';
@@ -68,45 +69,73 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-goldenrod/10 via-transparent to-purple-900/10" />
+        
+        {/* Floating Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-2 h-2 bg-goldenrod/30 rounded-full animate-pulse"></div>
+          <div className="absolute top-40 right-20 w-1 h-1 bg-purple-400/40 rounded-full animate-ping"></div>
+          <div className="absolute bottom-40 left-20 w-3 h-3 bg-goldenrod/20 rounded-full animate-bounce"></div>
+          <div className="absolute top-60 right-10 w-1.5 h-1.5 bg-blue-400/30 rounded-full animate-pulse"></div>
+        </div>
+        
         <div className="relative max-w-7xl mx-auto px-6 py-20">
           <div className="text-center space-y-8">
-            <MonArkLogo showTitle size="xl" className="mx-auto" />
+            <div className="animate-fade-in">
+              <MonArkLogo showTitle size="xl" className="mx-auto" />
+            </div>
             
             <div className="max-w-3xl mx-auto space-y-6">
-              <h1 className="text-5xl md:text-6xl font-light text-white leading-tight">
-                Dating with <span className="text-goldenrod font-medium">Emotional Intelligence</span>
+              <h1 className="text-5xl md:text-6xl font-light text-white leading-tight animate-fade-in">
+                Dating with <span className="text-goldenrod font-medium bg-gradient-to-r from-goldenrod to-yellow-400 bg-clip-text text-transparent">Emotional Intelligence</span>
               </h1>
-              <p className="text-xl text-gray-300 leading-relaxed">
+              <p className="text-xl text-gray-300 leading-relaxed animate-fade-in">
                 MonArk combines cutting-edge AI with relational psychology to help you build 
                 meaningful connections. Experience dating that prioritizes emotional compatibility 
                 and authentic relationships.
               </p>
             </div>
 
+            {/* Stats Row */}
+            <div className="flex flex-wrap justify-center gap-8 py-6 animate-fade-in">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-goldenrod">85%</div>
+                <div className="text-sm text-gray-400">Better Matches</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-400">3x</div>
+                <div className="text-sm text-gray-400">Deeper Conversations</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-400">24/7</div>
+                <div className="text-sm text-gray-400">AI Guidance</div>
+              </div>
+            </div>
+
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
               <Button
                 onClick={startFullDemo}
                 disabled={!agreedToTerms}
-                className={`font-semibold px-8 py-4 text-lg transition-all duration-300 ${
+                className={`font-semibold px-8 py-4 text-lg transition-all duration-300 group ${
                   agreedToTerms 
-                    ? 'bg-goldenrod-gradient text-jet-black hover:shadow-golden-glow' 
+                    ? 'bg-goldenrod-gradient text-jet-black hover:shadow-golden-glow hover:scale-105' 
                     : 'bg-gray-600 text-gray-400 cursor-not-allowed'
                 }`}
               >
-                <Zap className="h-5 w-5 mr-2" />
-                Experience MonArk Demo
+                <Play className="h-5 w-5 mr-2 group-hover:animate-pulse" />
+                Experience Live Demo
               </Button>
               
               <Button
                 onClick={() => setShowWaitlistModal(true)}
                 disabled={!agreedToTerms}
                 variant="outline"
-                className={`px-8 py-4 text-lg ${
+                className={`px-8 py-4 text-lg group ${
                   agreedToTerms
-                    ? 'text-white border-white/30 hover:bg-white/10'
+                    ? 'text-white border-white/30 hover:bg-white/10 hover:border-goldenrod/50'
                     : 'text-gray-400 border-gray-600 cursor-not-allowed'
                 }`}
               >
+                <Heart className="h-5 w-5 mr-2 group-hover:text-goldenrod transition-colors" />
                 Join the Waitlist
               </Button>
               
@@ -142,7 +171,111 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             </div>
 
             <div className="text-sm text-gray-400 pt-4">
-              <p>✨ Full interactive demo • No signup required</p>
+              <div className="flex items-center justify-center space-x-4">
+                <Badge variant="secondary" className="bg-goldenrod/20 text-goldenrod border-goldenrod/30">
+                  <Sparkles className="h-3 w-3 mr-1" />
+                  Interactive Demo
+                </Badge>
+                <Badge variant="secondary" className="bg-green-500/20 text-green-400 border-green-500/30">
+                  <CheckCircle className="h-3 w-3 mr-1" />
+                  No Signup Required
+                </Badge>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* App Preview Section */}
+      <section className="py-20 bg-gradient-to-b from-charcoal-gray/10 to-charcoal-gray/30">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-light text-white mb-4">
+              See MonArk in Action
+            </h2>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              Get a glimpse of the MonArk experience before you dive in
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-8 mb-16">
+            <div className="lg:col-span-2 bg-gradient-to-br from-charcoal-gray/80 to-charcoal-gray/40 rounded-2xl p-8 border border-goldenrod/20">
+              <div className="space-y-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <div className="flex-1 bg-gray-700 rounded-full h-8 flex items-center px-4">
+                    <span className="text-gray-400 text-sm">monark.app/discover</span>
+                  </div>
+                </div>
+                
+                <div className="bg-jet-black rounded-lg p-6 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-white font-medium">Discovery Map</h3>
+                    <Badge className="bg-goldenrod/20 text-goldenrod">Live Preview</Badge>
+                  </div>
+                  
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="aspect-square bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-lg flex items-center justify-center">
+                      <Users className="h-6 w-6 text-purple-300" />
+                    </div>
+                    <div className="aspect-square bg-gradient-to-br from-goldenrod/20 to-orange-500/20 rounded-lg flex items-center justify-center">
+                      <Heart className="h-6 w-6 text-goldenrod" />
+                    </div>
+                    <div className="aspect-square bg-gradient-to-br from-green-500/20 to-teal-500/20 rounded-lg flex items-center justify-center">
+                      <MessageCircle className="h-6 w-6 text-green-300" />
+                    </div>
+                  </div>
+                  
+                  <div className="text-center pt-4">
+                    <Button 
+                      onClick={startFullDemo}
+                      disabled={!agreedToTerms}
+                      size="sm" 
+                      className="bg-goldenrod-gradient text-jet-black hover:shadow-golden-glow"
+                    >
+                      Try Interactive Demo
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="bg-charcoal-gray/60 rounded-xl p-6 border border-purple-500/20">
+                <div className="flex items-center space-x-3 mb-4">
+                  <Shield className="h-5 w-5 text-purple-400" />
+                  <h4 className="text-white font-medium">RIF Matching</h4>
+                </div>
+                <p className="text-gray-300 text-sm mb-4">
+                  Our AI analyzes emotional compatibility in real-time
+                </p>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-gray-400">Intent Clarity</span>
+                    <span className="text-purple-400">92%</span>
+                  </div>
+                  <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div className="bg-gradient-to-r from-purple-600 to-purple-400 h-2 rounded-full w-[92%]"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-charcoal-gray/60 rounded-xl p-6 border border-goldenrod/20">
+                <div className="flex items-center space-x-3 mb-4">
+                  <TrendingUp className="h-5 w-5 text-goldenrod" />
+                  <h4 className="text-white font-medium">Growth Tracking</h4>
+                </div>
+                <p className="text-gray-300 text-sm mb-4">
+                  Monitor your dating journey with personalized insights
+                </p>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-goldenrod mb-1">127</div>
+                  <div className="text-xs text-gray-400">Growth Points This Month</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -202,6 +335,84 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               title="Authentic Matching"
               description="Move beyond superficial swipes to connections based on genuine compatibility."
               highlight="Quality over quantity"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 bg-gradient-to-b from-charcoal-gray/30 to-jet-black">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-light text-white mb-4">
+              What Our Beta Users Are Saying
+            </h2>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              Real feedback from people who've experienced MonArk's unique approach to dating
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <TestimonialCard 
+              quote="MonArk helped me understand myself better before dating others. The RIF matching is incredibly accurate."
+              author="Sarah M."
+              role="Product Designer"
+              rating={5}
+            />
+            
+            <TestimonialCard 
+              quote="Finally, a dating app that prioritizes emotional compatibility. I found my person within 2 months!"
+              author="David K."
+              role="Software Engineer"
+              rating={5}
+            />
+            
+            <TestimonialCard 
+              quote="The AI date concierge feature is genius. It suggested perfect activities based on our conversation style."
+              author="Maya R."
+              role="Marketing Director"
+              rating={5}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 bg-charcoal-gray/10">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-light text-white mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xl text-gray-300">
+              Everything you need to know about MonArk
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            <FAQItem 
+              question="What makes MonArk different from other dating apps?"
+              answer="MonArk uses our proprietary Relational Intelligence Framework (RIF) to match users based on emotional compatibility, communication styles, and relationship readiness - not just photos and basic preferences."
+            />
+            
+            <FAQItem 
+              question="How does the RIF matching system work?"
+              answer="Our AI analyzes your conversation patterns, response styles, emotional readiness, and relationship goals to create a comprehensive compatibility profile. This helps us match you with people who complement your emotional and communicative approach to relationships."
+            />
+            
+            <FAQItem 
+              question="Is my data safe and private?"
+              answer="Absolutely. We use industry-leading encryption and privacy measures. Your personal data is never sold to third parties, and you have complete control over your privacy settings and data retention."
+            />
+            
+            <FAQItem 
+              question="Can I try MonArk before committing?"
+              answer="Yes! Our interactive demo lets you explore all features without signing up. You can experience the discovery map, RIF matching, and conversation tools risk-free."
+            />
+            
+            <FAQItem 
+              question="When will MonArk be available to everyone?"
+              answer="We're currently in private beta with select users. Join our waitlist to be notified when we launch publicly and get early access to new features."
             />
           </div>
         </div>
@@ -285,3 +496,62 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon: Icon, title, descriptio
     </div>
   </div>
 );
+
+interface TestimonialCardProps {
+  quote: string;
+  author: string;
+  role: string;
+  rating: number;
+}
+
+const TestimonialCard: React.FC<TestimonialCardProps> = ({ quote, author, role, rating }) => (
+  <div className="bg-charcoal-gray/50 rounded-xl p-6 border border-goldenrod/20 hover:border-goldenrod/40 transition-colors">
+    <div className="flex items-center mb-4">
+      {[...Array(rating)].map((_, i) => (
+        <Star key={i} className="h-4 w-4 text-goldenrod fill-goldenrod" />
+      ))}
+    </div>
+    
+    <Quote className="h-6 w-6 text-goldenrod/60 mb-4" />
+    <p className="text-gray-300 leading-relaxed mb-6 italic">"{quote}"</p>
+    
+    <div className="flex items-center space-x-3">
+      <div className="w-10 h-10 bg-gradient-to-br from-goldenrod/30 to-purple-500/30 rounded-full flex items-center justify-center">
+        <span className="text-white font-medium text-sm">{author.charAt(0)}</span>
+      </div>
+      <div>
+        <p className="text-white font-medium text-sm">{author}</p>
+        <p className="text-gray-400 text-xs">{role}</p>
+      </div>
+    </div>
+  </div>
+);
+
+interface FAQItemProps {
+  question: string;
+  answer: string;
+}
+
+const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="bg-charcoal-gray/30 rounded-xl border border-gray-700/50 overflow-hidden">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-charcoal-gray/50 transition-colors"
+      >
+        <h3 className="text-white font-medium pr-4">{question}</h3>
+        <div className={`transform transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
+          <ArrowRight className="h-5 w-5 text-goldenrod rotate-90" />
+        </div>
+      </button>
+      
+      {isOpen && (
+        <div className="px-6 pb-4">
+          <p className="text-gray-300 leading-relaxed">{answer}</p>
+        </div>
+      )}
+    </div>
+  );
+};
