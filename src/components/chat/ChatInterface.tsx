@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, MoreVertical, Shield, Video, Calendar } from 'lucide-react';
+import { Send, MoreVertical, Shield, Video, Calendar, Check, CheckCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -12,6 +12,8 @@ import { VideoCallModal } from '@/components/video/VideoCallModal';
 import { useMessages } from '@/hooks/useMessages';
 import { useAuth } from '@/hooks/useAuth';
 import { useDateConcierge } from '@/hooks/useDateConcierge';
+import { useTypingIndicator } from '@/hooks/useTypingIndicator';
+import { useRealTimePresence } from '@/hooks/useRealTimePresence';
 import { format } from 'date-fns';
 
 interface ChatInterfaceProps {
@@ -40,6 +42,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const { messages, loading, sendMessage } = useMessages(conversationId);
   const { user } = useAuth();
   const { checkConversationReadiness } = useDateConcierge();
+  const { typingUsers, startTyping, stopTyping } = useTypingIndicator(conversationId);
+  const { isUserOnline } = useRealTimePresence();
+
+  // Typing timeout ref
+  const typingTimeoutRef = useRef<NodeJS.Timeout>();
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -58,12 +65,54 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
     }
   }, [messages.length, conversationId, matchUserId, user]);
 
+  // Cleanup typing timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+        stopTyping();
+      }
+    };
+  }, [stopTyping]);
+
+  // Handle typing indicator
+  const handleTyping = (text: string) => {
+    setMessageText(text);
+    
+    if (text.trim()) {
+      // Start typing if not already
+      startTyping(matchName);
+      
+      // Clear existing timeout
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      
+      // Stop typing after 2 seconds of inactivity
+      typingTimeoutRef.current = setTimeout(() => {
+        stopTyping();
+      }, 2000);
+    } else {
+      // Stop typing immediately if text is empty
+      stopTyping();
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+    }
+  };
+
   const handleSendMessage = async () => {
     if (!messageText.trim() || isSending) return;
     
+    // Stop typing indicator
+    stopTyping();
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+  
     setIsSending(true);
     const success = await sendMessage(messageText, matchUserId);
-    
+  
     if (success) {
       setMessageText('');
       // Reset textarea height
@@ -72,6 +121,24 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       }
     }
     setIsSending(false);
+  };
+
+  // Get delivery status icon
+  const getDeliveryStatusIcon = (message: any) => {
+    if (message.sender_user_id !== user?.id) return null;
+    
+    switch (message.delivery_status) {
+      case 'sending':
+        return <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin" />;
+      case 'delivered':
+        return <Check className="h-3 w-3" />;
+      case 'read':
+        return <CheckCheck className="h-3 w-3 text-goldenrod" />;
+      case 'failed':
+        return <div className="w-3 h-3 bg-red-500 rounded-full" />;
+      default:
+        return <Check className="h-3 w-3" />;
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -119,7 +186,16 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           </Avatar>
           <div>
             <h3 className="text-white font-medium">{matchName}</h3>
-            <p className="text-gray-400 text-sm">Active now</p>
+            <p className="text-gray-400 text-sm">
+              {isUserOnline(matchUserId) ? (
+                <span className="flex items-center">
+                  <span className="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
+                  Online
+                </span>
+              ) : (
+                'Last seen recently'
+              )}
+            </p>
           </div>
         </div>
         
@@ -216,16 +292,38 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                     }`}
                   >
                     <p className="text-sm">{message.content}</p>
-                    <p className={`text-xs mt-1 ${
-                      isOwnMessage ? 'text-jet-black/70' : 'text-gray-400'
-                    }`}>
-                      {format(new Date(message.created_at), 'HH:mm')}
-                    </p>
+                     <p className={`text-xs mt-1 flex items-center justify-between ${
+                       isOwnMessage ? 'text-jet-black/70' : 'text-gray-400'
+                     }`}>
+                       <span>{format(new Date(message.created_at), 'HH:mm')}</span>
+                       {getDeliveryStatusIcon(message)}
+                     </p>
                   </div>
                 </div>
               </div>
             );
           })
+        )}
+        
+        {/* Typing Indicators */}
+        {typingUsers.length > 0 && (
+          <div className="flex justify-start">
+            <div className="max-w-xs lg:max-w-md">
+              <Avatar className="h-6 w-6 mb-1">
+                <AvatarImage src={matchImage} alt={matchName} />
+                <AvatarFallback className="bg-goldenrod text-jet-black text-xs">
+                  {matchName.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="px-4 py-2 rounded-2xl bg-charcoal-gray text-white mr-2">
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
         <div ref={messagesEndRef} />
       </div>
@@ -237,7 +335,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             <Textarea
               ref={textareaRef}
               value={messageText}
-              onChange={(e) => setMessageText(e.target.value)}
+              onChange={(e) => handleTyping(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder={`Message ${matchName}...`}
               className="min-h-[44px] max-h-32 resize-none bg-charcoal-gray border-gray-700 text-white placeholder-gray-400 focus:border-goldenrod"

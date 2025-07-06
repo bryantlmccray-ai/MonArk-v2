@@ -6,8 +6,12 @@ import { Tables } from '@/integrations/supabase/types';
 
 type Message = Tables<'messages'>;
 
+interface MessageWithStatus extends Message {
+  delivery_status?: 'sending' | 'delivered' | 'read' | 'failed';
+}
+
 export const useMessages = (conversationId: string) => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<MessageWithStatus[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
@@ -62,10 +66,11 @@ export const useMessages = (conversationId: string) => {
         },
         async (payload) => {
           try {
-            const newMessage = payload.new as Message;
+            const newMessage = payload.new as MessageWithStatus;
+            newMessage.delivery_status = 'delivered';
             setMessages(prev => [...prev, newMessage]);
             
-            // Mark as read if user is recipient
+            // Mark as read if user is recipient and chat is active
             if (newMessage.recipient_user_id === user.id) {
               try {
                 await supabase.rpc('mark_messages_as_read', {
@@ -81,6 +86,27 @@ export const useMessages = (conversationId: string) => {
           }
         }
       )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'messages',
+          filter: `conversation_id=eq.${conversationId}`,
+        },
+        (payload) => {
+          try {
+            const updatedMessage = payload.new as MessageWithStatus;
+            setMessages(prev => prev.map(msg => 
+              msg.id === updatedMessage.id 
+                ? { ...updatedMessage, delivery_status: updatedMessage.read_at ? 'read' : 'delivered' }
+                : msg
+            ));
+          } catch (error) {
+            console.error('Error handling message update:', error);
+          }
+        }
+      )
       .subscribe();
 
     return () => {
@@ -90,10 +116,27 @@ export const useMessages = (conversationId: string) => {
         console.error('Error removing channel:', error);
       }
     };
-  }, [conversationId, user?.id]); // Use user.id instead of user object
+  }, [conversationId, user?.id]);
 
   const sendMessage = async (content: string, recipientUserId: string, messageType: 'text' | 'system' = 'text') => {
-    if (!user || !content.trim()) return null;
+    if (!user || !content.trim()) return false;
+
+    // Add optimistic message
+    const tempId = `temp_${Date.now()}`;
+    const optimisticMessage: MessageWithStatus = {
+      id: tempId,
+      conversation_id: conversationId,
+      sender_user_id: user.id,
+      recipient_user_id: recipientUserId,
+      content: content.trim(),
+      message_type: messageType,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      read_at: null,
+      delivery_status: 'sending'
+    };
+
+    setMessages(prev => [...prev, optimisticMessage]);
 
     try {
       const { data, error } = await supabase
@@ -110,13 +153,32 @@ export const useMessages = (conversationId: string) => {
 
       if (error) {
         console.error('Error sending message:', error);
-        return null;
+        // Update optimistic message to failed
+        setMessages(prev => prev.map(msg => 
+          msg.id === tempId 
+            ? { ...msg, delivery_status: 'failed' }
+            : msg
+        ));
+        return false;
       }
 
-      return data;
+      // Replace optimistic message with real one
+      setMessages(prev => prev.map(msg => 
+        msg.id === tempId 
+          ? { ...data, delivery_status: 'delivered' }
+          : msg
+      ));
+
+      return true;
     } catch (error) {
       console.error('Error sending message:', error);
-      return null;
+      // Update optimistic message to failed
+      setMessages(prev => prev.map(msg => 
+        msg.id === tempId 
+          ? { ...msg, delivery_status: 'failed' }
+          : msg
+      ));
+      return false;
     }
   };
 
