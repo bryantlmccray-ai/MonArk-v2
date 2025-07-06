@@ -100,11 +100,11 @@ export const EnhancedProfileCard: React.FC<EnhancedProfileCardProps> = ({
             {/* Header */}
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-sm text-popover-foreground">
+                <p className="font-medium text-sm text-white">
                   {profile.user_id.slice(0, 8)}, {profile.age || 25}
                 </p>
                 {profile.distance && (
-                  <div className="flex items-center text-muted-foreground text-xs">
+                  <div className="flex items-center text-gray-300 text-xs">
                     <MapPin className="h-3 w-3 mr-1" />
                     {profile.distance}km away
                   </div>
@@ -120,7 +120,7 @@ export const EnhancedProfileCard: React.FC<EnhancedProfileCardProps> = ({
 
             {/* Bio preview */}
             {profile.bio && (
-              <p className="text-xs text-muted-foreground line-clamp-2">
+              <p className="text-xs text-gray-300 line-clamp-2">
                 {profile.bio}
               </p>
             )}
@@ -128,10 +128,10 @@ export const EnhancedProfileCard: React.FC<EnhancedProfileCardProps> = ({
             {/* Compatibility highlights */}
             {highlights.length > 0 && (
               <div className="space-y-1">
-                <p className="text-primary text-xs font-medium">Connection potential:</p>
+                <p className="text-goldenrod text-xs font-medium">Connection potential:</p>
                 {highlights.slice(0, 2).map((highlight, index) => (
-                  <div key={index} className="flex items-start text-muted-foreground text-xs">
-                    <div className="w-1 h-1 bg-primary rounded-full mr-2 mt-1.5 flex-shrink-0" />
+                  <div key={index} className="flex items-start text-gray-300 text-xs">
+                    <div className="w-1 h-1 bg-goldenrod rounded-full mr-2 mt-1.5 flex-shrink-0" />
                     <span className="line-clamp-1">{highlight}</span>
                   </div>
                 ))}
@@ -150,7 +150,7 @@ export const EnhancedProfileCard: React.FC<EnhancedProfileCardProps> = ({
                   </span>
                 ))}
                 {profile.interests.length > 3 && (
-                  <span className="px-1.5 py-0.5 bg-muted text-muted-foreground text-xs rounded">
+                  <span className="px-1.5 py-0.5 bg-gray-700 text-gray-300 text-xs rounded">
                     +{profile.interests.length - 3}
                   </span>
                 )}
