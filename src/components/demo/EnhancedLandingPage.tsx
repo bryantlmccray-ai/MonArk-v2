@@ -209,7 +209,15 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               <MonArkLogo size="sm" />
               <span className="text-white font-medium">MonArk</span>
             </div>
-            <p>&copy; 2024 MonArk. Dating reimagined with emotional intelligence.</p>
+            <p className="mb-4">&copy; 2024 MonArk. Dating reimagined with emotional intelligence.</p>
+            <div className="flex items-center justify-center space-x-6 text-sm">
+              <a href="/privacy" className="text-goldenrod hover:underline">
+                Privacy Policy
+              </a>
+              <a href="/terms" className="text-goldenrod hover:underline">
+                Terms of Service
+              </a>
+            </div>
           </div>
         </div>
       </footer>

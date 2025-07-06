@@ -247,10 +247,10 @@ export const PrivacyDataPortal: React.FC = () => {
           <span className="text-gray-300 text-sm font-medium">Legal Information</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-          <a href="/privacy-policy" className="text-goldenrod hover:underline">
+          <a href="/privacy" className="text-goldenrod hover:underline">
             Privacy Policy
           </a>
-          <a href="/terms-of-service" className="text-goldenrod hover:underline">
+          <a href="/terms" className="text-goldenrod hover:underline">
             Terms of Service
           </a>
           <a href="/data-processing" className="text-goldenrod hover:underline">
