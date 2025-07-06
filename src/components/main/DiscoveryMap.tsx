@@ -655,7 +655,7 @@ export const DiscoveryMap: React.FC = () => {
       </div>
       
       {/* Elegant Floating Search */}
-      <div className="absolute top-6 right-6 z-20">
+      <div className="absolute top-20 right-6 z-20">
         {!searchExpanded ? (
           /* Minimal Search Button */
           <button
