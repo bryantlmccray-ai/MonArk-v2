@@ -32,9 +32,10 @@ export const useNotificationTriggers = () => {
       }
     };
 
-    // Single channel for all notification triggers
+    // Single channel for all notification triggers with stable name
+    const channelName = `notification-triggers-${user.id}`;
     const channel = supabase
-      .channel(`notification-triggers-${user.id}`)
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
@@ -44,15 +45,19 @@ export const useNotificationTriggers = () => {
           filter: `liked_user_id=eq.${user.id}`
         },
         (payload) => {
-          const match = payload.new as any;
-          if (match.is_mutual && !payload.old?.is_mutual) {
-            createNotification(
-              'match',
-              '🎉 New Match!',
-              'You have a new mutual match. Start a conversation!',
-              { match_id: match.id },
-              '/matches'
-            );
+          try {
+            const match = payload.new as any;
+            if (match.is_mutual && !payload.old?.is_mutual) {
+              createNotification(
+                'match',
+                '🎉 New Match!',
+                'You have a new mutual match. Start a conversation!',
+                { match_id: match.id },
+                '/matches'
+              );
+            }
+          } catch (error) {
+            console.error('Error handling match notification:', error);
           }
         }
       )
@@ -65,17 +70,21 @@ export const useNotificationTriggers = () => {
           filter: `recipient_user_id=eq.${user.id}`
         },
         (payload) => {
-          const message = payload.new as any;
-          createNotification(
-            'message',
-            '💬 New Message',
-            'You have a new message waiting for you.',
-            { 
-              message_id: message.id,
-              conversation_id: message.conversation_id 
-            },
-            `/matches?conversation=${message.conversation_id}`
-          );
+          try {
+            const message = payload.new as any;
+            createNotification(
+              'message',
+              '💬 New Message',
+              'You have a new message waiting for you.',
+              { 
+                message_id: message.id,
+                conversation_id: message.conversation_id 
+              },
+              `/matches?conversation=${message.conversation_id}`
+            );
+          } catch (error) {
+            console.error('Error handling message notification:', error);
+          }
         }
       )
       .on(
@@ -87,25 +96,33 @@ export const useNotificationTriggers = () => {
           filter: `recipient_user_id=eq.${user.id}`
         },
         (payload) => {
-          const proposal = payload.new as any;
-          createNotification(
-            'date_proposal',
-            '📅 Date Proposal',
-            `Someone proposed a date: ${proposal.title}`,
-            { 
-              proposal_id: proposal.id,
-              conversation_id: proposal.conversation_id 
-            },
-            `/matches?conversation=${proposal.conversation_id}`
-          );
+          try {
+            const proposal = payload.new as any;
+            createNotification(
+              'date_proposal',
+              '📅 Date Proposal',
+              `Someone proposed a date: ${proposal.title}`,
+              { 
+                proposal_id: proposal.id,
+                conversation_id: proposal.conversation_id 
+              },
+              `/matches?conversation=${proposal.conversation_id}`
+            );
+          } catch (error) {
+            console.error('Error handling date proposal notification:', error);
+          }
         }
       )
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      try {
+        supabase.removeChannel(channel);
+      } catch (error) {
+        console.error('Error removing channel:', error);
+      }
     };
-  }, [user]);
+  }, [user?.id]); // Use user.id instead of user object
 
   return null;
 };

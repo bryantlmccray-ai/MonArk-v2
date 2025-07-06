@@ -21,9 +21,10 @@ export const useActivityFeed = () => {
   useEffect(() => {
     if (!user) return;
 
-    // Listen for new profiles being created
+    // Use a stable channel name with user ID
+    const channelName = `activity-profiles-${user.id}`;
     const profilesChannel = supabase
-      .channel('activity-profiles')
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
@@ -32,25 +33,29 @@ export const useActivityFeed = () => {
           table: 'user_profiles'
         },
         async (payload) => {
-          // Fetch profile name
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('name')
-            .eq('id', payload.new.user_id)
-            .single();
+          try {
+            // Fetch profile name
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('name')
+              .eq('id', payload.new.user_id)
+              .single();
 
-          if (profile) {
-            const newActivity: ActivityItem = {
-              id: `profile-${payload.new.id}`,
-              type: 'new_profile',
-              user_id: payload.new.user_id,
-              user_name: profile.name || 'New User',
-              message: `${profile.name || 'Someone new'} just joined MonArk!`,
-              timestamp: payload.new.created_at,
-              distance: Math.random() * 10 + 1 // Mock distance for now
-            };
+            if (profile) {
+              const newActivity: ActivityItem = {
+                id: `profile-${payload.new.id}`,
+                type: 'new_profile',
+                user_id: payload.new.user_id,
+                user_name: profile.name || 'New User',
+                message: `${profile.name || 'Someone new'} just joined MonArk!`,
+                timestamp: payload.new.created_at,
+                distance: Math.random() * 10 + 1 // Mock distance for now
+              };
 
-            setActivities(prev => [newActivity, ...prev.slice(0, 9)]); // Keep last 10
+              setActivities(prev => [newActivity, ...prev.slice(0, 9)]); // Keep last 10
+            }
+          } catch (error) {
+            console.error('Error handling activity feed:', error);
           }
         }
       )
@@ -98,9 +103,13 @@ export const useActivityFeed = () => {
     generateMockActivities();
 
     return () => {
-      supabase.removeChannel(profilesChannel);
+      try {
+        supabase.removeChannel(profilesChannel);
+      } catch (error) {
+        console.error('Error removing channel:', error);
+      }
     };
-  }, [user]);
+  }, [user?.id]); // Use user.id instead of user object
 
   const addProximityAlert = (
     userId: string,

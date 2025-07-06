@@ -135,9 +135,10 @@ export const useConversations = () => {
   useEffect(() => {
     if (!user) return;
 
-    // Subscribe to new messages
+    // Subscribe to new messages with stable channel name
+    const messageChannelName = `messages_${user.id}`;
     const messageChannel = supabase
-      .channel(`messages_${user.id}_${Date.now()}`)
+      .channel(messageChannelName)
       .on(
         'postgres_changes',
         {
@@ -147,14 +148,19 @@ export const useConversations = () => {
           filter: `recipient_user_id=eq.${user.id}`
         },
         () => {
-          fetchConversations();
+          try {
+            fetchConversations();
+          } catch (error) {
+            console.error('Error handling message update:', error);
+          }
         }
       )
       .subscribe();
 
-    // Subscribe to conversation updates  
+    // Subscribe to conversation updates with stable channel name
+    const conversationChannelName = `conversations_${user.id}`;
     const conversationChannel = supabase
-      .channel(`conversations_${user.id}_${Date.now()}`)
+      .channel(conversationChannelName)
       .on(
         'postgres_changes',
         {
@@ -163,19 +169,27 @@ export const useConversations = () => {
           table: 'conversation_tracker'
         },
         (payload) => {
-          const updatedConversation = payload.new as ConversationTracker;
-          if (updatedConversation.user_id === user.id || updatedConversation.match_user_id === user.id) {
-            fetchConversations();
+          try {
+            const updatedConversation = payload.new as ConversationTracker;
+            if (updatedConversation.user_id === user.id || updatedConversation.match_user_id === user.id) {
+              fetchConversations();
+            }
+          } catch (error) {
+            console.error('Error handling conversation update:', error);
           }
         }
       )
       .subscribe();
 
     return () => {
-      supabase.removeChannel(messageChannel);
-      supabase.removeChannel(conversationChannel);
+      try {
+        supabase.removeChannel(messageChannel);
+        supabase.removeChannel(conversationChannel);
+      } catch (error) {
+        console.error('Error removing channels:', error);
+      }
     };
-  }, [user]);
+  }, [user?.id]); // Use user.id instead of user object
 
   // Load conversations on mount
   useEffect(() => {

@@ -259,8 +259,10 @@ export const useNotifications = () => {
   useEffect(() => {
     if (!user) return;
 
+    // Use a stable channel name with cleanup
+    const channelName = `notifications_${user.id}`;
     const channel = supabase
-      .channel(`notifications_${user.id}_${Date.now()}`)
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
@@ -270,23 +272,31 @@ export const useNotifications = () => {
           filter: `user_id=eq.${user.id}`
         },
         (payload) => {
-          const newNotification = payload.new as Notification;
-          setNotifications(prev => [newNotification, ...prev]);
-          setUnreadCount(prev => prev + 1);
-          
-          // Show toast for new notification
-          toast({
-            title: newNotification.title,
-            description: newNotification.message,
-          });
+          try {
+            const newNotification = payload.new as Notification;
+            setNotifications(prev => [newNotification, ...prev]);
+            setUnreadCount(prev => prev + 1);
+            
+            // Show toast for new notification
+            toast({
+              title: newNotification.title,
+              description: newNotification.message,
+            });
+          } catch (error) {
+            console.error('Error handling notification:', error);
+          }
         }
       )
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      try {
+        supabase.removeChannel(channel);
+      } catch (error) {
+        console.error('Error removing channel:', error);
+      }
     };
-  }, [user]);
+  }, [user?.id]); // Use user.id instead of user object
 
   useEffect(() => {
     if (user) {

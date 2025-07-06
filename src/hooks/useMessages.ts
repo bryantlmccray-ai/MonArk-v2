@@ -49,8 +49,9 @@ export const useMessages = (conversationId: string) => {
   useEffect(() => {
     if (!conversationId || !user) return;
 
+    const channelName = `messages:${conversationId}`;
     const channel = supabase
-      .channel(`messages:${conversationId}`)
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
@@ -59,25 +60,37 @@ export const useMessages = (conversationId: string) => {
           table: 'messages',
           filter: `conversation_id=eq.${conversationId}`,
         },
-        (payload) => {
-          const newMessage = payload.new as Message;
-          setMessages(prev => [...prev, newMessage]);
-          
-          // Mark as read if user is recipient
-          if (newMessage.recipient_user_id === user.id) {
-            supabase.rpc('mark_messages_as_read', {
-              p_conversation_id: conversationId,
-              p_user_id: user.id
-            });
+        async (payload) => {
+          try {
+            const newMessage = payload.new as Message;
+            setMessages(prev => [...prev, newMessage]);
+            
+            // Mark as read if user is recipient
+            if (newMessage.recipient_user_id === user.id) {
+              try {
+                await supabase.rpc('mark_messages_as_read', {
+                  p_conversation_id: conversationId,
+                  p_user_id: user.id
+                });
+              } catch (markReadError) {
+                console.error('Error marking message as read:', markReadError);
+              }
+            }
+          } catch (error) {
+            console.error('Error handling new message:', error);
           }
         }
       )
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      try {
+        supabase.removeChannel(channel);
+      } catch (error) {
+        console.error('Error removing channel:', error);
+      }
     };
-  }, [conversationId, user]);
+  }, [conversationId, user?.id]); // Use user.id instead of user object
 
   const sendMessage = async (content: string, recipientUserId: string, messageType: 'text' | 'system' = 'text') => {
     if (!user || !content.trim()) return null;

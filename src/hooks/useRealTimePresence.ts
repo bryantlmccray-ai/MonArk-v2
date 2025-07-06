@@ -17,36 +17,46 @@ export const useRealTimePresence = () => {
   useEffect(() => {
     if (!user) return;
 
-    const channel = supabase.channel('user_presence');
+    // Use a user-specific channel name to prevent conflicts
+    const channelName = `user_presence_${user.id}`;
+    const channel = supabase.channel(channelName);
 
     // Track current user's presence
     const trackPresence = async () => {
-      const presence: UserPresence = {
-        user_id: user.id,
-        online_at: new Date().toISOString(),
-        last_seen: new Date().toISOString()
-      };
+      try {
+        const presence: UserPresence = {
+          user_id: user.id,
+          online_at: new Date().toISOString(),
+          last_seen: new Date().toISOString()
+        };
 
-      setUserPresence(presence);
-      await channel.track(presence);
+        setUserPresence(presence);
+        await channel.track(presence);
+      } catch (error) {
+        console.error('Error tracking presence:', error);
+      }
     };
 
     // Listen for presence changes
     channel
       .on('presence', { event: 'sync' }, () => {
-        const presenceState = channel.presenceState();
-        const users: UserPresence[] = [];
-        
-        Object.keys(presenceState).forEach(key => {
-          const presences = presenceState[key] as any[];
-          presences.forEach(presence => {
-            if (presence.user_id && presence.online_at && presence.last_seen) {
-              users.push(presence as UserPresence);
-            }
+        try {
+          const presenceState = channel.presenceState();
+          const users: UserPresence[] = [];
+          
+          Object.keys(presenceState).forEach(key => {
+            const presences = presenceState[key] as any[];
+            presences.forEach(presence => {
+              if (presence.user_id && presence.online_at && presence.last_seen) {
+                users.push(presence as UserPresence);
+              }
+            });
           });
-        });
-        
-        setOnlineUsers(users);
+          
+          setOnlineUsers(users);
+        } catch (error) {
+          console.error('Error handling presence sync:', error);
+        }
       })
       .on('presence', { event: 'join' }, ({ key, newPresences }) => {
         console.log('User joined:', key, newPresences);
@@ -65,18 +75,26 @@ export const useRealTimePresence = () => {
     // Update presence every 30 seconds
     const presenceInterval = setInterval(() => {
       if (userPresence) {
-        channel.track({
-          ...userPresence,
-          last_seen: new Date().toISOString()
-        });
+        try {
+          channel.track({
+            ...userPresence,
+            last_seen: new Date().toISOString()
+          });
+        } catch (error) {
+          console.error('Error updating presence:', error);
+        }
       }
     }, 30000);
 
     return () => {
-      clearInterval(presenceInterval);
-      supabase.removeChannel(channel);
+      try {
+        clearInterval(presenceInterval);
+        supabase.removeChannel(channel);
+      } catch (error) {
+        console.error('Error cleaning up presence:', error);
+      }
     };
-  }, [user]);
+  }, [user?.id]); // Use user.id instead of user object
 
   const isUserOnline = (userId: string): boolean => {
     const userPresence = onlineUsers.find(u => u.user_id === userId);
