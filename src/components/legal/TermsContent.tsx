@@ -1,10 +1,27 @@
 import React from 'react';
-import { FileText, Shield, Users, Scale, AlertTriangle } from 'lucide-react';
+import { FileText, Shield, Users, Scale, AlertTriangle, ArrowLeft, Home } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 export const TermsContent: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
+      {/* Navigation */}
+      <div className="flex items-center justify-between mb-6">
+        <Button 
+          variant="ghost" 
+          onClick={() => window.history.back()}
+          className="text-goldenrod hover:bg-goldenrod/10"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back
+        </Button>
+        <a href="/" className="text-goldenrod hover:underline flex items-center gap-2">
+          <Home className="h-4 w-4" />
+          Home
+        </a>
+      </div>
+
       {/* Header */}
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-3">
@@ -176,6 +193,25 @@ export const TermsContent: React.FC = () => {
                 legal@monark.com
               </a>
             </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Related Links */}
+      <Card className="bg-charcoal-gray border-goldenrod/20">
+        <CardContent className="pt-6">
+          <div className="text-center space-y-4">
+            <h3 className="text-white font-medium">Related Documents</h3>
+            <div className="flex items-center justify-center space-x-6">
+              <a href="/privacy" className="text-goldenrod hover:underline flex items-center gap-2">
+                <Shield className="h-4 w-4" />
+                Privacy Policy
+              </a>
+              <a href="/" className="text-goldenrod hover:underline flex items-center gap-2">
+                <Home className="h-4 w-4" />
+                Back to MonArk
+              </a>
+            </div>
           </div>
         </CardContent>
       </Card>
