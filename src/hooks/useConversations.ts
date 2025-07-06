@@ -137,7 +137,7 @@ export const useConversations = () => {
 
     // Subscribe to new messages
     const messageChannel = supabase
-      .channel('user-messages')
+      .channel(`messages_${user.id}_${Date.now()}`)
       .on(
         'postgres_changes',
         {
@@ -152,9 +152,9 @@ export const useConversations = () => {
       )
       .subscribe();
 
-    // Subscribe to conversation updates
+    // Subscribe to conversation updates  
     const conversationChannel = supabase
-      .channel('user-conversations')
+      .channel(`conversations_${user.id}_${Date.now()}`)
       .on(
         'postgres_changes',
         {
