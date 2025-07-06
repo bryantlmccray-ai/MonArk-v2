@@ -61,7 +61,7 @@ export const AICompanionChat: React.FC<AICompanionChatProps> = ({ onClose }) => 
       const welcomeMessage: AIMessage = {
         id: `welcome_${Date.now()}`,
         type: 'conversation',
-        content: `Hi there! I'm your AI dating companion. I'm here to help you grow and succeed in your dating journey. 
+        content: `Hi I'm Ark your AI companion. I'm here to help you grow and succeed in your dating journey. 
 
 I can help you with:
 • Processing your dating experiences and feelings
@@ -363,7 +363,7 @@ What would you like to talk about? 😊`,
             <Sparkles className="h-4 w-4 text-goldenrod" />
           </div>
           <div>
-            <h3 className="text-white font-medium text-sm">Your AI Companion</h3>
+            <h3 className="text-white font-medium text-sm">Ark - Your AI Companion</h3>
             <p className="text-gray-400 text-xs">Here to help you grow</p>
           </div>
         </div>
