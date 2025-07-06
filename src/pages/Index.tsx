@@ -32,26 +32,13 @@ const Index = () => {
   }, []);
 
   // Demo mode override - accessible regardless of auth status  
-  if (showDemo) {
-    return (
-      <div className="min-h-screen bg-jet-black">
-        <div className="fixed top-4 right-4 z-50">
-          <button
-            onClick={() => {
-              console.log('Exit demo button clicked from landing');
-              setShowDemo(false);
-            }}
-            className="px-4 py-2 bg-charcoal-gray/80 text-white rounded-lg border border-goldenrod/30 hover:bg-charcoal-gray transition-colors"
-          >
-            Exit Demo
-          </button>
-        </div>
-        <EnhancedLandingPage onExitToApp={() => {
-          console.log('Exit to app from landing page');
-          setShowDemo(false);
-        }} />
-      </div>
-    );
+  if (showDemo || demoData.isInDemo) {
+    console.log('Rendering demo, showDemo:', showDemo, 'demoData.isInDemo:', demoData.isInDemo);
+    return <DemoMainApp onClose={() => {
+      console.log('Closing demo');
+      setShowDemo(false);
+      setDemoMode(false);
+    }} />;
   }
 
 
