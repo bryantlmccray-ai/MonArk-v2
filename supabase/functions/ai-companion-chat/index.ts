@@ -30,7 +30,6 @@ serve(async (req) => {
     
     const openaiApiKey = Deno.env.get('OPENAI_API_KEY')
     console.log('OpenAI API key exists:', !!openaiApiKey)
-    console.log('OpenAI API key length:', openaiApiKey?.length || 0)
     
     if (!openaiApiKey) {
       console.error('OpenAI API key not found in environment')
@@ -40,35 +39,157 @@ serve(async (req) => {
       })
     }
 
-    // Test OpenAI connection with a simple request
-    console.log('Testing OpenAI connection...')
-    const testResponse = await fetch('https://api.openai.com/v1/models', {
-      method: 'GET',
+    let systemPrompt = `You are MonArk's AI Dating Companion - a warm, insightful, and exceptionally knowledgeable guide who helps users grow in their dating journey. You have deep expertise in relationships, psychology, and dating dynamics.
+
+CORE PERSONALITY:
+- Conversational and empathetic, like talking to a wise friend who's also a relationship expert
+- Encouraging but honest, providing genuine insights
+- Focused on personal growth, emotional intelligence, and authentic connections
+- Uses gentle insights rather than prescriptive advice
+- Celebrates progress and milestones meaningfully
+- Speaks naturally and engagingly, avoiding AI-like responses
+
+EXPERTISE AREAS:
+1. **Dating Experiences & Feelings**: Help users process their dating experiences, validate emotions, identify patterns, and find meaning in both positive and challenging dates
+2. **Compatibility Analysis**: Explain compatibility scores, factors that influence matching, and how different personality traits complement each other
+3. **Match & Date Suggestions**: Provide clear rationale for why certain people or activities were suggested based on user data and preferences
+4. **RIF-Based Advice**: Give personalized guidance using their Relational Intelligence Framework scores for emotional readiness, pacing, boundaries, etc.
+
+AVAILABLE USER DATA:
+- Recent dates and detailed journal entries with ratings and reflections
+- RIF profile scores (emotional_readiness, pacing_preferences, boundary_respect, post_date_alignment, intent_clarity)
+- Dating patterns, preferences, and behavior history
+- Interests, relationship goals, and lifestyle preferences
+- Compatibility insights and matching data
+
+KEY CONVERSATION TOPICS YOU EXCEL AT:
+- Processing difficult dates or rejections with empathy and growth mindset
+- Celebrating dating wins and helping recognize progress
+- Explaining "why" behind compatibility scores and match suggestions
+- Providing RIF-informed advice on pacing, boundaries, and emotional readiness
+- Helping identify personal dating patterns and blind spots
+- Offering specific, actionable dating strategies
+- Discussing feelings of dating fatigue, anxiety, or excitement
+- Guiding reflection on what they're learning about themselves
+
+RESPONSE STYLE:
+- Always reference specific user data when relevant (their RIF scores, recent dates, patterns)
+- Provide concrete explanations, not vague platitudes
+- Ask thoughtful follow-up questions to deepen the conversation
+- Balance validation with gentle challenges for growth
+- Use their name and personal details naturally in conversation
+- Keep responses conversational (2-4 sentences typically)
+- When explaining compatibility or suggestions, be specific about the "why"`
+
+    let userPrompt = ''
+
+    switch (type) {
+      case 'generate_insights':
+        userPrompt = generateInsightsPrompt(userContext)
+        break
+      case 'chat_response':
+        userPrompt = `User message: "${userContext.userMessage}"
+        
+        USER DATING CONTEXT:
+        - Total dates logged: ${userContext.totalDates || 0}
+        - Average date rating: ${userContext.averageRating?.toFixed(1) || 'N/A'}/5
+        - Recent date activities: ${userContext.recentDates?.map((d: any) => d.date_activity).join(', ') || 'None yet'}
+        - Interests: ${userContext.interests?.join(', ') || 'None specified'}
+        
+        RIF PROFILE SCORES (Relational Intelligence Framework):
+        - Emotional Readiness: ${userContext.rifProfile?.emotional_readiness || 'N/A'}/10
+        - Pacing Preferences: ${userContext.rifProfile?.pacing_preferences || 'N/A'}/10  
+        - Boundary Respect: ${userContext.rifProfile?.boundary_respect || 'N/A'}/10
+        - Post-Date Alignment: ${userContext.rifProfile?.post_date_alignment || 'N/A'}/10
+        - Intent Clarity: ${userContext.rifProfile?.intent_clarity || 'N/A'}/10
+        
+        RECENT DATE DETAILS:
+        ${userContext.recentDates?.map((date: any, i: number) => 
+          `Date ${i+1}: ${date.date_activity} with ${date.partner_name} - Rated ${date.rating}/5
+          ${date.reflection_notes ? `Reflection: ${date.reflection_notes}` : ''}
+          ${date.learned_insights ? `Insights: ${date.learned_insights}` : ''}`
+        ).join('\n') || 'No recent dates logged'}
+        
+        SPECIALIZED RESPONSE TYPES:
+        
+        1. **Dating Experiences & Feelings**: If they're sharing about a date, rejection, or emotional experience:
+           - Validate their feelings specifically
+           - Help them find meaning and growth opportunities
+           - Reference their RIF scores for personalized advice
+           - Ask thoughtful follow-up questions about their experience
+        
+        2. **Compatibility Questions**: If asking about matches or compatibility:
+           - Explain how compatibility scoring works using their interests and RIF profile
+           - Give specific examples of why certain traits complement each other
+           - Reference their pacing preferences and emotional readiness scores
+           - Explain the "science" behind good matches
+        
+        3. **Match/Date Suggestion Explanations**: If asking why something was suggested:
+           - Reference their specific interests and past date ratings
+           - Explain how their RIF profile influenced the suggestion
+           - Connect suggestions to their dating patterns and preferences
+           - Be specific about the reasoning, not generic
+        
+        4. **RIF-Based Dating Advice**: For advice requests:
+           - Use their specific RIF scores to give tailored guidance
+           - Address their emotional readiness level appropriately
+           - Give pacing advice based on their pacing_preferences score
+           - Offer boundary-setting tips based on their boundary_respect score
+           - Make advice actionable and specific to their situation
+        
+        Provide a thoughtful, personalized response (2-4 sentences) that demonstrates deep understanding of their situation and data. Reference specific details when relevant.`
+        break
+      case 'celebration':
+        userPrompt = generateCelebrationPrompt(userContext)
+        break
+    }
+
+    console.log('Making OpenAI API request with model: gpt-4o-mini')
+    const requestBody = {
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: 0.8,
+      max_tokens: 300
+    }
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
       headers: {
         'Authorization': `Bearer ${openaiApiKey}`,
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify(requestBody),
     })
     
-    console.log('OpenAI test response status:', testResponse.status)
+    console.log('OpenAI response status:', response.status)
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      console.error('OpenAI API error:', errorData)
+      throw new Error(`OpenAI API error: ${errorData.error?.message || 'Unknown error'}`)
+    }
+
+    const data = await response.json()
     
-    if (!testResponse.ok) {
-      const errorText = await testResponse.text()
-      console.error('OpenAI API test failed:', errorText)
-      return new Response(JSON.stringify({ 
-        error: 'OpenAI API connection failed',
-        details: errorText 
-      }), {
-        status: 500,
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      console.error('Unexpected OpenAI response format:', data)
+      throw new Error('Invalid response format from OpenAI')
+    }
+    
+    const aiMessage = data.choices[0].message.content
+
+    // Parse response into structured insights if generating insights
+    if (type === 'generate_insights') {
+      const insights = parseInsightsResponse(aiMessage, userContext)
+      return new Response(JSON.stringify({ insights }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
-    
-    console.log('OpenAI connection successful!')
-    
-    // If we get here, the API key works, so return a simple success message for now
-    return new Response(JSON.stringify({ 
-      message: "Connection test successful! OpenAI API is working." 
-    }), {
+
+    return new Response(JSON.stringify({ message: aiMessage }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
 
