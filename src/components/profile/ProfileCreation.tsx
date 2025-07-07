@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 
 interface ProfileCreationProps {
   onComplete: () => void;
+  onCancel?: () => void;
 }
 
 export interface ProfileData {
@@ -60,7 +61,7 @@ export interface StepRequirements {
   identityPreferences: 'critical';
 }
 
-export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) => {
+export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, onCancel }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const { profile, updateProfile, loading } = useProfile();
   const { toast } = useToast();
@@ -246,6 +247,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
             updateData={updateProfileData} 
             onNext={() => { markStepCompleted('bio'); nextStep(); }}
             onSkip={() => { markStepSkipped('bio'); nextStep(); }}
+            onCancel={onCancel}
             stepRequirement={stepRequirements.bio}
           />
         );
@@ -326,6 +328,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete }) 
             updateData={updateProfileData} 
             onNext={() => { markStepCompleted('bio'); nextStep(); }}
             onSkip={() => { markStepSkipped('bio'); nextStep(); }}
+            onCancel={onCancel}
             stepRequirement={stepRequirements.bio}
           />
         );

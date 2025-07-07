@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
+import { X } from 'lucide-react';
 import { ProfileData } from './ProfileCreation';
 
 interface BioStepProps {
@@ -9,10 +10,11 @@ interface BioStepProps {
   onNext: () => void;
   onSkip: () => void;
   onBack?: () => void;
+  onCancel?: () => void;
   stepRequirement: 'critical' | 'important' | 'optional';
 }
 
-export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, stepRequirement }) => {
+export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, onCancel, stepRequirement }) => {
   const [bio, setBio] = useState(profileData.bio);
 
   const prompts = [
@@ -35,6 +37,19 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
 
   return (
     <div className="min-h-screen bg-jet-black p-6 flex flex-col">
+      {/* Cancel Button */}
+      {onCancel && (
+        <div className="absolute top-6 right-6 z-10">
+          <button
+            onClick={onCancel}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-charcoal-gray/80 hover:bg-charcoal-gray text-gray-400 hover:text-white transition-colors"
+            aria-label="Cancel profile creation"
+          >
+            <X size={20} />
+          </button>
+        </div>
+      )}
+      
       <div className="flex-1 max-w-2xl mx-auto w-full space-y-6">
         {/* Header */}
         <div className="text-center space-y-2 pt-8">

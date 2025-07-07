@@ -92,7 +92,14 @@ const Index = () => {
 
   // If user has a profile but it's not complete, show profile creation
   if (profile && !profile.is_profile_complete) {
-    return <ProfileCreation onComplete={() => refetchProfile()} />;
+    return <ProfileCreation 
+      onComplete={() => refetchProfile()} 
+      onCancel={() => {
+        // For now, we'll keep user on the profile creation
+        // In the future, this could redirect to main app or logout
+        console.log('Profile creation cancelled');
+      }}
+    />;
   }
 
   // Show onboarding if user hasn't completed it yet
@@ -101,7 +108,13 @@ const Index = () => {
   }
 
   // Show profile creation after onboarding
-  return <ProfileCreation onComplete={() => refetchProfile()} />;
+  return <ProfileCreation 
+    onComplete={() => refetchProfile()}
+    onCancel={() => {
+      // User can cancel and be redirected to main app
+      console.log('Profile creation cancelled from onboarding');
+    }}
+  />;
 };
 
 export default Index;
