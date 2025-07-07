@@ -139,22 +139,29 @@ RESPONSE STYLE:
         break
     }
 
+    console.log('Making OpenAI API request with model: gpt-4o-mini')
+    const requestBody = {
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: 0.8,
+      max_tokens: 300
+    }
+    console.log('Request body:', JSON.stringify(requestBody, null, 2))
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${openaiApiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        temperature: 0.8,
-        max_tokens: 300
-      }),
+      body: JSON.stringify(requestBody),
     })
+    
+    console.log('OpenAI response status:', response.status)
+    console.log('OpenAI response headers:', Object.fromEntries(response.headers.entries()))
 
     if (!response.ok) {
       const errorData = await response.json()
