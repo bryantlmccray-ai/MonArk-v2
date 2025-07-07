@@ -286,7 +286,7 @@ export const DiscoveryMap: React.FC = () => {
 
         const { Map } = await loader.importLibrary('maps');
         
-        if (mapRef.current) {
+        if (mapRef.current && !map) {
           const mapInstance = new Map(mapRef.current, {
             center: { lat: 41.8781, lng: -87.6298 }, // Chicago
             zoom: 12,
@@ -328,6 +328,17 @@ export const DiscoveryMap: React.FC = () => {
     };
 
     initMap();
+
+    // Cleanup function
+    return () => {
+      if (map) {
+        // Clear markers
+        markers.forEach(marker => marker.setMap(null));
+        setMarkers([]);
+        setMap(null);
+        setMapLoaded(false);
+      }
+    };
   }, []);
 
   // Add markers when map and profiles are ready
