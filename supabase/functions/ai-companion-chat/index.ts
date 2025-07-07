@@ -25,9 +25,12 @@ serve(async (req) => {
 
   try {
     const { type, userContext }: CompanionRequest = await req.json()
+    console.log('Received request:', { type, userContext })
     
     const openaiApiKey = Deno.env.get('OPENAI_API_KEY')
+    console.log('OpenAI API key exists:', !!openaiApiKey)
     if (!openaiApiKey) {
+      console.error('OpenAI API key not found in environment')
       throw new Error('OpenAI API key not configured')
     }
 
