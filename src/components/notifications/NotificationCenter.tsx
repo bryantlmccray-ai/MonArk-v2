@@ -48,6 +48,7 @@ export const NotificationCenter: React.FC = () => {
     markAsRead,
     markAllAsRead,
     deleteNotification,
+    createNotification,
     loading
   } = useNotifications();
 
@@ -65,6 +66,15 @@ export const NotificationCenter: React.FC = () => {
   const handleDeleteNotification = async (notificationId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     await deleteNotification(notificationId);
+  };
+
+  // Test function to create a sample notification
+  const createTestNotification = async () => {
+    await createNotification(
+      'system',
+      'Test Notification',
+      'This is a test notification to verify the system is working.',
+    );
   };
 
   return (
@@ -107,14 +117,22 @@ export const NotificationCenter: React.FC = () => {
                     Mark all read
                   </Button>
                 )}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowSettings(!showSettings)}
-                  className="text-goldenrod hover:bg-goldenrod/10"
-                >
-                  <Settings className="h-4 w-4" />
-                </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowSettings(!showSettings)}
+                    className="text-goldenrod hover:bg-goldenrod/10"
+                  >
+                    <Settings className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={createTestNotification}
+                    className="text-xs text-goldenrod hover:bg-goldenrod/10"
+                  >
+                    Test
+                  </Button>
               </div>
             </div>
           </CardHeader>

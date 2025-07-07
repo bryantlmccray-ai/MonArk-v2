@@ -45,6 +45,7 @@ export const useNotifications = () => {
     if (!user) return;
 
     try {
+      console.log('Fetching notifications for user:', user.id);
       const { data, error } = await supabase
         .from('notifications')
         .select('*')
@@ -55,6 +56,7 @@ export const useNotifications = () => {
       if (error) throw error;
       
       const typedNotifications = (data || []) as Notification[];
+      console.log('Notifications fetched:', typedNotifications);
       setNotifications(typedNotifications);
       setUnreadCount(typedNotifications.filter(n => !n.read_at).length);
     } catch (error) {
@@ -300,6 +302,7 @@ export const useNotifications = () => {
 
   useEffect(() => {
     if (user) {
+      console.log('User authenticated, fetching notifications for:', user.id);
       fetchNotifications();
       fetchPreferences();
     }
