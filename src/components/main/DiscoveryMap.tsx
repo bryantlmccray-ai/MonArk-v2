@@ -271,8 +271,12 @@ export const DiscoveryMap: React.FC = () => {
   useEffect(() => {
     let mapInstance: google.maps.Map | null = null;
     let currentMarkers: google.maps.Marker[] = [];
+    let isInitializing = false;
 
     const initMap = async () => {
+      if (isInitializing || mapInstance) return;
+      isInitializing = true;
+
       try {
         // Get Google Maps API key from edge function
         const { data: config } = await supabase.functions.invoke('google-maps-config');
@@ -335,15 +339,18 @@ export const DiscoveryMap: React.FC = () => {
       } catch (error) {
         console.error('Failed to initialize Google Maps:', error);
         setMapLoaded(false);
+      } finally {
+        isInitializing = false;
       }
     };
 
-    initMap();
+    // Only initialize if we don't have a map yet
+    if (!map && !mapLoaded) {
+      initMap();
+    }
 
     // Cleanup function
     return () => {
-      console.log('Cleaning up Google Maps...');
-      
       // Clear markers first
       currentMarkers.forEach(marker => {
         try {
@@ -357,28 +364,13 @@ export const DiscoveryMap: React.FC = () => {
       // Clear map instance
       if (mapInstance) {
         try {
-          // Don't call any map methods, just null the reference
           mapInstance = null;
         } catch (e) {
           console.warn('Error cleaning up map:', e);
         }
       }
-      
-      // Clear React state
-      setMap(null);
-      setMarkers([]);
-      setMapLoaded(false);
-      
-      // Clear the container safely
-      if (mapRef.current) {
-        try {
-          mapRef.current.innerHTML = '';
-        } catch (e) {
-          console.warn('Error clearing map container:', e);
-        }
-      }
     };
-  }, []);
+  }, [map, mapLoaded]);
 
   // Add markers when map and profiles are ready
   useEffect(() => {
@@ -837,28 +829,7 @@ export const DiscoveryMap: React.FC = () => {
         )}
       </div>
 
-      {/* Profile Pins - Now rendered over Google Maps */}
-      {mapLoaded && profilesWithPositions.map((profile) => (
-        <div
-          key={profile.mapId}
-          className="absolute z-30 pointer-events-auto"
-          style={{
-            left: `${profile.x}%`,
-            top: `${profile.y}%`,
-            transform: 'translate(-50%, -50%)',
-          }}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleProfileClick(profile);
-          }}
-        >
-          <EnhancedProfileCard
-            profile={profile}
-            currentUserRIF={rifProfile || undefined}
-            onClick={() => handleProfileClick(profile)}
-          />
-        </div>
-      ))}
+      {/* Profile markers are now handled by Google Maps */}
       
       {/* Elegant Floating Search */}
       <div className="absolute top-20 right-6 z-20">
