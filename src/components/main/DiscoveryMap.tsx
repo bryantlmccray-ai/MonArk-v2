@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Heart, MessageCircle, X, Clock, Shield, Target, MapPin, Star, Search, SlidersHorizontal, Navigation, Bell, Wifi, ChevronUp, ChevronDown } from 'lucide-react';
-import { Loader } from '@googlemaps/js-api-loader';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -27,7 +26,6 @@ import { useProximityAlerts } from '@/hooks/useProximityAlerts';
 import { useCompatibilityScoring } from '@/hooks/useCompatibilityScoring';
 import { useTouchGestures } from '@/hooks/useTouchGestures';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { supabase } from '@/integrations/supabase/client';
 
 // Prototype profiles for testing - structured to match database schema
 const prototypeProfiles: (DiscoveryProfile & { profiles?: { name: string } })[] = [
@@ -233,11 +231,6 @@ export const DiscoveryMap: React.FC = () => {
     },
     showOnlyHighCompatibility: false
   });
-  
-  // Google Maps specific state
-  const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
-  const [mapLoaded, setMapLoaded] = useState(false);
 
   const { rifProfile } = useRIF();
   const { profile, refetchProfile } = useProfile();
@@ -266,193 +259,6 @@ export const DiscoveryMap: React.FC = () => {
 
   // Check if user has location enabled
   const hasLocation = profile?.location_consent && profile?.location_data;
-
-  // Initialize Google Maps with complete React isolation
-  useEffect(() => {
-    let mapInstance: google.maps.Map | null = null;
-    let currentMarkers: google.maps.Marker[] = [];
-    let mapContainer: HTMLDivElement | null = null;
-    let isDestroyed = false; // Flag to prevent cleanup conflicts
-
-    const initMap = async () => {
-      if (isDestroyed) return;
-      
-      try {
-        // Get Google Maps API key from edge function
-        const { data: config } = await supabase.functions.invoke('google-maps-config');
-        
-        if (!config?.apiKey || isDestroyed) {
-          throw new Error('Failed to get Google Maps API key');
-        }
-
-        const loader = new Loader({
-          apiKey: config.apiKey,
-          version: 'weekly',
-          libraries: ['places']
-        });
-
-        const { Map } = await loader.importLibrary('maps');
-        
-        if (mapRef.current && !mapInstance && !isDestroyed) {
-          const parentElement = mapRef.current;
-          
-          // Create a container that React will NEVER touch
-          mapContainer = document.createElement('div');
-          mapContainer.id = `google-maps-${Date.now()}`; // Unique ID
-          mapContainer.style.cssText = `
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            pointer-events: auto;
-          `;
-          
-          // Clear parent and add our container
-          parentElement.innerHTML = '';
-          parentElement.appendChild(mapContainer);
-
-          mapInstance = new Map(mapContainer, {
-            center: { lat: 41.8781, lng: -87.6298 }, // Chicago
-            zoom: 12,
-            styles: [
-              {
-                featureType: 'all',
-                elementType: 'geometry.fill',
-                stylers: [{ color: '#1a1a1a' }]
-              },
-              {
-                featureType: 'all',
-                elementType: 'labels.text.fill',
-                stylers: [{ color: '#ffffff' }]
-              },
-              {
-                featureType: 'water',
-                elementType: 'geometry',
-                stylers: [{ color: '#2c3e50' }]
-              },
-              {
-                featureType: 'road',
-                elementType: 'geometry',
-                stylers: [{ color: '#34495e' }]
-              }
-            ],
-            disableDefaultUI: true,
-            zoomControl: true,
-            mapTypeControl: false,
-            streetViewControl: false,
-            fullscreenControl: false
-          });
-
-          setMap(mapInstance);
-          setMapLoaded(true);
-        }
-      } catch (error) {
-        console.error('Failed to initialize Google Maps:', error);
-        if (!isDestroyed) {
-          setMapLoaded(false);
-        }
-      }
-    };
-
-    initMap();
-
-    // Cleanup function with proper isolation
-    return () => {
-      isDestroyed = true; // Prevent any ongoing operations
-      
-      // Clean up markers safely
-      currentMarkers.forEach(marker => {
-        try {
-          if (marker && typeof marker.setMap === 'function') {
-            marker.setMap(null);
-          }
-        } catch (e) {
-          // Ignore cleanup errors
-        }
-      });
-      currentMarkers = [];
-      
-      // Clean up map instance
-      if (mapInstance) {
-        try {
-          // Don't call any map methods, just null the reference
-          mapInstance = null;
-        } catch (e) {
-          // Ignore cleanup errors
-        }
-      }
-      
-      // Clean up container without letting React interfere
-      setTimeout(() => {
-        if (mapContainer) {
-          try {
-            // Remove from DOM safely
-            if (mapContainer.parentNode) {
-              mapContainer.parentNode.removeChild(mapContainer);
-            }
-          } catch (e) {
-            // If that fails, try clearing the parent
-            try {
-              if (mapRef.current) {
-                mapRef.current.innerHTML = '';
-              }
-            } catch (innerE) {
-              // Final fallback - do nothing
-            }
-          }
-          mapContainer = null;
-        }
-      }, 0); // Defer DOM cleanup to next tick
-      
-      // Reset React state
-      setMap(null);
-      setMarkers([]);
-      setMapLoaded(false);
-    };
-  }, []); // Empty dependency array - initialize once only
-
-  // Add markers when map and profiles are ready
-  useEffect(() => {
-    if (!map || !mapLoaded) return;
-
-    // Clear existing markers
-    markers.forEach(marker => marker.setMap(null));
-    setMarkers([]);
-
-    const newMarkers: google.maps.Marker[] = [];
-    const filteredProfiles = getFilteredProfiles();
-
-    filteredProfiles.forEach((profile, index) => {
-      // Generate mock coordinates around Chicago
-      const baseLatLng = { lat: 41.8781, lng: -87.6298 };
-      const lat = baseLatLng.lat + (Math.random() - 0.5) * 0.1;
-      const lng = baseLatLng.lng + (Math.random() - 0.5) * 0.1;
-
-      const marker = new google.maps.Marker({
-        position: { lat, lng },
-        map: map,
-        title: (profile as any).profiles?.name || 'User',
-        icon: {
-          url: profile.photos?.[0] || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face',
-          size: new google.maps.Size(50, 50),
-          scaledSize: new google.maps.Size(50, 50),
-          anchor: new google.maps.Point(25, 50),
-          origin: new google.maps.Point(0, 0)
-        }
-      });
-
-      marker.addListener('click', () => {
-        setSelectedProfile(profile);
-        setSelectedPin(index);
-      });
-
-      newMarkers.push(marker);
-    });
-
-    setMarkers(newMarkers);
-  }, [map, mapLoaded, allProfiles, filters, searchQuery]);
 
   const locations = [
     { id: 1, name: 'DOWNTOWN', x: 48, y: 32, gridX: 3, gridY: 2 },
@@ -854,23 +660,77 @@ export const DiscoveryMap: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-jet-black relative overflow-hidden">
-      {/* Google Maps Container */}
+      {/* Interactive Map Background */}
       <div 
         ref={mapRef}
-        className="absolute inset-0 w-full h-full"
-        style={{ minHeight: '100vh' }}
+        className="absolute inset-0 w-full h-full overflow-hidden cursor-grab"
+        style={{
+          backgroundImage: `
+            radial-gradient(circle at 20% 30%, rgba(218, 165, 32, 0.1) 0%, transparent 30%),
+            radial-gradient(circle at 80% 20%, rgba(218, 165, 32, 0.08) 0%, transparent 25%),
+            radial-gradient(circle at 30% 80%, rgba(218, 165, 32, 0.12) 0%, transparent 35%),
+            radial-gradient(circle at 70% 70%, rgba(218, 165, 32, 0.06) 0%, transparent 40%),
+            linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)
+          `,
+          transform: `translate(${-(mapCenter.x - 50) * 2}px, ${-(mapCenter.y - 50) * 2}px) scale(${zoomLevel})`,
+          transition: isDragging ? 'none' : 'transform 0.3s ease-out'
+        }}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onWheel={handleWheel}
       >
-        {!mapLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-jet-black">
-            <div className="text-center">
-              <div className="w-8 h-8 border-2 border-goldenrod border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-white">Loading map...</p>
-            </div>
+        {/* Grid Pattern Overlay */}
+        <div 
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(218, 165, 32, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(218, 165, 32, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px'
+          }}
+        />
+        
+        {/* Neighborhood Labels */}
+        {locations.map(location => (
+          <div
+            key={location.id}
+            className="absolute text-xs text-goldenrod/60 font-medium tracking-wider pointer-events-none select-none"
+            style={{
+              left: `${location.x}%`,
+              top: `${location.y}%`,
+              transform: 'translate(-50%, -50%)'
+            }}
+          >
+            {location.name}
           </div>
-        )}
+        ))}
       </div>
 
-      {/* Profile markers are now handled by Google Maps */}
+      {/* Profile Pins */}
+      {profilesWithPositions.map((profile) => (
+        <div
+          key={profile.mapId}
+          className="absolute z-30 pointer-events-auto"
+          style={{
+            left: `${profile.x}%`,
+            top: `${profile.y}%`,
+            transform: 'translate(-50%, -50%)',
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleProfileClick(profile);
+          }}
+        >
+          <EnhancedProfileCard
+            profile={profile}
+            currentUserRIF={rifProfile || undefined}
+            onClick={() => handleProfileClick(profile)}
+          />
+        </div>
+      ))}
       
       {/* Elegant Floating Search */}
       <div className="absolute top-20 right-6 z-20">
