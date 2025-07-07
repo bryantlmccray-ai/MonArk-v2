@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Calendar, Flame, Target, TrendingUp, Award, Star, ChevronRight, Edit3 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -46,20 +46,10 @@ export const JournalEngagementFeatures: React.FC<JournalEngagementFeaturesProps>
   const [showReminderSettings, setShowReminderSettings] = useState(false);
   const [newGoal, setNewGoal] = useState(weeklyGoal);
   
-  const weeklyProgress = (entriesThisWeek / weeklyGoal) * 100;
-  const recentAchievements = achievements.filter(a => a.unlocked).slice(0, 3);
-  
-  // Debug logging
-  console.log('Journal Engagement Debug:', {
-    totalEntries,
-    achievements,
-    recentAchievements,
-    entriesThisWeek,
-    currentStreak
-  });
+  const weeklyProgress = useMemo(() => (entriesThisWeek / weeklyGoal) * 100, [entriesThisWeek, weeklyGoal]);
+  const recentAchievements = useMemo(() => achievements.filter(a => a.unlocked).slice(0, 3), [achievements]);
 
   const handleReminderSave = (settings: ReminderSettings) => {
-    console.log('Saving reminder settings:', settings);
     // This would integrate with a notification system
     onSetReminder();
   };
