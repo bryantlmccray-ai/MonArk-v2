@@ -219,12 +219,17 @@ export const useConversationNudges = () => {
     sentimentScore: number = 0
   ) => {
     try {
-      // Check if conversation monitor exists first
-      const { data: existingMonitor } = await supabase
+      // Use maybeSingle() to avoid errors when no record exists
+      const { data: existingMonitor, error: fetchError } = await supabase
         .from('conversation_monitor')
         .select('id')
         .eq('conversation_id', conversationId)
-        .single();
+        .maybeSingle();
+
+      if (fetchError) {
+        console.error('Error checking existing monitor:', fetchError);
+        return;
+      }
 
       if (existingMonitor) {
         // Update existing monitor
@@ -239,22 +244,31 @@ export const useConversationNudges = () => {
           })
           .eq('conversation_id', conversationId);
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error updating conversation monitor:', error);
+          return;
+        }
       } else {
-        // Insert new monitor
+        // Insert new monitor with upsert to handle duplicates
         const { error } = await supabase
           .from('conversation_monitor')
-          .insert({
+          .upsert({
             conversation_id: conversationId,
             last_message_time: new Date().toISOString(),
             message_count: messageCount,
             avg_sentiment_score: sentimentScore,
             inactivity_hours: 0
+          }, {
+            onConflict: 'conversation_id'
           });
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error inserting conversation monitor:', error);
+          return;
+        }
       }
       
+      // Only refetch if the operation was successful
       await fetchConversationMonitors();
     } catch (error) {
       console.error('Error updating conversation activity:', error);

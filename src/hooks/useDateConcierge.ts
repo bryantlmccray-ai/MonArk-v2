@@ -76,10 +76,16 @@ export const useDateConcierge = () => {
         .or(`creator_user_id.eq.${user.id},recipient_user_id.eq.${user.id}`)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching proposals:', error);
+        // Don't crash, just continue with empty array
+        setProposals([]);
+        return;
+      }
       setProposals(data || []);
     } catch (error) {
       console.error('Error fetching proposals:', error);
+      setProposals([]);
     }
   };
 
@@ -112,10 +118,15 @@ export const useDateConcierge = () => {
         .or(`user_id.eq.${user.id},match_user_id.eq.${user.id}`)
         .order('last_activity', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching conversations:', error);
+        setConversations([]);
+        return;
+      }
       setConversations(data || []);
     } catch (error) {
       console.error('Error fetching conversations:', error);
+      setConversations([]);
     }
   };
 

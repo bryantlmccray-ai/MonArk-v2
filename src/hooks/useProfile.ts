@@ -58,6 +58,8 @@ export const useProfile = () => {
 
       if (error) {
         console.error('Error fetching profile:', error);
+        // Don't throw error, just log it and continue
+        setProfile(null);
         return;
       }
 
@@ -70,6 +72,8 @@ export const useProfile = () => {
       }
     } catch (error) {
       console.error('Exception fetching profile:', error);
+      // Don't crash the app, just set profile to null
+      setProfile(null);
     } finally {
       setLoading(false);
     }
