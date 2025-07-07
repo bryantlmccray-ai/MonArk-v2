@@ -11,8 +11,8 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, o
   const tabs = [
     { id: 'profile', icon: User, label: 'Profile' },
     { id: 'matches', icon: MessageCircle, label: 'Connections' },
-    { id: 'dates', icon: BookOpen, label: 'Dates & Journal' },
     { id: 'discover', icon: Map, label: 'Discover' },
+    { id: 'dates', icon: BookOpen, label: 'Dates & Journal' },
     { id: 'circle', icon: Users, label: 'Circle' },
   ];
 

@@ -24,8 +24,8 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
   const tabs = [
     { id: 'profile', icon: User, label: 'Profile' },
     { id: 'matches', icon: MessageCircle, label: 'Connections' },
-    { id: 'dates', icon: BookOpen, label: 'Dates & Journal' },
     { id: 'discover', icon: Map, label: 'Discover' },
+    { id: 'dates', icon: BookOpen, label: 'Dates & Journal' },
     { id: 'circle', icon: Users, label: 'Circle' },
   ];
 
