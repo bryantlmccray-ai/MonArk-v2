@@ -30,9 +30,9 @@ serve(async (req) => {
     
     const { type, userContext }: CompanionRequest = requestData
     
-    const openaiApiKey = Deno.env.get('OPENAI_API_KEY')
-    if (!openaiApiKey) {
-      throw new Error('OpenAI API key not configured')
+    const geminiApiKey = Deno.env.get('GOOGLE_GEMINI_API_KEY')
+    if (!geminiApiKey) {
+      throw new Error('Google Gemini API key not configured')
     }
 
     const systemPrompt = `You are Ark, a helpful AI dating companion. You provide warm, empathetic advice about dating and relationships. Keep responses conversational and supportive.`
@@ -48,39 +48,40 @@ serve(async (req) => {
       userPrompt = 'Provide encouraging dating advice for someone just starting their dating journey.'
     }
 
-    console.log('Making OpenAI request...')
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    console.log('Making Gemini request...')
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openaiApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        temperature: 0.8,
-        max_tokens: 300
+        contents: [{
+          parts: [{
+            text: `${systemPrompt}\n\n${userPrompt}`
+          }]
+        }],
+        generationConfig: {
+          temperature: 0.8,
+          maxOutputTokens: 300,
+        }
       }),
     })
 
-    console.log('OpenAI response status:', response.status)
+    console.log('Gemini response status:', response.status)
 
     if (!response.ok) {
       const errorData = await response.json()
-      console.error('OpenAI error:', errorData)
-      throw new Error(`OpenAI API error: ${errorData.error?.message || 'Unknown error'}`)
+      console.error('Gemini error:', errorData)
+      throw new Error(`Gemini API error: ${errorData.error?.message || 'Unknown error'}`)
     }
 
     const data = await response.json()
     
-    if (!data.choices?.[0]?.message?.content) {
-      throw new Error('Invalid OpenAI response format')
+    if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
+      throw new Error('Invalid Gemini response format')
     }
     
-    const aiMessage = data.choices[0].message.content
+    const aiMessage = data.candidates[0].content.parts[0].text
     console.log('AI response generated successfully')
 
     return new Response(JSON.stringify({ message: aiMessage }), {
