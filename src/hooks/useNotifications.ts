@@ -259,43 +259,61 @@ export const useNotifications = () => {
 
   // Set up real-time subscription for new notifications only
   useEffect(() => {
-    if (!user) return;
+    if (!user?.id) return;
 
-    // Use a unique channel name with timestamp to prevent subscription conflicts
-    const channelName = `notifications_${user.id}_${Date.now()}`;
-    const channel = supabase
-      .channel(channelName)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'notifications',
-          filter: `user_id=eq.${user.id}`
-        },
-        (payload) => {
-          try {
-            const newNotification = payload.new as Notification;
-            setNotifications(prev => [newNotification, ...prev]);
-            setUnreadCount(prev => prev + 1);
-            
-            // Show toast for new notification
-            toast({
-              title: newNotification.title,
-              description: newNotification.message,
-            });
-          } catch (error) {
-            console.error('Error handling notification:', error);
-          }
-        }
-      )
-      .subscribe();
+    let channel: any = null;
+    let isSubscribed = false;
+
+    const setupSubscription = async () => {
+      if (isSubscribed) return;
+      
+      try {
+        // Use a unique channel name with timestamp to prevent subscription conflicts
+        const channelName = `notifications_${user.id}_${Date.now()}`;
+        channel = supabase
+          .channel(channelName)
+          .on(
+            'postgres_changes',
+            {
+              event: 'INSERT',
+              schema: 'public',
+              table: 'notifications',
+              filter: `user_id=eq.${user.id}`
+            },
+            (payload) => {
+              try {
+                const newNotification = payload.new as Notification;
+                setNotifications(prev => [newNotification, ...prev]);
+                setUnreadCount(prev => prev + 1);
+                
+                // Show toast for new notification
+                toast({
+                  title: newNotification.title,
+                  description: newNotification.message,
+                });
+              } catch (error) {
+                console.error('Error handling notification:', error);
+              }
+            }
+          );
+
+        await channel.subscribe();
+        isSubscribed = true;
+      } catch (error) {
+        console.error('Error setting up notification subscription:', error);
+      }
+    };
+
+    setupSubscription();
 
     return () => {
-      try {
-        supabase.removeChannel(channel);
-      } catch (error) {
-        console.error('Error removing channel:', error);
+      isSubscribed = false;
+      if (channel) {
+        try {
+          supabase.removeChannel(channel);
+        } catch (error) {
+          console.error('Error removing channel:', error);
+        }
       }
     };
   }, [user?.id]); // Use user.id instead of user object
