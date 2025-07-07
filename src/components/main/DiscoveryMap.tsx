@@ -269,6 +269,9 @@ export const DiscoveryMap: React.FC = () => {
 
   // Initialize Google Maps
   useEffect(() => {
+    let mapInstance: google.maps.Map | null = null;
+    let currentMarkers: google.maps.Marker[] = [];
+
     const initMap = async () => {
       try {
         // Get Google Maps API key from edge function
@@ -286,8 +289,15 @@ export const DiscoveryMap: React.FC = () => {
 
         const { Map } = await loader.importLibrary('maps');
         
-        if (mapRef.current && !map) {
-          const mapInstance = new Map(mapRef.current, {
+        if (mapRef.current && !mapInstance) {
+          // Create a dedicated container for Google Maps
+          mapRef.current.innerHTML = '';
+          const mapContainer = document.createElement('div');
+          mapContainer.style.width = '100%';
+          mapContainer.style.height = '100%';
+          mapRef.current.appendChild(mapContainer);
+
+          mapInstance = new Map(mapContainer, {
             center: { lat: 41.8781, lng: -87.6298 }, // Chicago
             zoom: 12,
             styles: [
@@ -324,6 +334,7 @@ export const DiscoveryMap: React.FC = () => {
         }
       } catch (error) {
         console.error('Failed to initialize Google Maps:', error);
+        setMapLoaded(false);
       }
     };
 
@@ -331,12 +342,40 @@ export const DiscoveryMap: React.FC = () => {
 
     // Cleanup function
     return () => {
-      if (map) {
-        // Clear markers
-        markers.forEach(marker => marker.setMap(null));
-        setMarkers([]);
-        setMap(null);
-        setMapLoaded(false);
+      console.log('Cleaning up Google Maps...');
+      
+      // Clear markers first
+      currentMarkers.forEach(marker => {
+        try {
+          marker.setMap(null);
+        } catch (e) {
+          console.warn('Error removing marker:', e);
+        }
+      });
+      currentMarkers = [];
+      
+      // Clear map instance
+      if (mapInstance) {
+        try {
+          // Don't call any map methods, just null the reference
+          mapInstance = null;
+        } catch (e) {
+          console.warn('Error cleaning up map:', e);
+        }
+      }
+      
+      // Clear React state
+      setMap(null);
+      setMarkers([]);
+      setMapLoaded(false);
+      
+      // Clear the container safely
+      if (mapRef.current) {
+        try {
+          mapRef.current.innerHTML = '';
+        } catch (e) {
+          console.warn('Error clearing map container:', e);
+        }
       }
     };
   }, []);
