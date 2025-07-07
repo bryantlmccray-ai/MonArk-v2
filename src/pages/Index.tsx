@@ -23,6 +23,10 @@ const Index = () => {
     const handleAuthChange = () => {
       // Force component re-render on auth change
       console.log('Auth state changed in Index, user:', user?.id);
+      // Reset showAuth when user is authenticated
+      if (user) {
+        setShowAuth(false);
+      }
     };
 
     window.addEventListener('auth-change', handleAuthChange);
