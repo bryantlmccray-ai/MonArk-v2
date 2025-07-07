@@ -1,1 +1,19 @@
 project_id = "yjidsifrdmaxubkmqung"
+
+[functions.ai-companion-chat]
+verify_jwt = false
+
+[functions.ai-date-concierge]
+verify_jwt = false
+
+[functions.ml-compatibility-trainer]
+verify_jwt = false
+
+[functions.rif-engine]
+verify_jwt = false
+
+[functions.send-notification-email]
+verify_jwt = false
+
+[functions.google-maps-config]
+verify_jwt = false
