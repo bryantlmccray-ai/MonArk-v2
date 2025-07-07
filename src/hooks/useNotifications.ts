@@ -259,8 +259,8 @@ export const useNotifications = () => {
   useEffect(() => {
     if (!user) return;
 
-    // Use a stable channel name with cleanup
-    const channelName = `notifications_${user.id}`;
+    // Use a unique channel name with timestamp to prevent subscription conflicts
+    const channelName = `notifications_${user.id}_${Date.now()}`;
     const channel = supabase
       .channel(channelName)
       .on(

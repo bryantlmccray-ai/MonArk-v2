@@ -32,8 +32,8 @@ export const useNotificationTriggers = () => {
       }
     };
 
-    // Single channel for all notification triggers with stable name
-    const channelName = `notification-triggers-${user.id}`;
+    // Single channel for all notification triggers with unique timestamp
+    const channelName = `notification-triggers-${user.id}-${Date.now()}`;
     const channel = supabase
       .channel(channelName)
       .on(
