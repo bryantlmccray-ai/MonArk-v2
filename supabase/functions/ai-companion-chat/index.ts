@@ -153,7 +153,19 @@ RESPONSE STYLE:
       }),
     })
 
+    if (!response.ok) {
+      const errorData = await response.json()
+      console.error('OpenAI API error:', errorData)
+      throw new Error(`OpenAI API error: ${errorData.error?.message || 'Unknown error'}`)
+    }
+
     const data = await response.json()
+    
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      console.error('Unexpected OpenAI response format:', data)
+      throw new Error('Invalid response format from OpenAI')
+    }
+    
     const aiMessage = data.choices[0].message.content
 
     // Parse response into structured insights if generating insights
