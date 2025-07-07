@@ -39,8 +39,16 @@ const getNotificationBg = (type: string, isRead: boolean) => {
   }
 };
 
-export const NotificationCenter: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+interface NotificationCenterProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export const NotificationCenter: React.FC<NotificationCenterProps> = ({ 
+  open: controlledOpen, 
+  onOpenChange 
+}) => {
+  const [internalOpen, setInternalOpen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const {
     notifications,
@@ -51,6 +59,10 @@ export const NotificationCenter: React.FC = () => {
     createNotification,
     loading
   } = useNotifications();
+
+  // Use controlled open state if provided, otherwise use internal state
+  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setIsOpen = onOpenChange || setInternalOpen;
 
   const handleNotificationClick = async (notificationId: string, actionUrl?: string | null) => {
     await markAsRead(notificationId);
