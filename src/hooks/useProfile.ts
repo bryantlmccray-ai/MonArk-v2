@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
+import { withRetry } from '@/utils/retryUtils';
 import type { Database } from '@/integrations/supabase/types';
 
 type GenderIdentity = Database['public']['Enums']['gender_identity'];
@@ -50,18 +51,23 @@ export const useProfile = () => {
 
     try {
       console.log('Fetching profile for user:', user.id);
-      const { data, error } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle();
+      
+      // Use retry logic for network requests
+      const operation = async () => {
+        const { data, error } = await supabase
+          .from('user_profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle();
 
-      if (error) {
-        console.error('Error fetching profile:', error);
-        // Don't throw error, just log it and continue
-        setProfile(null);
-        return;
-      }
+        if (error) {
+          throw error;
+        }
+        
+        return data;
+      };
+
+      const data = await withRetry(operation, { maxRetries: 2, baseDelay: 1000 });
 
       if (!data) {
         console.log('No profile found for user:', user.id);
@@ -71,7 +77,7 @@ export const useProfile = () => {
         setProfile(data);
       }
     } catch (error) {
-      console.error('Exception fetching profile:', error);
+      console.error('Error fetching profile:', error);
       // Don't crash the app, just set profile to null
       setProfile(null);
     } finally {
