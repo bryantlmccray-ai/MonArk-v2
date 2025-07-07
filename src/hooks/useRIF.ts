@@ -40,28 +40,40 @@ export const useRIF = () => {
 
   const loadRIFData = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) {
+        console.log('No authenticated user for RIF data');
+        setLoading(false);
+        return;
+      }
 
-      // Load RIF profile
-      const { data: profileData } = await supabase
+      // Load RIF profile with error handling
+      const { data: profileData, error: profileError } = await supabase
         .from('rif_profiles')
         .select('*')
         .eq('user_id', user.id)
         .eq('is_active', true)
         .maybeSingle();
 
-      // Load RIF settings
-      const { data: settingsData } = await supabase
+      if (profileError) {
+        console.error('Error loading RIF profile:', profileError);
+      }
+
+      // Load RIF settings with error handling
+      const { data: settingsData, error: settingsError } = await supabase
         .from('rif_settings')
         .select('*')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
+
+      if (settingsError) {
+        console.error('Error loading RIF settings:', settingsError);
+      }
 
       setRifProfile(profileData);
       setRifSettings(settingsData);
     } catch (error) {
-      console.error('Error loading RIF data:', error);
+      console.error('Exception loading RIF data:', error);
     } finally {
       setLoading(false);
     }
@@ -69,8 +81,15 @@ export const useRIF = () => {
 
   const submitFeedback = async (type: string, data: any) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('User not authenticated');
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError) {
+        console.error('Auth error in submitFeedback:', authError);
+        throw new Error('Authentication failed');
+      }
+      if (!user) {
+        console.error('No user found in submitFeedback');
+        throw new Error('User not authenticated');
+      }
 
       const encryptedData = {
         type,
@@ -79,13 +98,18 @@ export const useRIF = () => {
         encrypted: true
       };
 
-      await supabase
+      const { error: insertError } = await supabase
         .from('rif_feedback')
         .insert({
           user_id: user.id,
           feedback_type: type,
           data: encryptedData
         });
+
+      if (insertError) {
+        console.error('Error inserting RIF feedback:', insertError);
+        throw insertError;
+      }
 
       // Process feedback immediately for behavioral types
       if (['post_date', 'behavioral'].includes(type)) {
@@ -96,6 +120,11 @@ export const useRIF = () => {
       await loadRIFData();
     } catch (error) {
       console.error('Error submitting RIF feedback:', error);
+      // Don't re-throw if it's just a network error
+      if (error.message?.includes('Failed to fetch')) {
+        console.log('Network error in RIF feedback, continuing...');
+        return;
+      }
       throw error;
     }
   };

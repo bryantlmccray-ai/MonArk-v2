@@ -21,30 +21,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     let mounted = true;
+    let retryCount = 0;
+    const maxRetries = 3;
 
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         if (!mounted) return;
         
         console.log('Auth state changed:', event, session?.user?.id);
         
-        // Update session and user state immediately
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-        
-        // Force a state update to ensure UI refreshes
-        if (event === 'SIGNED_IN' && session) {
-          // Small delay to ensure all state is updated
-          setTimeout(() => {
-            window.dispatchEvent(new Event('auth-change'));
-          }, 100);
+        try {
+          // Update session and user state immediately
+          setSession(session);
+          setUser(session?.user ?? null);
+          setLoading(false);
+          
+          // Force a state update to ensure UI refreshes
+          if (event === 'SIGNED_IN' && session) {
+            // Small delay to ensure all state is updated
+            setTimeout(() => {
+              window.dispatchEvent(new Event('auth-change'));
+            }, 100);
+          }
+        } catch (error) {
+          console.error('Error in auth state change handler:', error);
+          if (mounted) {
+            setLoading(false);
+          }
         }
       }
     );
 
-    // Get initial session
+    // Get initial session with retry logic
     const getInitialSession = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -52,6 +61,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (error) {
           console.error('Error getting session:', error);
+          // Don't throw on session errors, just log them
+          if (retryCount < maxRetries && mounted) {
+            retryCount++;
+            console.log(`Retrying session fetch (${retryCount}/${maxRetries})`);
+            setTimeout(getInitialSession, 1000 * retryCount);
+            return;
+          }
         }
         
         console.log('Initial session:', session?.user?.id);
@@ -61,6 +77,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } catch (error) {
         console.error('Exception getting session:', error);
         if (mounted) {
+          // On network errors, don't crash - just continue without auth
+          setSession(null);
+          setUser(null);
           setLoading(false);
         }
       }
