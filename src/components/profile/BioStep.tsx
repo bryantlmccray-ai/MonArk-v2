@@ -36,7 +36,7 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
   };
 
   return (
-    <div className="min-h-screen bg-jet-black p-6 flex flex-col">
+    <div className="relative min-h-screen bg-jet-black p-6 flex flex-col">
       {/* Cancel Button */}
       {onCancel && (
         <div className="absolute top-6 right-6 z-10">
