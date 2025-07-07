@@ -254,7 +254,9 @@ What would you like to talk about? 😊`,
     if (!user) return "I'd love to help, but it seems you're not logged in!";
 
     try {
-      // Get user's RIF profile for personalization
+      console.log('Generating AI response for input:', input);
+      
+      // Get user's RIF profile for personalization (may not exist for new users)
       const { data: rifProfile } = await supabase
         .from('rif_profiles')
         .select('*')
@@ -262,9 +264,11 @@ What would you like to talk about? 😊`,
         .eq('is_active', true)
         .maybeSingle();
 
+      console.log('RIF Profile data:', rifProfile);
+
       const userContext = {
         recentDates: journalEntries.slice(0, 3),
-        rifProfile,
+        rifProfile: rifProfile || null, // Handle null RIF profile gracefully
         interests: profile?.interests || [],
         userMessage: input,
         totalDates: journalEntries.length,
@@ -273,6 +277,8 @@ What would you like to talk about? 😊`,
           : 0
       };
 
+      console.log('Sending user context to AI:', userContext);
+
       const { data, error } = await supabase.functions.invoke('ai-companion-chat', {
         body: {
           type: 'chat_response',
@@ -280,12 +286,24 @@ What would you like to talk about? 😊`,
         }
       });
 
-      if (error) throw error;
+      console.log('AI function response:', { data, error });
 
-      return data.message || "I'm here to help you with your dating journey! What's on your mind?";
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
+
+      return data?.message || "I'm here to help you with your dating journey! What's on your mind?";
     } catch (error) {
       console.error('Error generating AI response:', error);
-      return "I'm having trouble thinking right now, but I'm here for you! Try asking again in a moment.";
+      // Provide more specific error messages based on the error type
+      if (error.message?.includes('OpenAI')) {
+        return "I'm having trouble connecting to my knowledge base right now. Please try again in a moment!";
+      } else if (error.message?.includes('api')) {
+        return "There seems to be a connection issue. Let me try to help you anyway - what would you like to know about dating?";
+      } else {
+        return "I'm having trouble thinking right now, but I'm here for you! Try asking again in a moment, or feel free to share what's on your mind about your dating journey.";
+      }
     }
   };
 

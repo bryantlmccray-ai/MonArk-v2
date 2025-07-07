@@ -1028,7 +1028,7 @@ export const DiscoveryMap: React.FC = () => {
         />
       )}
 
-      {/* ML Insights Panel */}
+      {/* ML Insights Panel - AI Assistant is accessible via this component */}
       <MLInsightsPanel />
 
       {/* RIF Insight Overlay */}
