@@ -267,21 +267,21 @@ export const DiscoveryMap: React.FC = () => {
   // Check if user has location enabled
   const hasLocation = profile?.location_consent && profile?.location_data;
 
-  // Initialize Google Maps
+  // Initialize Google Maps with complete React isolation
   useEffect(() => {
     let mapInstance: google.maps.Map | null = null;
     let currentMarkers: google.maps.Marker[] = [];
-    let isInitializing = false;
+    let mapContainer: HTMLDivElement | null = null;
+    let isDestroyed = false; // Flag to prevent cleanup conflicts
 
     const initMap = async () => {
-      if (isInitializing || mapInstance) return;
-      isInitializing = true;
-
+      if (isDestroyed) return;
+      
       try {
         // Get Google Maps API key from edge function
         const { data: config } = await supabase.functions.invoke('google-maps-config');
         
-        if (!config?.apiKey) {
+        if (!config?.apiKey || isDestroyed) {
           throw new Error('Failed to get Google Maps API key');
         }
 
@@ -293,13 +293,25 @@ export const DiscoveryMap: React.FC = () => {
 
         const { Map } = await loader.importLibrary('maps');
         
-        if (mapRef.current && !mapInstance) {
-          // Create a dedicated container for Google Maps
-          mapRef.current.innerHTML = '';
-          const mapContainer = document.createElement('div');
-          mapContainer.style.width = '100%';
-          mapContainer.style.height = '100%';
-          mapRef.current.appendChild(mapContainer);
+        if (mapRef.current && !mapInstance && !isDestroyed) {
+          const parentElement = mapRef.current;
+          
+          // Create a container that React will NEVER touch
+          mapContainer = document.createElement('div');
+          mapContainer.id = `google-maps-${Date.now()}`; // Unique ID
+          mapContainer.style.cssText = `
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: auto;
+          `;
+          
+          // Clear parent and add our container
+          parentElement.innerHTML = '';
+          parentElement.appendChild(mapContainer);
 
           mapInstance = new Map(mapContainer, {
             center: { lat: 41.8781, lng: -87.6298 }, // Chicago
@@ -338,39 +350,68 @@ export const DiscoveryMap: React.FC = () => {
         }
       } catch (error) {
         console.error('Failed to initialize Google Maps:', error);
-        setMapLoaded(false);
-      } finally {
-        isInitializing = false;
+        if (!isDestroyed) {
+          setMapLoaded(false);
+        }
       }
     };
 
-    // Only initialize if we don't have a map yet
-    if (!map && !mapLoaded) {
-      initMap();
-    }
+    initMap();
 
-    // Cleanup function
+    // Cleanup function with proper isolation
     return () => {
-      // Clear markers first
+      isDestroyed = true; // Prevent any ongoing operations
+      
+      // Clean up markers safely
       currentMarkers.forEach(marker => {
         try {
-          marker.setMap(null);
+          if (marker && typeof marker.setMap === 'function') {
+            marker.setMap(null);
+          }
         } catch (e) {
-          console.warn('Error removing marker:', e);
+          // Ignore cleanup errors
         }
       });
       currentMarkers = [];
       
-      // Clear map instance
+      // Clean up map instance
       if (mapInstance) {
         try {
+          // Don't call any map methods, just null the reference
           mapInstance = null;
         } catch (e) {
-          console.warn('Error cleaning up map:', e);
+          // Ignore cleanup errors
         }
       }
+      
+      // Clean up container without letting React interfere
+      setTimeout(() => {
+        if (mapContainer) {
+          try {
+            // Remove from DOM safely
+            if (mapContainer.parentNode) {
+              mapContainer.parentNode.removeChild(mapContainer);
+            }
+          } catch (e) {
+            // If that fails, try clearing the parent
+            try {
+              if (mapRef.current) {
+                mapRef.current.innerHTML = '';
+              }
+            } catch (innerE) {
+              // Final fallback - do nothing
+            }
+          }
+          mapContainer = null;
+        }
+      }, 0); // Defer DOM cleanup to next tick
+      
+      // Reset React state
+      setMap(null);
+      setMarkers([]);
+      setMapLoaded(false);
     };
-  }, [map, mapLoaded]);
+  }, []); // Empty dependency array - initialize once only
 
   // Add markers when map and profiles are ready
   useEffect(() => {
