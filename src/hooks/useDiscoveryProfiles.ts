@@ -104,13 +104,30 @@ export const useDiscoveryProfiles = () => {
           };
         });
 
-      // Calculate ML-based compatibility scores for all profiles
+      // Get user's adaptive preferences for enhanced scoring
+      const { data: userPreferences } = await supabase
+        .from('user_ml_preferences')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      // Get user's behavioral patterns for context-aware matching
+      const { data: behavioralPatterns } = await supabase
+        .from('behavioral_patterns')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('is_active', true);
+
+      // Calculate ML-based compatibility scores with adaptive learning
       const compatibilityScores = await batchCalculateCompatibility(enrichedProfiles);
       
       // Add compatibility scores and highlight high-compatibility profiles
       const profilesWithCompatibility = enrichedProfiles.map(profile => {
         const compatibilityScore = compatibilityScores.get(profile.user_id);
-        const isHighlighted = compatibilityScore ? compatibilityScore.overall_score > 0.75 : false;
+        
+        // Use adaptive thresholds based on user's journey stage and patterns
+        const adaptiveThreshold = calculateAdaptiveThreshold(behavioralPatterns || [], userPreferences);
+        const isHighlighted = compatibilityScore ? compatibilityScore.overall_score > adaptiveThreshold : false;
         
         return {
           ...profile,
@@ -119,16 +136,19 @@ export const useDiscoveryProfiles = () => {
         };
       });
 
-      // Sort by compatibility score (highest first), then by distance
+      // Adaptive sorting based on user's learned preferences
       profilesWithCompatibility.sort((a, b) => {
         const scoreA = a.compatibilityScore?.overall_score || 0;
         const scoreB = b.compatibilityScore?.overall_score || 0;
         
-        if (Math.abs(scoreA - scoreB) > 0.1) {
-          return scoreB - scoreA; // Higher scores first
-        }
+        // Use adaptive weights from user preferences
+        const rifWeight = userPreferences?.rif_weight || 0.4;
+        const distanceWeight = 1 - rifWeight;
         
-        return (a.distance || 999) - (b.distance || 999); // Then by distance
+        const adaptiveScoreA = (scoreA * rifWeight) + ((1 - (a.distance || 0) / 50) * distanceWeight);
+        const adaptiveScoreB = (scoreB * rifWeight) + ((1 - (b.distance || 0) / 50) * distanceWeight);
+        
+        return adaptiveScoreB - adaptiveScoreA;
       });
 
       setProfiles(profilesWithCompatibility);
@@ -143,6 +163,30 @@ export const useDiscoveryProfiles = () => {
   useEffect(() => {
     fetchProfiles();
   }, [user]);
+
+  // Helper function to calculate adaptive threshold based on user patterns
+  const calculateAdaptiveThreshold = (patterns: any[], preferences: any) => {
+    let baseThreshold = 0.75;
+    
+    // Adjust threshold based on behavioral patterns
+    patterns.forEach(pattern => {
+      if (pattern.pattern_type === 'preference_evolution' && pattern.confidence_score > 0.7) {
+        // User has learned preferences, be more selective
+        baseThreshold += 0.05;
+      }
+      if (pattern.pattern_type === 'dating_frequency' && pattern.pattern_data?.dating_frequency > 2) {
+        // User dates frequently, can be more selective
+        baseThreshold += 0.1;
+      }
+    });
+    
+    // Adjust based on user's confidence level
+    if (preferences?.confidence_level > 0.8) {
+      baseThreshold += 0.05;
+    }
+    
+    return Math.min(baseThreshold, 0.9); // Cap at 0.9
+  };
 
   return {
     profiles,

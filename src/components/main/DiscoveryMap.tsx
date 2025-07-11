@@ -16,6 +16,8 @@ import { ActivityFeed } from './ActivityFeed';
 import { LocationConsentModal } from '../location/LocationConsentModal';
 import { ErrorState } from '../common/ErrorState';
 import { LoadingSpinner } from '../common/LoadingSpinner';
+import { AdaptiveInsightsPanel } from '../adaptive/AdaptiveInsightsPanel';
+import { RelationshipOutcomeModal } from '../adaptive/RelationshipOutcomeModal';
 import { useRIF } from '@/hooks/useRIF';
 import { useProfile } from '@/hooks/useProfile';
 import { useDiscoveryProfiles, DiscoveryProfile } from '@/hooks/useDiscoveryProfiles';
@@ -207,6 +209,9 @@ export const DiscoveryMap: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [showActivityFeed, setShowActivityFeed] = useState(false);
   const [searchExpanded, setSearchExpanded] = useState(false);
+  const [showAdaptiveInsights, setShowAdaptiveInsights] = useState(false);
+  const [showOutcomeModal, setShowOutcomeModal] = useState(false);
+  const [outcomeModalData, setOutcomeModalData] = useState<{ matchName?: string; matchUserId?: string } | null>(null);
   const [mapCenter, setMapCenter] = useState({ x: 50, y: 50 });
   const [zoomLevel, setZoomLevel] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
