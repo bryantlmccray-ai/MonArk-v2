@@ -118,12 +118,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
               <Button
                 onClick={startFullDemo}
-                disabled={!agreedToTerms}
-                className={`font-semibold px-8 py-4 text-lg transition-all duration-300 group ${
-                  agreedToTerms 
-                    ? 'bg-goldenrod-gradient text-jet-black hover:shadow-golden-glow hover:scale-105' 
-                    : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                }`}
+                className="font-semibold px-8 py-4 text-lg transition-all duration-300 group bg-goldenrod-gradient text-jet-black hover:shadow-golden-glow hover:scale-105"
               >
                 <Play className="h-5 w-5 mr-2 group-hover:animate-pulse" />
                 Experience Live Demo
@@ -131,13 +126,8 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               
               <Button
                 onClick={() => setShowWaitlistModal(true)}
-                disabled={!agreedToTerms}
                 variant="outline"
-                className={`px-8 py-4 text-lg group ${
-                  agreedToTerms
-                    ? 'text-white border-white/30 hover:bg-white/10 hover:border-goldenrod/50'
-                    : 'text-gray-400 border-gray-600 cursor-not-allowed'
-                }`}
+                className="px-8 py-4 text-lg group text-white border-white/30 hover:bg-white/10 hover:border-goldenrod/50"
               >
                 <Heart className="h-5 w-5 mr-2 group-hover:text-goldenrod transition-colors" />
                 Join the Waitlist
@@ -154,15 +144,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               )}
             </div>
 
-            {/* Terms Consent */}
-            <div className="flex items-start justify-center gap-3 pt-6 max-w-md mx-auto">
-              <Checkbox
-                checked={agreedToTerms}
-                onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
-                className="mt-1 border-goldenrod/50 data-[state=checked]:bg-goldenrod data-[state=checked]:border-goldenrod"
-              />
+            {/* Demo Notice */}
+            <div className="text-center pt-6 max-w-md mx-auto">
               <p className="text-sm text-gray-400 leading-relaxed">
-                I agree to MonArk's{' '}
+                The demo and waitlist require no account creation. For full access, you'll need to agree to our{' '}
                 <a href="/terms" className="text-goldenrod hover:underline">
                   Terms of Service
                 </a>{' '}
@@ -170,7 +155,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <a href="/privacy" className="text-goldenrod hover:underline">
                   Privacy Policy
                 </a>
-                . By using MonArk, I consent to the collection and use of my data as described in these policies.
+                .
               </p>
             </div>
 
@@ -235,7 +220,6 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   <div className="text-center pt-4">
                     <Button 
                       onClick={startFullDemo}
-                      disabled={!agreedToTerms}
                       size="sm" 
                       className="bg-goldenrod-gradient text-jet-black hover:shadow-golden-glow"
                     >
