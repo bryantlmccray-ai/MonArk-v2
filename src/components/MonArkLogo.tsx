@@ -21,37 +21,43 @@ export const MonArkLogo: React.FC<MonArkLogoProps> = ({
   animated = false
 }) => {
   const sizeClasses = {
-    sm: 'h-16',   // Increased from h-8
-    md: 'h-24',   // Increased from h-12
-    lg: 'h-32',   // Increased from h-16
-    xl: 'h-48'    // Increased from h-20
+    sm: 'h-18',   // Increased more for better frame fill
+    md: 'h-28',   // Increased more for better frame fill
+    lg: 'h-36',   // Increased more for better frame fill
+    xl: 'h-52'    // Increased more for better frame fill
   };
 
   const LogoImage = () => (
     <div className={`relative ${clickable ? 'cursor-pointer group' : ''} ${animated ? 'animate-gentle-float' : ''}`}>
-      {/* Animated backdrop with soft edges */}
-      <div className={`absolute -inset-4 bg-gradient-to-br from-primary/15 via-primary/5 to-accent/10 rounded-full blur-2xl transition-all duration-700 ${
-        animated ? 'animate-gentle-pulse opacity-40' : 'opacity-60'
-      } ${clickable ? 'group-hover:opacity-90 group-hover:scale-110' : ''}`}></div>
+      {/* Larger, softer animated backdrop */}
+      <div className={`absolute -inset-6 bg-gradient-to-br from-primary/15 via-primary/5 to-accent/10 rounded-full blur-3xl transition-all duration-700 ${
+        animated ? 'animate-gentle-pulse opacity-50' : 'opacity-70'
+      } ${clickable ? 'group-hover:opacity-95 group-hover:scale-115' : ''}`}></div>
+      
+      {/* Secondary soft glow layer */}
+      <div className={`absolute -inset-4 bg-gradient-to-br from-accent/20 via-transparent to-primary/15 rounded-full blur-2xl transition-all duration-700 ${
+        animated ? 'animate-gentle-pulse opacity-40' : 'opacity-50'
+      } ${clickable ? 'group-hover:opacity-80' : ''}`}></div>
       
       {/* Shimmer overlay for animated logos */}
       {animated && (
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-primary/20 to-transparent animate-shimmer opacity-60"></div>
+        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-primary/25 to-transparent animate-shimmer opacity-70"></div>
       )}
       
       <img 
         src="/lovable-uploads/e11ccc80-2237-4aac-b579-dccb89f8d727.png" 
         alt="MonArk - Date well."
-        className={`${sizeClasses[size]} w-auto object-contain relative z-10 rounded-2xl transition-all duration-700 ${
+        className={`${sizeClasses[size]} w-auto object-contain relative z-10 rounded-full transition-all duration-700 p-2 ${
           clickable ? 'group-hover:scale-105 group-hover:drop-shadow-2xl' : ''
-        } ${animated ? 'drop-shadow-xl animate-subtle-glow' : 'drop-shadow-lg'}`}
+        } ${animated ? 'drop-shadow-2xl animate-subtle-glow' : 'drop-shadow-xl'}`}
         onClick={clickable ? onClick : undefined}
+        style={{ filter: 'drop-shadow(0 0 20px rgba(212, 175, 55, 0.4))' }}
       />
       
-      {/* Elegant gold rim with animation */}
-      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-primary/25 via-transparent to-accent/25 pointer-events-none transition-all duration-700 ${
-        animated ? 'animate-gentle-pulse opacity-40' : 'opacity-30'
-      } ${clickable ? 'group-hover:opacity-60' : ''}`}></div>
+      {/* Ultra-soft gold rim with enhanced blur */}
+      <div className={`absolute inset-2 rounded-full bg-gradient-to-br from-primary/30 via-transparent to-accent/30 pointer-events-none transition-all duration-700 blur-sm ${
+        animated ? 'animate-gentle-pulse opacity-50' : 'opacity-40'
+      } ${clickable ? 'group-hover:opacity-70' : ''}`}></div>
     </div>
   );
 
