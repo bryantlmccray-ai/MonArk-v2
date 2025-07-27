@@ -26,14 +26,22 @@ export const MonArkLogo: React.FC<MonArkLogoProps> = ({
   };
 
   const LogoImage = () => (
-    <img 
-      src="/lovable-uploads/e11ccc80-2237-4aac-b579-dccb89f8d727.png" 
-      alt="MonArk - Date well."
-      className={`${sizeClasses[size]} w-auto object-contain transition-all duration-300 ${
-        clickable ? 'hover:scale-105 hover:drop-shadow-lg cursor-pointer' : ''
-      }`}
-      onClick={clickable ? onClick : undefined}
-    />
+    <div className={`relative ${clickable ? 'cursor-pointer group' : ''}`}>
+      {/* Elegant backdrop with soft edges */}
+      <div className="absolute -inset-3 bg-gradient-to-br from-primary/10 via-transparent to-primary/5 rounded-full blur-xl opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+      
+      <img 
+        src="/lovable-uploads/e11ccc80-2237-4aac-b579-dccb89f8d727.png" 
+        alt="MonArk - Date well."
+        className={`${sizeClasses[size]} w-auto object-contain transition-all duration-500 relative z-10 ${
+          clickable ? 'group-hover:scale-105 group-hover:drop-shadow-2xl filter drop-shadow-lg' : 'drop-shadow-lg'
+        } rounded-2xl`}
+        onClick={clickable ? onClick : undefined}
+      />
+      
+      {/* Subtle gold rim glow */}
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 via-transparent to-accent/20 opacity-30 group-hover:opacity-50 transition-opacity duration-500 pointer-events-none"></div>
+    </div>
   );
 
   if (variant === 'compact') {
