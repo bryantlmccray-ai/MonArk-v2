@@ -8,6 +8,7 @@ interface MonArkLogoProps {
   onClick?: () => void;
   clickable?: boolean;
   variant?: 'default' | 'compact'; // New variant for different layout styles
+  animated?: boolean; // New prop for enabling animations
 }
 
 export const MonArkLogo: React.FC<MonArkLogoProps> = ({ 
@@ -16,7 +17,8 @@ export const MonArkLogo: React.FC<MonArkLogoProps> = ({
   size = 'lg',
   onClick,
   clickable = false,
-  variant = 'default'
+  variant = 'default',
+  animated = false
 }) => {
   const sizeClasses = {
     sm: 'h-16',   // Increased from h-8
@@ -26,21 +28,30 @@ export const MonArkLogo: React.FC<MonArkLogoProps> = ({
   };
 
   const LogoImage = () => (
-    <div className={`relative ${clickable ? 'cursor-pointer group' : ''}`}>
-      {/* Elegant backdrop with soft edges */}
-      <div className="absolute -inset-3 bg-gradient-to-br from-primary/10 via-transparent to-primary/5 rounded-full blur-xl opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+    <div className={`relative ${clickable ? 'cursor-pointer group' : ''} ${animated ? 'animate-gentle-float' : ''}`}>
+      {/* Animated backdrop with soft edges */}
+      <div className={`absolute -inset-4 bg-gradient-to-br from-primary/15 via-primary/5 to-accent/10 rounded-full blur-2xl transition-all duration-700 ${
+        animated ? 'animate-gentle-pulse opacity-40' : 'opacity-60'
+      } ${clickable ? 'group-hover:opacity-90 group-hover:scale-110' : ''}`}></div>
+      
+      {/* Shimmer overlay for animated logos */}
+      {animated && (
+        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-primary/20 to-transparent animate-shimmer opacity-60"></div>
+      )}
       
       <img 
         src="/lovable-uploads/e11ccc80-2237-4aac-b579-dccb89f8d727.png" 
         alt="MonArk - Date well."
-        className={`${sizeClasses[size]} w-auto object-contain transition-all duration-500 relative z-10 ${
-          clickable ? 'group-hover:scale-105 group-hover:drop-shadow-2xl filter drop-shadow-lg' : 'drop-shadow-lg'
-        } rounded-2xl`}
+        className={`${sizeClasses[size]} w-auto object-contain relative z-10 rounded-2xl transition-all duration-700 ${
+          clickable ? 'group-hover:scale-105 group-hover:drop-shadow-2xl' : ''
+        } ${animated ? 'drop-shadow-xl animate-subtle-glow' : 'drop-shadow-lg'}`}
         onClick={clickable ? onClick : undefined}
       />
       
-      {/* Subtle gold rim glow */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 via-transparent to-accent/20 opacity-30 group-hover:opacity-50 transition-opacity duration-500 pointer-events-none"></div>
+      {/* Elegant gold rim with animation */}
+      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-primary/25 via-transparent to-accent/25 pointer-events-none transition-all duration-700 ${
+        animated ? 'animate-gentle-pulse opacity-40' : 'opacity-30'
+      } ${clickable ? 'group-hover:opacity-60' : ''}`}></div>
     </div>
   );
 
@@ -53,15 +64,15 @@ export const MonArkLogo: React.FC<MonArkLogoProps> = ({
   }
 
   return (
-    <div className={`flex flex-col items-center ${showTitle ? 'gap-2' : 'gap-0'} ${className}`}>
-      <div className={clickable ? 'transition-transform duration-300 hover:scale-105' : ''}>
+    <div className={`flex flex-col items-center ${showTitle ? 'gap-2' : 'gap-0'} ${className} ${animated ? 'animate-fade-in-up' : ''}`}>
+      <div className={`${clickable ? 'transition-transform duration-300 hover:scale-105' : ''} ${animated ? 'animate-entrance-delay' : ''}`}>
         <LogoImage />
       </div>
       
-      {/* Optional title overlay - only show if the logo doesn't include text */}
+      {/* Optional title overlay with animation */}
       {showTitle && (
-        <div className="text-center mt-2">
-          <p className="text-sm text-primary/60 tracking-wide font-light italic">
+        <div className={`text-center mt-2 ${animated ? 'animate-fade-in-up animation-delay-300' : ''}`}>
+          <p className="text-sm text-primary/60 tracking-wide font-light italic animate-gentle-pulse">
             Luxury dating reimagined
           </p>
         </div>

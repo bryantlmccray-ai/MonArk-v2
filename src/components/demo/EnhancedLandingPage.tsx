@@ -42,7 +42,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       <div className="min-h-screen bg-jet-black flex items-center justify-center px-6">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">
-            <MonArkLogo size="xl" className="mb-12" />
+            <MonArkLogo size="xl" animated={true} className="mb-12" />
           </div>
           
           <div className="text-center space-y-4">
@@ -85,7 +85,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="relative max-w-7xl mx-auto px-6 py-20">
           <div className="text-center space-y-8">
             <div className="animate-fade-in">
-              <MonArkLogo size="xl" className="mx-auto mb-12" />
+              <MonArkLogo size="xl" animated={true} className="mx-auto mb-12" />
             </div>
             
             <div className="max-w-3xl mx-auto space-y-6">
