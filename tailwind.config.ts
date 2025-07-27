@@ -27,34 +27,20 @@ export default {
 				'display': ['Playfair Display', 'serif'],
 			},
 			colors: {
-				/* Luxurious Color System - Deep Navy & Metallic Gold */
-				'deep-navy': '#1a1f2e',
-				'metallic-gold': '#D4AF37',
-				'gold-light': '#E0C547',
-				'gold-dark': '#B8951D',
-				'warm-ivory': '#F8F8F8',
-				'charcoal': '#3a3f4f',
-				'graphite': '#5a6070',
-				'midnight': '#0f1419',
+				/* Clean luxury colors matching logo - HSL format for proper color functions */
+				'metallic-gold': 'hsl(45, 67%, 53%)', /* #D4AF37 - exact logo gold */
+				'gold-light': 'hsl(45, 67%, 63%)', /* #E0C547 - lighter variant */
+				'gold-dark': 'hsl(45, 67%, 43%)', /* #B8951D - darker variant */
+				'deep-navy': 'hsl(220, 25%, 12%)', /* #1a1f2e - logo background navy */
+				'warm-ivory': 'hsl(0, 0%, 97%)', /* #F8F8F8 - elegant text */
+				'charcoal': 'hsl(220, 15%, 25%)', /* premium surfaces */
+				'graphite': 'hsl(220, 10%, 40%)', /* borders and muted elements */
+				'midnight': 'hsl(220, 30%, 8%)', /* deep accents */
 
-				/* Legacy color updates for new luxury theme */
-				'midnight-navy': '#1a1f2e',
-				'soft-ivory': '#F8F8F8',
-				'copper-rose': '#D4AF37',
-				'dusky-lavender': '#5a6070',
-				'charcoal-ink': '#3a3f4f',
-
-				/* Updated MonArk brand colors */
-				'monark-navy': '#1a1f2e',
-				'monark-ivory': '#F8F8F8',
-				'monark-copper': '#D4AF37',
-				'monark-lavender': '#5a6070',
-				'monark-sage': '#3a3f4f',
-				'monark-brass': '#B8951D',
-				'monark-coral': '#D4AF37',
-				'charcoal-gray': '#3a3f4f',
-				'jet-black': '#1a1f2e',
-				'goldenrod': '#D4AF37',
+				/* Legacy support - cleaned up */
+				'goldenrod': 'hsl(45, 67%, 53%)', /* same as metallic-gold */
+				'jet-black': 'hsl(220, 25%, 12%)', /* same as deep-navy */
+				'charcoal-gray': 'hsl(220, 15%, 25%)', /* same as charcoal */
 
 				/* Shadcn integration */
 				border: 'hsl(var(--border))',
@@ -110,11 +96,12 @@ export default {
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-				'gold-gradient': 'linear-gradient(135deg, #D4AF37 0%, #E0C547 100%)',
-				'metallic-gradient': 'linear-gradient(135deg, #D4AF37 0%, #B8951D 100%)',
-				'luxury-gradient': 'linear-gradient(135deg, #3a3f4f 0%, #1a1f2e 100%)',
-				'goldenrod-gradient': 'linear-gradient(135deg, #D4AF37 0%, #E0C547 100%)',
-				'premium-gradient': 'linear-gradient(135deg, #D4AF37 0%, #E0C547 50%, #D4AF37 100%)',
+				'luxury-gold': 'linear-gradient(135deg, hsl(45, 67%, 53%) 0%, hsl(45, 67%, 63%) 100%)',
+				'premium-gold': 'linear-gradient(135deg, hsl(45, 67%, 43%) 0%, hsl(45, 67%, 53%) 100%)',
+				'elegant-navy': 'linear-gradient(135deg, hsl(220, 25%, 12%) 0%, hsl(220, 15%, 25%) 100%)',
+				'shimmer-gold': 'linear-gradient(45deg, hsl(45, 67%, 43%), hsl(45, 67%, 53%), hsl(45, 67%, 63%))',
+				/* Legacy support */
+				'goldenrod-gradient': 'linear-gradient(135deg, hsl(45, 67%, 53%) 0%, hsl(45, 67%, 63%) 100%)',
 			},
 			boxShadow: {
 				'monark': '0px 4px 20px rgba(0, 0, 0, 0.3)',
@@ -129,6 +116,7 @@ export default {
 				'soft-fade-in': 'soft-fade-in 400ms ease-out',
 				'slide-up': 'slide-up 350ms ease-out',
 				'fade-in': 'fade-in 0.3s ease-out',
+				'shimmer': 'shimmer 3s ease-in-out infinite',
 			},
 			borderRadius: {
 				'monark': '12px',

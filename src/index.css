@@ -5,23 +5,23 @@
 
 @layer base {
   :root {
-    /* Luxurious Color System - Deep Navy & Metallic Gold */
-    --color-deep-navy: 220 25% 12%; /* #1a1f2e - rich navy background */
-    --color-metallic-gold: 45 67% 53%; /* #D4AF37 - luxurious metallic gold */
-    --color-gold-light: 45 67% 63%; /* lighter gold for gradients */
-    --color-gold-dark: 45 67% 43%; /* darker gold for gradients */
-    --color-warm-ivory: 0 0% 97%; /* #F8F8F8 - soft off-white text */
+    /* Luxury Logo-Matched Color System - HSL for proper color functions */
+    --color-deep-navy: 220 25% 12%; /* #1a1f2e - rich navy background from logo */
+    --color-metallic-gold: 45 67% 53%; /* #D4AF37 - exact logo gold */
+    --color-gold-light: 45 67% 63%; /* #E0C547 - lighter gold variant */
+    --color-gold-dark: 45 67% 43%; /* #B8951D - darker gold variant */
+    --color-warm-ivory: 0 0% 97%; /* #F8F8F8 - elegant off-white */
     --color-charcoal: 220 15% 25%; /* premium charcoal */
     --color-graphite: 220 10% 40%; /* elegant borders */
-    --color-midnight: 220 30% 8%; /* deeper navy for accents */
+    --color-midnight: 220 30% 8%; /* deeper navy for depth */
 
-    /* Design System Tokens - Updated */
+    /* Logo-aligned design tokens */
     --color-primary-bg: var(--color-deep-navy);
     --color-secondary-bg: var(--color-charcoal);
-    --color-accent-1: var(--color-metallic-gold);
-    --color-accent-2: var(--color-gold-dark);
+    --color-accent-gold: var(--color-metallic-gold);
+    --color-accent-light: var(--color-gold-light);
 
-    /* Updated shadcn variables for luxury theme */
+    /* Shadcn variables optimized for luxury logo theme */
     --background: var(--color-deep-navy);
     --foreground: var(--color-warm-ivory);
 
@@ -32,7 +32,7 @@
     --popover-foreground: var(--color-warm-ivory);
 
     --primary: var(--color-metallic-gold);
-    --primary-foreground: 0 0% 0%;
+    --primary-foreground: var(--color-deep-navy);
 
     --secondary: var(--color-charcoal);
     --secondary-foreground: var(--color-warm-ivory);
@@ -41,7 +41,7 @@
     --muted-foreground: var(--color-graphite);
 
     --accent: var(--color-gold-light);
-    --accent-foreground: 0 0% 0%;
+    --accent-foreground: var(--color-deep-navy);
 
     --destructive: 0 62% 30%;
     --destructive-foreground: var(--color-warm-ivory);
@@ -50,14 +50,35 @@
     --input: var(--color-midnight);
     --ring: var(--color-metallic-gold);
 
+    /* Sidebar colors matching luxury theme */
+    --sidebar-background: var(--color-charcoal);
+    --sidebar-foreground: var(--color-warm-ivory);
+    --sidebar-primary: var(--color-metallic-gold);
+    --sidebar-primary-foreground: var(--color-deep-navy);
+    --sidebar-accent: var(--color-gold-light);
+    --sidebar-accent-foreground: var(--color-deep-navy);
+    --sidebar-border: var(--color-graphite);
+    --sidebar-ring: var(--color-metallic-gold);
+
     --radius: 12px;
 
-    /* MonArk spacing system */
+    /* Luxury spacing system */
     --spacing-xs: 4px;
     --spacing-sm: 8px;
     --spacing-md: 16px;
     --spacing-lg: 24px;
     --spacing-xl: 32px;
+
+    /* Logo-inspired gradients */
+    --gradient-luxury-gold: linear-gradient(135deg, hsl(var(--color-metallic-gold)), hsl(var(--color-gold-light)));
+    --gradient-premium-navy: linear-gradient(135deg, hsl(var(--color-deep-navy)), hsl(var(--color-charcoal)));
+    --gradient-elegant-gold: linear-gradient(45deg, hsl(var(--color-gold-dark)), hsl(var(--color-metallic-gold)), hsl(var(--color-gold-light)));
+
+    /* Luxury shadows matching logo aesthetic */
+    --shadow-luxury: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --shadow-gold-glow: 0 0 25px rgba(212, 175, 55, 0.4);
+    --shadow-elegant: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --shadow-premium: 0 12px 40px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(212, 175, 55, 0.1);
   }
 
   * {
@@ -65,91 +86,119 @@
   }
 
   body {
-    @apply bg-deep-navy text-warm-ivory;
+    @apply bg-background text-foreground;
     font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
     font-size: 16px;
     line-height: 1.6;
     letter-spacing: -0.01em;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Typography System - Updated to use Playfair Display as primary */
+  /* Typography System - Playfair Display for luxury feel matching logo */
   .font-primary {
     font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
   }
 
-  .font-reflection {
-    font-family: 'Georgia', 'Times New Roman', serif;
-    font-style: normal;
+  .font-logo {
+    font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
+    font-weight: 600;
+    letter-spacing: 0.02em;
   }
 
-  /* Design System Utilities - Updated for Luxury Theme */
+  .font-reflection {
+    font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  /* Logo-Aligned Design System Utilities */
   .monark-card {
-    @apply bg-slate-800/50 rounded-xl shadow-lg border border-slate-700;
+    @apply bg-card/50 rounded-xl border border-border backdrop-blur-sm;
+    box-shadow: var(--shadow-luxury);
+  }
+
+  .monark-card-premium {
+    @apply bg-gradient-to-br from-card/60 to-card/80 rounded-2xl border border-border/50 backdrop-blur-sm;
+    box-shadow: var(--shadow-premium);
   }
 
   .monark-button {
-    @apply rounded-3xl px-6 py-3 font-medium transition-all duration-300;
+    @apply rounded-xl px-6 py-3 font-medium transition-all duration-300 font-primary;
   }
 
   .monark-button-primary {
     @apply bg-primary text-primary-foreground hover:bg-primary/90;
+    box-shadow: var(--shadow-gold-glow);
   }
 
   .monark-button-secondary {
     @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border;
   }
 
-  .monark-button-gradient {
-    @apply bg-gradient-to-r from-primary to-accent text-primary-foreground hover:from-primary/90 hover:to-accent/90;
+  .monark-button-luxury {
+    background: var(--gradient-luxury-gold);
+    @apply text-primary-foreground hover:scale-105 transition-transform duration-300;
+    box-shadow: var(--shadow-gold-glow);
   }
 
-  /* Input styles */
+  /* Input styles matching logo aesthetic */
   .monark-input {
-    @apply bg-input border border-border text-foreground placeholder-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring;
+    @apply bg-input border border-border text-foreground placeholder-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring font-primary;
   }
 
-  /* Micro-interaction utilities - Updated for Metallic Gold */
-  .gentle-glow {
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  /* Logo-inspired micro-interactions and effects */
+  .luxury-glow {
+    box-shadow: var(--shadow-gold-glow);
   }
 
-  .soft-shadow {
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+  .elegant-shadow {
+    box-shadow: var(--shadow-elegant);
   }
 
-  .gold-glow {
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  .premium-glow {
+    box-shadow: var(--shadow-premium);
   }
 
-  .golden-glow {
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  .gold-shimmer {
+    background: var(--gradient-elegant-gold);
+    background-size: 200% 200%;
+    animation: shimmer 3s ease-in-out infinite;
   }
 
-  .metallic-glow {
-    box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
-  }
-
-  /* Premium Journal Styling - Updated */
-  .journal-premium-card {
-    @apply bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-700/50;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(212, 175, 55, 0.1);
+  /* Premium Journal Styling - Logo-aligned */
+  .journal-luxury-card {
+    @apply bg-gradient-to-br from-card/60 to-card/80 backdrop-blur-sm rounded-2xl border border-border/50;
+    box-shadow: var(--shadow-premium);
   }
 
   .journal-header-text {
-    @apply font-display text-foreground tracking-tight;
+    @apply font-primary font-semibold text-foreground tracking-tight;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
   .journal-accent-border {
-    border-image: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(30, 58, 138, 0.3)) 1;
+    border-image: linear-gradient(135deg, hsl(var(--color-metallic-gold) / 0.3), hsl(var(--color-deep-navy) / 0.3)) 1;
   }
 
   .journal-metric-glow {
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+    box-shadow: var(--shadow-gold-glow);
   }
 
-  .journal-floating-glow {
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 8px 32px rgba(212, 175, 55, 0.08);
+  .journal-floating-luxury {
+    box-shadow: var(--shadow-premium);
+  }
+
+  /* Logo-inspired heading styles */
+  .heading-luxury {
+    @apply font-primary font-semibold text-foreground;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .subheading-elegant {
+    @apply font-primary font-light italic text-muted-foreground;
+    letter-spacing: 0.025em;
   }
 }
 
@@ -168,6 +217,10 @@
 
   .animate-fade-in {
     animation: fade-in 0.3s ease-out;
+  }
+
+  .animate-gold-shimmer {
+    animation: shimmer 3s ease-in-out infinite;
   }
 }
 
@@ -212,5 +265,14 @@
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
   }
 }
