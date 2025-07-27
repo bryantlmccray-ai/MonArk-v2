@@ -19,10 +19,10 @@ export const MonArkLogo: React.FC<MonArkLogoProps> = ({
   variant = 'default'
 }) => {
   const sizeClasses = {
-    sm: 'h-8',
-    md: 'h-12', 
-    lg: 'h-16',
-    xl: 'h-20'
+    sm: 'h-16',   // Increased from h-8
+    md: 'h-24',   // Increased from h-12
+    lg: 'h-32',   // Increased from h-16
+    xl: 'h-48'    // Increased from h-20
   };
 
   const LogoImage = () => (

@@ -110,7 +110,7 @@ export default function ResetPassword() {
       <div className="w-full max-w-md space-y-8">
         {/* MonArk Logo */}
         <div className="text-center">
-          <MonArkLogo size="xl" className="mb-8" />
+          <MonArkLogo size="xl" className="mb-12" />
         </div>
 
         <div className="text-center space-y-4">
