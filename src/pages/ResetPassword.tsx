@@ -98,7 +98,7 @@ export default function ResetPassword() {
     return (
       <div className="min-h-screen bg-jet-black flex items-center justify-center px-6">
         <div className="text-center">
-          <MonArkLogo showTitle size="xl" className="mb-6" />
+          <MonArkLogo size="xl" className="mb-6" />
           <p className="text-gray-400">Validating reset link...</p>
         </div>
       </div>
@@ -110,7 +110,7 @@ export default function ResetPassword() {
       <div className="w-full max-w-md space-y-8">
         {/* MonArk Logo */}
         <div className="text-center">
-          <MonArkLogo showTitle size="xl" className="mb-6" />
+          <MonArkLogo size="xl" className="mb-8" />
         </div>
 
         <div className="text-center space-y-4">

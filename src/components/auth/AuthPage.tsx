@@ -261,7 +261,7 @@ export const AuthPage: React.FC = () => {
       <div className="w-full max-w-md space-y-8">
         {/* MonArk Logo */}
         <div className="text-center">
-          <MonArkLogo showTitle size="xl" className="mb-6" />
+          <MonArkLogo size="xl" className="mb-8" />
         </div>
 
         <div className="text-center space-y-4">

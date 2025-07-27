@@ -42,7 +42,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       <div className="min-h-screen bg-jet-black flex items-center justify-center px-6">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">
-            <MonArkLogo showTitle size="xl" className="mb-6" />
+            <MonArkLogo size="xl" className="mb-8" />
           </div>
           
           <div className="text-center space-y-4">
@@ -85,7 +85,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="relative max-w-7xl mx-auto px-6 py-20">
           <div className="text-center space-y-8">
             <div className="animate-fade-in">
-              <MonArkLogo showTitle size="xl" className="mx-auto" />
+              <MonArkLogo size="xl" className="mx-auto mb-8" />
             </div>
             
             <div className="max-w-3xl mx-auto space-y-6">
@@ -436,9 +436,8 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       <footer className="py-12 border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center text-gray-400">
-            <div className="flex items-center justify-center space-x-2 mb-4">
-              <MonArkLogo size="sm" />
-              <span className="text-white font-medium">MonArk</span>
+            <div className="flex items-center justify-center mb-6">
+              <MonArkLogo size="sm" variant="compact" />
             </div>
             <p className="mb-4">&copy; 2024 MonArk. Dating reimagined with emotional intelligence.</p>
             <div className="flex items-center justify-center space-x-6 text-sm">
