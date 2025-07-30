@@ -132,7 +132,7 @@ export const ConversationHelper: React.FC<ConversationHelperProps> = ({
               }`}
             >
               <HelpCircle className="h-4 w-4 mr-1" />
-              Need help?
+              <span className="font-semibold">Need help?</span>
             </Button>
           </PopoverTrigger>
           <PopoverContent 
