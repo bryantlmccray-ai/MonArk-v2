@@ -171,7 +171,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-light text-white mb-4">
-              See MonArk in Action
+              Ready to Experience the Future of Dating
             </h2>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
               Get a glimpse of the MonArk experience before you dive in
