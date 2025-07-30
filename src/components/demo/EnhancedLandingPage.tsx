@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { MonArkLogo } from '@/components/MonArkLogo';
+import { Hero3DBackground } from '@/components/3d/Hero3DBackground';
 import { Heart, MessageCircle, Calendar, Shield, Star, MapPin, Users, Zap, ArrowRight, Play, CheckCircle, Quote, TrendingUp, Sparkles } from 'lucide-react';
 import { useDemo } from '@/contexts/DemoContext';
 import { DemoMainApp } from './DemoMainApp';
@@ -70,17 +71,15 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
   return (
     <div className="min-h-screen bg-jet-black">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-goldenrod/10 via-transparent to-blue-900/10" />
+      {/* Hero Section with 3D Background */}
+      <section className="relative overflow-hidden min-h-screen flex items-center">
+        <div className="absolute inset-0 bg-gradient-to-br from-goldenrod/5 via-transparent to-blue-900/5" />
         
-        {/* Floating Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-10 w-2 h-2 bg-goldenrod/30 rounded-full animate-pulse"></div>
-          <div className="absolute top-40 right-20 w-1 h-1 bg-blue-400/40 rounded-full animate-ping"></div>
-          <div className="absolute bottom-40 left-20 w-3 h-3 bg-goldenrod/20 rounded-full animate-bounce"></div>
-          <div className="absolute top-60 right-10 w-1.5 h-1.5 bg-blue-400/30 rounded-full animate-pulse"></div>
-        </div>
+        {/* 3D Background */}
+        <Hero3DBackground />
+        
+        {/* Content overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-deep-navy/20 to-deep-navy/40" />
         
         <div className="relative max-w-7xl mx-auto px-6 py-20">
           <div className="text-center space-y-8">
