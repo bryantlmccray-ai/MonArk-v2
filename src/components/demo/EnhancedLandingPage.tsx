@@ -196,17 +196,6 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                     <Badge className="bg-goldenrod/20 text-goldenrod">Live Preview</Badge>
                   </div>
                   
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="aspect-square bg-gradient-to-br from-blue-500/20 to-blue-400/20 rounded-lg flex items-center justify-center">
-                      <Users className="h-6 w-6 text-blue-300" />
-                    </div>
-                    <div className="aspect-square bg-gradient-to-br from-goldenrod/20 to-goldenrod/30 rounded-lg flex items-center justify-center">
-                      <Heart className="h-6 w-6 text-goldenrod" />
-                    </div>
-                    <div className="aspect-square bg-gradient-to-br from-blue-400/20 to-blue-500/20 rounded-lg flex items-center justify-center">
-                      <MessageCircle className="h-6 w-6 text-blue-300" />
-                    </div>
-                  </div>
                   
                   <div className="text-center pt-4">
                     <Button 
