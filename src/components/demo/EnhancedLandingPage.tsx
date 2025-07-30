@@ -84,7 +84,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="relative max-w-7xl mx-auto px-6 py-20">
           <div className="text-center space-y-8">
             <div className="animate-fade-in">
-              <MonArkLogo size="xl" animated={true} use3D={true} className="mx-auto mb-12" />
+              <MonArkLogo size="xl" animated={true} className="mx-auto mb-12" />
             </div>
             
             <div className="max-w-3xl mx-auto space-y-6">
