@@ -84,7 +84,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <div className="max-w-2xl mx-auto space-y-12">
               <div className="space-y-8">
                 <h1 className="text-7xl font-editorial-headline text-charcoal leading-[0.9] tracking-wide">
-                  INSPIRED BY<br />NATURE
+                  EMOTIONAL INTELLIGENCE,<br />NATURALLY ENGINEERED.
                 </h1>
                 <div className="w-32 h-px bg-taupe mx-auto"></div>
                 <p className="text-lg font-body text-charcoal-soft leading-loose">
