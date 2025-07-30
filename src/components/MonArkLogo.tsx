@@ -1,5 +1,6 @@
 
-import React from 'react';
+import React, { Suspense } from 'react';
+import { MonArk3DLogo } from '@/components/3d/MonArk3DLogo';
 
 interface MonArkLogoProps {
   className?: string;
@@ -7,8 +8,9 @@ interface MonArkLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   onClick?: () => void;
   clickable?: boolean;
-  variant?: 'default' | 'compact'; // New variant for different layout styles
+  variant?: 'default' | 'compact' | '3d'; // Added 3D variant
   animated?: boolean; // New prop for enabling animations
+  use3D?: boolean; // Direct 3D mode toggle
 }
 
 export const MonArkLogo: React.FC<MonArkLogoProps> = ({ 
@@ -18,8 +20,36 @@ export const MonArkLogo: React.FC<MonArkLogoProps> = ({
   onClick,
   clickable = false,
   variant = 'default',
-  animated = false
+  animated = false,
+  use3D = false
 }) => {
+  // Return 3D version if requested
+  if (use3D || variant === '3d') {
+    return (
+      <div className={`flex flex-col items-center ${showTitle ? 'gap-2' : 'gap-0'} ${className}`}>
+        <Suspense fallback={
+          <div className="h-48 w-48 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full animate-pulse flex items-center justify-center">
+            <div className="text-primary text-sm">Loading 3D...</div>
+          </div>
+        }>
+          <MonArk3DLogo 
+            size={size} 
+            clickable={clickable} 
+            onClick={onClick}
+            className={animated ? 'animate-fade-in-up' : ''}
+          />
+        </Suspense>
+        
+        {showTitle && (
+          <div className={`text-center mt-2 ${animated ? 'animate-fade-in-up animation-delay-300' : ''}`}>
+            <p className="text-sm text-primary/60 tracking-wide font-light italic animate-gentle-pulse">
+              Luxury dating reimagined
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  }
   const sizeClasses = {
     sm: 'h-18',   // Increased more for better frame fill
     md: 'h-28',   // Increased more for better frame fill
