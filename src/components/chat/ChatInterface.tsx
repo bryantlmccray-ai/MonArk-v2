@@ -174,13 +174,13 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   }
 
   return (
-    <div className="flex flex-col h-full bg-jet-black">
+    <div className="flex flex-col h-full bg-background">
       {/* Chat Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-800">
+      <div className="flex items-center justify-between p-4 border-b border-border bg-card">
         <div className="flex items-center space-x-3">
           <Avatar className="h-10 w-10">
             <AvatarImage src={matchImage} alt={matchName} />
-            <AvatarFallback className="bg-goldenrod text-jet-black">
+            <AvatarFallback className="bg-primary text-primary-foreground">
               {matchName.charAt(0)}
             </AvatarFallback>
           </Avatar>
@@ -217,7 +217,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-charcoal-gray border-gray-700">
+            <DropdownMenuContent align="end" className="bg-card border-border">
               <DropdownMenuItem
                 onClick={() => setShowConcierge(true)}
                 className="text-white hover:bg-goldenrod/20 cursor-pointer"
@@ -234,7 +234,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 Video Call
               </DropdownMenuItem>
               
-              <DropdownMenuSeparator className="bg-gray-600" />
+              <DropdownMenuSeparator className="bg-border" />
               
               <DropdownMenuItem
                 onClick={() => setShowUserActions(true)}
@@ -279,21 +279,21 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                   {!isOwnMessage && (
                     <Avatar className="h-6 w-6 mb-1">
                       <AvatarImage src={matchImage} alt={matchName} />
-                      <AvatarFallback className="bg-goldenrod text-jet-black text-xs">
+                      <AvatarFallback className="bg-primary text-primary-foreground text-xs">
                         {matchName.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
                   )}
                   <div
-                    className={`px-4 py-2 rounded-2xl ${
+                    className={`px-4 py-3 rounded-2xl ${
                       isOwnMessage
-                        ? 'bg-goldenrod text-jet-black ml-2'
-                        : 'bg-charcoal-gray text-white mr-2'
+                        ? 'bg-primary text-primary-foreground ml-2'
+                        : 'bg-secondary text-secondary-foreground mr-2'
                     }`}
                   >
                     <p className="text-base">{message.content}</p>
                      <div className={`text-sm mt-1 flex items-center justify-between ${
-                       isOwnMessage ? 'text-jet-black/70' : 'text-muted-foreground'
+                       isOwnMessage ? 'text-primary-foreground/70' : 'text-secondary-foreground/70'
                      }`}>
                        <span>{format(new Date(message.created_at), 'HH:mm')}</span>
                        {getDeliveryStatusIcon(message)}
@@ -311,15 +311,15 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             <div className="max-w-xs lg:max-w-md">
               <Avatar className="h-6 w-6 mb-1">
                 <AvatarImage src={matchImage} alt={matchName} />
-                <AvatarFallback className="bg-goldenrod text-jet-black text-xs">
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs">
                   {matchName.charAt(0)}
                 </AvatarFallback>
               </Avatar>
-              <div className="px-4 py-2 rounded-2xl bg-charcoal-gray text-white mr-2">
+              <div className="px-4 py-3 rounded-2xl bg-secondary text-secondary-foreground mr-2">
                 <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
                 </div>
               </div>
             </div>
@@ -329,7 +329,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       </div>
 
       {/* Message Input Area */}
-      <div className="p-4 border-t border-gray-800">
+      <div className="p-4 border-t border-border bg-card">
         <div className="flex items-end space-x-2">
           <div className="flex-1">
             <Textarea
@@ -338,7 +338,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
               onChange={(e) => handleTyping(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder={`Message ${matchName}...`}
-              className="min-h-[44px] max-h-32 resize-none bg-charcoal-gray border-gray-700 text-white placeholder-gray-400 focus:border-goldenrod"
+              className="min-h-[44px] max-h-32 resize-none bg-input border-border text-foreground placeholder-muted-foreground focus:border-ring text-base"
               disabled={isSending}
             />
           </div>
