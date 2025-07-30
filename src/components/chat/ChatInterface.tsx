@@ -168,7 +168,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="text-gray-400">Loading messages...</div>
+        <div className="text-muted-foreground text-base">Loading messages...</div>
       </div>
     );
   }
@@ -185,8 +185,8 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             </AvatarFallback>
           </Avatar>
           <div>
-            <h3 className="text-white font-medium">{matchName}</h3>
-            <p className="text-gray-400 text-sm">
+            <h3 className="text-foreground font-medium">{matchName}</h3>
+            <p className="text-muted-foreground text-base">
               {isUserOnline(matchUserId) ? (
                 <span className="flex items-center">
                   <span className="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
@@ -251,9 +251,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 ? (
-          <div className="text-center text-gray-400 py-8">
-            <p>Start your conversation with {matchName}</p>
-            <p className="text-sm mt-1">Say hello and share what's on your mind!</p>
+          <div className="text-center text-muted-foreground py-8">
+            <p className="text-base">Start your conversation with {matchName}</p>
+            <p className="text-base mt-1">Say hello and share what's on your mind!</p>
           </div>
         ) : (
           messages.map((message) => {
@@ -263,7 +263,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             if (isSystemMessage) {
               return (
                 <div key={message.id} className="text-center">
-                  <div className="text-xs text-gray-500 bg-gray-800/50 px-3 py-1 rounded-full inline-block">
+                  <div className="text-sm text-muted-foreground bg-muted px-3 py-1 rounded-full inline-block">
                     {message.content}
                   </div>
                 </div>
@@ -291,9 +291,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                         : 'bg-charcoal-gray text-white mr-2'
                     }`}
                   >
-                    <p className="text-sm">{message.content}</p>
-                     <div className={`text-xs mt-1 flex items-center justify-between ${
-                       isOwnMessage ? 'text-jet-black/70' : 'text-gray-400'
+                    <p className="text-base">{message.content}</p>
+                     <div className={`text-sm mt-1 flex items-center justify-between ${
+                       isOwnMessage ? 'text-jet-black/70' : 'text-muted-foreground'
                      }`}>
                        <span>{format(new Date(message.created_at), 'HH:mm')}</span>
                        {getDeliveryStatusIcon(message)}
