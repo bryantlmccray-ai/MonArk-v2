@@ -70,104 +70,96 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
   }
 
   return (
-    <div className="min-h-screen bg-jet-black">
-      {/* Hero Section with 3D Background */}
+    <div className="min-h-screen bg-bone">
+      {/* Hero Section - Editorial Magazine Style */}
       <section className="relative overflow-hidden min-h-screen flex items-center">
-        <div className="absolute inset-0 bg-gradient-to-br from-goldenrod/5 via-transparent to-blue-900/5" />
+        <div className="absolute inset-0 bg-gradient-to-br from-sand/50 via-transparent to-parchment/30" />
         
-        {/* 3D Background */}
-        <Hero3DBackground />
-        
-        {/* Content overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-deep-navy/20 to-deep-navy/40" />
-        
-        <div className="relative max-w-7xl mx-auto px-6 py-20">
-          <div className="text-center space-y-8">
+        <div className="relative max-w-4xl mx-auto px-12 py-32">
+          <div className="text-center space-y-20">
             <div className="animate-fade-in">
-              <MonArkLogo size="xl" animated={true} rotateOnLoad={true} className="mx-auto mb-12" />
+              <MonArkLogo size="xl" animated={true} rotateOnLoad={true} className="mx-auto mb-16" />
             </div>
             
-            <div className="max-w-3xl mx-auto space-y-6">
-              <h1 className="text-5xl md:text-6xl font-light text-white leading-tight animate-fade-in">
-                Dating with <span className="text-goldenrod font-medium bg-gradient-to-r from-goldenrod to-yellow-400 bg-clip-text text-transparent">Emotional Intelligence</span>
-              </h1>
-              <p className="text-xl text-gray-300 leading-relaxed animate-fade-in">
-                MonArk combines cutting-edge AI with relational psychology to help you build 
-                meaningful connections. Experience dating that prioritizes emotional compatibility 
-                and authentic relationships.
-              </p>
-            </div>
-
-            {/* Stats Row */}
-            <div className="flex flex-wrap justify-center gap-8 py-6 animate-fade-in">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-goldenrod">85%</div>
-                <div className="text-sm text-gray-400">Better Matches</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-400">3x</div>
-                <div className="text-sm text-gray-400">Deeper Conversations</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-goldenrod">24/7</div>
-                <div className="text-sm text-gray-400">AI Guidance</div>
+            <div className="max-w-2xl mx-auto space-y-12">
+              <div className="space-y-8">
+                <h1 className="text-7xl font-editorial-headline text-charcoal leading-[0.9] tracking-wide">
+                  INSPIRED BY<br />NATURE
+                </h1>
+                <div className="w-32 h-px bg-taupe mx-auto"></div>
+                <p className="text-lg font-body text-charcoal-soft leading-loose">
+                  Love doesn't have a script. But it can have a setting.<br />
+                  A space where intention meets connection.
+                </p>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
+            {/* Editorial Stats */}
+            <div className="grid grid-cols-3 gap-16 py-12 max-w-lg mx-auto">
+              <div className="text-center space-y-2">
+                <div className="text-3xl font-editorial-headline text-taupe">85</div>
+                <div className="font-caption text-charcoal-muted">PERCENT SATISFACTION</div>
+              </div>
+              <div className="text-center space-y-2">
+                <div className="text-3xl font-editorial-headline text-taupe">3X</div>
+                <div className="font-caption text-charcoal-muted">DEEPER DIALOGUE</div>
+              </div>
+              <div className="text-center space-y-2">
+                <div className="text-3xl font-editorial-headline text-taupe">24/7</div>
+                <div className="font-caption text-charcoal-muted">AI GUIDANCE</div>
+              </div>
+            </div>
+
+            <div className="space-y-6 max-w-sm mx-auto">
               <Button
                 onClick={startFullDemo}
-                className="font-semibold px-8 py-4 text-lg transition-all duration-300 group bg-goldenrod-gradient text-jet-black hover:shadow-golden-glow hover:scale-105"
+                className="w-full editorial-button-primary py-4 text-sm tracking-widest font-body"
               >
-                <Play className="h-5 w-5 mr-2 group-hover:animate-pulse" />
-                Experience Live Demo
+                EXPERIENCE DEMO
               </Button>
               
               <Button
                 onClick={() => setShowWaitlistModal(true)}
                 variant="outline"
-                className="px-8 py-4 text-lg group text-white border-white/30 hover:bg-white/10 hover:border-goldenrod/50"
+                className="w-full editorial-button-secondary py-4 text-sm tracking-widest font-body"
               >
-                <Heart className="h-5 w-5 mr-2 group-hover:text-goldenrod transition-colors" />
-                Join the Waitlist
+                JOIN WAITLIST
               </Button>
               
               {onExitToApp && (
                 <Button
                   onClick={onExitToApp}
                   variant="ghost"
-                  className="text-gray-400 hover:text-white hover:bg-white/5 px-8 py-4 text-lg"
+                  className="w-full editorial-button-ghost py-4 text-sm tracking-widest font-body"
                 >
-                  Return to Home Page
+                  RETURN HOME
                 </Button>
               )}
             </div>
 
-            {/* Demo Notice */}
-            <div className="text-center pt-6 max-w-md mx-auto">
-              <p className="text-sm text-gray-400 leading-relaxed">
-                The demo and waitlist require no account creation. For full access, you'll need to agree to our{' '}
-                <a href="/terms" className="text-goldenrod hover:underline">
-                  Terms of Service
+            {/* Editorial Notice */}
+            <div className="text-center pt-12 max-w-lg mx-auto space-y-4">
+              <p className="font-body text-charcoal-soft text-sm leading-relaxed">
+                Demo access requires no commitment. Full membership includes agreement to our{' '}
+                <a href="/terms" className="text-taupe hover:underline">
+                  Terms
                 </a>{' '}
                 and{' '}
-                <a href="/privacy" className="text-goldenrod hover:underline">
+                <a href="/privacy" className="text-taupe hover:underline">
                   Privacy Policy
                 </a>
                 .
               </p>
-            </div>
 
-            <div className="text-sm text-gray-400 pt-4">
-              <div className="flex items-center justify-center space-x-4">
-                <Badge variant="secondary" className="bg-goldenrod/20 text-goldenrod border-goldenrod/30">
-                  <Sparkles className="h-3 w-3 mr-1" />
-                  Interactive Demo
-                </Badge>
-                <Badge variant="secondary" className="bg-blue-500/20 text-blue-400 border-blue-500/30">
-                  <CheckCircle className="h-3 w-3 mr-1" />
-                  No Signup Required
-                </Badge>
+              <div className="flex items-center justify-center space-x-8 pt-6">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-taupe"></div>
+                  <span className="font-caption text-charcoal-muted">Interactive</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-olive"></div>
+                  <span className="font-caption text-charcoal-muted">No Registration</span>
+                </div>
               </div>
             </div>
           </div>

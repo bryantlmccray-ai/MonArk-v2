@@ -5,80 +5,82 @@
 
 @layer base {
   :root {
-    /* Luxury Logo-Matched Color System - HSL for proper color functions */
-    --color-deep-navy: 220 25% 12%; /* #1a1f2e - rich navy background from logo */
-    --color-metallic-gold: 45 67% 53%; /* #D4AF37 - exact logo gold */
-    --color-gold-light: 45 67% 63%; /* #E0C547 - lighter gold variant */
-    --color-gold-dark: 45 67% 43%; /* #B8951D - darker gold variant */
-    --color-warm-ivory: 0 0% 97%; /* #F8F8F8 - elegant off-white */
-    --color-charcoal: 220 15% 25%; /* premium charcoal */
-    --color-graphite: 220 10% 40%; /* elegant borders */
-    --color-midnight: 220 30% 8%; /* deeper navy for depth */
+    /* Quiet Luxury Color System - Editorial magazine aesthetic */
+    --color-bone: 35 15% 96%; /* Soft ivory/bone - warm neutral background */
+    --color-sand: 35 8% 92%; /* Subtle sand for surfaces */
+    --color-parchment: 35 20% 98%; /* Softer ivory for elevated surfaces */
+    --color-charcoal: 220 15% 15%; /* Deep charcoal - not pure black */
+    --color-charcoal-soft: 220 10% 40%; /* Softer charcoal for secondary text */
+    --color-charcoal-muted: 220 8% 65%; /* Very soft charcoal for muted elements */
+    --color-taupe: 25 25% 25%; /* Muted taupe - editorial accent */
+    --color-olive: 80 15% 65%; /* Muted olive - sparingly used */
+    --color-dusty-rose: 355 40% 55%; /* Dusty rose for gentle alerts */
 
-    /* Logo-aligned design tokens */
-    --color-primary-bg: var(--color-deep-navy);
-    --color-secondary-bg: var(--color-charcoal);
-    --color-accent-gold: var(--color-metallic-gold);
-    --color-accent-light: var(--color-gold-light);
+    /* Editorial design tokens - inspired by The Row, Aesop, Celine */
+    --color-editorial-bg: var(--color-bone);
+    --color-editorial-surface: var(--color-sand);
+    --color-editorial-text: var(--color-charcoal);
+    --color-editorial-accent: var(--color-taupe);
 
-    /* Shadcn variables optimized for luxury logo theme */
-    --background: var(--color-deep-navy);
-    --foreground: var(--color-warm-ivory);
+    /* Shadcn variables for quiet luxury aesthetic */
+    --background: var(--color-bone);
+    --foreground: var(--color-charcoal);
 
-    --card: var(--color-charcoal);
-    --card-foreground: var(--color-warm-ivory);
+    --card: var(--color-parchment);
+    --card-foreground: var(--color-charcoal);
 
-    --popover: var(--color-charcoal);
-    --popover-foreground: var(--color-warm-ivory);
+    --popover: var(--color-parchment);
+    --popover-foreground: var(--color-charcoal);
 
-    --primary: var(--color-metallic-gold);
-    --primary-foreground: var(--color-deep-navy);
+    --primary: var(--color-taupe);
+    --primary-foreground: var(--color-bone);
 
-    --secondary: var(--color-charcoal);
-    --secondary-foreground: var(--color-warm-ivory);
+    --secondary: var(--color-sand);
+    --secondary-foreground: var(--color-charcoal);
 
-    --muted: var(--color-midnight);
-    --muted-foreground: var(--color-graphite);
+    --muted: 35 10% 88%; /* Muted sand */
+    --muted-foreground: var(--color-charcoal-soft);
 
-    --accent: var(--color-gold-light);
-    --accent-foreground: var(--color-deep-navy);
+    --accent: var(--color-olive);
+    --accent-foreground: var(--color-charcoal);
 
-    --destructive: 0 62% 30%;
-    --destructive-foreground: var(--color-warm-ivory);
+    --destructive: var(--color-dusty-rose);
+    --destructive-foreground: var(--color-bone);
 
-    --border: var(--color-graphite);
-    --input: var(--color-midnight);
-    --ring: var(--color-metallic-gold);
+    --border: 35 8% 85%; /* Subtle bone borders */
+    --input: 35 12% 94%; /* Soft input backgrounds */
+    --ring: var(--color-taupe); /* Taupe for focus rings */
 
-    /* Sidebar colors matching luxury theme */
-    --sidebar-background: var(--color-charcoal);
-    --sidebar-foreground: var(--color-warm-ivory);
-    --sidebar-primary: var(--color-metallic-gold);
-    --sidebar-primary-foreground: var(--color-deep-navy);
-    --sidebar-accent: var(--color-gold-light);
-    --sidebar-accent-foreground: var(--color-deep-navy);
-    --sidebar-border: var(--color-graphite);
-    --sidebar-ring: var(--color-metallic-gold);
+    /* Sidebar colors for editorial theme */
+    --sidebar-background: var(--color-sand);
+    --sidebar-foreground: var(--color-charcoal);
+    --sidebar-primary: var(--color-taupe);
+    --sidebar-primary-foreground: var(--color-bone);
+    --sidebar-accent: var(--color-olive);
+    --sidebar-accent-foreground: var(--color-charcoal);
+    --sidebar-border: 35 8% 85%;
+    --sidebar-ring: var(--color-taupe);
 
-    --radius: 12px;
+    --radius: 2px; /* Minimal editorial radius */
 
-    /* Luxury spacing system */
-    --spacing-xs: 4px;
-    --spacing-sm: 8px;
-    --spacing-md: 16px;
-    --spacing-lg: 24px;
-    --spacing-xl: 32px;
+    /* Editorial spacing system - generous for breathing room */
+    --spacing-xs: 8px;
+    --spacing-sm: 16px;
+    --spacing-md: 32px;
+    --spacing-lg: 48px;
+    --spacing-xl: 64px;
+    --spacing-xxl: 96px;
 
-    /* Logo-inspired gradients */
-    --gradient-luxury-gold: linear-gradient(135deg, hsl(var(--color-metallic-gold)), hsl(var(--color-gold-light)));
-    --gradient-premium-navy: linear-gradient(135deg, hsl(var(--color-deep-navy)), hsl(var(--color-charcoal)));
-    --gradient-elegant-gold: linear-gradient(45deg, hsl(var(--color-gold-dark)), hsl(var(--color-metallic-gold)), hsl(var(--color-gold-light)));
+    /* Quiet luxury gradients - subtle and refined */
+    --gradient-editorial: linear-gradient(135deg, hsl(var(--color-bone)), hsl(var(--color-sand)));
+    --gradient-surface: linear-gradient(180deg, hsl(var(--color-parchment)), hsl(var(--color-sand)));
+    --gradient-subtle-accent: linear-gradient(135deg, hsl(var(--color-taupe) / 0.1), hsl(var(--color-olive) / 0.05));
 
-    /* Luxury shadows matching logo aesthetic */
-    --shadow-luxury: 0 8px 32px rgba(0, 0, 0, 0.4);
-    --shadow-gold-glow: 0 0 25px rgba(212, 175, 55, 0.4);
-    --shadow-elegant: 0 4px 20px rgba(0, 0, 0, 0.3);
-    --shadow-premium: 0 12px 40px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(212, 175, 55, 0.1);
+    /* Editorial shadows - soft and understated */
+    --shadow-editorial: 0 2px 16px rgba(0, 0, 0, 0.08);
+    --shadow-gentle: 0 1px 8px rgba(0, 0, 0, 0.04);
+    --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.12);
+    --shadow-magazine: 0 8px 40px rgba(0, 0, 0, 0.06);
   }
 
   * {
@@ -87,118 +89,125 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
-    font-size: 16px;
-    line-height: 1.6;
-    letter-spacing: -0.01em;
-    font-weight: 400;
+    font-family: 'Canela', 'Tiempos Text', 'Playfair Display', 'Georgia', serif;
+    font-size: 17px;
+    line-height: 1.75;
+    letter-spacing: 0.01em;
+    font-weight: 300;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Typography System - Playfair Display for luxury feel matching logo */
-  .font-primary {
-    font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
-  }
-
-  .font-logo {
-    font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-  }
-
-  .font-reflection {
-    font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
-    font-style: italic;
+  /* Editorial Typography System - Inspired by design magazines */
+  .font-editorial {
+    font-family: 'Canela', 'Tiempos Text', 'Playfair Display', 'Georgia', serif;
     font-weight: 300;
+    letter-spacing: 0.02em;
+    line-height: 1.8;
   }
 
-  /* Logo-Aligned Design System Utilities */
-  .monark-card {
-    @apply bg-card/50 rounded-xl border border-border backdrop-blur-sm;
-    box-shadow: var(--shadow-luxury);
+  .font-editorial-headline {
+    font-family: 'Canela', 'Tiempos Text', 'Playfair Display', 'Georgia', serif;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
   }
 
-  .monark-card-premium {
-    @apply bg-gradient-to-br from-card/60 to-card/80 rounded-2xl border border-border/50 backdrop-blur-sm;
-    box-shadow: var(--shadow-premium);
+  .font-body {
+    font-family: 'Maison Neue', 'Inter', 'Helvetica Neue', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.005em;
+    line-height: 1.7;
   }
 
-  .monark-button {
-    @apply rounded-xl px-6 py-3 font-medium transition-all duration-300 font-primary;
+  .font-caption {
+    font-family: 'Maison Neue', 'Inter', 'Helvetica Neue', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
   }
 
-  .monark-button-primary {
+  /* Editorial Design System Utilities */
+  .editorial-card {
+    @apply bg-card border border-border;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-editorial);
+  }
+
+  .editorial-surface {
+    @apply bg-secondary;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-gentle);
+  }
+
+  .editorial-button {
+    @apply px-8 py-3 font-body text-sm transition-all duration-300;
+    border-radius: var(--radius);
+    letter-spacing: 0.05em;
+  }
+
+  .editorial-button-primary {
     @apply bg-primary text-primary-foreground hover:bg-primary/90;
-    box-shadow: var(--shadow-gold-glow);
+    box-shadow: var(--shadow-gentle);
   }
 
-  .monark-button-secondary {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border;
+  .editorial-button-secondary {
+    @apply bg-transparent text-foreground hover:bg-secondary border border-border;
   }
 
-  .monark-button-luxury {
-    background: var(--gradient-luxury-gold);
-    @apply text-primary-foreground hover:scale-105 transition-transform duration-300;
-    box-shadow: var(--shadow-gold-glow);
+  .editorial-button-ghost {
+    @apply bg-transparent text-muted-foreground hover:text-foreground;
   }
 
-  /* Input styles matching logo aesthetic */
-  .monark-input {
-    @apply bg-input border border-border text-foreground placeholder-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring font-primary;
+  /* Input styles for editorial aesthetic */
+  .editorial-input {
+    @apply bg-input border border-border text-foreground placeholder-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring font-body;
+    border-radius: var(--radius);
   }
 
-  /* Logo-inspired micro-interactions and effects */
-  .luxury-glow {
-    box-shadow: var(--shadow-gold-glow);
+  /* Editorial micro-interactions and effects */
+  .editorial-shadow {
+    box-shadow: var(--shadow-editorial);
   }
 
-  .elegant-shadow {
-    box-shadow: var(--shadow-elegant);
+  .gentle-shadow {
+    box-shadow: var(--shadow-gentle);
   }
 
-  .premium-glow {
-    box-shadow: var(--shadow-premium);
+  .elevated-shadow {
+    box-shadow: var(--shadow-elevated);
   }
 
-  .gold-shimmer {
-    background: var(--gradient-elegant-gold);
-    background-size: 200% 200%;
-    animation: shimmer 3s ease-in-out infinite;
+  .magazine-shadow {
+    box-shadow: var(--shadow-magazine);
   }
 
-  /* Premium Journal Styling - Logo-aligned */
-  .journal-luxury-card {
-    @apply bg-gradient-to-br from-card/60 to-card/80 backdrop-blur-sm rounded-2xl border border-border/50;
-    box-shadow: var(--shadow-premium);
+  /* Editorial heading styles */
+  .headline-editorial {
+    @apply font-editorial-headline text-foreground;
   }
 
-  .journal-header-text {
-    @apply font-primary font-semibold text-foreground tracking-tight;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  .subheading-editorial {
+    @apply font-body text-muted-foreground;
+    letter-spacing: 0.05em;
   }
 
-  .journal-accent-border {
-    border-image: linear-gradient(135deg, hsl(var(--color-metallic-gold) / 0.3), hsl(var(--color-deep-navy) / 0.3)) 1;
+  .caption-editorial {
+    @apply font-caption text-muted-foreground;
   }
 
-  .journal-metric-glow {
-    box-shadow: var(--shadow-gold-glow);
+  /* Layout utilities for editorial spacing */
+  .section-spacing {
+    padding: var(--spacing-xl) 0;
   }
 
-  .journal-floating-luxury {
-    box-shadow: var(--shadow-premium);
+  .content-spacing {
+    padding: var(--spacing-lg);
   }
 
-  /* Logo-inspired heading styles */
-  .heading-luxury {
-    @apply font-primary font-semibold text-foreground;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  }
-
-  .subheading-elegant {
-    @apply font-primary font-light italic text-muted-foreground;
-    letter-spacing: 0.025em;
+  .generous-spacing {
+    margin: var(--spacing-xxl) 0;
   }
 }
 

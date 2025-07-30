@@ -20,27 +20,29 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'sans': ['Playfair Display', 'Georgia', 'Times New Roman', 'serif'],
-				'primary': ['Playfair Display', 'Georgia', 'Times New Roman', 'serif'],
-				'reflection': ['Georgia', 'Times New Roman', 'serif'],
-				'playfair': ['Playfair Display', 'serif'],
-				'display': ['Playfair Display', 'serif'],
+				'sans': ['Maison Neue', 'Inter', 'Helvetica Neue', 'sans-serif'],
+				'serif': ['Canela', 'Tiempos Text', 'Playfair Display', 'Georgia', 'serif'],
+				'editorial': ['Canela', 'Tiempos Text', 'Playfair Display', 'Georgia', 'serif'],
+				'body': ['Maison Neue', 'Inter', 'Helvetica Neue', 'sans-serif'],
+				'headline': ['Canela', 'Tiempos Text', 'Playfair Display', 'Georgia', 'serif'],
+				'caption': ['Maison Neue', 'Inter', 'Helvetica Neue', 'sans-serif'],
 			},
 			colors: {
-				/* Clean luxury colors matching logo - HSL format for proper color functions */
-				'metallic-gold': 'hsl(45, 67%, 53%)', /* #D4AF37 - exact logo gold */
-				'gold-light': 'hsl(45, 67%, 63%)', /* #E0C547 - lighter variant */
-				'gold-dark': 'hsl(45, 67%, 43%)', /* #B8951D - darker variant */
-				'deep-navy': 'hsl(220, 25%, 12%)', /* #1a1f2e - logo background navy */
-				'warm-ivory': 'hsl(0, 0%, 97%)', /* #F8F8F8 - elegant text */
-				'charcoal': 'hsl(220, 15%, 25%)', /* premium surfaces */
-				'graphite': 'hsl(220, 10%, 40%)', /* borders and muted elements */
-				'midnight': 'hsl(220, 30%, 8%)', /* deep accents */
+				/* Quiet Luxury Colors - Editorial magazine aesthetic */
+				'bone': 'hsl(35, 15%, 96%)', /* Soft ivory/bone - warm neutral background */
+				'sand': 'hsl(35, 8%, 92%)', /* Subtle sand for surfaces */
+				'parchment': 'hsl(35, 20%, 98%)', /* Softer ivory for elevated surfaces */
+				'charcoal': 'hsl(220, 15%, 15%)', /* Deep charcoal - not pure black */
+				'charcoal-soft': 'hsl(220, 10%, 40%)', /* Softer charcoal for secondary text */
+				'charcoal-muted': 'hsl(220, 8%, 65%)', /* Very soft charcoal for muted elements */
+				'taupe': 'hsl(25, 25%, 25%)', /* Muted taupe - editorial accent */
+				'olive': 'hsl(80, 15%, 65%)', /* Muted olive - sparingly used */
+				'dusty-rose': 'hsl(355, 40%, 55%)', /* Dusty rose for gentle alerts */
 
-				/* Legacy support - cleaned up */
-				'goldenrod': 'hsl(45, 67%, 53%)', /* same as metallic-gold */
-				'jet-black': 'hsl(220, 25%, 12%)', /* same as deep-navy */
-				'charcoal-gray': 'hsl(220, 15%, 25%)', /* same as charcoal */
+				/* Legacy support for gradual migration */
+				'warm-ivory': 'hsl(35, 15%, 96%)', /* same as bone */
+				'metallic-gold': 'hsl(25, 25%, 25%)', /* now taupe for editorial feel */
+				'deep-navy': 'hsl(220, 15%, 15%)', /* now charcoal */
 
 				/* Shadcn integration */
 				border: 'hsl(var(--border))',
@@ -96,20 +98,17 @@ export default {
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-				'luxury-gold': 'linear-gradient(135deg, hsl(45, 67%, 53%) 0%, hsl(45, 67%, 63%) 100%)',
-				'premium-gold': 'linear-gradient(135deg, hsl(45, 67%, 43%) 0%, hsl(45, 67%, 53%) 100%)',
-				'elegant-navy': 'linear-gradient(135deg, hsl(220, 25%, 12%) 0%, hsl(220, 15%, 25%) 100%)',
-				'shimmer-gold': 'linear-gradient(45deg, hsl(45, 67%, 43%), hsl(45, 67%, 53%), hsl(45, 67%, 63%))',
-				/* Legacy support */
-				'goldenrod-gradient': 'linear-gradient(135deg, hsl(45, 67%, 53%) 0%, hsl(45, 67%, 63%) 100%)',
+				'editorial': 'linear-gradient(135deg, hsl(35, 15%, 96%) 0%, hsl(35, 8%, 92%) 100%)',
+				'surface': 'linear-gradient(180deg, hsl(35, 20%, 98%) 0%, hsl(35, 8%, 92%) 100%)',
+				'subtle-accent': 'linear-gradient(135deg, hsl(25, 25%, 25%) 0%, hsl(80, 15%, 65%) 100%)',
+				'magazine': 'linear-gradient(45deg, hsl(35, 15%, 96%), hsl(35, 20%, 98%), hsl(35, 8%, 92%))',
 			},
 			boxShadow: {
-				'monark': '0px 4px 20px rgba(0, 0, 0, 0.3)',
-				'monark-glow': '0 0 20px rgba(212, 175, 55, 0.3)',
-				'gentle': '0 2px 8px rgba(0, 0, 0, 0.2)',
-				'golden-glow': '0 0 20px rgba(212, 175, 55, 0.4)',
-				'gold-glow': '0 0 20px rgba(212, 175, 55, 0.4)',
-				'sapphire-glow': '0 0 20px rgba(30, 58, 138, 0.4)',
+				'editorial': '0 2px 16px rgba(0, 0, 0, 0.08)',
+				'gentle': '0 1px 8px rgba(0, 0, 0, 0.04)',
+				'elevated': '0 4px 24px rgba(0, 0, 0, 0.12)',
+				'magazine': '0 8px 40px rgba(0, 0, 0, 0.06)',
+				'soft': '0 2px 12px rgba(0, 0, 0, 0.06)',
 			},
 			animation: {
 				'gentle-pulse': 'gentle-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
