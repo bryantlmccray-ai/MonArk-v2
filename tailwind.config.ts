@@ -28,16 +28,16 @@ export default {
 				'caption': ['Maison Neue', 'Inter', 'Helvetica Neue', 'sans-serif'],
 			},
 			colors: {
-				/* Quiet Luxury Colors - Editorial magazine aesthetic */
-				'bone': 'hsl(35, 15%, 96%)', /* Soft ivory/bone - warm neutral background */
-				'sand': 'hsl(35, 8%, 92%)', /* Subtle sand for surfaces */
-				'parchment': 'hsl(35, 20%, 98%)', /* Softer ivory for elevated surfaces */
-				'charcoal': 'hsl(220, 15%, 15%)', /* Deep charcoal - not pure black */
-				'charcoal-soft': 'hsl(220, 10%, 40%)', /* Softer charcoal for secondary text */
-				'charcoal-muted': 'hsl(220, 8%, 65%)', /* Very soft charcoal for muted elements */
-				'taupe': 'hsl(25, 25%, 25%)', /* Muted taupe - editorial accent */
-				'olive': 'hsl(80, 15%, 65%)', /* Muted olive - sparingly used */
-				'dusty-rose': 'hsl(355, 40%, 55%)', /* Dusty rose for gentle alerts */
+				/* Quiet Luxury Colors - Editorial magazine aesthetic - Using CSS variables */
+				'bone': 'hsl(var(--color-bone))', /* Soft ivory/bone - warm neutral background */
+				'sand': 'hsl(var(--color-sand))', /* Subtle sand for surfaces */
+				'parchment': 'hsl(var(--color-parchment))', /* Softer ivory for elevated surfaces */
+				'charcoal': 'hsl(var(--color-charcoal))', /* Very dark green for maximum readability */
+				'charcoal-soft': 'hsl(var(--color-charcoal-soft))', /* Dark green for secondary text */
+				'charcoal-muted': 'hsl(var(--color-charcoal-muted))', /* Dark brown for muted elements */
+				'taupe': 'hsl(var(--color-taupe))', /* Muted taupe - editorial accent */
+				'olive': 'hsl(var(--color-olive))', /* Muted olive - sparingly used */
+				'dusty-rose': 'hsl(var(--color-dusty-rose))', /* Dusty rose for gentle alerts */
 
 				/* Legacy support for gradual migration */
 				'warm-ivory': 'hsl(35, 15%, 96%)', /* same as bone */
