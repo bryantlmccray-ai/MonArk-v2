@@ -178,71 +178,25 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8 mb-16">
-            <div className="lg:col-span-2 bg-gradient-to-br from-charcoal-gray/80 to-charcoal-gray/40 rounded-2xl p-8 border border-goldenrod/20">
-              <div className="space-y-6">
-                <div className="flex items-center space-x-3">
-                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <div className="flex-1 bg-gray-700 rounded-full h-8 flex items-center px-4">
-                    <span className="text-gray-400 text-sm">monark.app/discover</span>
-                  </div>
-                </div>
-                
-                <div className="bg-jet-black rounded-lg p-6 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-white font-medium">Discovery Map</h3>
-                    <Badge className="bg-goldenrod/20 text-goldenrod">Live Preview</Badge>
-                  </div>
-                  
-                  
-                  <div className="text-center pt-4">
-                    <Button 
-                      onClick={startFullDemo}
-                      size="sm" 
-                      className="bg-goldenrod-gradient text-jet-black hover:shadow-golden-glow"
-                    >
-                      Try Interactive Demo
-                      <ArrowRight className="h-4 w-4 ml-2" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="bg-charcoal-gray/60 rounded-xl p-6 border border-blue-500/20">
-                <div className="flex items-center space-x-3 mb-4">
-                  <Shield className="h-5 w-5 text-blue-400" />
-                  <h4 className="text-white font-medium">RIF Matching</h4>
-                </div>
-                <p className="text-gray-300 text-sm mb-4">
-                  Our AI analyzes emotional compatibility in real-time
-                </p>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-gray-400">Intent Clarity</span>
-                    <span className="text-blue-400">92%</span>
-                  </div>
-                  <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div className="bg-gradient-to-r from-blue-600 to-blue-400 h-2 rounded-full w-[92%]"></div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-charcoal-gray/60 rounded-xl p-6 border border-goldenrod/20">
-                <div className="flex items-center space-x-3 mb-4">
-                  <TrendingUp className="h-5 w-5 text-goldenrod" />
-                  <h4 className="text-white font-medium">Growth Tracking</h4>
-                </div>
-                <p className="text-gray-300 text-sm mb-4">
-                  Monitor your dating journey with personalized insights
-                </p>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-goldenrod mb-1">127</div>
-                  <div className="text-xs text-gray-400">Growth Points This Month</div>
-                </div>
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="bg-gradient-to-r from-goldenrod/10 to-blue-900/10 rounded-2xl p-12 border border-goldenrod/20">
+              <h3 className="text-3xl font-light text-white mb-4">
+                Ready to Experience the Future of Dating?
+              </h3>
+              <p className="text-xl text-gray-300 mb-8">
+                Try our comprehensive demo and see how MonArk can transform your dating experience.
+              </p>
+              
+              <Button
+                onClick={startFullDemo}
+                className="bg-goldenrod-gradient text-jet-black font-semibold px-8 py-4 text-lg hover:shadow-golden-glow transition-all duration-300"
+              >
+                <Star className="h-5 w-5 mr-2" />
+                Launch Full Demo Experience
+              </Button>
+              
+              <div className="text-sm text-gray-400 mt-6">
+                <p>Explore profiles • Chat with matches • Track growth • No commitment required</p>
               </div>
             </div>
           </div>
@@ -386,31 +340,6 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
-      {/* Demo CTA */}
-      <section className="py-20">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <div className="bg-gradient-to-r from-goldenrod/10 to-blue-900/10 rounded-2xl p-12 border border-goldenrod/20">
-            <h3 className="text-3xl font-light text-white mb-4">
-              Ready to Experience the Future of Dating?
-            </h3>
-            <p className="text-xl text-gray-300 mb-8">
-              Try our comprehensive demo and see how MonArk can transform your dating experience.
-            </p>
-            
-            <Button
-              onClick={startFullDemo}
-              className="bg-goldenrod-gradient text-jet-black font-semibold px-8 py-4 text-lg hover:shadow-golden-glow transition-all duration-300"
-            >
-              <Star className="h-5 w-5 mr-2" />
-              Launch Full Demo Experience
-            </Button>
-            
-            <div className="text-sm text-gray-400 mt-6">
-              <p>Explore profiles • Chat with matches • Track growth • No commitment required</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="py-12 border-t border-gray-800">
