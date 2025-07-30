@@ -8,9 +8,9 @@
     --color-bone: 35 15% 96%; /* Soft ivory/bone - warm neutral background */
     --color-sand: 35 8% 92%; /* Subtle sand for surfaces */
     --color-parchment: 35 20% 98%; /* Softer ivory for elevated surfaces */
-    --color-charcoal: 220 30% 8%; /* Deep navy-charcoal for maximum readability */
-    --color-charcoal-soft: 220 25% 18%; /* Dark navy for secondary text */
-    --color-charcoal-muted: 220 25% 55%; /* Medium navy for muted elements */
+    --color-charcoal: 170 17% 21%; /* Deep green for maximum readability */
+    --color-charcoal-soft: 170 17% 25%; /* Slightly lighter deep green for secondary text */
+    --color-charcoal-muted: 170 17% 30%; /* Medium deep green for muted elements */
     --color-taupe: 25 25% 25%; /* Muted taupe - editorial accent */
     --color-olive: 80 15% 65%; /* Muted olive - sparingly used */
     --color-dusty-rose: 355 40% 55%; /* Dusty rose for gentle alerts */
@@ -38,7 +38,7 @@
     --secondary-foreground: var(--color-charcoal);
 
     --muted: 35 10% 88%; /* Muted sand */
-    --muted-foreground: 220 25% 8%; /* Much darker muted text for readability */
+    --muted-foreground: var(--color-charcoal-muted);
 
     --accent: var(--color-olive);
     --accent-foreground: var(--color-charcoal);
