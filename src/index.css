@@ -38,7 +38,7 @@
     --secondary-foreground: var(--color-charcoal);
 
     --muted: 35 10% 88%; /* Muted sand */
-    --muted-foreground: var(--color-charcoal-soft);
+    --muted-foreground: 220 25% 8%; /* Much darker muted text for readability */
 
     --accent: var(--color-olive);
     --accent-foreground: var(--color-charcoal);
