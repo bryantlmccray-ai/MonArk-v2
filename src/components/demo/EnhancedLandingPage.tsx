@@ -75,19 +75,19 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       <section className="relative overflow-hidden min-h-screen flex items-center">
         <div className="absolute inset-0 bg-gradient-to-br from-sand/50 via-transparent to-parchment/30" />
         
-        <div className="relative max-w-4xl mx-auto px-12 py-32">
-          <div className="text-center space-y-20">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-8 lg:px-12 py-16 sm:py-24 lg:py-32">
+          <div className="text-center space-y-8 sm:space-y-12 lg:space-y-20">
             <div className="animate-fade-in">
-              <MonArkLogo size="xl" animated={true} rotateOnLoad={true} className="mx-auto mb-16" />
+              <MonArkLogo size="xl" animated={true} rotateOnLoad={true} className="mx-auto mb-8 sm:mb-12 lg:mb-16" />
             </div>
             
-            <div className="max-w-2xl mx-auto space-y-12">
-              <div className="space-y-8">
-                <h1 className="text-7xl font-editorial-headline text-charcoal leading-[0.9] tracking-wide">
+            <div className="max-w-2xl mx-auto space-y-6 sm:space-y-8 lg:space-y-12">
+              <div className="space-y-4 sm:space-y-6 lg:space-y-8">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-editorial-headline text-charcoal leading-[0.9] tracking-wide px-2">
                   EMOTIONAL INTELLIGENCE,<br />NATURALLY ENGINEERED.
                 </h1>
                 <div className="w-32 h-px bg-taupe mx-auto"></div>
-                <p className="text-lg font-body text-charcoal-soft leading-loose">
+                <p className="text-base sm:text-lg font-body text-charcoal-soft leading-loose px-4">
                   Love doesn't have a script. But it can have a setting.<br />
                   A space where intention meets connection.
                 </p>
@@ -95,18 +95,18 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             </div>
 
             {/* Editorial Stats */}
-            <div className="grid grid-cols-3 gap-16 py-12 max-w-lg mx-auto">
+            <div className="grid grid-cols-3 gap-4 sm:gap-8 lg:gap-16 py-8 sm:py-12 max-w-lg mx-auto px-4">
               <div className="text-center space-y-2">
-                <div className="text-3xl font-editorial-headline text-taupe">85</div>
-                <div className="font-caption text-charcoal-muted">PERCENT SATISFACTION</div>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-editorial-headline text-taupe">85</div>
+                <div className="font-caption text-charcoal-muted text-xs sm:text-sm">PERCENT SATISFACTION</div>
               </div>
               <div className="text-center space-y-2">
-                <div className="text-3xl font-editorial-headline text-taupe">3X</div>
-                <div className="font-caption text-charcoal-muted">DEEPER DIALOGUE</div>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-editorial-headline text-taupe">3X</div>
+                <div className="font-caption text-charcoal-muted text-xs sm:text-sm">DEEPER DIALOGUE</div>
               </div>
               <div className="text-center space-y-2">
-                <div className="text-3xl font-editorial-headline text-taupe">24/7</div>
-                <div className="font-caption text-charcoal-muted">AI GUIDANCE</div>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-editorial-headline text-taupe">24/7</div>
+                <div className="font-caption text-charcoal-muted text-xs sm:text-sm">AI GUIDANCE</div>
               </div>
             </div>
 
