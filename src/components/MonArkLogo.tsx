@@ -7,8 +7,9 @@ interface MonArkLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   onClick?: () => void;
   clickable?: boolean;
-  variant?: 'default' | 'compact'; // New variant for different layout styles
-  animated?: boolean; // New prop for enabling animations
+  variant?: 'default' | 'compact';
+  animated?: boolean;
+  rotateOnLoad?: boolean; // New prop for rotation animation
 }
 
 export const MonArkLogo: React.FC<MonArkLogoProps> = ({ 
@@ -18,7 +19,8 @@ export const MonArkLogo: React.FC<MonArkLogoProps> = ({
   onClick,
   clickable = false,
   variant = 'default',
-  animated = false
+  animated = false,
+  rotateOnLoad = false
 }) => {
   const sizeClasses = {
     sm: 'h-18',   // Increased more for better frame fill
@@ -28,7 +30,7 @@ export const MonArkLogo: React.FC<MonArkLogoProps> = ({
   };
 
   const LogoImage = () => (
-    <div className={`relative ${clickable ? 'cursor-pointer group' : ''} ${animated ? 'animate-gentle-float' : ''}`}>
+    <div className={`relative ${clickable ? 'cursor-pointer group' : ''} ${animated ? 'animate-gentle-float' : ''} ${rotateOnLoad ? 'animate-[spin_2s_ease-in-out_2]' : ''}`}>
       {/* Larger, softer animated backdrop */}
       <div className={`absolute -inset-6 bg-gradient-to-br from-primary/15 via-primary/5 to-accent/10 rounded-full blur-3xl transition-all duration-700 ${
         animated ? 'animate-gentle-pulse opacity-50' : 'opacity-70'

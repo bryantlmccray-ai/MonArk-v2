@@ -38,6 +38,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
             onClick={onArkNavigation || (() => onTabChange('dates'))}
             variant="compact"
             size="lg"
+            rotateOnLoad={true}
           />
         </div>
       </SidebarHeader>
