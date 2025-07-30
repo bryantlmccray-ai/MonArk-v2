@@ -54,7 +54,7 @@ export const RIFPostDateFeedback: React.FC<RIFPostDateFeedbackProps> = ({
 
   return (
     <div className="fixed inset-0 bg-jet-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-charcoal-gray rounded-2xl p-6 w-full max-w-md border border-gray-700 max-h-[90vh] overflow-y-auto">
+      <div className="bg-card rounded-2xl p-6 w-full max-w-md border border-gray-700 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center space-x-2">
             <Heart className="h-5 w-5 text-goldenrod" />
