@@ -5,9 +5,9 @@
 @layer base {
   :root {
     /* Quiet Luxury Color System - Editorial magazine aesthetic */
-    --color-bone: 35 15% 65%; /* Much darker warm neutral background */
-    --color-sand: 35 8% 62%; /* Much darker sand for surfaces */
-    --color-parchment: 35 20% 67%; /* Much darker ivory for elevated surfaces */
+    --color-bone: 35 15% 45%; /* Much darker warm neutral background */
+    --color-sand: 35 8% 42%; /* Much darker sand for surfaces */
+    --color-parchment: 35 20% 47%; /* Much darker ivory for elevated surfaces */
     --color-charcoal: 213 30% 17%; /* Sophisticated navy with a modern twist */
     --color-charcoal-soft: 213 30% 17%; /* Same as main text for consistency */
     --color-charcoal-muted: 213 30% 17%; /* Same as main text for consistency */
