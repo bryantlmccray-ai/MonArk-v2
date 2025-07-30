@@ -8,9 +8,9 @@
     --color-bone: 35 15% 65%; /* Much darker warm neutral background */
     --color-sand: 35 8% 62%; /* Much darker sand for surfaces */
     --color-parchment: 35 20% 67%; /* Much darker ivory for elevated surfaces */
-    --color-charcoal: 170 17% 55%; /* Very light green for ultra-low contrast */
-    --color-charcoal-soft: 170 17% 55%; /* Same as main text for consistency */
-    --color-charcoal-muted: 170 17% 55%; /* Same as main text for consistency */
+    --color-charcoal: 213 30% 17%; /* Sophisticated navy with a modern twist */
+    --color-charcoal-soft: 213 30% 17%; /* Same as main text for consistency */
+    --color-charcoal-muted: 213 30% 17%; /* Same as main text for consistency */
     --color-taupe: 25 25% 25%; /* Muted taupe - editorial accent */
     --color-olive: 80 15% 65%; /* Muted olive - sparingly used */
     --color-dusty-rose: 355 40% 55%; /* Dusty rose for gentle alerts */
