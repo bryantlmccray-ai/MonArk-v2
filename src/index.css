@@ -5,12 +5,12 @@
 @layer base {
   :root {
     /* Quiet Luxury Color System - Editorial magazine aesthetic */
-    --color-bone: 35 15% 85%; /* Darker warm neutral background */
-    --color-sand: 35 8% 80%; /* Darker sand for surfaces */
-    --color-parchment: 35 20% 88%; /* Darker ivory for elevated surfaces */
-    --color-charcoal: 170 17% 8%; /* Very dark green for maximum readability */
-    --color-charcoal-soft: 170 17% 12%; /* Dark green for secondary text */
-    --color-charcoal-muted: 25 25% 15%; /* Dark brown for muted elements */
+    --color-bone: 35 15% 95%; /* Light warm neutral background */
+    --color-sand: 35 8% 92%; /* Light sand for surfaces */
+    --color-parchment: 35 20% 97%; /* Light ivory for elevated surfaces */
+    --color-charcoal: 170 17% 5%; /* Almost black green for maximum readability */
+    --color-charcoal-soft: 170 17% 8%; /* Very dark green for secondary text */
+    --color-charcoal-muted: 25 25% 10%; /* Very dark brown for muted elements */
     --color-taupe: 25 25% 25%; /* Muted taupe - editorial accent */
     --color-olive: 80 15% 65%; /* Muted olive - sparingly used */
     --color-dusty-rose: 355 40% 55%; /* Dusty rose for gentle alerts */
