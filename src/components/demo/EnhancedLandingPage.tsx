@@ -169,14 +169,6 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       {/* App Preview Section */}
       <section className="py-20 bg-gradient-to-b from-charcoal-gray/10 to-charcoal-gray/30">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-light text-white mb-4">
-              Ready to Experience the Future of Dating
-            </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Get a glimpse of the MonArk experience before you dive in
-            </p>
-          </div>
 
           <div className="max-w-4xl mx-auto text-center">
             <div className="bg-gradient-to-r from-goldenrod/10 to-blue-900/10 rounded-2xl p-12 border border-goldenrod/20">
