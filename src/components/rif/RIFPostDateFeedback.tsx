@@ -71,7 +71,7 @@ export const RIFPostDateFeedback: React.FC<RIFPostDateFeedbackProps> = ({
         <div className="space-y-6">
           <div className="text-center">
             <p className="text-gray-300">How was your date with {dateName}?</p>
-            <p className="text-xs text-gray-500 mt-1">Your feedback helps improve your MonArk experience</p>
+            <p className="text-sm text-gray-500 mt-1">Your feedback helps improve your MonArk experience</p>
           </div>
 
           {/* Overall Experience */}
@@ -88,7 +88,7 @@ export const RIFPostDateFeedback: React.FC<RIFPostDateFeedbackProps> = ({
               step={1}
               className="w-full"
             />
-            <div className="flex justify-between text-xs text-gray-400">
+            <div className="flex justify-between text-sm text-gray-400">
               <span>Not great</span>
               <span>Amazing</span>
             </div>
@@ -108,7 +108,7 @@ export const RIFPostDateFeedback: React.FC<RIFPostDateFeedbackProps> = ({
               step={1}
               className="w-full"
             />
-            <div className="flex justify-between text-xs text-gray-400">
+            <div className="flex justify-between text-sm text-gray-400">
               <span>Mismatched</span>
               <span>Perfect sync</span>
             </div>
@@ -128,7 +128,7 @@ export const RIFPostDateFeedback: React.FC<RIFPostDateFeedbackProps> = ({
               step={1}
               className="w-full"
             />
-            <div className="flex justify-between text-xs text-gray-400">
+            <div className="flex justify-between text-sm text-gray-400">
               <span>Concerning</span>
               <span>Very respectful</span>
             </div>
@@ -148,7 +148,7 @@ export const RIFPostDateFeedback: React.FC<RIFPostDateFeedbackProps> = ({
               step={1}
               className="w-full"
             />
-            <div className="flex justify-between text-xs text-gray-400">
+            <div className="flex justify-between text-sm text-gray-400">
               <span>No spark</span>
               <span>Strong connection</span>
             </div>
@@ -168,7 +168,7 @@ export const RIFPostDateFeedback: React.FC<RIFPostDateFeedbackProps> = ({
               step={1}
               className="w-full"
             />
-            <div className="flex justify-between text-xs text-gray-400">
+            <div className="flex justify-between text-sm text-gray-400">
               <span>Unclear</span>
               <span>Very clear</span>
             </div>
@@ -204,7 +204,7 @@ export const RIFPostDateFeedback: React.FC<RIFPostDateFeedbackProps> = ({
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-goldenrod focus:outline-none resize-none"
               rows={4}
             />
-            <p className="text-xs text-gray-500">
+            <p className="text-sm text-gray-500">
               This helps you track your dating journey and personal growth over time
             </p>
           </div>
