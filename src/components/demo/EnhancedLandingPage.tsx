@@ -336,11 +336,11 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       {/* Footer */}
       <footer className="py-12 border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center text-gray-400">
+          <div className="text-center text-muted-foreground">
             <div className="flex items-center justify-center mb-8">
               <MonArkLogo size="md" variant="compact" />
             </div>
-            <p className="mb-4">&copy; 2024 MonArk. Dating reimagined with emotional intelligence.</p>
+            <p className="mb-4 text-foreground">&copy; 2024 MonArk. Dating reimagined with emotional intelligence.</p>
             <div className="flex items-center justify-center space-x-6 text-sm">
               <a href="/privacy" className="text-goldenrod hover:underline">
                 Privacy Policy
