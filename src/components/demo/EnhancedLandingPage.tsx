@@ -48,7 +48,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           
           <div className="text-center space-y-4">
             <h1 className="text-3xl font-light text-white">Join MonArk</h1>
-            <p className="text-gray-400">Create your account to start meaningful connections</p>
+            <p className="text-muted-foreground">Create your account to start meaningful connections</p>
           </div>
 
           <div className="space-y-4">
@@ -60,7 +60,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               ← Back to Homepage
             </Button>
             
-            <div className="text-center text-sm text-gray-500">
+            <div className="text-center text-sm text-muted-foreground">
               <p>Authentication coming soon in full version</p>
             </div>
           </div>
@@ -175,7 +175,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               <h3 className="text-3xl font-light text-white mb-4">
                 Ready to Experience the Future of Dating?
               </h3>
-              <p className="text-xl text-gray-300 mb-8">
+              <p className="text-xl text-muted-foreground mb-8">
                 Try our comprehensive demo and see how MonArk can transform your dating experience.
               </p>
               
@@ -187,7 +187,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 Launch Full Demo Experience
               </Button>
               
-              <div className="text-sm text-gray-400 mt-6">
+              <div className="text-sm text-muted-foreground mt-6">
                 <p>Explore profiles • Chat with matches • Track growth • No commitment required</p>
               </div>
             </div>
@@ -202,7 +202,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <h2 className="text-4xl font-light text-white mb-4">
               Redefining Online Dating
             </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Our unique Relational Intelligence Framework (RIF) helps you connect 
               with people who match your emotional readiness and relationship goals.
             </p>
@@ -334,7 +334,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
 
       {/* Footer */}
-      <footer className="py-12 border-t border-gray-800">
+      <footer className="py-12 border-t border-border">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center text-muted-foreground">
             <div className="flex items-center justify-center mb-8">
