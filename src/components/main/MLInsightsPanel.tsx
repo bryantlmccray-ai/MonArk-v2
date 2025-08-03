@@ -90,14 +90,14 @@ export const MLInsightsPanel: React.FC = () => {
       )}
 
       {/* Enhanced trigger button with AI chat option */}
-      <div className="fixed bottom-20 right-4 flex flex-col items-end space-y-2 z-40">
+      <div className="fixed bottom-24 right-6 flex flex-col items-end space-y-3 z-50">
         {/* AI Companion Button */}
         <button
           onClick={() => {
             setShowAIChat(true);
             markInsightsAsRead();
           }}
-          className="bg-goldenrod hover:bg-goldenrod/90 text-jet-black rounded-full p-3 shadow-lg transition-all duration-300 hover:scale-110"
+          className="bg-goldenrod hover:bg-goldenrod/90 text-jet-black rounded-full p-4 shadow-golden-glow border border-goldenrod/30 transition-all duration-300 hover:scale-110 relative"
         >
           <MessageCircle className="h-5 w-5" />
           {hasNewInsights && (
