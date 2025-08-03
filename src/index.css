@@ -47,7 +47,7 @@
     --destructive-foreground: var(--color-bone);
 
     --border: 35 8% 85%; /* Subtle bone borders */
-    --input: 35 12% 94%; /* Soft input backgrounds */
+    --input: 0 0% 100%; /* White input backgrounds for proper contrast */
     --ring: var(--color-taupe); /* Taupe for focus rings */
 
     /* Sidebar colors for editorial theme */
