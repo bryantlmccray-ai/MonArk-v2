@@ -156,7 +156,7 @@ export const JournalEntryModal: React.FC<JournalEntryModalProps> = ({
                 value={formData.date_title}
                 onChange={(e) => handleInputChange('date_title', e.target.value)}
                 placeholder="e.g., Coffee Date at Central Park"
-                className="bg-jet-black border-gray-700 text-white"
+                className="bg-white border-gray-700 text-black"
               />
             </div>
             
@@ -166,7 +166,7 @@ export const JournalEntryModal: React.FC<JournalEntryModalProps> = ({
                 value={formData.partner_name}
                 onChange={(e) => handleInputChange('partner_name', e.target.value)}
                 placeholder="First name or nickname"
-                className="bg-jet-black border-gray-700 text-white"
+                className="bg-white border-gray-700 text-black"
               />
             </div>
           </div>
@@ -178,7 +178,7 @@ export const JournalEntryModal: React.FC<JournalEntryModalProps> = ({
               value={formData.date_activity}
               onChange={(e) => handleInputChange('date_activity', e.target.value)}
               placeholder="What did you do together?"
-              className="bg-jet-black border-gray-700 text-white"
+              className="bg-white border-gray-700 text-black"
             />
           </div>
 
@@ -238,7 +238,7 @@ export const JournalEntryModal: React.FC<JournalEntryModalProps> = ({
                 value={newTag}
                 onChange={(e) => setNewTag(e.target.value)}
                 placeholder="Add a tag (e.g., romantic, fun, outdoors)"
-                className="bg-jet-black border-gray-700 text-white"
+                className="bg-white border-gray-700 text-black"
                 onKeyPress={(e) => e.key === 'Enter' && handleAddTag()}
               />
               <Button
@@ -259,7 +259,7 @@ export const JournalEntryModal: React.FC<JournalEntryModalProps> = ({
               value={formData.reflection_notes}
               onChange={(e) => handleInputChange('reflection_notes', e.target.value)}
               placeholder="How did the date go? What was the conversation like?"
-              className="bg-jet-black border-gray-700 text-white min-h-20"
+              className="bg-white border-gray-700 text-black min-h-20"
             />
           </div>
 
@@ -270,7 +270,7 @@ export const JournalEntryModal: React.FC<JournalEntryModalProps> = ({
               value={formData.learned_insights}
               onChange={(e) => handleInputChange('learned_insights', e.target.value)}
               placeholder="What did you discover about yourself, dating, or what you're looking for?"
-              className="bg-jet-black border-gray-700 text-white min-h-20"
+              className="bg-white border-gray-700 text-black min-h-20"
             />
           </div>
 
