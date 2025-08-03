@@ -140,8 +140,8 @@ export const ConversationHelper: React.FC<ConversationHelperProps> = ({
             align="end"
           >
             <div className="space-y-3">
-              <div className="text-sm font-medium text-goldenrod">Conversation Helper</div>
-              <p className="text-xs text-gray-400">
+              <div className="text-sm font-medium text-primary">Conversation Helper</div>
+              <p className="text-xs text-muted-foreground">
                 Get gentle suggestions to improve your conversation
               </p>
               
@@ -150,16 +150,16 @@ export const ConversationHelper: React.FC<ConversationHelperProps> = ({
                   <button
                     key={option.id}
                     onClick={option.action}
-                    className="w-full flex items-start space-x-3 p-2 rounded-lg hover:bg-gray-800/50 transition-colors text-left"
+                    className="w-full flex items-start space-x-3 p-2 rounded-lg hover:bg-secondary transition-colors text-left"
                   >
-                    <div className="text-goldenrod mt-0.5">
+                    <div className="text-primary mt-0.5">
                       {option.icon}
                     </div>
                     <div className="flex-1">
-                      <div className="text-sm font-medium text-white">
+                      <div className="text-sm font-medium text-foreground">
                         {option.label}
                       </div>
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs text-muted-foreground">
                         {option.description}
                       </div>
                     </div>
