@@ -71,35 +71,29 @@ export const AIConciergeModal: React.FC<AIConciergeModalProps> = ({
   const renderIntroStep = () => (
     <div className="space-y-8">
       <div className="text-center">
-        <div className="w-20 h-20 bg-gradient-to-br from-amber-100 to-amber-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg ring-1 ring-amber-200/50">
-          <Sparkles className="h-10 w-10 text-amber-600" />
+        <div className="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg backdrop-blur-sm">
+          <Sparkles className="h-8 w-8 text-amber-400" />
         </div>
-        <h3 className="text-2xl font-light text-slate-800 mb-3 tracking-wide">
+        <h3 className="text-2xl font-light text-slate-100 mb-3 tracking-wide">
           Ready to plan something special?
         </h3>
-        <p className="text-slate-600 text-sm leading-relaxed max-w-sm mx-auto">
+        <p className="text-slate-300 text-sm leading-relaxed max-w-sm mx-auto">
           Your AI concierge has noticed great chemistry in your conversation with {matchName}. 
           Let's create a personalized date experience that brings out the best in both of you.
         </p>
       </div>
 
-      <div className="bg-gradient-to-r from-slate-50 to-slate-100/50 rounded-xl p-6 space-y-4 border border-slate-200/50 shadow-sm">
-        <div className="flex items-center space-x-4 text-sm text-slate-700">
-          <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
-            <MessageCircle className="h-4 w-4 text-amber-600" />
-          </div>
+      <div className="bg-slate-800/40 backdrop-blur-sm rounded-xl p-6 space-y-4 border border-slate-700/50">
+        <div className="flex items-center space-x-4 text-sm text-slate-300">
+          <MessageCircle className="h-5 w-5 text-slate-400" />
           <span className="font-medium">Analyzing your conversation flow</span>
         </div>
-        <div className="flex items-center space-x-4 text-sm text-slate-700">
-          <div className="w-8 h-8 bg-rose-100 rounded-full flex items-center justify-center">
-            <Heart className="h-4 w-4 text-rose-600" />
-          </div>
+        <div className="flex items-center space-x-4 text-sm text-slate-300">
+          <Heart className="h-5 w-5 text-rose-400" />
           <span className="font-medium">Matching shared interests and values</span>
         </div>
-        <div className="flex items-center space-x-4 text-sm text-slate-700">
-          <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
-            <MapPin className="h-4 w-4 text-emerald-600" />
-          </div>
+        <div className="flex items-center space-x-4 text-sm text-slate-300">
+          <MapPin className="h-5 w-5 text-emerald-400" />
           <span className="font-medium">Curating location and activity options</span>
         </div>
       </div>
@@ -108,13 +102,13 @@ export const AIConciergeModal: React.FC<AIConciergeModalProps> = ({
         <Button
           onClick={onClose}
           variant="outline"
-          className="flex-1 border-slate-300 text-slate-600 hover:bg-slate-50 font-medium tracking-wide"
+          className="flex-1 border-slate-600 text-slate-300 bg-slate-800/50 hover:bg-slate-700/50 font-medium tracking-wide"
         >
           Maybe Later
         </Button>
         <Button
           onClick={handleGenerateProposal}
-          className="flex-1 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white font-medium shadow-lg tracking-wide"
+          className="flex-1 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-slate-900 font-medium shadow-lg tracking-wide"
         >
           Let's Plan This! ✨
         </Button>
@@ -124,14 +118,14 @@ export const AIConciergeModal: React.FC<AIConciergeModalProps> = ({
 
   const renderGeneratingStep = () => (
     <div className="space-y-8 text-center py-12">
-      <div className="w-20 h-20 bg-gradient-to-br from-amber-100 to-amber-50 rounded-full flex items-center justify-center mx-auto animate-pulse shadow-lg ring-1 ring-amber-200/50">
-        <Sparkles className="h-10 w-10 text-amber-600 animate-spin" />
+      <div className="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto animate-pulse shadow-lg backdrop-blur-sm">
+        <Sparkles className="h-8 w-8 text-amber-400 animate-spin" />
       </div>
       <div>
-        <h3 className="text-2xl font-light text-slate-800 mb-3 tracking-wide">
+        <h3 className="text-2xl font-light text-slate-100 mb-3 tracking-wide">
           Crafting your perfect date...
         </h3>
-        <p className="text-slate-600 text-sm max-w-sm mx-auto">
+        <p className="text-slate-300 text-sm max-w-sm mx-auto">
           Analyzing compatibility and creating a personalized experience
         </p>
       </div>
@@ -144,47 +138,41 @@ export const AIConciergeModal: React.FC<AIConciergeModalProps> = ({
     return (
       <div className="space-y-8">
         <div className="text-center">
-          <h3 className="text-2xl font-light text-slate-800 mb-3 tracking-wide">
+          <h3 className="text-2xl font-light text-slate-100 mb-3 tracking-wide">
             Your Personalized Date Idea
           </h3>
-          <p className="text-slate-600 text-sm">
+          <p className="text-slate-300 text-sm">
             Curated just for you and {matchName}
           </p>
         </div>
 
-        <div className="bg-gradient-to-br from-amber-50 via-white to-rose-50 rounded-2xl p-8 border border-amber-200/50 shadow-xl">
-          <h4 className="text-xl font-light text-slate-800 mb-6 tracking-wide">
+        <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 shadow-xl">
+          <h4 className="text-xl font-light text-slate-100 mb-6 tracking-wide">
             {generatedProposal.title}
           </h4>
           
           <div className="space-y-4 mb-6">
             <div className="flex items-center space-x-4 text-sm">
-              <div className="w-8 h-8 bg-rose-100 rounded-full flex items-center justify-center">
-                <Heart className="h-4 w-4 text-rose-600" />
-              </div>
-              <span className="text-slate-700 font-medium">Vibe: {generatedProposal.vibe}</span>
+              <Heart className="h-5 w-5 text-rose-400" />
+              <span className="text-slate-300 font-medium">Vibe: {generatedProposal.vibe}</span>
             </div>
             <div className="flex items-center space-x-4 text-sm">
-              <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
-                <MapPin className="h-4 w-4 text-emerald-600" />
-              </div>
-              <span className="text-slate-700 font-medium">Setting: {generatedProposal.location_type}</span>
+              <MapPin className="h-5 w-5 text-emerald-400" />
+              <span className="text-slate-300 font-medium">Setting: {generatedProposal.location_type}</span>
             </div>
             <div className="flex items-center space-x-4 text-sm">
-              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                <Clock className="h-4 w-4 text-blue-600" />
-              </div>
-              <span className="text-slate-700 font-medium">Timing: {generatedProposal.time_suggestion}</span>
+              <Clock className="h-5 w-5 text-blue-400" />
+              <span className="text-slate-300 font-medium">Timing: {generatedProposal.time_suggestion}</span>
             </div>
           </div>
 
-          <p className="text-slate-700 text-sm leading-relaxed mb-6 font-light">
+          <p className="text-slate-300 text-sm leading-relaxed mb-6 font-light">
             {generatedProposal.rationale}
           </p>
 
-          <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-slate-200/50 shadow-sm">
-            <p className="text-slate-800 text-sm font-medium mb-2 tracking-wide">Activity Details:</p>
-            <p className="text-slate-700 text-sm font-light leading-relaxed">{generatedProposal.activity}</p>
+          <div className="bg-slate-900/50 backdrop-blur-sm rounded-xl p-4 border border-slate-700/30">
+            <p className="text-slate-200 text-sm font-medium mb-2 tracking-wide">Activity Details:</p>
+            <p className="text-slate-300 text-sm font-light leading-relaxed">{generatedProposal.activity}</p>
           </div>
         </div>
 
@@ -192,14 +180,14 @@ export const AIConciergeModal: React.FC<AIConciergeModalProps> = ({
           <Button
             onClick={handleEditProposal}
             variant="outline"
-            className="flex-1 border-slate-300 text-slate-600 hover:bg-slate-50 font-medium tracking-wide"
+            className="flex-1 border-slate-600 text-slate-300 bg-slate-800/50 hover:bg-slate-700/50 font-medium tracking-wide"
             disabled={isGenerating}
           >
             Try Another Idea
           </Button>
           <Button
             onClick={handleSendProposal}
-            className="flex-1 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white font-medium shadow-lg tracking-wide"
+            className="flex-1 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-slate-900 font-medium shadow-lg tracking-wide"
           >
             Send to {matchName} 💫
           </Button>
@@ -210,14 +198,14 @@ export const AIConciergeModal: React.FC<AIConciergeModalProps> = ({
 
   const renderSentStep = () => (
     <div className="space-y-8 text-center py-12">
-      <div className="w-20 h-20 bg-gradient-to-br from-emerald-100 to-emerald-50 rounded-full flex items-center justify-center mx-auto shadow-lg ring-1 ring-emerald-200/50">
-        <Heart className="h-10 w-10 text-emerald-600" />
+      <div className="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto shadow-lg backdrop-blur-sm">
+        <Heart className="h-8 w-8 text-emerald-400" />
       </div>
       <div>
-        <h3 className="text-2xl font-light text-slate-800 mb-3 tracking-wide">
+        <h3 className="text-2xl font-light text-slate-100 mb-3 tracking-wide">
           Date proposal sent! 🎉
         </h3>
-        <p className="text-slate-600 text-sm max-w-sm mx-auto leading-relaxed">
+        <p className="text-slate-300 text-sm max-w-sm mx-auto leading-relaxed">
           {matchName} will receive your thoughtful date idea. 
           You'll both be notified when they respond.
         </p>
@@ -242,9 +230,9 @@ export const AIConciergeModal: React.FC<AIConciergeModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 shadow-2xl max-w-md backdrop-blur-sm">
+      <DialogContent className="bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 shadow-2xl max-w-md backdrop-blur-sm">
         <DialogHeader>
-          <DialogTitle className="text-slate-800 text-center font-light text-xl tracking-wide">
+          <DialogTitle className="text-slate-100 text-center font-light text-xl tracking-wide">
             AI Date Concierge
           </DialogTitle>
         </DialogHeader>
