@@ -136,7 +136,7 @@ export const ConversationHelper: React.FC<ConversationHelperProps> = ({
             </Button>
           </PopoverTrigger>
           <PopoverContent 
-            className="w-80 bg-charcoal-gray border border-gray-800 text-white"
+            className="w-80 bg-popover border border-border text-foreground shadow-lg z-50"
             align="end"
           >
             <div className="space-y-3">
