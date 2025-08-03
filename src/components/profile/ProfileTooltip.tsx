@@ -34,10 +34,10 @@ export const ProfileTooltip: React.FC<ProfileTooltipProps> = ({
     }`}>
       <div className={`backdrop-blur-sm rounded-lg p-3 border shadow-lg w-56 ${
         isVeryHighlighted
-          ? 'bg-gradient-to-br from-primary/20 via-popover/95 to-accent/20 border-primary/50 shadow-primary/25'
+          ? 'bg-gradient-to-br from-primary/30 via-popover to-accent/30 border-primary/50 shadow-primary/25'
           : isHighlighted
-          ? 'bg-popover/95 border-primary/30 shadow-primary/10'
-          : 'bg-popover/95 border-border'
+          ? 'bg-popover border-primary/30 shadow-primary/10'
+          : 'bg-popover border-border'
       }`}>
         <div className="space-y-2">
           {/* Header with enhanced styling for compatibility */}
