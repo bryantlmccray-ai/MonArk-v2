@@ -65,8 +65,8 @@ export const InsightsModule: React.FC<InsightsModuleProps> = ({ insights }) => {
           
           {/* Clear next steps */}
           <div className="border-t border-gray-700/50 pt-4">
-            <p className="text-gray-400 text-sm mb-3">To start generating insights:</p>
-            <div className="space-y-2 text-xs text-gray-500">
+            <p className="text-foreground text-sm mb-3">To start generating insights:</p>
+            <div className="space-y-2 text-xs text-muted-foreground">
               <div className="flex items-center space-x-2">
                 <MessageCircle className="h-3 w-3" />
                 <span>Complete reflection prompts below</span>
