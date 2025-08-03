@@ -149,7 +149,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose })
                   type="text"
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
-                  className="bg-jet-black border-gray-700 text-white pl-10 focus:border-goldenrod focus:ring-goldenrod/20"
+                  className="bg-white border-gray-700 text-black pl-10 focus:border-goldenrod focus:ring-goldenrod/20"
                   placeholder="First name"
                   disabled={isSubmitting}
                 />
@@ -167,7 +167,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose })
                   type="text"
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
-                  className="bg-jet-black border-gray-700 text-white pl-10 focus:border-goldenrod focus:ring-goldenrod/20"
+                  className="bg-white border-gray-700 text-black pl-10 focus:border-goldenrod focus:ring-goldenrod/20"
                   placeholder="Last name"
                   disabled={isSubmitting}
                 />
@@ -186,7 +186,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose })
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className="bg-jet-black border-gray-700 text-white pl-10 focus:border-goldenrod focus:ring-goldenrod/20"
+                className="bg-white border-gray-700 text-black pl-10 focus:border-goldenrod focus:ring-goldenrod/20"
                 placeholder="your@email.com"
                 disabled={isSubmitting}
               />
