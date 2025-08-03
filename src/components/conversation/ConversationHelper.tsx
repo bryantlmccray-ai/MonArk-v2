@@ -136,12 +136,12 @@ export const ConversationHelper: React.FC<ConversationHelperProps> = ({
             </Button>
           </PopoverTrigger>
           <PopoverContent 
-            className="w-80 bg-popover border border-border text-foreground shadow-lg z-50"
+            className="w-80 bg-white border border-gray-300 text-gray-900 shadow-lg z-50"
             align="end"
           >
             <div className="space-y-3">
-              <div className="text-sm font-medium text-primary">Conversation Helper</div>
-              <p className="text-xs text-muted-foreground">
+              <div className="text-sm font-medium text-gray-900">Conversation Helper</div>
+              <p className="text-xs text-gray-600">
                 Get gentle suggestions to improve your conversation
               </p>
               
@@ -150,16 +150,16 @@ export const ConversationHelper: React.FC<ConversationHelperProps> = ({
                   <button
                     key={option.id}
                     onClick={option.action}
-                    className="w-full flex items-start space-x-3 p-2 rounded-lg hover:bg-secondary transition-colors text-left"
+                    className="w-full flex items-start space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-colors text-left"
                   >
-                    <div className="text-primary mt-0.5">
+                    <div className="text-blue-600 mt-0.5">
                       {option.icon}
                     </div>
                     <div className="flex-1">
-                      <div className="text-sm font-medium text-foreground">
+                      <div className="text-sm font-medium text-gray-900">
                         {option.label}
                       </div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-xs text-gray-600">
                         {option.description}
                       </div>
                     </div>
