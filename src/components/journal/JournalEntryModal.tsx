@@ -120,7 +120,7 @@ export const JournalEntryModal: React.FC<JournalEntryModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-charcoal-gray border-gray-800 max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-charcoal-gray border border-goldenrod/30 shadow-glow max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-white text-xl">New Journal Entry</DialogTitle>
         </DialogHeader>
