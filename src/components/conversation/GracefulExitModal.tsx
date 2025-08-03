@@ -72,64 +72,64 @@ export const GracefulExitModal: React.FC<GracefulExitModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-white border border-gray-300 text-gray-900 max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 shadow-2xl max-w-lg max-h-[90vh] overflow-y-auto backdrop-blur-sm">
         <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2 text-gray-900">
-            <Heart className="h-5 w-5 text-red-600" />
+          <DialogTitle className="flex items-center space-x-2 text-slate-100 font-light text-xl tracking-wide">
+            <Heart className="h-5 w-5 text-rose-400" />
             <span>End Conversation Kindly</span>
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
-          <p className="text-gray-700 text-sm leading-relaxed">
+        <div className="space-y-8">
+          <p className="text-slate-300 text-sm leading-relaxed font-light">
             It's okay if this connection isn't right for you. Let's help you close this conversation 
             with kindness and respect for {matchName}.
           </p>
 
-          <div className="space-y-4">
-            <h4 className="text-sm font-medium text-gray-900">Choose a message template:</h4>
-            <div className="space-y-2">
+          <div className="space-y-6">
+            <h4 className="text-sm font-medium text-slate-200 tracking-wide">Choose a message template:</h4>
+            <div className="space-y-3">
               {exitTemplates.map((template) => (
                 <button
                   key={template.id}
                   onClick={() => setSelectedTemplate(template.message)}
-                  className={`w-full text-left p-3 rounded-lg border transition-all ${
+                  className={`w-full text-left p-4 rounded-xl border transition-all duration-300 ${
                     selectedTemplate === template.message
-                      ? 'border-blue-600 bg-blue-50 text-blue-900'
-                      : 'border-gray-300 bg-white text-gray-700 hover:border-blue-300'
+                      ? 'border-amber-500/50 bg-amber-500/10 text-amber-300 shadow-lg backdrop-blur-sm'
+                      : 'border-slate-700/50 bg-slate-800/40 hover:border-slate-600/50 hover:bg-slate-700/40 text-slate-300 backdrop-blur-sm'
                   }`}
                 >
-                  <p className="text-sm">{template.message}</p>
+                  <p className="text-sm font-light leading-relaxed">{template.message}</p>
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="space-y-3">
-            <h4 className="text-sm font-medium text-gray-900">Or write your own message:</h4>
+          <div className="space-y-4">
+            <h4 className="text-sm font-medium text-slate-200 tracking-wide">Or write your own message:</h4>
             <Textarea
               value={customMessage}
               onChange={(e) => setCustomMessage(e.target.value)}
               placeholder="Write a kind closing message..."
-              className="bg-white border-gray-300 text-gray-900 placeholder-gray-500 min-h-[80px]"
+              className="bg-slate-800/40 border-slate-700/50 text-slate-300 placeholder-slate-500 min-h-[80px] rounded-xl focus:border-amber-500/50 focus:ring-amber-500/20 backdrop-blur-sm"
             />
           </div>
 
-          <div className="space-y-3">
-            <h4 className="text-sm font-medium text-gray-900">
+          <div className="space-y-4">
+            <h4 className="text-sm font-medium text-slate-200 tracking-wide">
               What led to this decision? (Optional - helps us improve)
             </h4>
             <RadioGroup value={exitReason} onValueChange={setExitReason}>
               {exitReasons.map((reason) => (
-                <div key={reason.id} className="flex items-center space-x-2">
+                <div key={reason.id} className="flex items-center space-x-3">
                   <RadioGroupItem 
                     value={reason.id} 
                     id={reason.id}
-                    className="border-gray-400 text-blue-600"
+                    className="border-slate-600 text-amber-400"
                   />
                   <Label 
                     htmlFor={reason.id} 
-                    className="text-sm text-gray-700 cursor-pointer"
+                    className="text-sm text-slate-300 cursor-pointer font-light"
                   >
                     {reason.label}
                   </Label>
@@ -138,24 +138,24 @@ export const GracefulExitModal: React.FC<GracefulExitModalProps> = ({
             </RadioGroup>
           </div>
 
-          <div className="flex space-x-3 pt-4 border-t border-gray-300">
+          <div className="flex space-x-4 pt-6 border-t border-slate-700/50">
             <Button
               onClick={handleConfirmExit}
               disabled={!customMessage && !selectedTemplate}
-              className="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium"
+              className="flex-1 bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-700 hover:to-rose-600 text-white font-medium shadow-lg tracking-wide"
             >
               Send & Close Conversation
             </Button>
             <Button
               onClick={handleClose}
               variant="outline" 
-              className="border-gray-300 text-gray-700 hover:bg-gray-50"
+              className="border-slate-600 text-slate-300 bg-slate-800/50 hover:bg-slate-700/50 font-medium tracking-wide"
             >
               Cancel
             </Button>
           </div>
 
-          <p className="text-xs text-gray-500 text-center">
+          <p className="text-xs text-slate-400 text-center font-light">
             This will end the conversation respectfully and notify {matchName} of your decision.
           </p>
         </div>
