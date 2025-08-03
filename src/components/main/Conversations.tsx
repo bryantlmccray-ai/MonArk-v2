@@ -166,11 +166,11 @@ export const Conversations: React.FC = () => {
     const isInvolvedConversation = conversations.some(conv => conv.conversationId === proposal.conversation_id);
     if (!isInvolvedConversation) return false;
     
-    // Check if dismissed by current user
+    // Check if dismissed by current user OR if status is declined
     const isCreator = proposal.creator_user_id === user?.id;
     const dismissedField = isCreator ? (proposal as any).dismissed_by_creator_at : (proposal as any).dismissed_by_recipient_at;
     
-    return !!dismissedField;
+    return !!dismissedField || proposal.status === 'declined';
   });
 
   // Show authentication message if user is not logged in
