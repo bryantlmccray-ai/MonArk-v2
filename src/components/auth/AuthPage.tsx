@@ -288,7 +288,7 @@ export const AuthPage: React.FC = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter your full name"
-                className="bg-charcoal-gray border-gray-700 text-white placeholder:text-gray-500 focus:border-goldenrod"
+                className="bg-input border-border text-foreground placeholder:text-muted-foreground focus:border-ring"
                 required={!isLogin}
               />
             </div>
@@ -304,7 +304,7 @@ export const AuthPage: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="bg-charcoal-gray border-gray-700 text-white placeholder:text-gray-500 focus:border-goldenrod"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground focus:border-ring"
               required
             />
           </div>
@@ -319,7 +319,7 @@ export const AuthPage: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
-              className="bg-charcoal-gray border-gray-700 text-white placeholder:text-gray-500 focus:border-goldenrod"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground focus:border-ring"
               required
             />
             {!isLogin && (
@@ -449,7 +449,7 @@ export const AuthPage: React.FC = () => {
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}
                     placeholder="Enter your email"
-                    className="bg-charcoal-gray border-gray-700 text-white placeholder:text-gray-500 focus:border-goldenrod"
+                    className="bg-input border-border text-foreground placeholder:text-muted-foreground focus:border-ring"
                   />
                 </div>
                 
