@@ -97,6 +97,16 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Force visible text in all input fields */
+  input, textarea {
+    color: #000 !important;
+    background-color: #fff !important;
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: #666 !important;
+  }
+
   /* Editorial Typography System - Inspired by design magazines */
   .font-editorial {
     font-family: 'Canela', 'Tiempos Text', 'Playfair Display', 'Georgia', serif;
