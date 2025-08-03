@@ -201,7 +201,7 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, init
         </div>
 
         {/* Tabs */}
-        <div className="flex space-x-1 journal-premium-card p-1.5 backdrop-blur-lg">
+        <div className="flex space-x-1 bg-charcoal-gray rounded-xl p-1.5 border border-gray-800">
           {tabs.map((tab) => (
             <button
               key={tab.id}

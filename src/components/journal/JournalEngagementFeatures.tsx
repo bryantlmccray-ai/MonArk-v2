@@ -59,7 +59,7 @@ export const JournalEngagementFeatures: React.FC<JournalEngagementFeaturesProps>
       {/* Streak & Progress Cards */}
       <div className="grid grid-cols-2 gap-4">
         {/* Current Streak */}
-        <div className="journal-premium-card p-5 group hover:journal-metric-glow transition-all duration-300">
+        <div className="bg-charcoal-gray rounded-xl p-5 border border-gray-800 hover:border-goldenrod/30 group transition-all duration-300">
           <div className="flex items-center space-x-3 mb-3">
             <div className="p-2 bg-orange-500/10 rounded-lg">
               <Flame className="h-5 w-5 text-orange-400" />

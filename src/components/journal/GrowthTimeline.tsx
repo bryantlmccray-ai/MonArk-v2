@@ -11,7 +11,7 @@ export const GrowthTimeline: React.FC = () => {
         <h3 className="text-2xl font-display font-semibold text-white">Your Growth Journey</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="journal-premium-card p-6 animate-pulse">
+            <div key={i} className="bg-charcoal-gray rounded-xl p-6 border border-gray-800 animate-pulse">
               <div className="h-4 bg-gray-700 rounded mb-3 w-3/4"></div>
               <div className="h-8 bg-gray-700 rounded mb-3"></div>
               <div className="h-3 bg-gray-700 rounded w-1/2"></div>
@@ -24,7 +24,7 @@ export const GrowthTimeline: React.FC = () => {
 
   if (metrics.length === 0) {
     return (
-      <div className="journal-premium-card p-8 text-center">
+      <div className="bg-charcoal-gray rounded-xl p-8 text-center border border-gray-800">
         <h3 className="text-2xl font-display font-semibold text-white mb-4">Your Growth Journey</h3>
         <div className="py-8 space-y-4">
           <div className="text-7xl mb-6 animate-gentle-pulse">🌱</div>
@@ -73,7 +73,7 @@ export const GrowthTimeline: React.FC = () => {
         {metrics.map((metric) => (
           <div
             key={metric.id}
-            className="journal-premium-card p-6 hover:journal-metric-glow transition-all duration-500 group cursor-pointer"
+            className="bg-charcoal-gray rounded-xl p-6 border border-gray-800 hover:border-goldenrod/30 hover:shadow-glow transition-all duration-500 group cursor-pointer"
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center space-x-3">
