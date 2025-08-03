@@ -197,7 +197,7 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, init
           <h1 className="text-4xl font-display font-semibold journal-header-text bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
             Dates & Insights
           </h1>
-          <p className="text-gray-400 text-lg font-light tracking-wide">Reflect, grow, and understand your dating journey</p>
+          <p className="text-charcoal text-lg font-bold tracking-wide">Reflect, grow, and understand your dating journey</p>
         </div>
 
         {/* Tabs */}
