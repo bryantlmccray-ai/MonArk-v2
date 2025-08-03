@@ -15,9 +15,9 @@
     --color-olive: 80 15% 65%; /* Muted olive - sparingly used */
     --color-dusty-rose: 355 40% 55%; /* Dusty rose for gentle alerts */
     
-    /* Gold accent colors */
-    --color-goldenrod: 45 100% 50%; /* Rich gold for accents */
-    --color-gold-dark: 35 100% 40%; /* Darker gold for hover states */
+    /* Muted gold accent colors - quiet luxury aesthetic */
+    --color-goldenrod: 40 30% 58%; /* Muted warm brass for accents */
+    --color-gold-dark: 35 25% 45%; /* Darker muted gold for hover states */
 
     /* Editorial design tokens - inspired by The Row, Aesop, Celine */
     --color-editorial-bg: var(--color-bone);
