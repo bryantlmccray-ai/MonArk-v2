@@ -62,34 +62,34 @@ export const ConversationNudgeModal: React.FC<ConversationNudgeModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-monark-ivory border border-monark-navy/10 text-monark-navy max-w-md soft-shadow animate-slide-up">
+      <DialogContent className="bg-white border border-gray-300 text-gray-900 max-w-md shadow-lg">
         <DialogHeader>
-          <DialogTitle className="flex items-center space-x-3 text-monark-navy font-primary font-medium">
+          <DialogTitle className="flex items-center space-x-3 text-gray-900 font-semibold">
             {getNudgeIcon(nudgePrompt.nudge_type)}
             <span>Conversation Helper</span>
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
-          <p className="text-monark-navy/80 text-sm leading-relaxed font-primary">
+          <p className="text-gray-700 text-sm leading-relaxed">
             {nudgePrompt.prompt_text}
           </p>
 
           {responseOptions.length > 0 && (
             <div className="space-y-4">
-              <h4 className="text-sm font-medium text-monark-copper font-primary">Suggested responses:</h4>
+              <h4 className="text-sm font-medium text-gray-900">Suggested responses:</h4>
               <div className="space-y-3">
                 {responseOptions.map((option, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedResponse(option)}
-                    className={`w-full text-left p-4 rounded-monark border transition-all duration-300 ${
+                    className={`w-full text-left p-4 rounded-lg border transition-all duration-300 ${
                       selectedResponse === option
-                        ? 'border-monark-copper bg-monark-copper/10 text-monark-copper gentle-glow'
-                        : 'border-monark-navy/20 bg-monark-ivory hover:border-monark-lavender/50 hover:bg-monark-lavender/5'
+                        ? 'border-blue-600 bg-blue-50 text-blue-900'
+                        : 'border-gray-300 bg-white hover:border-blue-300 hover:bg-blue-25'
                     }`}
                   >
-                    <p className="text-sm font-primary">{option}</p>
+                    <p className="text-sm">{option}</p>
                   </button>
                 ))}
               </div>
@@ -97,12 +97,12 @@ export const ConversationNudgeModal: React.FC<ConversationNudgeModalProps> = ({
           )}
 
           <div className="space-y-3">
-            <h4 className="text-sm font-medium text-monark-copper font-primary">Or write your own:</h4>
+            <h4 className="text-sm font-medium text-gray-900">Or write your own:</h4>
             <Textarea
               value={customMessage}
               onChange={(e) => setCustomMessage(e.target.value)}
               placeholder="Type your own message..."
-              className="bg-monark-ivory border-monark-navy/20 text-monark-navy placeholder-monark-navy/50 min-h-[80px] rounded-monark focus:border-monark-copper focus:ring-monark-copper/20 font-reflection"
+              className="bg-white border-gray-300 text-gray-900 placeholder-gray-500 min-h-[80px] rounded-lg focus:border-blue-500 focus:ring-blue-500/20"
             />
           </div>
 
@@ -110,14 +110,14 @@ export const ConversationNudgeModal: React.FC<ConversationNudgeModalProps> = ({
             <Button
               onClick={handleUseResponse}
               disabled={!customMessage && !selectedResponse}
-              className="flex-1 monark-button monark-button-primary font-primary transition-all duration-300 hover:gentle-glow"
+              className="flex-1 bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300"
             >
               Use This Message
             </Button>
             <Button
               onClick={handleDismiss}
               variant="outline" 
-              className="border-goldenrod/40 text-goldenrod bg-goldenrod/10 hover:bg-goldenrod/20 hover:border-goldenrod hover:text-goldenrod font-primary transition-all duration-300 backdrop-blur-sm"
+              className="border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition-all duration-300"
             >
               Not Now
             </Button>
