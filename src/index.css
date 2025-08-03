@@ -14,6 +14,10 @@
     --color-taupe: 25 25% 25%; /* Muted taupe - editorial accent */
     --color-olive: 80 15% 65%; /* Muted olive - sparingly used */
     --color-dusty-rose: 355 40% 55%; /* Dusty rose for gentle alerts */
+    
+    /* Gold accent colors */
+    --color-goldenrod: 45 100% 50%; /* Rich gold for accents */
+    --color-gold-dark: 35 100% 40%; /* Darker gold for hover states */
 
     /* Editorial design tokens - inspired by The Row, Aesop, Celine */
     --color-editorial-bg: var(--color-bone);

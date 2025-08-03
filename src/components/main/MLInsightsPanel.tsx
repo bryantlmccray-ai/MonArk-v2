@@ -97,7 +97,7 @@ export const MLInsightsPanel: React.FC = () => {
             setShowAIChat(true);
             markInsightsAsRead();
           }}
-          className="bg-goldenrod hover:bg-goldenrod/90 text-jet-black rounded-full p-4 shadow-golden-glow border border-goldenrod/30 transition-all duration-300 hover:scale-110 relative"
+          className="bg-goldenrod hover:bg-gold-dark text-black rounded-full p-4 shadow-lg border-2 border-goldenrod/50 transition-all duration-300 hover:scale-110 hover:shadow-goldenrod/50"
         >
           <MessageCircle className="h-5 w-5" />
           {hasNewInsights && (

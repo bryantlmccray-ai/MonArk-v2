@@ -38,6 +38,8 @@ export default {
 				'taupe': 'hsl(var(--color-taupe))', /* Muted taupe - editorial accent */
 				'olive': 'hsl(var(--color-olive))', /* Muted olive - sparingly used */
 				'dusty-rose': 'hsl(var(--color-dusty-rose))', /* Dusty rose for gentle alerts */
+				'goldenrod': 'hsl(var(--color-goldenrod))', /* Rich gold for accents */
+				'gold-dark': 'hsl(var(--color-gold-dark))', /* Darker gold for hover states */
 
 				/* Legacy support for gradual migration */
 				'warm-ivory': 'hsl(35, 15%, 96%)', /* same as bone */
