@@ -72,22 +72,22 @@ export const GracefulExitModal: React.FC<GracefulExitModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-charcoal-gray border border-gray-800 text-white max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-white border border-gray-300 text-gray-900 max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2 text-white">
-            <Heart className="h-5 w-5 text-red-400" />
+          <DialogTitle className="flex items-center space-x-2 text-gray-900">
+            <Heart className="h-5 w-5 text-red-600" />
             <span>End Conversation Kindly</span>
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
-          <p className="text-gray-300 text-sm leading-relaxed">
+          <p className="text-gray-700 text-sm leading-relaxed">
             It's okay if this connection isn't right for you. Let's help you close this conversation 
             with kindness and respect for {matchName}.
           </p>
 
           <div className="space-y-4">
-            <h4 className="text-sm font-medium text-goldenrod">Choose a message template:</h4>
+            <h4 className="text-sm font-medium text-gray-900">Choose a message template:</h4>
             <div className="space-y-2">
               {exitTemplates.map((template) => (
                 <button
@@ -95,8 +95,8 @@ export const GracefulExitModal: React.FC<GracefulExitModalProps> = ({
                   onClick={() => setSelectedTemplate(template.message)}
                   className={`w-full text-left p-3 rounded-lg border transition-all ${
                     selectedTemplate === template.message
-                      ? 'border-goldenrod bg-goldenrod/10 text-goldenrod'
-                      : 'border-gray-700 bg-gray-800/50 text-gray-300 hover:border-gray-600'
+                      ? 'border-blue-600 bg-blue-50 text-blue-900'
+                      : 'border-gray-300 bg-white text-gray-700 hover:border-blue-300'
                   }`}
                 >
                   <p className="text-sm">{template.message}</p>
@@ -106,17 +106,17 @@ export const GracefulExitModal: React.FC<GracefulExitModalProps> = ({
           </div>
 
           <div className="space-y-3">
-            <h4 className="text-sm font-medium text-goldenrod">Or write your own message:</h4>
+            <h4 className="text-sm font-medium text-gray-900">Or write your own message:</h4>
             <Textarea
               value={customMessage}
               onChange={(e) => setCustomMessage(e.target.value)}
               placeholder="Write a kind closing message..."
-              className="bg-gray-800 border-gray-700 text-white placeholder-gray-400 min-h-[80px]"
+              className="bg-white border-gray-300 text-gray-900 placeholder-gray-500 min-h-[80px]"
             />
           </div>
 
           <div className="space-y-3">
-            <h4 className="text-sm font-medium text-goldenrod">
+            <h4 className="text-sm font-medium text-gray-900">
               What led to this decision? (Optional - helps us improve)
             </h4>
             <RadioGroup value={exitReason} onValueChange={setExitReason}>
@@ -125,11 +125,11 @@ export const GracefulExitModal: React.FC<GracefulExitModalProps> = ({
                   <RadioGroupItem 
                     value={reason.id} 
                     id={reason.id}
-                    className="border-gray-600 text-goldenrod"
+                    className="border-gray-400 text-blue-600"
                   />
                   <Label 
                     htmlFor={reason.id} 
-                    className="text-sm text-gray-300 cursor-pointer"
+                    className="text-sm text-gray-700 cursor-pointer"
                   >
                     {reason.label}
                   </Label>
@@ -138,7 +138,7 @@ export const GracefulExitModal: React.FC<GracefulExitModalProps> = ({
             </RadioGroup>
           </div>
 
-          <div className="flex space-x-3 pt-4 border-t border-gray-800">
+          <div className="flex space-x-3 pt-4 border-t border-gray-300">
             <Button
               onClick={handleConfirmExit}
               disabled={!customMessage && !selectedTemplate}
@@ -149,7 +149,7 @@ export const GracefulExitModal: React.FC<GracefulExitModalProps> = ({
             <Button
               onClick={handleClose}
               variant="outline" 
-              className="border-gray-600 text-gray-300 hover:bg-gray-800"
+              className="border-gray-300 text-gray-700 hover:bg-gray-50"
             >
               Cancel
             </Button>
