@@ -29,7 +29,7 @@ export const GrowthTimeline: React.FC = () => {
         <div className="py-8 space-y-4">
           <div className="text-7xl mb-6 animate-gentle-pulse">🌱</div>
           <p className="text-gray-300 text-lg font-light">Your growth story starts here!</p>
-          <p className="text-gray-500 text-sm max-w-md mx-auto leading-relaxed">
+          <p className="text-charcoal text-sm max-w-md mx-auto leading-relaxed font-bold">
             Complete a few journal entries to see how you're evolving in your dating journey.
           </p>
         </div>
