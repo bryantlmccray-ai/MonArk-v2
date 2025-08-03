@@ -123,7 +123,7 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, init
           ) : (
             <div className="text-center py-8">
               <p className="text-gray-400">No journal entries yet.</p>
-              <p className="text-gray-500 text-sm mt-1">Start journaling to track your dating insights!</p>
+              <p className="text-charcoal text-sm mt-1 font-bold">Start journaling to track your dating insights!</p>
             </div>
           )}
         </div>
