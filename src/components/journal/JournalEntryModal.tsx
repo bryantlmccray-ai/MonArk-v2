@@ -287,7 +287,7 @@ export const JournalEntryModal: React.FC<JournalEntryModalProps> = ({
               onClick={handleSubmit}
               disabled={loading}
               variant="outline"
-              className="flex-1 border-goldenrod/60 text-goldenrod hover:text-goldenrod/90 hover:border-goldenrod font-bold text-lg py-3"
+              className="flex-1 border-goldenrod/60 text-goldenrod hover:text-goldenrod/90 hover:border-goldenrod"
             >
               {loading ? 'Saving...' : 'Save Entry'}
             </Button>
