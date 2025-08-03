@@ -108,7 +108,7 @@ export const GrowthTimeline: React.FC = () => {
 
       {/* Motivational message */}
       {metrics.length > 0 && (
-        <div className="journal-floating-glow bg-gradient-to-r from-goldenrod/10 via-gray-800/20 to-charcoal-gray/40 rounded-2xl p-6 border border-goldenrod/20">
+        <div className="bg-charcoal-gray rounded-2xl p-6 border border-gray-800 hover:border-goldenrod/30 transition-all duration-300">
           <div className="flex items-center space-x-3 mb-3">
             <span className="text-2xl">💡</span>
             <h4 className="text-goldenrod font-display font-medium text-lg">Growth Insight</h4>

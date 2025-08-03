@@ -191,7 +191,7 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, init
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 p-6">
+    <div className="min-h-screen bg-jet-black p-6">
       <div className="max-w-6xl mx-auto space-y-8">
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-display font-semibold journal-header-text bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
