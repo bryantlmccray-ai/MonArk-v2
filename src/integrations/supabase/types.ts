@@ -457,21 +457,6 @@ export type Database = {
         }
         Relationships: []
       }
-      "MonArk RFP": {
-        Row: {
-          created_at: string
-          id: number
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-        }
-        Update: {
-          created_at?: string
-          id?: number
-        }
-        Relationships: []
-      }
       neighborhoods: {
         Row: {
           bounds: Json | null
@@ -1539,6 +1524,16 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
         }
         Returns: boolean
+      }
+      log_admin_action: {
+        Args: {
+          admin_user_id: string
+          action_type: string
+          target_table: string
+          target_id: string
+          details?: Json
+        }
+        Returns: undefined
       }
       mark_messages_as_read: {
         Args: { p_conversation_id: string; p_user_id: string }
