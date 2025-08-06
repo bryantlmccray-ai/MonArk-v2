@@ -4,6 +4,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { MonArkLogo } from '@/components/MonArkLogo';
 import { Hero3DBackground } from '@/components/3d/Hero3DBackground';
+import { FloatingElements } from '@/components/3d/FloatingElements';
 import { Heart, MessageCircle, Calendar, Shield, Star, MapPin, Users, Zap, ArrowRight, Play, CheckCircle, Quote, TrendingUp, Sparkles } from 'lucide-react';
 import { useDemo } from '@/contexts/DemoContext';
 import { DemoMainApp } from './DemoMainApp';
@@ -71,11 +72,13 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
   return (
     <div className="min-h-screen bg-bone">
-      {/* Hero Section - Editorial Magazine Style */}
+      {/* Hero Section - Editorial Magazine Style with Interactive Elements */}
       <section className="relative overflow-hidden min-h-screen flex items-center">
+        <Hero3DBackground />
+        <FloatingElements />
         <div className="absolute inset-0 bg-gradient-to-br from-sand/50 via-transparent to-parchment/30" />
         
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-8 lg:px-12 py-16 sm:py-24 lg:py-32">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-8 lg:px-12 py-16 sm:py-24 lg:py-32 z-20">
           <div className="text-center space-y-8 sm:space-y-12 lg:space-y-20">
             <div className="animate-fade-in">
               <MonArkLogo size="xl" animated={true} rotateOnLoad={true} className="mx-auto mb-8 sm:mb-12 lg:mb-16" />
@@ -94,36 +97,37 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               </div>
             </div>
 
-            {/* Editorial Stats */}
+            {/* Editorial Stats - Enhanced with animations */}
             <div className="grid grid-cols-3 gap-4 sm:gap-8 lg:gap-16 py-8 sm:py-12 max-w-lg mx-auto px-4">
-              <div className="text-center space-y-2">
-                <div className="text-xl sm:text-2xl lg:text-3xl font-editorial-headline text-taupe">85</div>
-                <div className="font-caption text-charcoal-muted text-xs sm:text-sm">PERCENT SATISFACTION</div>
+              <div className="text-center space-y-2 animate-fade-in [animation-delay:300ms] hover-scale cursor-default">
+                <div className="text-xl sm:text-2xl lg:text-3xl font-editorial-headline text-taupe animate-gentle-pulse">85</div>
+                <div className="font-caption text-charcoal-muted text-xs sm:text-sm story-link">PERCENT SATISFACTION</div>
               </div>
-              <div className="text-center space-y-2">
-                <div className="text-xl sm:text-2xl lg:text-3xl font-editorial-headline text-taupe">3X</div>
-                <div className="font-caption text-charcoal-muted text-xs sm:text-sm">DEEPER DIALOGUE</div>
+              <div className="text-center space-y-2 animate-fade-in [animation-delay:400ms] hover-scale cursor-default">
+                <div className="text-xl sm:text-2xl lg:text-3xl font-editorial-headline text-taupe animate-gentle-pulse [animation-delay:500ms]">3X</div>
+                <div className="font-caption text-charcoal-muted text-xs sm:text-sm story-link">DEEPER DIALOGUE</div>
               </div>
-              <div className="text-center space-y-2">
-                <div className="text-xl sm:text-2xl lg:text-3xl font-editorial-headline text-taupe">24/7</div>
-                <div className="font-caption text-charcoal-muted text-xs sm:text-sm">AI GUIDANCE</div>
+              <div className="text-center space-y-2 animate-fade-in [animation-delay:500ms] hover-scale cursor-default">
+                <div className="text-xl sm:text-2xl lg:text-3xl font-editorial-headline text-taupe animate-gentle-pulse [animation-delay:700ms]">24/7</div>
+                <div className="font-caption text-charcoal-muted text-xs sm:text-sm story-link">AI GUIDANCE</div>
               </div>
             </div>
 
-            <div className="space-y-6 max-w-sm mx-auto">
+            <div className="space-y-6 max-w-sm mx-auto animate-fade-in [animation-delay:600ms]">
               <Button
                 onClick={startFullDemo}
-                className="w-full editorial-button-primary py-4 text-sm tracking-widest font-body"
+                className="group w-full editorial-button-primary py-4 text-sm tracking-widest font-body hover-lift hover-glow relative overflow-hidden"
               >
-                EXPERIENCE DEMO
+                <span className="relative z-10 group-hover:tracking-[0.3em] transition-all duration-300">EXPERIENCE DEMO</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-goldenrod to-gold-dark opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
               </Button>
               
               <Button
                 onClick={() => setShowWaitlistModal(true)}
                 variant="outline"
-                className="w-full editorial-button-secondary py-4 text-sm tracking-widest font-body"
+                className="group w-full editorial-button-secondary py-4 text-sm tracking-widest font-body hover-lift transition-all duration-300"
               >
-                JOIN WAITLIST
+                <span className="group-hover:tracking-[0.3em] transition-all duration-300">JOIN WAITLIST</span>
               </Button>
               
               {onExitToApp && (
