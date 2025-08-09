@@ -112,104 +112,12 @@ export default {
 				'magazine': '0 8px 40px rgba(0, 0, 0, 0.06)',
 				'soft': '0 2px 12px rgba(0, 0, 0, 0.06)',
 			},
-			keyframes: {
-				// Accordion Animations
-				"accordion-down": {
-					from: { height: "0", opacity: "0" },
-					to: { height: "var(--radix-accordion-content-height)", opacity: "1" }
-				},
-				"accordion-up": {
-					from: { height: "var(--radix-accordion-content-height)", opacity: "1" },
-					to: { height: "0", opacity: "0" }
-				},
-				// Fade Animations
-				"fade-in": {
-					"0%": {
-						opacity: "0",
-						transform: "translateY(10px)"
-					},
-					"100%": {
-						opacity: "1",
-						transform: "translateY(0)"
-					}
-				},
-				"fade-out": {
-					"0%": {
-						opacity: "1",
-						transform: "translateY(0)"
-					},
-					"100%": {
-						opacity: "0",
-						transform: "translateY(10px)"
-					}
-				},
-				// Scale Animations
-				"scale-in": {
-					"0%": {
-						transform: "scale(0.95)",
-						opacity: "0"
-					},
-					"100%": {
-						transform: "scale(1)",
-						opacity: "1"
-					}
-				},
-				"scale-out": {
-					from: { transform: "scale(1)", opacity: "1" },
-					to: { transform: "scale(0.95)", opacity: "0" }
-				},
-				// Slide Animations
-				"slide-in-right": {
-					"0%": { transform: "translateX(100%)" },
-					"100%": { transform: "translateX(0)" }
-				},
-				"slide-out-right": {
-					"0%": { transform: "translateX(0)" },
-					"100%": { transform: "translateX(100%)" }
-				},
-				"slide-up": {
-					"0%": { transform: "translateY(20px)", opacity: "0" },
-					"100%": { transform: "translateY(0)", opacity: "1" }
-				},
-				// Custom MonArk Animations
-				'gentle-pulse': {
-					'0%, 100%': { transform: 'scale(1)', opacity: '0.8' },
-					'50%': { transform: 'scale(1.05)', opacity: '1' }
-				},
-				'shimmer': {
-					'0%': { transform: 'translateX(-100%)' },
-					'100%': { transform: 'translateX(100%)' }
-				},
-				'float': {
-					'0%, 100%': { transform: 'translateY(0px)' },
-					'50%': { transform: 'translateY(-20px)' }
-				},
-				'glow': {
-					'0%, 100%': { boxShadow: '0 0 20px rgba(212, 175, 55, 0.3)' },
-					'50%': { boxShadow: '0 0 40px rgba(212, 175, 55, 0.6)' }
-				}
-			},
 			animation: {
-				// Basic Animations
-				"accordion-down": "accordion-down 0.2s ease-out",
-				"accordion-up": "accordion-up 0.2s ease-out",
-				"fade-in": "fade-in 0.3s ease-out",
-				"fade-out": "fade-out 0.3s ease-out",
-				"scale-in": "scale-in 0.2s ease-out",
-				"scale-out": "scale-out 0.2s ease-out",
-				"slide-in-right": "slide-in-right 0.3s ease-out",
-				"slide-out-right": "slide-out-right 0.3s ease-out",
-				"slide-up": "slide-up 350ms ease-out",
-				
-				// Combined Animations
-				"enter": "fade-in 0.3s ease-out, scale-in 0.2s ease-out",
-				"exit": "fade-out 0.3s ease-out, scale-out 0.2s ease-out",
-				
-				// MonArk Custom Animations
 				'gentle-pulse': 'gentle-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				'soft-fade-in': 'soft-fade-in 400ms ease-out',
+				'slide-up': 'slide-up 350ms ease-out',
+				'fade-in': 'fade-in 0.3s ease-out',
 				'shimmer': 'shimmer 3s ease-in-out infinite',
-				'float': 'float 6s ease-in-out infinite',
-				'glow': 'glow 3s ease-in-out infinite',
 			},
 			borderRadius: {
 				'monark': '12px',
@@ -220,64 +128,5 @@ export default {
 			}
 		}
 	},
-	plugins: [
-		require("tailwindcss-animate"),
-		function({ addUtilities }: any) {
-			const newUtilities = {
-				// Underline Animation
-				'.story-link': {
-					'position': 'relative',
-					'display': 'inline-block',
-					'&::after': {
-						content: "''",
-						position: 'absolute',
-						width: '100%',
-						transform: 'scaleX(0)',
-						height: '2px',
-						bottom: '0',
-						left: '0',
-						backgroundColor: 'hsl(var(--color-goldenrod))',
-						transformOrigin: 'bottom right',
-						transition: 'transform 0.3s ease-out',
-					},
-					'&:hover::after': {
-						transform: 'scaleX(1)',
-						transformOrigin: 'bottom left',
-					}
-				},
-				// Hover Scale Animation
-				'.hover-scale': {
-					transition: 'transform 0.2s ease-out',
-					'&:hover': {
-						transform: 'scale(1.05)',
-					}
-				},
-				// Smooth lift effect
-				'.hover-lift': {
-					transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-					'&:hover': {
-						transform: 'translateY(-4px)',
-						boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-					}
-				},
-				// Glow effect on hover
-				'.hover-glow': {
-					transition: 'all 0.3s ease-out',
-					'&:hover': {
-						boxShadow: '0 0 20px rgba(212, 175, 55, 0.4)',
-						transform: 'scale(1.02)',
-					}
-				},
-				// Gradient shift animation
-				'.hover-gradient': {
-					backgroundSize: '200% 200%',
-					transition: 'background-position 0.3s ease',
-					'&:hover': {
-						backgroundPosition: 'right center',
-					}
-				}
-			};
-			addUtilities(newUtilities);
-		}
-	],
+	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
