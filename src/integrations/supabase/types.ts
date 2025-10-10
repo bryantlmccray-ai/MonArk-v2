@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -55,6 +55,33 @@ export type Database = {
           insight_title?: string
           insight_type?: string
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      behavior_analytics: {
+        Row: {
+          created_at: string
+          event_data: Json
+          event_type: string
+          id: string
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_data?: Json
+          event_type: string
+          id?: string
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json
+          event_type?: string
+          id?: string
+          session_id?: string | null
           user_id?: string
         }
         Relationships: []
@@ -393,6 +420,118 @@ export type Database = {
           vibe?: string | null
         }
         Relationships: []
+      }
+      itineraries: {
+        Row: {
+          completed_at: string | null
+          consent_nudge_shown: boolean
+          counterpart_user_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          location_data: Json
+          mode: string
+          safety_sharing_enabled: boolean
+          share_link: string | null
+          sos_visible: boolean
+          status: string
+          time_window: Json
+          title: string
+          updated_at: string
+          user_id: string
+          weekly_option_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          consent_nudge_shown?: boolean
+          counterpart_user_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          location_data: Json
+          mode: string
+          safety_sharing_enabled?: boolean
+          share_link?: string | null
+          sos_visible?: boolean
+          status?: string
+          time_window: Json
+          title: string
+          updated_at?: string
+          user_id: string
+          weekly_option_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          consent_nudge_shown?: boolean
+          counterpart_user_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          location_data?: Json
+          mode?: string
+          safety_sharing_enabled?: boolean
+          share_link?: string | null
+          sos_visible?: boolean
+          status?: string
+          time_window?: Json
+          title?: string
+          updated_at?: string
+          user_id?: string
+          weekly_option_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itineraries_weekly_option_id_fkey"
+            columns: ["weekly_option_id"]
+            isOneToOne: false
+            referencedRelation: "weekly_options"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      itinerary_feedback: {
+        Row: {
+          action_taken: string
+          close_message_sent: string | null
+          created_at: string
+          eq_adjustments: Json | null
+          feeling: string
+          id: string
+          itinerary_id: string
+          next_plan_suggested: Json | null
+          user_id: string
+        }
+        Insert: {
+          action_taken: string
+          close_message_sent?: string | null
+          created_at?: string
+          eq_adjustments?: Json | null
+          feeling: string
+          id?: string
+          itinerary_id: string
+          next_plan_suggested?: Json | null
+          user_id: string
+        }
+        Update: {
+          action_taken?: string
+          close_message_sent?: string | null
+          created_at?: string
+          eq_adjustments?: Json | null
+          feeling?: string
+          id?: string
+          itinerary_id?: string
+          next_plan_suggested?: Json | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itinerary_feedback_itinerary_id_fkey"
+            columns: ["itinerary_id"]
+            isOneToOne: false
+            referencedRelation: "itineraries"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       matches: {
         Row: {
@@ -1370,6 +1509,50 @@ export type Database = {
         }
         Relationships: []
       }
+      venue_care_scores: {
+        Row: {
+          accessibility_score: number
+          created_at: string
+          id: string
+          last_updated: string
+          lgbtq_friendly_score: number
+          overall_score: number
+          quality_score: number
+          safety_score: number
+          venue_id: string | null
+        }
+        Insert: {
+          accessibility_score?: number
+          created_at?: string
+          id?: string
+          last_updated?: string
+          lgbtq_friendly_score?: number
+          overall_score?: number
+          quality_score?: number
+          safety_score?: number
+          venue_id?: string | null
+        }
+        Update: {
+          accessibility_score?: number
+          created_at?: string
+          id?: string
+          last_updated?: string
+          lgbtq_friendly_score?: number
+          overall_score?: number
+          quality_score?: number
+          safety_score?: number
+          venue_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "venue_care_scores_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       venue_types: {
         Row: {
           category: string
@@ -1490,6 +1673,114 @@ export type Database = {
         }
         Relationships: []
       }
+      weekly_eq_settings: {
+        Row: {
+          active_from: string
+          budget_range: string
+          conversation_style: string
+          created_at: string
+          crowd_tolerance: string
+          duration_preference: number
+          energy_level: string
+          expires_at: string | null
+          id: string
+          radius_km: number
+          time_boundaries: Json | null
+          updated_at: string
+          user_id: string
+          values_priority: Json | null
+        }
+        Insert: {
+          active_from?: string
+          budget_range?: string
+          conversation_style?: string
+          created_at?: string
+          crowd_tolerance?: string
+          duration_preference?: number
+          energy_level?: string
+          expires_at?: string | null
+          id?: string
+          radius_km?: number
+          time_boundaries?: Json | null
+          updated_at?: string
+          user_id: string
+          values_priority?: Json | null
+        }
+        Update: {
+          active_from?: string
+          budget_range?: string
+          conversation_style?: string
+          created_at?: string
+          crowd_tolerance?: string
+          duration_preference?: number
+          energy_level?: string
+          expires_at?: string | null
+          id?: string
+          radius_km?: number
+          time_boundaries?: Json | null
+          updated_at?: string
+          user_id?: string
+          values_priority?: Json | null
+        }
+        Relationships: []
+      }
+      weekly_options: {
+        Row: {
+          care_index_score: number
+          created_at: string
+          distance_km: number | null
+          eq_fit_chips: Json
+          id: string
+          is_expired: boolean | null
+          is_template: boolean | null
+          option_number: number
+          tapped_at: string | null
+          time_window: Json
+          title: string
+          user_id: string
+          venue_data: Json | null
+          vibe_line: string
+          week_start: string
+          why_this_for_you: string
+        }
+        Insert: {
+          care_index_score?: number
+          created_at?: string
+          distance_km?: number | null
+          eq_fit_chips?: Json
+          id?: string
+          is_expired?: boolean | null
+          is_template?: boolean | null
+          option_number: number
+          tapped_at?: string | null
+          time_window: Json
+          title: string
+          user_id: string
+          venue_data?: Json | null
+          vibe_line: string
+          week_start: string
+          why_this_for_you: string
+        }
+        Update: {
+          care_index_score?: number
+          created_at?: string
+          distance_km?: number | null
+          eq_fit_chips?: Json
+          id?: string
+          is_expired?: boolean | null
+          is_template?: boolean | null
+          option_number?: number
+          tapped_at?: string | null
+          time_window?: Json
+          title?: string
+          user_id?: string
+          venue_data?: Json | null
+          vibe_line?: string
+          week_start?: string
+          why_this_for_you?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -1506,32 +1797,32 @@ export type Database = {
       find_nearest_neighborhood: {
         Args: { user_lat: number; user_lng: number }
         Returns: {
-          id: string
-          name: string
           city: string
-          state: string
           country: string
+          distance_km: number
+          id: string
           lat: number
           lng: number
+          name: string
+          state: string
           transit_score: number
           walkability_score: number
-          distance_km: number
         }[]
       }
       has_role: {
         Args: {
-          _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
         }
         Returns: boolean
       }
       log_admin_action: {
         Args: {
-          admin_user_id: string
           action_type: string
-          target_table: string
-          target_id: string
+          admin_user_id: string
           details?: Json
+          target_id: string
+          target_table: string
         }
         Returns: undefined
       }

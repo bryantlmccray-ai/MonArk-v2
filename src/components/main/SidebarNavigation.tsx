@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Map, MessageCircle, Users, BookOpen } from 'lucide-react';
+import { User, Map, MessageCircle, Users, BookOpen, Calendar } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -23,10 +23,10 @@ interface SidebarNavigationProps {
 export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab, onTabChange, onArkNavigation }) => {
   const tabs = [
     { id: 'profile', icon: User, label: 'Profile' },
+    { id: 'weekly', icon: Calendar, label: 'Weekly Options' },
     { id: 'matches', icon: MessageCircle, label: 'Connections' },
     { id: 'discover', icon: Map, label: 'Discover' },
     { id: 'dates', icon: BookOpen, label: 'Dates & Journal' },
-    { id: 'circle', icon: Users, label: 'Circle' },
   ];
 
   return (

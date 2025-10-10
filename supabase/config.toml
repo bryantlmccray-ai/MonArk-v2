@@ -17,3 +17,9 @@ verify_jwt = false
 
 [functions.google-maps-config]
 verify_jwt = false
+
+[functions.weekly-scheduler]
+verify_jwt = false
+
+[functions.create-itinerary]
+verify_jwt = true

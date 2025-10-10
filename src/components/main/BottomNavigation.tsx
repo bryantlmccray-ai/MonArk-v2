@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { User, Map, MessageCircle, Users, BookOpen } from 'lucide-react';
+import { User, Map, MessageCircle, Users, BookOpen, Calendar } from 'lucide-react';
 
 interface BottomNavigationProps {
   activeTab: string;
@@ -10,10 +9,10 @@ interface BottomNavigationProps {
 export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, onTabChange }) => {
   const tabs = [
     { id: 'profile', icon: User, label: 'Profile' },
-    { id: 'matches', icon: MessageCircle, label: 'Connections' },
+    { id: 'weekly', icon: Calendar, label: 'Weekly' },
+    { id: 'matches', icon: MessageCircle, label: 'Chats' },
     { id: 'discover', icon: Map, label: 'Discover' },
-    { id: 'dates', icon: BookOpen, label: 'Dates & Journal' },
-    { id: 'circle', icon: Users, label: 'Circle' },
+    { id: 'dates', icon: BookOpen, label: 'Journal' },
   ];
 
   return (

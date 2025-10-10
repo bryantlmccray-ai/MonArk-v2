@@ -8,6 +8,7 @@ import { MonArkCircle } from './MonArkCircle';
 import { Conversations } from './Conversations';
 import { DatesJournal } from './DatesJournal';
 import { Profile } from './Profile';
+import { WeeklyOptionsList } from '../weekly/WeeklyOptionsList';
 import { DebriefOverlay } from './overlays/DebriefOverlay';
 import { TrustScoreOverlay } from './overlays/TrustScoreOverlay';
 import { SettingsOverlay } from './overlays/SettingsOverlay';
@@ -51,6 +52,8 @@ export const MainApp: React.FC = () => {
     switch (activeTab) {
       case 'discover':
         return <DiscoveryMap />;
+      case 'weekly':
+        return <WeeklyOptionsList />;
       case 'circle':
         return <MonArkCircle />;
       case 'matches':
