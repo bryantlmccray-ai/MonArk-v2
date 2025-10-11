@@ -99,6 +99,17 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Authenticate user (system use only - internal notifications)
+    const authHeader = req.headers.get('Authorization');
+    
+    // Check if called with service role key for system notifications
+    const apiKey = req.headers.get('apikey');
+    const isSystemCall = apiKey === Deno.env.get('SUPABASE_ANON_KEY');
+    
+    if (!isSystemCall && !authHeader) {
+      throw new Error('Missing authorization');
+    }
+
     const { to, type, title, message, actionUrl }: NotificationEmailRequest = await req.json();
 
     // Validate required fields

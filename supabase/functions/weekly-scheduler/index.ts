@@ -12,23 +12,46 @@ serve(async (req) => {
   }
 
   try {
+    // Authenticate user first
     const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+    );
+
+    const authHeader = req.headers.get('Authorization')
+    if (!authHeader) {
+      throw new Error('Missing authorization header')
+    }
+
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser(
+      authHeader.replace('Bearer ', '')
+    )
+    
+    if (authError || !user) {
+      throw new Error('Unauthorized')
+    }
+
+    // Use service role for operations
+    const supabaseService = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
     const { action, user_id } = await req.json();
 
+    // Ensure user can only generate options for themselves
+    if (user_id && user_id !== user.id) {
+      throw new Error('Cannot generate options for other users')
+    }
+
     if (action === 'generate_weekly_options') {
-      // Generate options for a specific user or all active users
-      const usersToProcess = user_id 
-        ? [{ id: user_id }]
-        : await getActiveUsers(supabaseClient);
+      // Generate options for the authenticated user only
+      const usersToProcess = [{ id: user.id }];
 
       const results = [];
-      for (const user of usersToProcess) {
-        const options = await generateWeeklyOptionsForUser(supabaseClient, user.id);
-        results.push({ user_id: user.id, options });
+      for (const usr of usersToProcess) {
+        const options = await generateWeeklyOptionsForUser(supabaseService, usr.id);
+        results.push({ user_id: usr.id, options });
       }
 
       return new Response(

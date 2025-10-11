@@ -31,8 +31,25 @@ serve(async (req) => {
   }
 
   try {
-    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
+    // Authenticate user
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('Missing authorization header');
+    }
+
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
+    const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY');
+    const authClient = createClient(SUPABASE_URL!, SUPABASE_ANON_KEY!);
+    
+    const { data: { user }, error: authError } = await authClient.auth.getUser(
+      authHeader.replace('Bearer ', '')
+    );
+    
+    if (authError || !user) {
+      throw new Error('Unauthorized');
+    }
+
+    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
     if (!OPENAI_API_KEY) {
@@ -42,7 +59,12 @@ serve(async (req) => {
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
     const requestData: DateProposalRequest = await req.json();
 
-    console.log('Generating date proposal for conversation:', requestData.conversationId);
+    // Ensure user can only create proposals for themselves
+    if (requestData.currentUserId && requestData.currentUserId !== user.id) {
+      throw new Error('Cannot create proposals for other users');
+    }
+
+    console.log('Generating date proposal for conversation:', requestData.conversationId, 'user:', user.id);
 
     // Multi-factor data collection with error handling
     const analysisContext = await gatherAnalysisData(supabase, requestData);

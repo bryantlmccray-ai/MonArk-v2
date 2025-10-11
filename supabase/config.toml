@@ -1,25 +1,28 @@
 project_id = "yjidsifrdmaxubkmqung"
 
 [functions.ai-companion-chat]
-verify_jwt = false
+verify_jwt = true
 
 [functions.ai-date-concierge]
-verify_jwt = false
+verify_jwt = true
 
 [functions.ml-compatibility-trainer]
-verify_jwt = false
+verify_jwt = true
 
 [functions.rif-engine]
-verify_jwt = false
+verify_jwt = true
 
 [functions.send-notification-email]
-verify_jwt = false
+verify_jwt = true
 
 [functions.google-maps-config]
 verify_jwt = false
 
 [functions.weekly-scheduler]
-verify_jwt = false
+verify_jwt = true
 
 [functions.create-itinerary]
+verify_jwt = true
+
+[functions.adaptive-discovery-engine]
 verify_jwt = true

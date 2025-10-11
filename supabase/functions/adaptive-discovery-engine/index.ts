@@ -56,8 +56,27 @@ serve(async (req) => {
   }
 
   try {
+    // Authenticate user
+    const authHeader = req.headers.get('Authorization')
+    if (!authHeader) {
+      throw new Error('Missing authorization header')
+    }
+
+    const { data: { user }, error: authError } = await supabase.auth.getUser(
+      authHeader.replace('Bearer ', '')
+    )
+    
+    if (authError || !user) {
+      throw new Error('Unauthorized')
+    }
+
     const { action, data } = await req.json();
-    console.log('Adaptive Discovery Engine called with action:', action);
+    console.log('Adaptive Discovery Engine called with action:', action, 'for user:', user.id);
+
+    // Ensure user can only access their own data
+    if (data?.user_id && data.user_id !== user.id) {
+      throw new Error('Cannot access other users data')
+    }
 
     let result;
 
