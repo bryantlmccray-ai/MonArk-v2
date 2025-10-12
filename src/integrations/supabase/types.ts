@@ -1642,34 +1642,100 @@ export type Database = {
       }
       waitlist_submissions: {
         Row: {
+          accessibility_needs: string | null
+          age_range: string | null
+          budget_band: string | null
+          city: string | null
+          conversation_style: string | null
+          country: string | null
+          crowd_tolerance: string | null
+          drinking: string | null
           email: string
+          email_opt_in: boolean | null
           first_name: string
+          gender_identity: string | null
+          heard_about_us: string | null
           id: string
           ip_address: string | null
-          last_name: string
+          last_name: string | null
+          lgbtq_plus: boolean | null
+          orientation: string | null
+          other_notes: string | null
+          race_ethnicity: string[] | null
+          relationship_goal: string | null
+          smoking: string | null
           source_page: string | null
+          state_region: string | null
           submitted_at: string
+          time_window: string | null
           user_agent: string | null
+          weekly_energy: string | null
+          willing_to_beta: boolean | null
+          zip: string | null
         }
         Insert: {
+          accessibility_needs?: string | null
+          age_range?: string | null
+          budget_band?: string | null
+          city?: string | null
+          conversation_style?: string | null
+          country?: string | null
+          crowd_tolerance?: string | null
+          drinking?: string | null
           email: string
+          email_opt_in?: boolean | null
           first_name: string
+          gender_identity?: string | null
+          heard_about_us?: string | null
           id?: string
           ip_address?: string | null
-          last_name: string
+          last_name?: string | null
+          lgbtq_plus?: boolean | null
+          orientation?: string | null
+          other_notes?: string | null
+          race_ethnicity?: string[] | null
+          relationship_goal?: string | null
+          smoking?: string | null
           source_page?: string | null
+          state_region?: string | null
           submitted_at?: string
+          time_window?: string | null
           user_agent?: string | null
+          weekly_energy?: string | null
+          willing_to_beta?: boolean | null
+          zip?: string | null
         }
         Update: {
+          accessibility_needs?: string | null
+          age_range?: string | null
+          budget_band?: string | null
+          city?: string | null
+          conversation_style?: string | null
+          country?: string | null
+          crowd_tolerance?: string | null
+          drinking?: string | null
           email?: string
+          email_opt_in?: boolean | null
           first_name?: string
+          gender_identity?: string | null
+          heard_about_us?: string | null
           id?: string
           ip_address?: string | null
-          last_name?: string
+          last_name?: string | null
+          lgbtq_plus?: boolean | null
+          orientation?: string | null
+          other_notes?: string | null
+          race_ethnicity?: string[] | null
+          relationship_goal?: string | null
+          smoking?: string | null
           source_page?: string | null
+          state_region?: string | null
           submitted_at?: string
+          time_window?: string | null
           user_agent?: string | null
+          weekly_energy?: string | null
+          willing_to_beta?: boolean | null
+          zip?: string | null
         }
         Relationships: []
       }
