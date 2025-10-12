@@ -13,9 +13,10 @@ import { Mail, User, Loader2, MapPin, Heart, Wine, Calendar, ChevronRight, Chevr
 interface WaitlistModalProps {
   isOpen: boolean;
   onClose: () => void;
+  sourcePage?: string;
 }
 
-export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose }) => {
+export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, sourcePage = 'demo-landing' }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     // Contact
@@ -162,7 +163,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose })
           other_notes: formData.otherNotes || null,
           ip_address: null,
           user_agent: navigator.userAgent,
-          source_page: 'demo-landing'
+          source_page: sourcePage
         });
 
       if (error) {

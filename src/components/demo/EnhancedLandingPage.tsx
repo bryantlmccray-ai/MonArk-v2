@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { MonArkLogo } from '@/components/MonArkLogo';
-import { Heart, MessageCircle, Calendar, Mail, User, Check, Loader2 } from 'lucide-react';
+import { Heart, MessageCircle, Calendar } from 'lucide-react';
 import { useDemo } from '@/contexts/DemoContext';
 import { DemoMainApp } from './DemoMainApp';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { WaitlistModal } from './WaitlistModal';
 
 interface EnhancedLandingPageProps {
   onExitToApp?: () => void;
@@ -17,14 +14,7 @@ interface EnhancedLandingPageProps {
 export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExitToApp, onStartDemo }) => {
   const { demoData, setDemoMode } = useDemo();
   const [showFullDemo, setShowFullDemo] = useState(false);
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const { toast } = useToast();
+  const [showWaitlistModal, setShowWaitlistModal] = useState(false);
 
   const startFullDemo = () => {
     if (onStartDemo) {
@@ -35,78 +25,6 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
     }
   };
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleWaitlistSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.email.trim()) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all fields",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const { error } = await supabase
-        .from('waitlist_submissions')
-        .insert({
-          first_name: formData.firstName.trim(),
-          last_name: formData.lastName.trim(),
-          email: formData.email.trim().toLowerCase(),
-          ip_address: null,
-          user_agent: navigator.userAgent,
-          source_page: 'enhanced-landing'
-        });
-
-      if (error) {
-        console.error('Waitlist submission error:', error);
-        toast({
-          title: "Submission Failed",
-          description: "There was an error joining the waitlist. Please try again.",
-          variant: "destructive"
-        });
-        return;
-      }
-
-      setIsSubmitted(true);
-      toast({
-        title: "Welcome to the Waitlist!",
-        description: "We'll notify you when MonArk launches. Thank you for your interest!",
-      });
-
-      setTimeout(() => {
-        setFormData({ firstName: '', lastName: '', email: '' });
-        setIsSubmitted(false);
-      }, 3000);
-
-    } catch (error) {
-      console.error('Unexpected error:', error);
-      toast({
-        title: "Unexpected Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   if (showFullDemo) {
     return <DemoMainApp onClose={onExitToApp ? onExitToApp : () => setShowFullDemo(false)} />;
@@ -135,104 +53,26 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               </div>
             </div>
 
-            {/* Waitlist Form */}
+            {/* Waitlist CTA */}
             <div className="max-w-md mx-auto">
               <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 border border-taupe/20 shadow-xl">
                 <div className="text-center mb-6">
                   <h2 className="text-2xl font-editorial-headline text-charcoal mb-2">Join the Waitlist</h2>
-                  <p className="text-sm text-charcoal-soft">Get early access + compatibility quiz preview</p>
+                  <p className="text-sm text-charcoal-soft">Get early access + help shape MonArk</p>
                 </div>
 
-                {isSubmitted ? (
-                  <div className="text-center py-8">
-                    <div className="bg-olive/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                      <Check className="h-8 w-8 text-olive" />
-                    </div>
-                    <h3 className="text-xl font-editorial-headline text-charcoal mb-2">You're on the list!</h3>
-                    <p className="text-charcoal-soft text-sm">
-                      We'll send you early access when MonArk launches.
-                    </p>
-                  </div>
-                ) : (
-                  <form onSubmit={handleWaitlistSubmit} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-2">
-                        <Label htmlFor="firstName" className="text-charcoal text-sm font-body">
-                          First Name
-                        </Label>
-                        <div className="relative">
-                          <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-charcoal-muted" />
-                          <Input
-                            id="firstName"
-                            type="text"
-                            value={formData.firstName}
-                            onChange={(e) => handleInputChange('firstName', e.target.value)}
-                            className="bg-white/80 border-taupe/30 text-charcoal pl-10 focus:border-taupe focus:ring-taupe/20"
-                            placeholder="First"
-                            disabled={isSubmitting}
-                          />
-                        </div>
-                      </div>
+                <Button
+                  onClick={() => setShowWaitlistModal(true)}
+                  className="w-full editorial-button-primary py-3 text-sm tracking-wide font-body"
+                >
+                  JOIN WAITLIST
+                </Button>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="lastName" className="text-charcoal text-sm font-body">
-                          Last Name
-                        </Label>
-                        <div className="relative">
-                          <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-charcoal-muted" />
-                          <Input
-                            id="lastName"
-                            type="text"
-                            value={formData.lastName}
-                            onChange={(e) => handleInputChange('lastName', e.target.value)}
-                            className="bg-white/80 border-taupe/30 text-charcoal pl-10 focus:border-taupe focus:ring-taupe/20"
-                            placeholder="Last"
-                            disabled={isSubmitting}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-charcoal text-sm font-body">
-                        Email Address
-                      </Label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-charcoal-muted" />
-                        <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => handleInputChange('email', e.target.value)}
-                          className="bg-white/80 border-taupe/30 text-charcoal pl-10 focus:border-taupe focus:ring-taupe/20"
-                          placeholder="your@email.com"
-                          disabled={isSubmitting}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="bg-sand/30 rounded-lg p-4 border border-taupe/20">
-                      <p className="text-xs text-charcoal-soft font-body leading-relaxed">
-                        <strong>Preview:</strong> After joining, you'll get a mini RIF compatibility assessment to see how our emotional intelligence matching works.
-                      </p>
-                    </div>
-
-                    <Button
-                      type="submit"
-                      className="w-full editorial-button-primary py-3 text-sm tracking-wide font-body"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          JOINING...
-                        </>
-                      ) : (
-                        'JOIN WAITLIST'
-                      )}
-                    </Button>
-                  </form>
-                )}
+                <div className="bg-sand/30 rounded-lg p-4 border border-taupe/20 mt-4">
+                  <p className="text-xs text-charcoal-soft font-body leading-relaxed text-center">
+                    <strong>Preview:</strong> After joining, you'll get a mini RIF compatibility assessment to see how our emotional intelligence matching works.
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -368,6 +208,9 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           </div>
         </div>
       </section>
+
+      {/* Waitlist Modal */}
+      <WaitlistModal isOpen={showWaitlistModal} onClose={() => setShowWaitlistModal(false)} sourcePage="enhanced-landing" />
 
       {/* Footer */}
       <footer className="py-16 bg-charcoal-gray/30">
