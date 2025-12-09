@@ -1852,10 +1852,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      calculate_age: {
-        Args: { birth_date: string }
-        Returns: number
-      }
+      calculate_age: { Args: { birth_date: string }; Returns: number }
       delete_user_completely: {
         Args: { user_id_input: string }
         Returns: undefined
@@ -1896,10 +1893,7 @@ export type Database = {
         Args: { p_conversation_id: string; p_user_id: string }
         Returns: undefined
       }
-      verify_age_18_plus: {
-        Args: { birth_date: string }
-        Returns: boolean
-      }
+      verify_age_18_plus: { Args: { birth_date: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
