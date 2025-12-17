@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
-import { PenLine, Sparkles } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { PenLine, Sparkles, Briefcase } from 'lucide-react';
 
 interface SimplifiedBioStepProps {
-  onNext: (bio: string) => void;
+  onNext: (data: { bio: string; occupation: string }) => void;
   onBack: () => void;
 }
 
@@ -18,6 +19,7 @@ const prompts = [
 
 export const SimplifiedBioStep: React.FC<SimplifiedBioStepProps> = ({ onNext, onBack }) => {
   const [bio, setBio] = useState('');
+  const [occupation, setOccupation] = useState('');
   const [selectedPrompt, setSelectedPrompt] = useState<string | null>(null);
 
   const handlePromptClick = (prompt: string) => {
@@ -33,17 +35,17 @@ export const SimplifiedBioStep: React.FC<SimplifiedBioStepProps> = ({ onNext, on
   };
 
   const charsRemaining = BIO_CHAR_LIMIT - bio.length;
-  const canProceed = bio.trim().length >= 20;
+  const canProceed = bio.trim().length >= 20 && occupation.trim().length >= 2;
 
   return (
     <div className="min-h-screen bg-background p-6 flex flex-col">
       <div className="flex-1 max-w-md mx-auto w-full space-y-6">
         {/* Progress indicator */}
         <div className="flex justify-center space-x-2">
-          {[1, 2, 3, 4, 5].map((step) => (
+          {[1, 2, 3, 4, 5, 6].map((step) => (
             <div
               key={step}
-              className={`h-1.5 w-8 rounded-full ${step <= 2 ? 'bg-primary' : 'bg-muted'}`}
+              className={`h-1.5 w-6 rounded-full ${step <= 2 ? 'bg-primary' : 'bg-muted'}`}
             />
           ))}
         </div>
@@ -51,17 +53,35 @@ export const SimplifiedBioStep: React.FC<SimplifiedBioStepProps> = ({ onNext, on
         {/* Header */}
         <div className="text-center space-y-2 pt-4">
           <PenLine className="h-12 w-12 text-primary mx-auto mb-4" />
-          <h1 className="text-2xl font-semibold text-foreground">Write Your Bio</h1>
-          <p className="text-muted-foreground">Keep it short and authentic (150 chars max)</p>
+          <h1 className="text-2xl font-semibold text-foreground">About You</h1>
+          <p className="text-muted-foreground">Share a bit about yourself</p>
+        </div>
+
+        {/* Occupation */}
+        <div className="space-y-2">
+          <div className="flex items-center space-x-2 text-muted-foreground">
+            <Briefcase className="h-4 w-4" />
+            <span className="text-sm font-medium">What do you do?</span>
+          </div>
+          <Input
+            value={occupation}
+            onChange={(e) => setOccupation(e.target.value)}
+            placeholder="e.g., Designer, Teacher, Engineer..."
+            className="bg-card border-border text-foreground placeholder:text-muted-foreground"
+          />
         </div>
 
         {/* Bio Text Area */}
         <div className="space-y-3">
+          <div className="flex items-center space-x-2 text-muted-foreground">
+            <Sparkles className="h-4 w-4" />
+            <span className="text-sm font-medium">Write a short bio</span>
+          </div>
           <Textarea
             value={bio}
             onChange={handleChange}
             placeholder="Tell people a little about yourself..."
-            className="min-h-32 bg-card border-border text-foreground placeholder:text-muted-foreground resize-none text-lg"
+            className="min-h-28 bg-card border-border text-foreground placeholder:text-muted-foreground resize-none text-lg"
           />
           <div className="flex justify-between text-sm">
             <span className={`${charsRemaining < 20 ? 'text-destructive' : 'text-muted-foreground'}`}>
@@ -75,10 +95,7 @@ export const SimplifiedBioStep: React.FC<SimplifiedBioStepProps> = ({ onNext, on
 
         {/* Prompt Suggestions */}
         <div className="space-y-3">
-          <div className="flex items-center space-x-2 text-muted-foreground">
-            <Sparkles className="h-4 w-4" />
-            <span className="text-sm">Need inspiration?</span>
-          </div>
+          <span className="text-sm text-muted-foreground">Need inspiration?</span>
           <div className="flex flex-wrap gap-2">
             {prompts.map((prompt) => (
               <button
@@ -100,7 +117,7 @@ export const SimplifiedBioStep: React.FC<SimplifiedBioStepProps> = ({ onNext, on
       {/* Navigation Buttons */}
       <div className="pt-6 max-w-md mx-auto w-full space-y-3">
         <button
-          onClick={() => onNext(bio)}
+          onClick={() => onNext({ bio, occupation })}
           disabled={!canProceed}
           className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
         >

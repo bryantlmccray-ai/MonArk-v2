@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SimplifiedPhotosStep } from './SimplifiedPhotosStep';
 import { SimplifiedBioStep } from './SimplifiedBioStep';
+import { SimplifiedInterestsStep } from './SimplifiedInterestsStep';
 import { LocationStep } from './LocationStep';
 import { SimplifiedIdentityStep } from './SimplifiedIdentityStep';
 import { RelationshipGoalsStep } from './RelationshipGoalsStep';
@@ -17,6 +18,8 @@ interface OnboardingFlowProps {
 interface OnboardingData {
   photos: string[];
   bio: string;
+  occupation: string;
+  interests: string[];
   location: string;
   genderIdentity: string;
   sexualOrientation: string;
@@ -29,6 +32,8 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({
     photos: [],
     bio: '',
+    occupation: '',
+    interests: [],
     location: '',
     genderIdentity: '',
     sexualOrientation: '',
@@ -39,26 +44,29 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
   const { submitFeedback } = useRIF();
   const { toast } = useToast();
 
-  const totalSteps = 7; // 5 profile + RIF Lite + Welcome
-
   const handlePhotosNext = (photos: string[]) => {
     setOnboardingData(prev => ({ ...prev, photos }));
     setCurrentStep(1);
   };
 
-  const handleBioNext = (bio: string) => {
-    setOnboardingData(prev => ({ ...prev, bio }));
+  const handleBioNext = (data: { bio: string; occupation: string }) => {
+    setOnboardingData(prev => ({ ...prev, bio: data.bio, occupation: data.occupation }));
     setCurrentStep(2);
+  };
+
+  const handleInterestsNext = (interests: string[]) => {
+    setOnboardingData(prev => ({ ...prev, interests }));
+    setCurrentStep(3);
   };
 
   const handleLocationNext = (location: string) => {
     setOnboardingData(prev => ({ ...prev, location }));
-    setCurrentStep(3);
+    setCurrentStep(4);
   };
 
   const handleIdentityNext = (data: { genderIdentity: string; sexualOrientation: string }) => {
     setOnboardingData(prev => ({ ...prev, ...data }));
-    setCurrentStep(4);
+    setCurrentStep(5);
   };
 
   const handleGoalsNext = async (goals: string[]) => {
@@ -70,6 +78,8 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
       await updateProfile({
         photos: updatedData.photos,
         bio: updatedData.bio,
+        occupation: updatedData.occupation,
+        interests: updatedData.interests,
         location: updatedData.location,
         gender_identity: updatedData.genderIdentity as any,
         sexual_orientation: updatedData.sexualOrientation as any,
@@ -85,7 +95,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
       });
     }
     
-    setCurrentStep(5);
+    setCurrentStep(6);
   };
 
   const handleRIFComplete = async (answers: RIFLiteAnswers) => {
@@ -103,7 +113,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
       console.error('Error saving RIF answers:', error);
     }
     
-    setCurrentStep(6);
+    setCurrentStep(7);
   };
 
   const goBack = (step: number) => {
@@ -117,14 +127,16 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
       case 1:
         return <SimplifiedBioStep onNext={handleBioNext} onBack={() => goBack(0)} />;
       case 2:
-        return <LocationStep onNext={handleLocationNext} onBack={() => goBack(1)} />;
+        return <SimplifiedInterestsStep onNext={handleInterestsNext} onBack={() => goBack(1)} />;
       case 3:
-        return <SimplifiedIdentityStep onNext={handleIdentityNext} onBack={() => goBack(2)} />;
+        return <LocationStep onNext={handleLocationNext} onBack={() => goBack(2)} />;
       case 4:
-        return <RelationshipGoalsStep onNext={handleGoalsNext} onBack={() => goBack(3)} />;
+        return <SimplifiedIdentityStep onNext={handleIdentityNext} onBack={() => goBack(3)} />;
       case 5:
-        return <RIFLiteQuiz onComplete={handleRIFComplete} />;
+        return <RelationshipGoalsStep onNext={handleGoalsNext} onBack={() => goBack(4)} />;
       case 6:
+        return <RIFLiteQuiz onComplete={handleRIFComplete} />;
+      case 7:
         return <FinalWelcomeScreen onNext={onComplete} />;
       default:
         return <SimplifiedPhotosStep onNext={handlePhotosNext} />;

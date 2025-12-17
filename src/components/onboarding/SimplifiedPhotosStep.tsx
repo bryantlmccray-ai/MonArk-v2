@@ -98,10 +98,10 @@ export const SimplifiedPhotosStep: React.FC<SimplifiedPhotosStepProps> = ({ onNe
       <div className="flex-1 max-w-md mx-auto w-full space-y-6">
         {/* Progress indicator */}
         <div className="flex justify-center space-x-2">
-          {[1, 2, 3, 4, 5].map((step) => (
+          {[1, 2, 3, 4, 5, 6].map((step) => (
             <div
               key={step}
-              className={`h-1.5 w-8 rounded-full ${step === 1 ? 'bg-primary' : 'bg-muted'}`}
+              className={`h-1.5 w-6 rounded-full ${step === 1 ? 'bg-primary' : 'bg-muted'}`}
             />
           ))}
         </div>
