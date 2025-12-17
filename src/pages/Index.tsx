@@ -11,7 +11,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { useDemo } from '@/contexts/DemoContext';
 
 const Index = () => {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, isDemoMode, exitDemoMode } = useAuth();
   const { profile, loading: profileLoading, refetchProfile } = useProfile();
   const { demoData, setDemoMode } = useDemo();
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = React.useState(false);
@@ -22,16 +22,16 @@ const Index = () => {
   React.useEffect(() => {
     const handleAuthChange = () => {
       // Force component re-render on auth change
-      console.log('Auth state changed in Index, user:', user?.id);
-      // Reset showAuth when user is authenticated
-      if (user) {
+      console.log('Auth state changed in Index, user:', user?.id, 'isDemoMode:', isDemoMode);
+      // Reset showAuth when user is authenticated or demo mode is active
+      if (user || isDemoMode) {
         setShowAuth(false);
       }
     };
 
     window.addEventListener('auth-change', handleAuthChange);
     return () => window.removeEventListener('auth-change', handleAuthChange);
-  }, [user]);
+  }, [user, isDemoMode]);
 
   // Add escape key listener to exit demo
   React.useEffect(() => {
@@ -47,12 +47,13 @@ const Index = () => {
   }, []);
 
   // Demo mode override - accessible regardless of auth status  
-  if (showDemo || demoData.isInDemo) {
-    console.log('Rendering demo, showDemo:', showDemo, 'demoData.isInDemo:', demoData.isInDemo);
+  if (showDemo || demoData.isInDemo || isDemoMode) {
+    console.log('Rendering demo, showDemo:', showDemo, 'demoData.isInDemo:', demoData.isInDemo, 'isDemoMode:', isDemoMode);
     return <DemoMainApp onClose={() => {
       console.log('Closing demo');
       setShowDemo(false);
       setDemoMode(false);
+      exitDemoMode();
     }} />;
   }
 
