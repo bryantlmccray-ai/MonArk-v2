@@ -70,7 +70,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
                 <div className="bg-sand/30 rounded-lg p-4 border border-taupe/20 mt-4">
                   <p className="text-xs text-charcoal-soft font-body leading-relaxed text-center">
-                    <strong>Preview:</strong> After joining, you'll get a mini RIF compatibility assessment to see how our emotional intelligence matching works.
+                    <strong>Preview:</strong> After joining, you'll take a quick dating style quiz to see how our smart matching works.
                   </p>
                 </div>
               </div>
@@ -181,7 +181,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               <div className="space-y-4">
                 <h3 className="font-editorial-headline text-lg text-charcoal">2–3 Curated Matches per Month</h3>
                 <p className="text-charcoal-soft text-sm leading-relaxed">
-                  Matched using your Lite RIF emotional compatibility profile. Each match comes with an AI-curated premium date suggestion at vetted partner venues.
+                  Matched using your dating style and compatibility profile. Each match comes with an AI-curated premium date suggestion at vetted partner venues.
                 </p>
               </div>
 
