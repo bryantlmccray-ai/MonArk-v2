@@ -82,7 +82,7 @@ const AdminWaitlist: React.FC = () => {
     }
   };
 
-  const handleApproval = async (id: string, status: 'approved' | 'rejected') => {
+  const handleApproval = async (id: string, status: 'approved' | 'rejected', sendRejectionEmail: boolean = false) => {
     setProcessingId(id);
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -99,24 +99,36 @@ const AdminWaitlist: React.FC = () => {
 
       if (error) throw error;
 
+      const submission = submissions.find(s => s.id === id);
+      
       // If approved, send approval email
-      if (status === 'approved') {
-        const submission = submissions.find(s => s.id === id);
-        if (submission) {
-          await supabase.functions.invoke('waitlist-approval-email', {
-            body: {
-              email: submission.email,
-              firstName: submission.first_name
-            }
-          });
-        }
+      if (status === 'approved' && submission) {
+        await supabase.functions.invoke('waitlist-approval-email', {
+          body: {
+            email: submission.email,
+            firstName: submission.first_name
+          }
+        });
+      }
+      
+      // If rejected and sendRejectionEmail is true, send rejection email
+      if (status === 'rejected' && sendRejectionEmail && submission) {
+        await supabase.functions.invoke('waitlist-rejection-email', {
+          body: {
+            email: submission.email,
+            firstName: submission.first_name,
+            city: submission.city
+          }
+        });
       }
 
       toast({
         title: status === 'approved' ? "Approved!" : "Rejected",
         description: status === 'approved' 
           ? "Approval email sent to applicant" 
-          : "Application has been rejected"
+          : sendRejectionEmail 
+            ? "Rejection email sent to applicant"
+            : "Application has been rejected (no email sent)"
       });
 
       fetchSubmissions();
@@ -338,13 +350,22 @@ const AdminWaitlist: React.FC = () => {
                               Approve & Send Invite
                             </Button>
                             <Button
-                              onClick={() => handleApproval(submission.id, 'rejected')}
+                              onClick={() => handleApproval(submission.id, 'rejected', true)}
                               disabled={processingId === submission.id}
                               variant="outline"
                               className="border-red-500/50 text-red-400 hover:bg-red-500/10"
                             >
                               <X className="h-4 w-4 mr-2" />
-                              Reject
+                              Reject & Notify
+                            </Button>
+                            <Button
+                              onClick={() => handleApproval(submission.id, 'rejected', false)}
+                              disabled={processingId === submission.id}
+                              variant="ghost"
+                              className="text-gray-400 hover:text-gray-300"
+                            >
+                              <X className="h-4 w-4 mr-2" />
+                              Reject (Silent)
                             </Button>
                           </div>
                         </div>
