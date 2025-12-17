@@ -11,8 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
-import { Shield, MapPin, Users, MessageCircle, Eye, Phone } from 'lucide-react';
+import { Shield, MapPin, Eye, Phone, Plus, Trash2 } from 'lucide-react';
 import { useUserSafety } from '@/hooks/useUserSafety';
 
 interface SafetySettingsModalProps {
@@ -28,9 +27,6 @@ export const SafetySettingsModal: React.FC<SafetySettingsModalProps> = ({
   const [settings, setSettings] = useState({
     location_sharing_enabled: true,
     show_online_status: true,
-    allow_messages_from_strangers: true,
-    require_mutual_match_for_messaging: false,
-    auto_decline_inappropriate_content: true,
   });
   const [emergencyContact, setEmergencyContact] = useState('');
   const [emergencyContacts, setEmergencyContacts] = useState<string[]>([]);
@@ -40,12 +36,8 @@ export const SafetySettingsModal: React.FC<SafetySettingsModalProps> = ({
       setSettings({
         location_sharing_enabled: safetySettings.location_sharing_enabled,
         show_online_status: safetySettings.show_online_status,
-        allow_messages_from_strangers: safetySettings.allow_messages_from_strangers,
-        require_mutual_match_for_messaging: safetySettings.require_mutual_match_for_messaging,
-        auto_decline_inappropriate_content: safetySettings.auto_decline_inappropriate_content,
       });
       
-      // Parse emergency contacts
       try {
         const contacts = Array.isArray(safetySettings.emergency_contacts) 
           ? safetySettings.emergency_contacts as string[]
@@ -86,34 +78,34 @@ export const SafetySettingsModal: React.FC<SafetySettingsModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[450px]">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-white">
-            <Shield className="h-5 w-5 text-goldenrod" />
-            Safety & Privacy Settings
+          <DialogTitle className="flex items-center gap-2 text-foreground">
+            <Shield className="h-5 w-5 text-primary" />
+            Safety Settings
           </DialogTitle>
-          <DialogDescription className="text-gray-400">
-            Manage your privacy and safety preferences
+          <DialogDescription>
+            Manage your privacy and emergency contacts
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
           {/* Privacy Settings */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium text-white flex items-center gap-2">
+            <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
               <Eye className="h-4 w-4" />
               Privacy
             </h3>
             
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <Label className="text-gray-300 flex items-center gap-2">
-                    <MapPin className="h-4 w-4" />
+                <div className="space-y-0.5">
+                  <Label className="text-sm flex items-center gap-2">
+                    <MapPin className="h-3 w-3" />
                     Location Sharing
                   </Label>
-                  <p className="text-xs text-gray-400">
-                    Allow others to see your general location
+                  <p className="text-xs text-muted-foreground">
+                    Show general location to matches
                   </p>
                 </div>
                 <Switch
@@ -123,12 +115,9 @@ export const SafetySettingsModal: React.FC<SafetySettingsModalProps> = ({
               </div>
 
               <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <Label className="text-gray-300 flex items-center gap-2">
-                    <Users className="h-4 w-4" />
-                    Show Online Status
-                  </Label>
-                  <p className="text-xs text-gray-400">
+                <div className="space-y-0.5">
+                  <Label className="text-sm">Show Online Status</Label>
+                  <p className="text-xs text-muted-foreground">
                     Let others see when you're active
                   </p>
                 </div>
@@ -140,85 +129,35 @@ export const SafetySettingsModal: React.FC<SafetySettingsModalProps> = ({
             </div>
           </div>
 
-          <Separator className="bg-gray-600" />
-
-          {/* Messaging Settings */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium text-white flex items-center gap-2">
-              <MessageCircle className="h-4 w-4" />
-              Messaging
-            </h3>
-            
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <Label className="text-gray-300">Allow Messages from Anyone</Label>
-                  <p className="text-xs text-gray-400">
-                    Receive messages from users you haven't matched with
-                  </p>
-                </div>
-                <Switch
-                  checked={settings.allow_messages_from_strangers}
-                  onCheckedChange={(checked) => handleSettingChange('allow_messages_from_strangers', checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <Label className="text-gray-300">Require Mutual Match</Label>
-                  <p className="text-xs text-gray-400">
-                    Only allow messaging after both users have liked each other
-                  </p>
-                </div>
-                <Switch
-                  checked={settings.require_mutual_match_for_messaging}
-                  onCheckedChange={(checked) => handleSettingChange('require_mutual_match_for_messaging', checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <Label className="text-gray-300">Auto-decline Inappropriate Content</Label>
-                  <p className="text-xs text-gray-400">
-                    Automatically filter potentially inappropriate messages
-                  </p>
-                </div>
-                <Switch
-                  checked={settings.auto_decline_inappropriate_content}
-                  onCheckedChange={(checked) => handleSettingChange('auto_decline_inappropriate_content', checked)}
-                />
-              </div>
-            </div>
-          </div>
-
-          <Separator className="bg-gray-600" />
+          <Separator />
 
           {/* Emergency Contacts */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium text-white flex items-center gap-2">
+            <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
               <Phone className="h-4 w-4" />
               Emergency Contacts
             </h3>
             
-            <p className="text-sm text-gray-400">
-              Add trusted contacts who can be notified in case of emergency
+            <p className="text-xs text-muted-foreground">
+              Add contacts who can receive your date plans
             </p>
 
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="flex gap-2">
                 <Input
                   value={emergencyContact}
                   onChange={(e) => setEmergencyContact(e.target.value)}
-                  placeholder="Email or phone number"
-                  className="bg-charcoal-gray border-gray-600 text-white"
+                  placeholder="Phone number or email"
+                  className="flex-1"
                   onKeyPress={(e) => e.key === 'Enter' && addEmergencyContact()}
                 />
                 <Button
                   onClick={addEmergencyContact}
                   variant="outline"
+                  size="icon"
                   disabled={!emergencyContact.trim()}
                 >
-                  Add
+                  <Plus className="h-4 w-4" />
                 </Button>
               </div>
 
@@ -227,28 +166,34 @@ export const SafetySettingsModal: React.FC<SafetySettingsModalProps> = ({
                   {emergencyContacts.map((contact, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between bg-charcoal-gray/50 p-2 rounded"
+                      className="flex items-center justify-between bg-muted/50 p-3 rounded-lg"
                     >
-                      <span className="text-gray-300">{contact}</span>
+                      <span className="text-sm">{contact}</span>
                       <Button
                         onClick={() => removeEmergencyContact(contact)}
                         variant="ghost"
-                        size="sm"
-                        className="text-red-400 hover:text-red-300"
+                        size="icon"
+                        className="h-8 w-8 text-destructive hover:text-destructive"
                       >
-                        Remove
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   ))}
                 </div>
               )}
+
+              {emergencyContacts.length === 0 && (
+                <p className="text-xs text-muted-foreground text-center py-4 bg-muted/30 rounded-lg">
+                  No emergency contacts added yet
+                </p>
+              )}
             </div>
           </div>
 
-          <Separator className="bg-gray-600" />
+          <Separator />
 
           {/* Action Buttons */}
-          <div className="flex gap-2 pt-4">
+          <div className="flex gap-2">
             <Button
               onClick={onClose}
               variant="outline"
@@ -259,9 +204,9 @@ export const SafetySettingsModal: React.FC<SafetySettingsModalProps> = ({
             <Button
               onClick={handleSave}
               disabled={loading}
-              className="flex-1 bg-goldenrod-gradient text-jet-black font-medium hover:shadow-golden-glow"
+              className="flex-1"
             >
-              {loading ? 'Saving...' : 'Save Settings'}
+              {loading ? 'Saving...' : 'Save'}
             </Button>
           </div>
         </div>

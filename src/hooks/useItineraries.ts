@@ -81,6 +81,40 @@ export const useItineraries = () => {
     }
   };
 
+  const shareWithFriend = async (itineraryId: string, phoneOrEmail: string) => {
+    try {
+      const itinerary = itineraries.find(i => i.id === itineraryId);
+      if (!itinerary) return false;
+
+      // Create a share link (simple base64 encoded ID for MVP)
+      const shareLink = `${window.location.origin}/share/${btoa(itineraryId)}`;
+      
+      // Update itinerary with share link
+      await supabase
+        .from('itineraries')
+        .update({ share_link: shareLink })
+        .eq('id', itineraryId);
+
+      // Format message
+      const dateTime = new Date(itinerary.time_window.start).toLocaleString();
+      const message = `I'm going on a date! "${itinerary.title}" on ${dateTime}. My safety link: ${shareLink}`;
+      
+      // Open SMS or email
+      if (phoneOrEmail.includes('@')) {
+        window.open(`mailto:${phoneOrEmail}?subject=My Date Plans&body=${encodeURIComponent(message)}`);
+      } else {
+        window.open(`sms:${phoneOrEmail}?body=${encodeURIComponent(message)}`);
+      }
+
+      toast.success('Opening share dialog...');
+      return true;
+    } catch (error) {
+      console.error('Error sharing itinerary:', error);
+      toast.error('Failed to share');
+      return false;
+    }
+  };
+
   const getUpcomingItineraries = () => {
     return itineraries.filter(i => 
       i.status === 'confirmed' || i.status === 'proposed'
@@ -95,6 +129,7 @@ export const useItineraries = () => {
     itineraries,
     loading,
     updateStatus,
+    shareWithFriend,
     getUpcomingItineraries,
     getCompletedItineraries,
     refetch: loadItineraries
