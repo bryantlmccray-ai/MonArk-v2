@@ -7,19 +7,42 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  isDemoMode: boolean;
   signUp: (email: string, password: string, name: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
+  enterDemoMode: () => void;
+  exitDemoMode: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// Demo user for testing
+const DEMO_USER: User = {
+  id: 'demo-user-' + Date.now(),
+  email: 'demo@monark.test',
+  app_metadata: {},
+  user_metadata: { name: 'Demo User' },
+  aud: 'authenticated',
+  created_at: new Date().toISOString(),
+} as User;
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDemoMode, setIsDemoMode] = useState(false);
 
   useEffect(() => {
+    // Check for demo mode on mount
+    const demoMode = localStorage.getItem('monark-demo-mode') === 'true';
+    if (demoMode) {
+      setIsDemoMode(true);
+      setUser(DEMO_USER);
+      setLoading(false);
+      return;
+    }
+
     let mounted = true;
     let retryCount = 0;
     const maxRetries = 3;
@@ -93,6 +116,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
+  const enterDemoMode = () => {
+    localStorage.setItem('monark-demo-mode', 'true');
+    setIsDemoMode(true);
+    setUser(DEMO_USER);
+    setSession(null);
+  };
+
+  const exitDemoMode = () => {
+    localStorage.removeItem('monark-demo-mode');
+    setIsDemoMode(false);
+    setUser(null);
+    setSession(null);
+  };
+
   const signUp = async (email: string, password: string, name: string) => {
     try {
       const redirectUrl = `${window.location.origin}/`;
@@ -143,6 +180,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
+    if (isDemoMode) {
+      exitDemoMode();
+      return;
+    }
+    
     try {
       const { error } = await supabase.auth.signOut();
       if (error) {
@@ -158,9 +200,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       user,
       session,
       loading,
+      isDemoMode,
       signUp,
       signIn,
-      signOut
+      signOut,
+      enterDemoMode,
+      exitDemoMode
     }}>
       {children}
     </AuthContext.Provider>
