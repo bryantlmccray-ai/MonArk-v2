@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { MonArkLogo } from '@/components/MonArkLogo';
-import { Sparkles, Users, Calendar, ArrowRight } from 'lucide-react';
+import { Sparkles, Users, Calendar, ArrowRight, Instagram } from 'lucide-react';
 import { useDemo } from '@/contexts/DemoContext';
 import { DemoMainApp } from './DemoMainApp';
 import { WaitlistModal } from './WaitlistModal';
@@ -262,6 +262,20 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       <footer className="py-16 bg-charcoal-gray/30">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <MonArkLogo size="md" variant="compact" className="mx-auto mb-8" />
+          
+          {/* Social Link */}
+          <div className="mb-8">
+            <a 
+              href="https://instagram.com/monark.dating" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-taupe/20 bg-white/40 backdrop-blur-sm text-charcoal hover:bg-white/60 hover:border-taupe/40 transition-all duration-300 group"
+            >
+              <Instagram className="h-4 w-4 text-taupe group-hover:text-charcoal transition-colors" />
+              <span className="text-sm font-body tracking-wide">@monark.dating</span>
+            </a>
+          </div>
+          
           <p className="text-charcoal-soft font-body text-sm mb-6">
             &copy; 2024 MonArk. Dating reimagined with Smart Matching.
           </p>
