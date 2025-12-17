@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { 
   Check, X, Clock, ArrowLeft, Mail, MapPin, User, Calendar, 
-  MessageSquare, Loader2, RefreshCw, ChevronDown, ChevronUp, Info
+  MessageSquare, Loader2, RefreshCw, ChevronDown, ChevronUp, Info, Pause
 } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
@@ -38,7 +38,7 @@ const AdminWaitlist: React.FC = () => {
   const { toast } = useToast();
   const [submissions, setSubmissions] = useState<WaitlistSubmission[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('pending');
+  const [filter, setFilter] = useState<'all' | 'pending' | 'hold' | 'approved' | 'rejected'>('pending');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
@@ -83,7 +83,7 @@ const AdminWaitlist: React.FC = () => {
     }
   };
 
-  const handleApproval = async (id: string, status: 'approved' | 'rejected', sendRejectionEmail: boolean = false) => {
+  const handleApproval = async (id: string, status: 'approved' | 'rejected' | 'hold', sendRejectionEmail: boolean = false) => {
     setProcessingId(id);
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -123,14 +123,16 @@ const AdminWaitlist: React.FC = () => {
         });
       }
 
-      toast({
-        title: status === 'approved' ? "Approved!" : "Rejected",
-        description: status === 'approved' 
-          ? "Approval email sent to applicant" 
-          : sendRejectionEmail 
-            ? "Rejection email sent to applicant"
-            : "Application has been rejected (no email sent)"
-      });
+      const toastMessages = {
+        approved: { title: "Approved!", description: "Approval email sent to applicant" },
+        hold: { title: "On Hold", description: "Application saved for later review" },
+        rejected: { 
+          title: "Rejected", 
+          description: sendRejectionEmail ? "Rejection email sent to applicant" : "Application has been rejected (no email sent)"
+        }
+      };
+
+      toast(toastMessages[status]);
 
       fetchSubmissions();
     } catch (error) {
@@ -151,6 +153,8 @@ const AdminWaitlist: React.FC = () => {
         return <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Approved</Badge>;
       case 'rejected':
         return <Badge className="bg-red-500/20 text-red-400 border-red-500/30">Rejected</Badge>;
+      case 'hold':
+        return <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">On Hold</Badge>;
       default:
         return <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">Pending</Badge>;
     }
@@ -161,6 +165,7 @@ const AdminWaitlist: React.FC = () => {
     pending: submissions.filter(s => s.approval_status === 'pending').length,
     approved: submissions.filter(s => s.approval_status === 'approved').length,
     rejected: submissions.filter(s => s.approval_status === 'rejected').length,
+    hold: submissions.filter(s => s.approval_status === 'hold').length,
   };
 
   if (adminLoading) {
@@ -205,10 +210,11 @@ const AdminWaitlist: React.FC = () => {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-5 gap-4 mb-6">
           {[
             { label: 'Total', value: stats.total, color: 'text-white' },
             { label: 'Pending', value: stats.pending, color: 'text-yellow-400' },
+            { label: 'On Hold', value: stats.hold, color: 'text-blue-400' },
             { label: 'Approved', value: stats.approved, color: 'text-green-400' },
             { label: 'Rejected', value: stats.rejected, color: 'text-red-400' },
           ].map(stat => (
@@ -291,6 +297,25 @@ const AdminWaitlist: React.FC = () => {
                     </ul>
                   </div>
                 </div>
+                <div className="mt-4 pt-4 border-t border-gray-700">
+                  <h4 className="text-blue-400 font-medium mb-3 flex items-center gap-2">
+                    <Pause className="h-4 w-4" /> HOLD if:
+                  </h4>
+                  <ul className="space-y-2 text-sm text-gray-300">
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-400 mt-0.5">•</span>
+                      Lives in Chicago but <strong className="text-white">not sure they're a fit</strong> yet
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-400 mt-0.5">•</span>
+                      Could be good for a <strong className="text-white">later batch</strong>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-400 mt-0.5">•</span>
+                      Want to see how <strong className="text-white">first batch goes</strong> first
+                    </li>
+                  </ul>
+                </div>
               </CardContent>
             </Card>
           </CollapsibleContent>
@@ -298,7 +323,7 @@ const AdminWaitlist: React.FC = () => {
 
         {/* Filters */}
         <div className="flex gap-2 mb-6">
-          {(['all', 'pending', 'approved', 'rejected'] as const).map(f => (
+          {(['all', 'pending', 'hold', 'approved', 'rejected'] as const).map(f => (
             <Button
               key={f}
               variant={filter === f ? 'default' : 'outline'}
@@ -424,6 +449,15 @@ const AdminWaitlist: React.FC = () => {
                                 <Check className="h-4 w-4 mr-2" />
                               )}
                               Approve & Send Invite
+                            </Button>
+                            <Button
+                              onClick={() => handleApproval(submission.id, 'hold')}
+                              disabled={processingId === submission.id}
+                              variant="outline"
+                              className="border-blue-500/50 text-blue-400 hover:bg-blue-500/10"
+                            >
+                              <Pause className="h-4 w-4 mr-2" />
+                              Hold for Later
                             </Button>
                             <Button
                               onClick={() => handleApproval(submission.id, 'rejected', true)}
