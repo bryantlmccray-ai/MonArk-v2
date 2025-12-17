@@ -6,6 +6,25 @@ import { useDemo } from '@/contexts/DemoContext';
 import { DemoMainApp } from './DemoMainApp';
 import { WaitlistModal } from './WaitlistModal';
 
+// Instagram feed images
+import igArtOfDating from '@/assets/instagram/ig-art-of-dating.png';
+import igOurPromise from '@/assets/instagram/ig-our-promise.png';
+import igWomanPortrait from '@/assets/instagram/ig-woman-portrait.png';
+import igManSuit from '@/assets/instagram/ig-man-suit.png';
+import igWelcomeCircle from '@/assets/instagram/ig-welcome-circle.png';
+import igChampagne from '@/assets/instagram/ig-champagne.png';
+import igSunglasses from '@/assets/instagram/ig-sunglasses.png';
+
+const instagramImages = [
+  igWomanPortrait,
+  igArtOfDating,
+  igManSuit,
+  igOurPromise,
+  igWelcomeCircle,
+  igChampagne,
+  igSunglasses,
+  igWomanPortrait, // repeat for 8th slot
+];
 interface EnhancedLandingPageProps {
   onExitToApp?: () => void;
   onStartDemo?: () => void;
@@ -282,7 +301,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
           {/* Instagram Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            {[...Array(8)].map((_, i) => (
+            {instagramImages.map((image, i) => (
               <a
                 key={i}
                 href="https://www.instagram.com/monark.eq/"
@@ -290,24 +309,12 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 rel="noopener noreferrer"
                 className="relative aspect-square rounded-xl overflow-hidden group cursor-pointer"
               >
-                {/* Placeholder gradient backgrounds */}
-                <div 
-                  className={`absolute inset-0 ${
-                    i % 4 === 0 ? 'bg-gradient-to-br from-taupe/30 to-sand/50' :
-                    i % 4 === 1 ? 'bg-gradient-to-br from-dusty-rose/20 to-goldenrod/30' :
-                    i % 4 === 2 ? 'bg-gradient-to-br from-goldenrod/20 to-taupe/40' :
-                    'bg-gradient-to-br from-parchment to-sand/60'
-                  }`}
+                {/* Actual brand image */}
+                <img 
+                  src={image} 
+                  alt={`MonArk Instagram post ${i + 1}`}
+                  className="absolute inset-0 w-full h-full object-cover"
                 />
-                
-                {/* Decorative elements */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className={`w-12 h-12 rounded-full ${
-                    i % 3 === 0 ? 'bg-taupe/20' : i % 3 === 1 ? 'bg-goldenrod/20' : 'bg-dusty-rose/20'
-                  } flex items-center justify-center`}>
-                    <div className="w-6 h-6 rounded-full bg-white/40" />
-                  </div>
-                </div>
 
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-charcoal/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
