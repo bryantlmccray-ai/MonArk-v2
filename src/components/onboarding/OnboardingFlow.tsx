@@ -13,9 +13,13 @@ import { RIFComplete } from './RIFComplete';
 import { useProfile } from '@/hooks/useProfile';
 import { useRIF } from '@/hooks/useRIF';
 import { useToast } from '@/hooks/use-toast';
+import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface OnboardingFlowProps {
   onComplete: () => void;
+  onExit?: () => void;
+  showExitButton?: boolean;
 }
 
 interface OnboardingData {
@@ -43,7 +47,7 @@ interface OnboardingData {
 // 9: RIF Questions (DatingStyleQuiz)
 // 10: RIF Complete / Final Welcome
 
-export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
+export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onExit, showExitButton = false }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({
     photos: [],
@@ -187,7 +191,18 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      {showExitButton && onExit && (
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onExit}
+          className="absolute top-4 right-4 z-50 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full"
+          aria-label="Exit onboarding"
+        >
+          <X className="h-5 w-5" />
+        </Button>
+      )}
       {renderStep()}
     </div>
   );
