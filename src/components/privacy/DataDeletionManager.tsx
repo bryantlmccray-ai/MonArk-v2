@@ -173,7 +173,7 @@ export const DataDeletionManager: React.FC = () => {
                   <li>• All photos and media files</li>
                   <li>• Journal entries and reflections</li>
                   <li>• Match history and conversations</li>
-                  <li>• RIF data and insights</li>
+                  <li>• Dating preferences and style data</li>
                   <li>• Notification preferences</li>
                 </ul>
               </div>

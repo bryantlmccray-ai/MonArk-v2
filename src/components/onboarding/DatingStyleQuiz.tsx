@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Check, ChevronLeft, Sparkles } from 'lucide-react';
 
-interface RIFLiteQuizProps {
-  onComplete: (answers: RIFLiteAnswers) => void;
+interface DatingStyleQuizProps {
+  onComplete: (answers: DatingStyleAnswers) => void;
   onSkip?: () => void;
 }
 
-export interface RIFLiteAnswers {
+export interface DatingStyleAnswers {
   attachmentStyle: string;
   energyType: string;
   datePreferences: string[];
@@ -22,7 +22,7 @@ export interface RIFLiteAnswers {
 type QuestionType = 'single' | 'multi';
 
 interface Question {
-  id: keyof RIFLiteAnswers;
+  id: keyof DatingStyleAnswers;
   type: QuestionType;
   question: string;
   subtitle?: string;
@@ -150,9 +150,9 @@ const questions: Question[] = [
   },
 ];
 
-export const RIFLiteQuiz: React.FC<RIFLiteQuizProps> = ({ onComplete, onSkip }) => {
+export const DatingStyleQuiz: React.FC<DatingStyleQuizProps> = ({ onComplete, onSkip }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Partial<RIFLiteAnswers>>({});
+  const [answers, setAnswers] = useState<Partial<DatingStyleAnswers>>({});
 
   const currentQuestion = questions[currentIndex];
   const progress = ((currentIndex + 1) / questions.length) * 100;
@@ -166,7 +166,7 @@ export const RIFLiteQuiz: React.FC<RIFLiteQuizProps> = ({ onComplete, onSkip }) 
       if (currentIndex < questions.length - 1) {
         setCurrentIndex(currentIndex + 1);
       } else {
-        onComplete(newAnswers as RIFLiteAnswers);
+        onComplete(newAnswers as DatingStyleAnswers);
       }
     }, 300);
   };
@@ -191,7 +191,7 @@ export const RIFLiteQuiz: React.FC<RIFLiteQuizProps> = ({ onComplete, onSkip }) 
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      onComplete(answers as RIFLiteAnswers);
+      onComplete(answers as DatingStyleAnswers);
     }
   };
 
@@ -226,7 +226,7 @@ export const RIFLiteQuiz: React.FC<RIFLiteQuizProps> = ({ onComplete, onSkip }) 
           )}
           <div className="flex items-center space-x-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            <span className="text-sm text-muted-foreground">RIF Lite</span>
+            <span className="text-sm text-muted-foreground">Dating Style</span>
           </div>
           {onSkip ? (
             <button

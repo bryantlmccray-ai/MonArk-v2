@@ -121,19 +121,18 @@ export default function CookiePolicy() {
                     </ul>
                   </div>
 
-                  {/* RIF-Specific Cookies */}
+                  {/* Personalization Cookies */}
                   <div className="bg-goldenrod/20 border border-goldenrod rounded-lg p-4">
                     <h4 className="text-goldenrod font-medium mb-2">
-                      Emotional Wellness Cookies (Optional)
+                      Personalization Cookies (Optional)
                     </h4>
                     <p className="text-white text-sm mb-3">
-                      Special cookies that support our Relationship Intelligence Framework (RIF).
+                      Cookies that help us personalize your dating experience.
                     </p>
                     <ul className="list-disc list-inside space-y-1 text-white text-sm ml-4">
-                      <li><strong>RIF State:</strong> Remember your emotional readiness preferences</li>
-                      <li><strong>Reflection Progress:</strong> Track your wellness journey progress</li>
-                      <li><strong>Personalized Insights:</strong> Enable customized relationship recommendations</li>
-                      <li><strong>Wellness Reminders:</strong> Store preferences for wellness check-ins</li>
+                      <li><strong>Preferences:</strong> Remember your dating style preferences</li>
+                      <li><strong>Date Ideas:</strong> Store your preferred date types and availability</li>
+                      <li><strong>Personalized Suggestions:</strong> Enable customized match recommendations</li>
                     </ul>
                   </div>
                 </div>

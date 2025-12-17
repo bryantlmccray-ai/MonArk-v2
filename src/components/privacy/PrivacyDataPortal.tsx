@@ -152,7 +152,7 @@ export const PrivacyDataPortal: React.FC = () => {
               </p>
               <ul className="text-gray-500 text-xs mt-2 space-y-1">
                 <li>• Profile information and photos</li>
-                <li>• RIF scores and emotional insights</li>
+                <li>• Dating preferences and style</li>
                 <li>• Journal entries and reflections</li>
                 <li>• Date history and preferences</li>
                 <li>• Privacy settings and consent history</li>
@@ -222,7 +222,7 @@ export const PrivacyDataPortal: React.FC = () => {
                   <li>• Your profile and all photos</li>
                   <li>• All conversations and matches</li>
                   <li>• Date journal and reflections</li>
-                  <li>• RIF profile and insights</li>
+                  <li>• Dating preferences and style</li>
                   <li>• All preferences and settings</li>
                 </ul>
               </div>
@@ -282,7 +282,7 @@ export const PrivacyDataPortal: React.FC = () => {
                 <li>• Your entire profile and all photos</li>
                 <li>• All conversations, matches, and connections</li>
                 <li>• Date journal entries and reflections</li>
-                <li>• RIF insights and emotional data</li>
+                <li>• Dating preferences and style data</li>
                 <li>• All app preferences and settings</li>
               </ul>
               <p className="text-red-400 text-sm font-medium">

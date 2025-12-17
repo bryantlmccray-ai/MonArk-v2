@@ -65,9 +65,9 @@ export const AICompanionChat: React.FC<AICompanionChatProps> = ({ onClose }) => 
 
 I can help you with:
 • Processing your dating experiences and feelings
-• Understanding your compatibility scores and matches
+• Understanding your compatibility and matches
 • Explaining why certain dates or people were suggested
-• Giving personalized advice based on your RIF profile
+• Giving personalized advice based on your dating style
 
 What would you like to talk about? 😊`,
         timestamp: new Date().toISOString()
@@ -322,7 +322,7 @@ What would you like to talk about? 😊`,
         const starterQuestions = [
           "How can I improve my dating approach?",
           "Why do you think I'm attracted to certain types?", 
-          "What do my RIF scores say about my dating style?",
+          "What does my dating style say about me?",
           "How should I interpret my recent date ratings?",
           "What compatibility factors matter most for me?"
         ];

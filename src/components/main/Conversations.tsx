@@ -6,14 +6,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AfterDateFeedback } from '../feedback/AfterDateFeedback';
 import { DateProposalCard } from '../date-concierge/DateProposalCard';
 import { ChatModal } from '../chat/ChatModal';
-import { useRIF } from '@/hooks/useRIF';
 import { useDateConcierge } from '@/hooks/useDateConcierge';
 import { useAuth } from '@/hooks/useAuth';
 import { useAfterDateFeedback } from '@/hooks/useAfterDateFeedback';
 
 export const Conversations: React.FC = () => {
   const { user } = useAuth();
-  const { rifSettings } = useRIF();
   const { proposals, updateConversationEngagement, dismissProposal, restoreProposal } = useDateConcierge();
   const { pendingFeedback, showFeedback, setShowFeedback, dismissFeedback } = useAfterDateFeedback();
   
@@ -140,12 +138,6 @@ export const Conversations: React.FC = () => {
             <h1 className="text-2xl font-light text-white">Conversations</h1>
             <p className="text-gray-400 text-sm mt-1">Meaningful connections await</p>
           </div>
-          {rifSettings?.rif_enabled && (
-            <div className="bg-charcoal-gray/50 backdrop-blur-sm rounded-lg px-3 py-2 border border-goldenrod/30">
-              <div className="text-xs text-goldenrod font-medium">RIF Insights Active</div>
-              <div className="text-xs text-gray-400">Emotional guidance enabled</div>
-            </div>
-          )}
         </div>
 
         {/* Date Proposals Section */}
@@ -242,9 +234,6 @@ export const Conversations: React.FC = () => {
                     alt={conversation.name}
                     className="w-12 h-12 rounded-full cursor-pointer"
                   />
-                  {rifSettings?.rif_enabled && conversation.messageCount > 10 && (
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-goldenrod rounded-full border border-jet-black animate-pulse" />
-                  )}
                   {conversation.mutualEngagement > 0.7 && conversation.messageCount > 15 && (
                     <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border border-jet-black flex items-center justify-center">
                       <Calendar className="h-2 w-2 text-white" />
@@ -270,11 +259,6 @@ export const Conversations: React.FC = () => {
                         <Zap className="h-3 w-3" />
                         <span>Ready for date!</span>
                       </Badge>
-                    )}
-                    {rifSettings?.rif_enabled && conversation.messageCount > 15 && (
-                      <div className="px-2 py-1 bg-goldenrod/20 text-goldenrod text-xs rounded-full border border-goldenrod/30">
-                        Active chat
-                      </div>
                     )}
                   </div>
                   <p className={`text-sm ${
