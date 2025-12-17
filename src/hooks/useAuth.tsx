@@ -121,6 +121,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsDemoMode(true);
     setUser(DEMO_USER);
     setSession(null);
+    setLoading(false);
+    // Dispatch event to notify components
+    setTimeout(() => {
+      window.dispatchEvent(new Event('auth-change'));
+    }, 50);
   };
 
   const exitDemoMode = () => {
