@@ -27,13 +27,13 @@ export const RifInsightsCard: React.FC = () => {
   // Show progress indicator if less than 3 reflections
   if (reflections.length < 3) {
     return (
-      <Card className="bg-charcoal-gray border-gray-800">
+      <Card className="bg-card border-border">
         <CardContent className="p-4">
           <div className="flex items-center gap-3 mb-3">
             <Sparkles className="h-5 w-5 text-goldenrod" />
-            <h3 className="font-medium text-white">MonArk Insights</h3>
+            <h3 className="font-medium text-card-foreground">MonArk Insights</h3>
           </div>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-muted-foreground">
             Complete {3 - reflections.length} more date reflection{3 - reflections.length !== 1 ? 's' : ''} to unlock personalized insights.
           </p>
           <div className="mt-3 flex gap-1">
@@ -42,7 +42,7 @@ export const RifInsightsCard: React.FC = () => {
                 key={i}
                 className={cn(
                   "h-2 flex-1 rounded-full",
-                  i <= reflections.length ? "bg-goldenrod" : "bg-gray-700"
+                  i <= reflections.length ? "bg-goldenrod" : "bg-muted"
                 )}
               />
             ))}
@@ -55,12 +55,12 @@ export const RifInsightsCard: React.FC = () => {
   const summary = getInsightSummary();
 
   return (
-    <Card className="bg-charcoal-gray border-gray-800">
+    <Card className="bg-card border-border">
       <CardContent className="p-4">
         <div className="flex items-center gap-3 mb-4">
           <Sparkles className="h-5 w-5 text-goldenrod" />
-          <h3 className="font-medium text-white">MonArk Insights</h3>
-          <span className="text-xs text-gray-500 ml-auto">
+          <h3 className="font-medium text-card-foreground">MonArk Insights</h3>
+          <span className="text-xs text-muted-foreground ml-auto">
             Based on {reflections.length} date{reflections.length !== 1 ? 's' : ''}
           </span>
         </div>
@@ -84,13 +84,13 @@ export const RifInsightsCard: React.FC = () => {
                 {INSIGHT_ICONS[insight.type]}
                 <span className="font-medium text-sm">{insight.title}</span>
               </div>
-              <p className="text-sm text-gray-300">{insight.description}</p>
+              <p className="text-sm text-muted-foreground">{insight.description}</p>
             </div>
           ))}
         </div>
 
         {insights.length === 0 && reflections.length >= 3 && (
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-muted-foreground">
             Keep reflecting after dates—we're learning your preferences!
           </p>
         )}
