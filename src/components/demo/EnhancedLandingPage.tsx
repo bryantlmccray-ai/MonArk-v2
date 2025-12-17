@@ -258,6 +258,80 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       {/* Waitlist Modal */}
       <WaitlistModal isOpen={showWaitlistModal} onClose={() => setShowWaitlistModal(false)} sourcePage="enhanced-landing" />
 
+      {/* Instagram Feed Section */}
+      <section className="py-20 bg-gradient-to-b from-charcoal-gray/25 to-charcoal-gray/30">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <a 
+              href="https://www.instagram.com/monark.eq/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 group"
+            >
+              <div className="p-3 rounded-xl bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737] shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                <Instagram className="h-6 w-6 text-white" />
+              </div>
+              <div className="text-left">
+                <h2 className="text-2xl sm:text-3xl font-editorial-headline text-charcoal group-hover:text-taupe transition-colors">
+                  @monark.eq
+                </h2>
+                <p className="text-sm text-charcoal-soft font-body">Follow us on Instagram</p>
+              </div>
+            </a>
+          </div>
+
+          {/* Instagram Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            {[...Array(8)].map((_, i) => (
+              <a
+                key={i}
+                href="https://www.instagram.com/monark.eq/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative aspect-square rounded-xl overflow-hidden group cursor-pointer"
+              >
+                {/* Placeholder gradient backgrounds */}
+                <div 
+                  className={`absolute inset-0 ${
+                    i % 4 === 0 ? 'bg-gradient-to-br from-taupe/30 to-sand/50' :
+                    i % 4 === 1 ? 'bg-gradient-to-br from-dusty-rose/20 to-goldenrod/30' :
+                    i % 4 === 2 ? 'bg-gradient-to-br from-goldenrod/20 to-taupe/40' :
+                    'bg-gradient-to-br from-parchment to-sand/60'
+                  }`}
+                />
+                
+                {/* Decorative elements */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className={`w-12 h-12 rounded-full ${
+                    i % 3 === 0 ? 'bg-taupe/20' : i % 3 === 1 ? 'bg-goldenrod/20' : 'bg-dusty-rose/20'
+                  } flex items-center justify-center`}>
+                    <div className="w-6 h-6 rounded-full bg-white/40" />
+                  </div>
+                </div>
+
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-charcoal/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <Instagram className="h-8 w-8 text-white" />
+                </div>
+              </a>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div className="text-center mt-10">
+            <a
+              href="https://www.instagram.com/monark.eq/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-taupe/30 bg-white/50 backdrop-blur-sm text-charcoal hover:bg-white/70 hover:border-taupe/50 transition-all duration-300 font-body text-sm tracking-wide"
+            >
+              View More on Instagram
+              <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-16 bg-charcoal-gray/30">
         <div className="max-w-4xl mx-auto px-6 text-center">
