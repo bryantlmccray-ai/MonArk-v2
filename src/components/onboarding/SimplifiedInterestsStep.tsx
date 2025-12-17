@@ -4,6 +4,7 @@ import { Heart } from 'lucide-react';
 interface SimplifiedInterestsStepProps {
   onNext: (interests: string[]) => void;
   onBack: () => void;
+  onSkip?: () => void;
 }
 
 const INTERESTS = [
@@ -21,7 +22,7 @@ const INTERESTS = [
 
 const MAX_INTERESTS = 5;
 
-export const SimplifiedInterestsStep: React.FC<SimplifiedInterestsStepProps> = ({ onNext, onBack }) => {
+export const SimplifiedInterestsStep: React.FC<SimplifiedInterestsStepProps> = ({ onNext, onBack, onSkip }) => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
 
   const toggleInterest = (interest: string) => {
@@ -103,12 +104,22 @@ export const SimplifiedInterestsStep: React.FC<SimplifiedInterestsStepProps> = (
         >
           Continue
         </button>
-        <button
-          onClick={onBack}
-          className="w-full py-3 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Back
-        </button>
+        <div className="flex justify-between">
+          <button
+            onClick={onBack}
+            className="py-3 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Back
+          </button>
+          {onSkip && (
+            <button
+              onClick={onSkip}
+              className="py-3 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Skip for now
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

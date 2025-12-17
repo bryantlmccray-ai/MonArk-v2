@@ -4,6 +4,7 @@ import { Check, User } from 'lucide-react';
 interface SimplifiedIdentityStepProps {
   onNext: (data: { genderIdentity: string; sexualOrientation: string }) => void;
   onBack: () => void;
+  onSkip?: () => void;
 }
 
 const GENDER_OPTIONS = [
@@ -24,7 +25,7 @@ const ORIENTATION_OPTIONS = [
   { value: 'Other', label: 'Other / Prefer not to say' },
 ];
 
-export const SimplifiedIdentityStep: React.FC<SimplifiedIdentityStepProps> = ({ onNext, onBack }) => {
+export const SimplifiedIdentityStep: React.FC<SimplifiedIdentityStepProps> = ({ onNext, onBack, onSkip }) => {
   const [genderIdentity, setGenderIdentity] = useState('');
   const [sexualOrientation, setSexualOrientation] = useState('');
 
@@ -110,12 +111,22 @@ export const SimplifiedIdentityStep: React.FC<SimplifiedIdentityStepProps> = ({ 
         >
           Continue
         </button>
-        <button
-          onClick={onBack}
-          className="w-full py-3 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Back
-        </button>
+        <div className="flex justify-between">
+          <button
+            onClick={onBack}
+            className="py-3 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Back
+          </button>
+          {onSkip && (
+            <button
+              onClick={onSkip}
+              className="py-3 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Skip for now
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
