@@ -6,6 +6,7 @@ import { PenLine, Sparkles, Briefcase } from 'lucide-react';
 interface SimplifiedBioStepProps {
   onNext: (data: { bio: string; occupation: string }) => void;
   onBack: () => void;
+  onSkip?: () => void;
 }
 
 const BIO_CHAR_LIMIT = 150;
@@ -17,7 +18,7 @@ const prompts = [
   "I'm looking for someone who...",
 ];
 
-export const SimplifiedBioStep: React.FC<SimplifiedBioStepProps> = ({ onNext, onBack }) => {
+export const SimplifiedBioStep: React.FC<SimplifiedBioStepProps> = ({ onNext, onBack, onSkip }) => {
   const [bio, setBio] = useState('');
   const [occupation, setOccupation] = useState('');
   const [selectedPrompt, setSelectedPrompt] = useState<string | null>(null);
@@ -123,12 +124,22 @@ export const SimplifiedBioStep: React.FC<SimplifiedBioStepProps> = ({ onNext, on
         >
           Continue
         </button>
-        <button
-          onClick={onBack}
-          className="w-full py-3 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Back
-        </button>
+        <div className="flex justify-between">
+          <button
+            onClick={onBack}
+            className="py-3 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Back
+          </button>
+          {onSkip && (
+            <button
+              onClick={onSkip}
+              className="py-3 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Skip for now
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

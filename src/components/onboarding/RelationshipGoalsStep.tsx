@@ -4,6 +4,7 @@ import { Check, Heart } from 'lucide-react';
 interface RelationshipGoalsStepProps {
   onNext: (goals: string[]) => void;
   onBack: () => void;
+  onSkip?: () => void;
 }
 
 const GOAL_OPTIONS = [
@@ -15,7 +16,7 @@ const GOAL_OPTIONS = [
   { value: 'open', label: 'Open to anything', emoji: '✨' },
 ];
 
-export const RelationshipGoalsStep: React.FC<RelationshipGoalsStepProps> = ({ onNext, onBack }) => {
+export const RelationshipGoalsStep: React.FC<RelationshipGoalsStepProps> = ({ onNext, onBack, onSkip }) => {
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
 
   const toggleGoal = (goal: string) => {
@@ -90,12 +91,22 @@ export const RelationshipGoalsStep: React.FC<RelationshipGoalsStepProps> = ({ on
         >
           Complete Profile
         </button>
-        <button
-          onClick={onBack}
-          className="w-full py-3 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Back
-        </button>
+        <div className="flex justify-between">
+          <button
+            onClick={onBack}
+            className="py-3 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Back
+          </button>
+          {onSkip && (
+            <button
+              onClick={onSkip}
+              className="py-3 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Skip for now
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

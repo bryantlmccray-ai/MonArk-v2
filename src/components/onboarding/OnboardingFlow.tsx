@@ -44,6 +44,27 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
   const { submitFeedback } = useRIF();
   const { toast } = useToast();
 
+  // Skip handlers - move to next step without saving data
+  const skipToNext = () => {
+    if (currentStep < 6) {
+      setCurrentStep(currentStep + 1);
+    } else if (currentStep === 6) {
+      // Skip RIF lite - just complete with empty answers
+      handleRIFComplete({
+        attachmentStyle: '',
+        energyType: '',
+        datePreferences: [],
+        availabilityWindows: [],
+        communicationStyle: '',
+        pacePreference: '',
+        conflictStyle: '',
+        loveLanguage: '',
+        socialBattery: '',
+        dealBreaker: '',
+      });
+    }
+  };
+
   const handlePhotosNext = (photos: string[]) => {
     setOnboardingData(prev => ({ ...prev, photos }));
     setCurrentStep(1);
@@ -123,23 +144,23 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <SimplifiedPhotosStep onNext={handlePhotosNext} />;
+        return <SimplifiedPhotosStep onNext={handlePhotosNext} onSkip={skipToNext} />;
       case 1:
-        return <SimplifiedBioStep onNext={handleBioNext} onBack={() => goBack(0)} />;
+        return <SimplifiedBioStep onNext={handleBioNext} onBack={() => goBack(0)} onSkip={skipToNext} />;
       case 2:
-        return <SimplifiedInterestsStep onNext={handleInterestsNext} onBack={() => goBack(1)} />;
+        return <SimplifiedInterestsStep onNext={handleInterestsNext} onBack={() => goBack(1)} onSkip={skipToNext} />;
       case 3:
-        return <LocationStep onNext={handleLocationNext} onBack={() => goBack(2)} />;
+        return <LocationStep onNext={handleLocationNext} onBack={() => goBack(2)} onSkip={skipToNext} />;
       case 4:
-        return <SimplifiedIdentityStep onNext={handleIdentityNext} onBack={() => goBack(3)} />;
+        return <SimplifiedIdentityStep onNext={handleIdentityNext} onBack={() => goBack(3)} onSkip={skipToNext} />;
       case 5:
-        return <RelationshipGoalsStep onNext={handleGoalsNext} onBack={() => goBack(4)} />;
+        return <RelationshipGoalsStep onNext={handleGoalsNext} onBack={() => goBack(4)} onSkip={skipToNext} />;
       case 6:
-        return <RIFLiteQuiz onComplete={handleRIFComplete} />;
+        return <RIFLiteQuiz onComplete={handleRIFComplete} onSkip={skipToNext} />;
       case 7:
         return <FinalWelcomeScreen onNext={onComplete} />;
       default:
-        return <SimplifiedPhotosStep onNext={handlePhotosNext} />;
+        return <SimplifiedPhotosStep onNext={handlePhotosNext} onSkip={skipToNext} />;
     }
   };
 

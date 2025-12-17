@@ -6,9 +6,10 @@ import { useToast } from '@/hooks/use-toast';
 interface LocationStepProps {
   onNext: (location: string) => void;
   onBack: () => void;
+  onSkip?: () => void;
 }
 
-export const LocationStep: React.FC<LocationStepProps> = ({ onNext, onBack }) => {
+export const LocationStep: React.FC<LocationStepProps> = ({ onNext, onBack, onSkip }) => {
   const [location, setLocation] = useState('');
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const { toast } = useToast();
@@ -120,12 +121,22 @@ export const LocationStep: React.FC<LocationStepProps> = ({ onNext, onBack }) =>
         >
           Continue
         </button>
-        <button
-          onClick={onBack}
-          className="w-full py-3 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Back
-        </button>
+        <div className="flex justify-between">
+          <button
+            onClick={onBack}
+            className="py-3 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Back
+          </button>
+          {onSkip && (
+            <button
+              onClick={onSkip}
+              className="py-3 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Skip for now
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

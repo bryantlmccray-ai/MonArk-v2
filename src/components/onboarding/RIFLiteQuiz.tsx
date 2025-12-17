@@ -3,6 +3,7 @@ import { Check, ChevronLeft, Sparkles } from 'lucide-react';
 
 interface RIFLiteQuizProps {
   onComplete: (answers: RIFLiteAnswers) => void;
+  onSkip?: () => void;
 }
 
 export interface RIFLiteAnswers {
@@ -149,7 +150,7 @@ const questions: Question[] = [
   },
 ];
 
-export const RIFLiteQuiz: React.FC<RIFLiteQuizProps> = ({ onComplete }) => {
+export const RIFLiteQuiz: React.FC<RIFLiteQuizProps> = ({ onComplete, onSkip }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Partial<RIFLiteAnswers>>({});
 
@@ -211,7 +212,7 @@ export const RIFLiteQuiz: React.FC<RIFLiteQuizProps> = ({ onComplete }) => {
   return (
     <div className="min-h-screen bg-background p-6 flex flex-col">
       <div className="flex-1 max-w-md mx-auto w-full space-y-6">
-        {/* Header with back button */}
+        {/* Header with back button and skip */}
         <div className="flex items-center justify-between">
           {currentIndex > 0 ? (
             <button
@@ -227,7 +228,16 @@ export const RIFLiteQuiz: React.FC<RIFLiteQuizProps> = ({ onComplete }) => {
             <Sparkles className="h-5 w-5 text-primary" />
             <span className="text-sm text-muted-foreground">RIF Lite</span>
           </div>
-          <div className="w-10" />
+          {onSkip ? (
+            <button
+              onClick={onSkip}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Skip
+            </button>
+          ) : (
+            <div className="w-10" />
+          )}
         </div>
 
         {/* Progress bar */}

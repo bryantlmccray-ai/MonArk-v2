@@ -5,9 +5,10 @@ import { useToast } from '@/hooks/use-toast';
 
 interface SimplifiedPhotosStepProps {
   onNext: (photos: string[]) => void;
+  onSkip?: () => void;
 }
 
-export const SimplifiedPhotosStep: React.FC<SimplifiedPhotosStepProps> = ({ onNext }) => {
+export const SimplifiedPhotosStep: React.FC<SimplifiedPhotosStepProps> = ({ onNext, onSkip }) => {
   const [photos, setPhotos] = useState<string[]>(['', '', '']);
   const { uploadPhoto, deletePhoto, uploading } = usePhotoUpload();
   const { toast } = useToast();
@@ -179,7 +180,7 @@ export const SimplifiedPhotosStep: React.FC<SimplifiedPhotosStepProps> = ({ onNe
       </div>
 
       {/* Continue Button */}
-      <div className="pt-6 max-w-md mx-auto w-full">
+      <div className="pt-6 max-w-md mx-auto w-full space-y-3">
         <button
           onClick={handleNext}
           disabled={!canProceed || uploading}
@@ -187,6 +188,14 @@ export const SimplifiedPhotosStep: React.FC<SimplifiedPhotosStepProps> = ({ onNe
         >
           {uploading ? 'Uploading...' : 'Continue'}
         </button>
+        {onSkip && (
+          <button
+            onClick={onSkip}
+            className="w-full py-3 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Skip for now
+          </button>
+        )}
       </div>
     </div>
   );
