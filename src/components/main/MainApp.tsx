@@ -36,7 +36,16 @@ export const MainApp: React.FC = () => {
   // Record session on mount
   useEffect(() => {
     recordSession();
-  }, [recordSession]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Track weekly options view when tab changes
+  useEffect(() => {
+    if (activeTab === 'weekly') {
+      recordWeeklyOptionsView();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -59,8 +68,6 @@ export const MainApp: React.FC = () => {
   const renderActiveScreen = () => {
     switch (activeTab) {
       case 'weekly':
-        // Track weekly options view
-        recordWeeklyOptionsView();
         return <WeeklyOptionsList />;
       case 'circle':
         return <MonArkCircle />;
