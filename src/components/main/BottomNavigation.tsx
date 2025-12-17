@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Map, MessageCircle, Users, BookOpen, Calendar } from 'lucide-react';
+import { User, MessageCircle, BookOpen, Calendar } from 'lucide-react';
 
 interface BottomNavigationProps {
   activeTab: string;
@@ -7,12 +7,12 @@ interface BottomNavigationProps {
 }
 
 export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, onTabChange }) => {
+  // MVP: Weekly Options is the main view - no discovery/swiping
   const tabs = [
-    { id: 'profile', icon: User, label: 'Profile' },
-    { id: 'weekly', icon: Calendar, label: 'Weekly' },
+    { id: 'weekly', icon: Calendar, label: 'Your 3' },
     { id: 'matches', icon: MessageCircle, label: 'Chats' },
-    { id: 'discover', icon: Map, label: 'Discover' },
     { id: 'dates', icon: BookOpen, label: 'Journal' },
+    { id: 'profile', icon: User, label: 'Profile' },
   ];
 
   return (

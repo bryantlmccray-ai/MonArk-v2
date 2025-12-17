@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Settings, ShieldCheck, Edit, LogOut, MapPin, TrendingUp, Calendar } from 'lucide-react';
 import { ProfileCreation } from '../profile/ProfileCreation';
-import { RelationalCompass } from '../rif/RelationalCompass';
 import { LocationConsentModal } from '../location/LocationConsentModal';
 import { AnalyticsConsentModal } from '../analytics/AnalyticsConsentModal';
 import { MonthlyRecapModal } from '../analytics/MonthlyRecapModal';
@@ -389,10 +388,6 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                 )}
               </div>
             </div>
-
-            {/* Relational Compass Section */}
-            <RelationalCompass />
-
             {/* MonArk Moments Section */}
             <div className="bg-charcoal-gray rounded-xl p-6 border border-gray-800">
               <div className="flex items-center space-x-2 mb-2">
