@@ -9,9 +9,10 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-interface ApprovalEmailRequest {
+interface RejectionEmailRequest {
   email: string;
   firstName: string;
+  city?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -20,7 +21,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, firstName }: ApprovalEmailRequest = await req.json();
+    const { email, firstName, city }: RejectionEmailRequest = await req.json();
 
     if (!email || !firstName) {
       return new Response(
@@ -29,18 +30,16 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // TODO: Replace with actual app URL when deployed
-    const appUrl = Deno.env.get("APP_URL") || "https://your-app-url.lovable.app";
-    
-    // Calculate link expiry (7 days from now)
-    const expiryDate = new Date();
-    expiryDate.setDate(expiryDate.getDate() + 7);
-    const expiryString = expiryDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+    // Customize message based on city
+    const isChicago = city?.toLowerCase().includes('chicago');
+    const cityMessage = isChicago 
+      ? "We're currently at capacity but will reach out when spots open up."
+      : `Right now we're only launching in Chicago, but we'll expand to ${city || 'your area'} soon. We'll reach out when we're ready for ${city || 'your area'} users.`;
 
     const emailResponse = await resend.emails.send({
       from: "MonArk <onboarding@resend.dev>",
       to: [email],
-      subject: "Welcome to MonArk! 🎉",
+      subject: "MonArk Waitlist Update",
       html: `
         <!DOCTYPE html>
         <html>
@@ -66,30 +65,17 @@ const handler = async (req: Request): Promise<Response> => {
                     <td style="padding: 40px;">
                       <h2 style="margin: 0 0 20px; color: #ffffff; font-size: 24px; font-weight: 400;">Hi ${firstName},</h2>
                       
-                      <p style="margin: 0 0 25px; color: #cccccc; font-size: 16px; line-height: 1.6;">
-                        Great news—<strong style="color: #D4AF37;">you're approved!</strong>
+                      <p style="margin: 0 0 20px; color: #cccccc; font-size: 16px; line-height: 1.6;">
+                        Thanks for your interest in MonArk!
                       </p>
                       
-                      <!-- CTA Button -->
-                      <table width="100%" cellpadding="0" cellspacing="0">
-                        <tr>
-                          <td align="center" style="padding: 10px 0 30px;">
-                            <a href="${appUrl}" style="display: inline-block; background-color: #D4AF37; color: #1a1a1a; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-weight: 600; font-size: 16px;">
-                              Create Your Account
-                            </a>
-                          </td>
-                        </tr>
-                      </table>
-                      
-                      <p style="margin: 0 0 10px; color: #8a8a8a; font-size: 14px; text-align: center;">
-                        This link expires on ${expiryString} (7 days)
+                      <p style="margin: 0 0 20px; color: #cccccc; font-size: 16px; line-height: 1.6;">
+                        ${cityMessage}
                       </p>
                       
-                      <div style="background-color: #3a3a3a; border-radius: 8px; padding: 20px; margin: 30px 0; text-align: center;">
-                        <p style="margin: 0; color: #D4AF37; font-size: 16px; font-weight: 500;">
-                          ✨ Your first "Your 3" will arrive this Sunday at 9 AM
-                        </p>
-                      </div>
+                      <p style="margin: 0 0 20px; color: #cccccc; font-size: 16px; line-height: 1.6;">
+                        We appreciate your patience as we build something special.
+                      </p>
                       
                       <p style="margin: 0; color: #8a8a8a; font-size: 14px; line-height: 1.6;">
                         Questions? Just reply to this email.
@@ -101,7 +87,7 @@ const handler = async (req: Request): Promise<Response> => {
                   <tr>
                     <td style="padding: 30px 40px; background-color: #232323; border-top: 1px solid #3a3a3a;">
                       <p style="margin: 0; color: #666666; font-size: 12px; text-align: center;">
-                        Welcome to the community,<br>
+                        Thanks,<br>
                         <strong style="color: #8a8a8a;">The MonArk Team</strong>
                       </p>
                     </td>
@@ -115,14 +101,14 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
-    console.log("Approval email sent:", emailResponse);
+    console.log("Rejection email sent:", emailResponse);
 
     return new Response(JSON.stringify(emailResponse), {
       status: 200,
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
   } catch (error: any) {
-    console.error("Error in waitlist-approval-email:", error);
+    console.error("Error in waitlist-rejection-email:", error);
     return new Response(
       JSON.stringify({ error: error.message }),
       { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
