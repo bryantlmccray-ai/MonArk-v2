@@ -266,13 +266,13 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           {/* Social Link */}
           <div className="mb-8">
             <a 
-              href="https://instagram.com/monark.dating" 
+              href="https://www.instagram.com/monark.eq/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-taupe/20 bg-white/40 backdrop-blur-sm text-charcoal hover:bg-white/60 hover:border-taupe/40 transition-all duration-300 group"
             >
               <Instagram className="h-4 w-4 text-taupe group-hover:text-charcoal transition-colors" />
-              <span className="text-sm font-body tracking-wide">@monark.dating</span>
+              <span className="text-sm font-body tracking-wide">@monark.eq</span>
             </a>
           </div>
           
