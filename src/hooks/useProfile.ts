@@ -33,6 +33,13 @@ export interface UserProfile {
   date_of_birth: string | null;
   age_verified: boolean | null;
   age_verification_timestamp: string | null;
+  relationship_goals: string[] | null;
+  occupation: string | null;
+  education_level: string | null;
+  exercise_habits: string | null;
+  smoking_status: string | null;
+  drinking_status: string | null;
+  height_cm: number | null;
   created_at: string;
   updated_at: string;
 }
