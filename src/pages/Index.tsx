@@ -46,16 +46,18 @@ const Index = () => {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, []);
 
-  // Demo mode override - accessible regardless of auth status  
-  if (showDemo || demoData.isInDemo || isDemoMode) {
-    console.log('Rendering demo, showDemo:', showDemo, 'demoData.isInDemo:', demoData.isInDemo, 'isDemoMode:', isDemoMode);
+  // Separate demo mode that shows DemoMainApp (for landing page "Try Demo" button)
+  if (showDemo || demoData.isInDemo) {
+    console.log('Rendering demo app, showDemo:', showDemo, 'demoData.isInDemo:', demoData.isInDemo);
     return <DemoMainApp onClose={() => {
       console.log('Closing demo');
       setShowDemo(false);
       setDemoMode(false);
-      exitDemoMode();
     }} />;
   }
+
+  // Guest/Demo mode from auth page - goes through full onboarding flow
+  // Check if user is in demo mode (isDemoMode) but hasn't completed profile yet
 
 
   // Show loading screen while checking auth state
@@ -67,13 +69,13 @@ const Index = () => {
     );
   }
 
-  // Show auth page if requested
-  if (showAuth) {
+  // Show auth page if requested (and not in demo mode)
+  if (showAuth && !isDemoMode) {
     return <AuthPage />;
   }
 
-  // Show enhanced landing page if user is not logged in
-  if (!user) {
+  // Show enhanced landing page if user is not logged in and not in demo mode
+  if (!user && !isDemoMode) {
     return <EnhancedLandingPage 
       onExitToApp={() => {
         console.log('onExitToApp called - going to auth');
@@ -86,7 +88,7 @@ const Index = () => {
     />;
   }
 
-  // If user has a complete profile, show main app
+  // If user (real or demo) has a complete profile, show main app
   if (profile?.is_profile_complete) {
     return <MainApp />;
   }
