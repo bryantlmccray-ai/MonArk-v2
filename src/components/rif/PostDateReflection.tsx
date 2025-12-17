@@ -131,13 +131,13 @@ export const PostDateReflection: React.FC<PostDateReflectionProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-charcoal-gray border-gray-800 text-white max-w-md">
+      <DialogContent className="bg-charcoal border-border text-foreground max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Sparkles className="h-5 w-5 text-goldenrod" />
             Post-Date Reflection
           </DialogTitle>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Quick check-in to help us find better matches (30 seconds)
           </p>
         </DialogHeader>
@@ -149,7 +149,7 @@ export const PostDateReflection: React.FC<PostDateReflectionProps> = ({
               key={s}
               className={cn(
                 "h-1 flex-1 rounded-full transition-colors",
-                s <= step ? "bg-goldenrod" : "bg-gray-700"
+                s <= step ? "bg-goldenrod" : "bg-muted"
               )}
             />
           ))}
@@ -160,17 +160,17 @@ export const PostDateReflection: React.FC<PostDateReflectionProps> = ({
           {step === 1 && (
             <div className="space-y-4">
               <div>
-                <label className="text-sm text-gray-400 block mb-2">Who did you go out with?</label>
+                <label className="text-sm text-muted-foreground block mb-2">Who did you go out with?</label>
                 <Input
                   value={partnerName}
                   onChange={(e) => setPartnerName(e.target.value)}
                   placeholder="Their name"
-                  className="bg-jet-black border-gray-700 text-white"
+                  className="bg-input border-border text-foreground"
                 />
               </div>
               
               <div>
-                <label className="text-sm text-gray-400 block mb-3">How did you feel during the date?</label>
+                <label className="text-sm text-muted-foreground block mb-3">How did you feel during the date?</label>
                 <div className="grid gap-2">
                   {(Object.entries(FEELING_LABELS) as [FeelingDuring, string][]).map(([key, label]) => (
                     <button
@@ -179,11 +179,11 @@ export const PostDateReflection: React.FC<PostDateReflectionProps> = ({
                       className={cn(
                         "flex items-center gap-3 p-3 rounded-lg border transition-all text-left",
                         feeling === key
-                          ? "border-goldenrod bg-goldenrod/10 text-white"
-                          : "border-gray-700 bg-jet-black text-gray-300 hover:border-gray-600"
+                          ? "border-goldenrod bg-goldenrod/10 text-foreground"
+                          : "border-border bg-input text-muted-foreground hover:border-muted-foreground"
                       )}
                     >
-                      <span className={feeling === key ? "text-goldenrod" : "text-gray-500"}>
+                      <span className={feeling === key ? "text-goldenrod" : "text-muted-foreground"}>
                         {FEELING_ICONS[key]}
                       </span>
                       <span className="text-sm">{label}</span>
@@ -197,7 +197,7 @@ export const PostDateReflection: React.FC<PostDateReflectionProps> = ({
           {/* Step 2: Standout qualities */}
           {step === 2 && (
             <div>
-              <label className="text-sm text-gray-400 block mb-3">What stood out to you? (select all that apply)</label>
+              <label className="text-sm text-muted-foreground block mb-3">What stood out to you? (select all that apply)</label>
               <div className="grid gap-2">
                 {(Object.entries(STANDOUT_LABELS) as [StandoutQuality, string][]).map(([key, label]) => (
                   <button
@@ -206,11 +206,11 @@ export const PostDateReflection: React.FC<PostDateReflectionProps> = ({
                     className={cn(
                       "flex items-center gap-3 p-3 rounded-lg border transition-all text-left",
                       standouts.includes(key)
-                        ? "border-goldenrod bg-goldenrod/10 text-white"
-                        : "border-gray-700 bg-jet-black text-gray-300 hover:border-gray-600"
+                        ? "border-goldenrod bg-goldenrod/10 text-foreground"
+                        : "border-border bg-input text-muted-foreground hover:border-muted-foreground"
                     )}
                   >
-                    <span className={standouts.includes(key) ? "text-goldenrod" : "text-gray-500"}>
+                    <span className={standouts.includes(key) ? "text-goldenrod" : "text-muted-foreground"}>
                       {STANDOUT_ICONS[key]}
                     </span>
                     <span className="text-sm">{label}</span>
@@ -227,7 +227,7 @@ export const PostDateReflection: React.FC<PostDateReflectionProps> = ({
           {step === 3 && (
             <div className="space-y-4">
               <div>
-                <label className="text-sm text-gray-400 block mb-3">For your next date, would you prefer someone who:</label>
+                <label className="text-sm text-muted-foreground block mb-3">For your next date, would you prefer someone who:</label>
                 <div className="grid gap-2">
                   {(Object.entries(NEXT_PREFERENCE_LABELS) as [NextPreference, string][]).map(([key, label]) => (
                     <button
@@ -236,8 +236,8 @@ export const PostDateReflection: React.FC<PostDateReflectionProps> = ({
                       className={cn(
                         "flex items-center gap-3 p-3 rounded-lg border transition-all text-left",
                         nextPref === key
-                          ? "border-goldenrod bg-goldenrod/10 text-white"
-                          : "border-gray-700 bg-jet-black text-gray-300 hover:border-gray-600"
+                          ? "border-goldenrod bg-goldenrod/10 text-foreground"
+                          : "border-border bg-input text-muted-foreground hover:border-muted-foreground"
                       )}
                     >
                       <span className="text-sm">{label}</span>
@@ -248,12 +248,12 @@ export const PostDateReflection: React.FC<PostDateReflectionProps> = ({
 
               {nextPref === 'different_energy' && (
                 <div>
-                  <label className="text-sm text-gray-400 block mb-2">Describe the energy you'd prefer:</label>
+                  <label className="text-sm text-muted-foreground block mb-2">Describe the energy you'd prefer:</label>
                   <Textarea
                     value={differentDescription}
                     onChange={(e) => setDifferentDescription(e.target.value)}
                     placeholder="e.g., More calm and relaxed, or more adventurous..."
-                    className="bg-jet-black border-gray-700 text-white"
+                    className="bg-input border-border text-foreground"
                     rows={2}
                   />
                 </div>
@@ -267,7 +267,7 @@ export const PostDateReflection: React.FC<PostDateReflectionProps> = ({
           <Button
             variant="ghost"
             onClick={() => step > 1 ? setStep(step - 1) : handleClose()}
-            className="text-gray-400"
+            className="text-muted-foreground"
           >
             {step > 1 ? 'Back' : 'Skip'}
           </Button>

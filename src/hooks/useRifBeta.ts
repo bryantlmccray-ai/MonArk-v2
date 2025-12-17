@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -52,19 +52,7 @@ export function useRifBeta() {
   const [loading, setLoading] = useState(true);
   const [insights, setInsights] = useState<ReflectionInsight[]>([]);
 
-  useEffect(() => {
-    if (user) {
-      fetchReflections();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (reflections.length >= 3) {
-      generateInsights();
-    }
-  }, [reflections]);
-
-  const fetchReflections = async () => {
+  const fetchReflections = useCallback(async () => {
     if (!user) return;
     
     setLoading(true);
@@ -82,39 +70,9 @@ export function useRifBeta() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
-  const saveReflection = async (reflection: {
-    partner_name: string;
-    date_occurred?: string;
-    feeling_during: FeelingDuring;
-    standout_qualities: StandoutQuality[];
-    next_preference: NextPreference;
-    different_energy_description?: string;
-  }) => {
-    if (!user) throw new Error('Must be logged in');
-
-    const { data, error } = await supabase
-      .from('date_reflections')
-      .insert({
-        user_id: user.id,
-        partner_name: reflection.partner_name,
-        date_occurred: reflection.date_occurred || new Date().toISOString(),
-        feeling_during: reflection.feeling_during,
-        standout_qualities: reflection.standout_qualities,
-        next_preference: reflection.next_preference,
-        different_energy_description: reflection.different_energy_description
-      })
-      .select()
-      .single();
-
-    if (error) throw error;
-    
-    setReflections(prev => [data as DateReflection, ...prev]);
-    return data as DateReflection;
-  };
-
-  const generateInsights = () => {
+  const generateInsights = useCallback(() => {
     if (reflections.length < 3) {
       setInsights([]);
       return;
@@ -200,6 +158,48 @@ export function useRifBeta() {
     }
 
     setInsights(newInsights);
+  }, [reflections]);
+
+  useEffect(() => {
+    if (user) {
+      fetchReflections();
+    }
+  }, [user, fetchReflections]);
+
+  useEffect(() => {
+    if (reflections.length >= 3) {
+      generateInsights();
+    }
+  }, [reflections, generateInsights]);
+
+  const saveReflection = async (reflection: {
+    partner_name: string;
+    date_occurred?: string;
+    feeling_during: FeelingDuring;
+    standout_qualities: StandoutQuality[];
+    next_preference: NextPreference;
+    different_energy_description?: string;
+  }) => {
+    if (!user) throw new Error('Must be logged in');
+
+    const { data, error } = await supabase
+      .from('date_reflections')
+      .insert({
+        user_id: user.id,
+        partner_name: reflection.partner_name,
+        date_occurred: reflection.date_occurred || new Date().toISOString(),
+        feeling_during: reflection.feeling_during,
+        standout_qualities: reflection.standout_qualities,
+        next_preference: reflection.next_preference,
+        different_energy_description: reflection.different_energy_description
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    
+    setReflections(prev => [data as DateReflection, ...prev]);
+    return data as DateReflection;
   };
 
   const getReflectionCount = () => reflections.length;
