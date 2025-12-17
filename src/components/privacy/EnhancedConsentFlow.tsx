@@ -150,7 +150,7 @@ export const EnhancedConsentFlow: React.FC<EnhancedConsentFlowProps> = ({ onCons
                 {showFullText === 'privacy' ? (
                   <div className="space-y-4">
                     <h4 className="text-white font-medium">Data Collection & Use</h4>
-                    <p>MonArk collects only the information necessary to provide our dating and emotional wellness services. This includes profile information, interaction data, and anonymized behavioral patterns for improving our Relational Intelligence Framework (RIF).</p>
+                    <p>MonArk collects only the information necessary to provide our dating services. This includes profile information, interaction data, and anonymized patterns for improving our matching algorithms.</p>
                     
                     <h4 className="text-white font-medium">Health Data Protection</h4>
                     <p>Any emotional or wellness-related data is treated as sensitive health information under laws like Washington's My Health My Data Act. We implement additional protections for this data including encryption, access controls, and anonymization for analytics.</p>

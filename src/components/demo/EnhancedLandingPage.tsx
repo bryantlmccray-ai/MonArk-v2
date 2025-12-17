@@ -132,8 +132,8 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <div className="bg-taupe/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
                   <Heart className="h-8 w-8 text-taupe" />
                 </div>
-                <h3 className="font-editorial-headline text-lg text-charcoal">Relational Intelligence</h3>
-                <p className="text-sm">Our RIF helps you understand your patterns.</p>
+                <h3 className="font-editorial-headline text-lg text-charcoal">Smart Matching</h3>
+                <p className="text-sm">We match on communication style, not just demographics.</p>
               </div>
               
               <div className="text-center space-y-4">

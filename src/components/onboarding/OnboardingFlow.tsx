@@ -5,7 +5,7 @@ import { SimplifiedInterestsStep } from './SimplifiedInterestsStep';
 import { LocationStep } from './LocationStep';
 import { SimplifiedIdentityStep } from './SimplifiedIdentityStep';
 import { RelationshipGoalsStep } from './RelationshipGoalsStep';
-import { RIFLiteQuiz, RIFLiteAnswers } from './RIFLiteQuiz';
+import { DatingStyleQuiz, DatingStyleAnswers } from './DatingStyleQuiz';
 import { FinalWelcomeScreen } from './FinalWelcomeScreen';
 import { useProfile } from '@/hooks/useProfile';
 import { useRIF } from '@/hooks/useRIF';
@@ -24,7 +24,7 @@ interface OnboardingData {
   genderIdentity: string;
   sexualOrientation: string;
   relationshipGoals: string[];
-  rifAnswers?: RIFLiteAnswers;
+  datingStyleAnswers?: DatingStyleAnswers;
 }
 
 export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
@@ -49,8 +49,8 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
     if (currentStep < 6) {
       setCurrentStep(currentStep + 1);
     } else if (currentStep === 6) {
-      // Skip RIF lite - just complete with empty answers
-      handleRIFComplete({
+      // Skip dating style quiz - just complete with empty answers
+      handleDatingStyleComplete({
         attachmentStyle: '',
         energyType: '',
         datePreferences: [],
@@ -105,7 +105,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
         gender_identity: updatedData.genderIdentity as any,
         sexual_orientation: updatedData.sexualOrientation as any,
         relationship_goals: updatedData.relationshipGoals,
-        is_profile_complete: false, // Will be true after RIF Lite
+        is_profile_complete: false, // Will be true after dating style quiz
       });
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -119,19 +119,19 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
     setCurrentStep(6);
   };
 
-  const handleRIFComplete = async (answers: RIFLiteAnswers) => {
-    setOnboardingData(prev => ({ ...prev, rifAnswers: answers }));
+  const handleDatingStyleComplete = async (answers: DatingStyleAnswers) => {
+    setOnboardingData(prev => ({ ...prev, datingStyleAnswers: answers }));
     
-    // Save RIF answers
+    // Save dating style answers (powers matching behind the scenes)
     try {
-      await submitFeedback('onboarding_rif_lite', answers);
+      await submitFeedback('onboarding_dating_style', answers);
       
       // Mark profile as complete
       await updateProfile({
         is_profile_complete: true,
       });
     } catch (error) {
-      console.error('Error saving RIF answers:', error);
+      console.error('Error saving dating style answers:', error);
     }
     
     setCurrentStep(7);
@@ -156,7 +156,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
       case 5:
         return <RelationshipGoalsStep onNext={handleGoalsNext} onBack={() => goBack(4)} onSkip={skipToNext} />;
       case 6:
-        return <RIFLiteQuiz onComplete={handleRIFComplete} onSkip={skipToNext} />;
+        return <DatingStyleQuiz onComplete={handleDatingStyleComplete} onSkip={skipToNext} />;
       case 7:
         return <FinalWelcomeScreen onNext={onComplete} />;
       default:
