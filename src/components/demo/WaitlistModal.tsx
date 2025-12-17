@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Mail, User, Loader2, MapPin, Heart, Wine, Calendar, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Mail, User, Loader2, MapPin, Heart, ChevronRight, ChevronLeft, AlertCircle } from 'lucide-react';
 
 interface WaitlistModalProps {
   isOpen: boolean;
@@ -19,61 +19,43 @@ interface WaitlistModalProps {
 export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, sourcePage = 'demo-landing' }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
-    // Contact
+    // Step 1: Contact
     firstName: '',
     lastName: '',
     email: '',
-    // Location
-    city: '',
-    stateRegion: '',
-    country: '',
-    zip: '',
-    // Identity
+    // Step 2: About You
     ageRange: '',
+    city: '',
     genderIdentity: '',
-    orientation: '',
+    lookingFor: '',
     relationshipGoal: '',
-    // Lifestyle
-    drinking: '',
-    smoking: '',
-    accessibilityNeeds: '',
-    // Behavioral
-    weeklyEnergy: '',
-    conversationStyle: '',
-    crowdTolerance: '',
-    budgetBand: '',
-    timeWindow: '',
-    // Discovery
+    // Step 3: Why MonArk
+    whyMonark: '',
     heardAboutUs: '',
     willingToBeta: false,
     emailOptIn: true,
-    // DEI
-    lgbtqPlus: false,
-    raceEthnicity: [] as string[],
-    otherNotes: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
 
-  const totalSteps = 4;
+  const totalSteps = 3;
 
-  const handleInputChange = (field: string, value: string | boolean | string[]) => {
+  const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleRaceEthnicityToggle = (value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      raceEthnicity: prev.raceEthnicity.includes(value)
-        ? prev.raceEthnicity.filter(item => item !== value)
-        : [...prev.raceEthnicity, value]
-    }));
   };
 
   const validateStep = (step: number): boolean => {
     switch (step) {
       case 1:
+        if (!formData.firstName.trim()) {
+          toast({
+            title: "Name Required",
+            description: "Please enter your first name",
+            variant: "destructive"
+          });
+          return false;
+        }
         if (!formData.email.trim()) {
           toast({
             title: "Email Required",
@@ -93,20 +75,66 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
         }
         return true;
       case 2:
-        if (!formData.ageRange || !formData.relationshipGoal) {
+        if (!formData.ageRange) {
           toast({
-            title: "Required Fields",
-            description: "Please fill in age range and relationship goal",
+            title: "Age Required",
+            description: "Please select your age range",
+            variant: "destructive"
+          });
+          return false;
+        }
+        if (!formData.city.trim()) {
+          toast({
+            title: "City Required",
+            description: "Please enter your city",
+            variant: "destructive"
+          });
+          return false;
+        }
+        // Check if city is Chicago (case insensitive)
+        const cityLower = formData.city.toLowerCase().trim();
+        if (!cityLower.includes('chicago')) {
+          toast({
+            title: "Chicago Only for MVP",
+            description: "We're launching in Chicago first! We'll notify you when we expand to your area.",
+            variant: "destructive"
+          });
+          return false;
+        }
+        if (!formData.genderIdentity.trim()) {
+          toast({
+            title: "Gender Required",
+            description: "Please tell us how you identify",
+            variant: "destructive"
+          });
+          return false;
+        }
+        if (!formData.lookingFor.trim()) {
+          toast({
+            title: "Looking For Required",
+            description: "Please tell us who you're looking for",
+            variant: "destructive"
+          });
+          return false;
+        }
+        if (!formData.relationshipGoal) {
+          toast({
+            title: "Relationship Goal Required",
+            description: "Please select your relationship goal",
             variant: "destructive"
           });
           return false;
         }
         return true;
       case 3:
-        // All optional in this step
-        return true;
-      case 4:
-        // All optional in this step
+        if (!formData.whyMonark.trim() || formData.whyMonark.trim().length < 20) {
+          toast({
+            title: "Tell Us More",
+            description: "Please write at least a sentence about why you want to join MonArk",
+            variant: "destructive"
+          });
+          return false;
+        }
         return true;
       default:
         return true;
@@ -133,35 +161,22 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
     setIsSubmitting(true);
 
     try {
+      // Insert waitlist submission
       const { error } = await supabase
         .from('waitlist_submissions')
         .insert({
-          first_name: formData.firstName.trim() || null,
+          first_name: formData.firstName.trim(),
           last_name: formData.lastName.trim() || null,
           email: formData.email.trim().toLowerCase(),
-          city: formData.city.trim() || null,
-          state_region: formData.stateRegion.trim() || null,
-          country: formData.country.trim() || null,
-          zip: formData.zip.trim() || null,
-          age_range: formData.ageRange || null,
-          gender_identity: formData.genderIdentity || null,
-          orientation: formData.orientation || null,
-          relationship_goal: formData.relationshipGoal || null,
-          drinking: formData.drinking || null,
-          smoking: formData.smoking || null,
-          accessibility_needs: formData.accessibilityNeeds || null,
-          weekly_energy: formData.weeklyEnergy || null,
-          conversation_style: formData.conversationStyle || null,
-          crowd_tolerance: formData.crowdTolerance || null,
-          budget_band: formData.budgetBand || null,
-          time_window: formData.timeWindow || null,
-          heard_about_us: formData.heardAboutUs || null,
+          city: formData.city.trim(),
+          age_range: formData.ageRange,
+          gender_identity: formData.genderIdentity.trim(),
+          looking_for: formData.lookingFor.trim(),
+          relationship_goal: formData.relationshipGoal,
+          why_monark: formData.whyMonark.trim(),
+          heard_about_us: formData.heardAboutUs.trim() || null,
           willing_to_beta: formData.willingToBeta,
           email_opt_in: formData.emailOptIn,
-          lgbtq_plus: formData.lgbtqPlus || null,
-          race_ethnicity: formData.raceEthnicity.length > 0 ? formData.raceEthnicity : null,
-          other_notes: formData.otherNotes || null,
-          ip_address: null,
           user_agent: navigator.userAgent,
           source_page: sourcePage
         });
@@ -176,25 +191,20 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
         return;
       }
 
-      setIsSubmitted(true);
-      toast({
-        title: "Welcome to the Waitlist!",
-        description: "We'll notify you when MonArk launches. Thank you for your interest!",
-      });
-
-      setTimeout(() => {
-        setFormData({
-          firstName: '', lastName: '', email: '', city: '', stateRegion: '', country: '', zip: '',
-          ageRange: '', genderIdentity: '', orientation: '', relationshipGoal: '',
-          drinking: '', smoking: '', accessibilityNeeds: '',
-          weeklyEnergy: '', conversationStyle: '', crowdTolerance: '', budgetBand: '', timeWindow: '',
-          heardAboutUs: '', willingToBeta: false, emailOptIn: true,
-          lgbtqPlus: false, raceEthnicity: [], otherNotes: ''
+      // Send confirmation email
+      try {
+        await supabase.functions.invoke('waitlist-confirmation-email', {
+          body: {
+            email: formData.email.trim().toLowerCase(),
+            firstName: formData.firstName.trim()
+          }
         });
-        setIsSubmitted(false);
-        setCurrentStep(1);
-        onClose();
-      }, 2000);
+      } catch (emailError) {
+        console.error('Email error (non-blocking):', emailError);
+        // Don't block submission if email fails
+      }
+
+      setIsSubmitted(true);
 
     } catch (error) {
       console.error('Unexpected error:', error);
@@ -211,12 +221,9 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
   const handleClose = () => {
     if (!isSubmitting) {
       setFormData({
-        firstName: '', lastName: '', email: '', city: '', stateRegion: '', country: '', zip: '',
-        ageRange: '', genderIdentity: '', orientation: '', relationshipGoal: '',
-        drinking: '', smoking: '', accessibilityNeeds: '',
-        weeklyEnergy: '', conversationStyle: '', crowdTolerance: '', budgetBand: '', timeWindow: '',
-        heardAboutUs: '', willingToBeta: false, emailOptIn: true,
-        lgbtqPlus: false, raceEthnicity: [], otherNotes: ''
+        firstName: '', lastName: '', email: '',
+        ageRange: '', city: '', genderIdentity: '', lookingFor: '', relationshipGoal: '',
+        whyMonark: '', heardAboutUs: '', willingToBeta: false, emailOptIn: true
       });
       setIsSubmitted(false);
       setCurrentStep(1);
@@ -229,6 +236,36 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
       case 1:
         return (
           <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="firstName" className="text-white text-sm">First Name *</Label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    id="firstName"
+                    type="text"
+                    value={formData.firstName}
+                    onChange={(e) => handleInputChange('firstName', e.target.value)}
+                    className="bg-white border-gray-700 text-black pl-10"
+                    placeholder="First name"
+                    disabled={isSubmitting}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lastName" className="text-white text-sm">Last Name</Label>
+                <Input
+                  id="lastName"
+                  type="text"
+                  value={formData.lastName}
+                  onChange={(e) => handleInputChange('lastName', e.target.value)}
+                  className="bg-white border-gray-700 text-black"
+                  placeholder="Last name"
+                  disabled={isSubmitting}
+                />
+              </div>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="email" className="text-white text-sm">Email Address *</Label>
               <div className="relative">
@@ -240,33 +277,6 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   className="bg-white border-gray-700 text-black pl-10"
                   placeholder="your@email.com"
-                  disabled={isSubmitting}
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="firstName" className="text-white text-sm">First Name</Label>
-                <Input
-                  id="firstName"
-                  type="text"
-                  value={formData.firstName}
-                  onChange={(e) => handleInputChange('firstName', e.target.value)}
-                  className="bg-white border-gray-700 text-black"
-                  placeholder="First name"
-                  disabled={isSubmitting}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="lastName" className="text-white text-sm">Last Name</Label>
-                <Input
-                  id="lastName"
-                  type="text"
-                  value={formData.lastName}
-                  onChange={(e) => handleInputChange('lastName', e.target.value)}
-                  className="bg-white border-gray-700 text-black"
-                  placeholder="Last name"
                   disabled={isSubmitting}
                 />
               </div>
@@ -293,94 +303,63 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
               </Select>
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="city" className="text-white text-sm">City *</Label>
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  id="city"
+                  value={formData.city}
+                  onChange={(e) => handleInputChange('city', e.target.value)}
+                  className="bg-white border-gray-700 text-black pl-10"
+                  placeholder="Chicago"
+                  disabled={isSubmitting}
+                />
+              </div>
+              <p className="text-xs text-goldenrod/80 flex items-center gap-1">
+                <AlertCircle className="h-3 w-3" />
+                We're launching in Chicago first
+              </p>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="genderIdentity" className="text-white text-sm">Gender Identity</Label>
+                <Label htmlFor="genderIdentity" className="text-white text-sm">I am a... *</Label>
                 <Input
                   id="genderIdentity"
                   value={formData.genderIdentity}
                   onChange={(e) => handleInputChange('genderIdentity', e.target.value)}
                   className="bg-white border-gray-700 text-black"
-                  placeholder="Your gender"
+                  placeholder="e.g. Woman, Man, Non-binary"
                   disabled={isSubmitting}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="orientation" className="text-white text-sm">Orientation</Label>
+                <Label htmlFor="lookingFor" className="text-white text-sm">Looking for... *</Label>
                 <Input
-                  id="orientation"
-                  value={formData.orientation}
-                  onChange={(e) => handleInputChange('orientation', e.target.value)}
+                  id="lookingFor"
+                  value={formData.lookingFor}
+                  onChange={(e) => handleInputChange('lookingFor', e.target.value)}
                   className="bg-white border-gray-700 text-black"
-                  placeholder="Your orientation"
+                  placeholder="e.g. Women, Men, Everyone"
                   disabled={isSubmitting}
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="relationshipGoal" className="text-white text-sm">Relationship Goal *</Label>
+              <Label htmlFor="relationshipGoal" className="text-white text-sm">What are you looking for? *</Label>
               <Select value={formData.relationshipGoal} onValueChange={(val) => handleInputChange('relationshipGoal', val)} disabled={isSubmitting}>
                 <SelectTrigger className="bg-white border-gray-700 text-black">
-                  <SelectValue placeholder="What are you looking for?" />
+                  <SelectValue placeholder="Select your goal" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="casual">Casual</SelectItem>
-                  <SelectItem value="dating">Dating</SelectItem>
-                  <SelectItem value="long-term">Long-term</SelectItem>
-                  <SelectItem value="not sure">Not Sure</SelectItem>
+                  <SelectItem value="casual">Something casual</SelectItem>
+                  <SelectItem value="dating">Dating & exploring</SelectItem>
+                  <SelectItem value="long-term">Long-term relationship</SelectItem>
+                  <SelectItem value="not sure">Not sure yet</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="city" className="text-white text-sm">City</Label>
-                <Input
-                  id="city"
-                  value={formData.city}
-                  onChange={(e) => handleInputChange('city', e.target.value)}
-                  className="bg-white border-gray-700 text-black"
-                  placeholder="Your city"
-                  disabled={isSubmitting}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="stateRegion" className="text-white text-sm">State/Region</Label>
-                <Input
-                  id="stateRegion"
-                  value={formData.stateRegion}
-                  onChange={(e) => handleInputChange('stateRegion', e.target.value)}
-                  className="bg-white border-gray-700 text-black"
-                  placeholder="State/region"
-                  disabled={isSubmitting}
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="country" className="text-white text-sm">Country</Label>
-                <Input
-                  id="country"
-                  value={formData.country}
-                  onChange={(e) => handleInputChange('country', e.target.value)}
-                  className="bg-white border-gray-700 text-black"
-                  placeholder="Your country"
-                  disabled={isSubmitting}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="zip" className="text-white text-sm">ZIP Code</Label>
-                <Input
-                  id="zip"
-                  value={formData.zip}
-                  onChange={(e) => handleInputChange('zip', e.target.value)}
-                  className="bg-white border-gray-700 text-black"
-                  placeholder="ZIP code"
-                  disabled={isSubmitting}
-                />
-              </div>
             </div>
           </div>
         );
@@ -388,125 +367,19 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
       case 3:
         return (
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="drinking" className="text-white text-sm">Drinking</Label>
-                <Select value={formData.drinking} onValueChange={(val) => handleInputChange('drinking', val)} disabled={isSubmitting}>
-                  <SelectTrigger className="bg-white border-gray-700 text-black">
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="no">No</SelectItem>
-                    <SelectItem value="social">Social</SelectItem>
-                    <SelectItem value="regular">Regular</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="smoking" className="text-white text-sm">Smoking</Label>
-                <Select value={formData.smoking} onValueChange={(val) => handleInputChange('smoking', val)} disabled={isSubmitting}>
-                  <SelectTrigger className="bg-white border-gray-700 text-black">
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="no">No</SelectItem>
-                    <SelectItem value="occasionally">Occasionally</SelectItem>
-                    <SelectItem value="yes">Yes</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="weeklyEnergy" className="text-white text-sm">Weekly Energy</Label>
-                <Select value={formData.weeklyEnergy} onValueChange={(val) => handleInputChange('weeklyEnergy', val)} disabled={isSubmitting}>
-                  <SelectTrigger className="bg-white border-gray-700 text-black">
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="conversationStyle" className="text-white text-sm">Conversation Style</Label>
-                <Select value={formData.conversationStyle} onValueChange={(val) => handleInputChange('conversationStyle', val)} disabled={isSubmitting}>
-                  <SelectTrigger className="bg-white border-gray-700 text-black">
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="short">Short</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="long">Long</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="crowdTolerance" className="text-white text-sm">Crowd Tolerance</Label>
-                <Select value={formData.crowdTolerance} onValueChange={(val) => handleInputChange('crowdTolerance', val)} disabled={isSubmitting}>
-                  <SelectTrigger className="bg-white border-gray-700 text-black">
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="budgetBand" className="text-white text-sm">Budget Band</Label>
-                <Select value={formData.budgetBand} onValueChange={(val) => handleInputChange('budgetBand', val)} disabled={isSubmitting}>
-                  <SelectTrigger className="bg-white border-gray-700 text-black">
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="low">Low ($)</SelectItem>
-                    <SelectItem value="medium">Medium ($$)</SelectItem>
-                    <SelectItem value="high">High ($$$)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
             <div className="space-y-2">
-              <Label htmlFor="timeWindow" className="text-white text-sm">Preferred Time</Label>
-              <Select value={formData.timeWindow} onValueChange={(val) => handleInputChange('timeWindow', val)} disabled={isSubmitting}>
-                <SelectTrigger className="bg-white border-gray-700 text-black">
-                  <SelectValue placeholder="Select preferred time" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="morning">Morning</SelectItem>
-                  <SelectItem value="afternoon">Afternoon</SelectItem>
-                  <SelectItem value="evening">Evening</SelectItem>
-                  <SelectItem value="weekend">Weekend</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="accessibilityNeeds" className="text-white text-sm">Accessibility Needs</Label>
-              <Input
-                id="accessibilityNeeds"
-                value={formData.accessibilityNeeds}
-                onChange={(e) => handleInputChange('accessibilityNeeds', e.target.value)}
-                className="bg-white border-gray-700 text-black"
-                placeholder="Any accessibility needs we should know about?"
+              <Label htmlFor="whyMonark" className="text-white text-sm">Why do you want to join MonArk? *</Label>
+              <Textarea
+                id="whyMonark"
+                value={formData.whyMonark}
+                onChange={(e) => handleInputChange('whyMonark', e.target.value)}
+                className="bg-white border-gray-700 text-black min-h-[120px]"
+                placeholder="Tell us a bit about yourself and what you're hoping to find. What's not working with other dating apps? What excites you about MonArk's approach?"
                 disabled={isSubmitting}
               />
+              <p className="text-xs text-gray-400">This helps us understand if MonArk is a good fit for you</p>
             </div>
-          </div>
-        );
 
-      case 4:
-        return (
-          <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="heardAboutUs" className="text-white text-sm">How did you hear about us?</Label>
               <Input
@@ -519,7 +392,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
               />
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3 pt-2">
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="willingToBeta"
@@ -528,7 +401,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   disabled={isSubmitting}
                 />
                 <Label htmlFor="willingToBeta" className="text-white text-sm font-normal cursor-pointer">
-                  I'm interested in beta testing
+                  I'm interested in beta testing and giving feedback
                 </Label>
               </div>
 
@@ -543,49 +416,6 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   Send me updates about MonArk
                 </Label>
               </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="lgbtqPlus"
-                  checked={formData.lgbtqPlus}
-                  onCheckedChange={(checked) => handleInputChange('lgbtqPlus', checked as boolean)}
-                  disabled={isSubmitting}
-                />
-                <Label htmlFor="lgbtqPlus" className="text-white text-sm font-normal cursor-pointer">
-                  I identify as LGBTQ+
-                </Label>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-white text-sm">Race/Ethnicity (optional, select all that apply)</Label>
-              <div className="grid grid-cols-2 gap-2">
-                {['Asian', 'Black/African', 'Hispanic/Latino', 'White/Caucasian', 'Middle Eastern', 'Pacific Islander', 'Native American', 'Other'].map((option) => (
-                  <div key={option} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`race-${option}`}
-                      checked={formData.raceEthnicity.includes(option)}
-                      onCheckedChange={() => handleRaceEthnicityToggle(option)}
-                      disabled={isSubmitting}
-                    />
-                    <Label htmlFor={`race-${option}`} className="text-white text-xs font-normal cursor-pointer">
-                      {option}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="otherNotes" className="text-white text-sm">Additional Notes</Label>
-              <Textarea
-                id="otherNotes"
-                value={formData.otherNotes}
-                onChange={(e) => handleInputChange('otherNotes', e.target.value)}
-                className="bg-white border-gray-700 text-black min-h-[80px]"
-                placeholder="Anything else you'd like us to know?"
-                disabled={isSubmitting}
-              />
             </div>
           </div>
         );
@@ -601,29 +431,14 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
         <DialogContent className="bg-charcoal-gray border-goldenrod/20 max-w-md">
           <div className="text-center py-8">
             <div className="bg-goldenrod/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-              <Mail className="h-8 w-8 text-goldenrod" />
+              <Heart className="h-8 w-8 text-goldenrod" />
             </div>
-            <h3 className="text-2xl font-light text-white mb-2">You're on the list!</h3>
-            <p className="text-gray-300">
-              We'll send you an email when MonArk is ready to transform your dating experience.
+            <h3 className="text-2xl font-light text-white mb-2">You're on the waitlist!</h3>
+            <p className="text-gray-300 mb-4">
+              Thanks for applying, {formData.firstName}! We're reviewing applications now and will let you know within 1-2 days.
             </p>
-          </div>
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
-  if (isSubmitted) {
-    return (
-      <Dialog open={isOpen} onOpenChange={handleClose}>
-        <DialogContent className="bg-charcoal-gray border-goldenrod/20 max-w-md">
-          <div className="text-center py-8">
-            <div className="bg-goldenrod/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-              <Mail className="h-8 w-8 text-goldenrod" />
-            </div>
-            <h3 className="text-2xl font-light text-white mb-2">You're on the list!</h3>
-            <p className="text-gray-300">
-              We'll send you an email when MonArk is ready to transform your dating experience.
+            <p className="text-sm text-gray-400">
+              Check your email for a confirmation. We're launching with a small group in Chicago to make sure everyone gets great matches.
             </p>
           </div>
         </DialogContent>
@@ -633,10 +448,9 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
 
   const getStepTitle = () => {
     switch (currentStep) {
-      case 1: return 'Contact Information';
+      case 1: return 'Contact Info';
       case 2: return 'About You';
-      case 3: return 'Your Style';
-      case 4: return 'Final Details';
+      case 3: return 'Why MonArk?';
       default: return 'Join Waitlist';
     }
   };
@@ -691,10 +505,10 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 {isSubmitting ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Joining...
+                    Submitting...
                   </>
                 ) : (
-                  'Join Waitlist'
+                  'Submit Application'
                 )}
               </Button>
             )}
@@ -702,7 +516,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
         </form>
 
         <div className="text-center text-xs text-gray-500 mt-4">
-          We respect your privacy. No spam, just updates about MonArk.
+          We review every application. No spam, ever.
         </div>
       </DialogContent>
     </Dialog>
