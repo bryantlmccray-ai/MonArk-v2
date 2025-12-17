@@ -1,20 +1,27 @@
-
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, MoreVertical, Shield, Video, Calendar, Check, CheckCheck } from 'lucide-react';
+import { Send, MoreVertical, Shield, Check, CheckCheck, UserX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { ConversationHelper } from '@/components/conversation/ConversationHelper';
 import { UserActionsModal } from '@/components/safety/UserActionsModal';
-import { AIConciergeModal } from '@/components/date-concierge/AIConciergeModal';
-import { VideoCallModal } from '@/components/video/VideoCallModal';
 import { useMessages } from '@/hooks/useMessages';
 import { useAuth } from '@/hooks/useAuth';
-import { useDateConcierge } from '@/hooks/useDateConcierge';
 import { useTypingIndicator } from '@/hooks/useTypingIndicator';
 import { useRealTimePresence } from '@/hooks/useRealTimePresence';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface ChatInterfaceProps {
   conversationId: string;
@@ -34,38 +41,23 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const [messageText, setMessageText] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [showUserActions, setShowUserActions] = useState(false);
-  const [showConcierge, setShowConcierge] = useState(false);
-  const [showVideoCall, setShowVideoCall] = useState(false);
+  const [showUnmatchConfirm, setShowUnmatchConfirm] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   
   const { messages, loading, sendMessage } = useMessages(conversationId);
   const { user } = useAuth();
-  const { checkConversationReadiness } = useDateConcierge();
   const { typingUsers, startTyping, stopTyping } = useTypingIndicator(conversationId);
   const { isUserOnline } = useRealTimePresence();
 
-  // Typing timeout ref
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
 
-  // Auto-scroll to bottom when new messages arrive
+  // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Check if conversation is ready for AI concierge
-  useEffect(() => {
-    if (messages.length > 15 && user) {
-      checkConversationReadiness(conversationId, matchUserId).then((readiness) => {
-        if (readiness.shouldTrigger && readiness.confidence > 0.7) {
-          // Could show a subtle prompt or notification
-          console.log('Conversation ready for AI concierge:', readiness);
-        }
-      });
-    }
-  }, [messages.length, conversationId, matchUserId, user]);
-
-  // Cleanup typing timeout on unmount
+  // Cleanup typing timeout
   useEffect(() => {
     return () => {
       if (typingTimeoutRef.current) {
@@ -75,55 +67,35 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
     };
   }, [stopTyping]);
 
-  // Handle typing indicator
   const handleTyping = (text: string) => {
     setMessageText(text);
     
     if (text.trim()) {
-      // Start typing if not already
       startTyping(matchName);
-      
-      // Clear existing timeout
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
-      
-      // Stop typing after 2 seconds of inactivity
-      typingTimeoutRef.current = setTimeout(() => {
-        stopTyping();
-      }, 2000);
+      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+      typingTimeoutRef.current = setTimeout(() => stopTyping(), 2000);
     } else {
-      // Stop typing immediately if text is empty
       stopTyping();
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
+      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
     }
   };
 
   const handleSendMessage = async () => {
     if (!messageText.trim() || isSending) return;
     
-    // Stop typing indicator
     stopTyping();
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-    }
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
   
     setIsSending(true);
     const success = await sendMessage(messageText, matchUserId);
   
     if (success) {
       setMessageText('');
-      // Reset textarea height
-      if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto';
-      }
+      if (textareaRef.current) textareaRef.current.style.height = 'auto';
     }
     setIsSending(false);
   };
 
-  // Get delivery status icon
   const getDeliveryStatusIcon = (message: any) => {
     if (message.sender_user_id !== user?.id) return null;
     
@@ -133,9 +105,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       case 'delivered':
         return <Check className="h-3 w-3" />;
       case 'read':
-        return <CheckCheck className="h-3 w-3 text-goldenrod" />;
+        return <CheckCheck className="h-3 w-3 text-primary" />;
       case 'failed':
-        return <div className="w-3 h-3 bg-red-500 rounded-full" />;
+        return <div className="w-3 h-3 bg-destructive rounded-full" />;
       default:
         return <Check className="h-3 w-3" />;
     }
@@ -148,27 +120,29 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
     }
   };
 
-  const handleConversationHelperSend = async (message: string) => {
-    await sendMessage(message, matchUserId);
-  };
+  const handleUnmatch = async () => {
+    if (!user) return;
+    
+    try {
+      // Delete the match
+      await supabase
+        .from('matches')
+        .delete()
+        .or(`user_id.eq.${user.id},liked_user_id.eq.${user.id}`)
+        .or(`user_id.eq.${matchUserId},liked_user_id.eq.${matchUserId}`);
 
-  const handleConversationHelperEnd = async (message: string, reason?: string) => {
-    // Send the farewell message
-    await sendMessage(message, matchUserId);
-    
-    // Send a system message about the conversation ending
-    if (reason) {
-      await sendMessage(`Conversation ended: ${reason}`, matchUserId, 'system');
+      toast.success('Unmatched successfully');
+      onClose?.();
+    } catch (error) {
+      console.error('Error unmatching:', error);
+      toast.error('Failed to unmatch');
     }
-    
-    // Close the chat interface
-    onClose?.();
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="text-muted-foreground text-base">Loading messages...</div>
+        <div className="text-muted-foreground">Loading messages...</div>
       </div>
     );
   }
@@ -186,7 +160,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           </Avatar>
           <div>
             <h3 className="text-foreground font-medium">{matchName}</h3>
-            <p className="text-muted-foreground text-base">
+            <p className="text-muted-foreground text-sm">
               {isUserOnline(matchUserId) ? (
                 <span className="flex items-center">
                   <span className="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
@@ -199,76 +173,44 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           </div>
         </div>
         
-        <div className="flex items-center space-x-2">
-          <ConversationHelper
-            conversationId={conversationId}
-            matchName={matchName}
-            onSendMessage={handleConversationHelperSend}
-            onEndConversation={handleConversationHelperEnd}
-          />
-          
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className="text-gray-400 hover:text-white"
-              >
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-card border-border">
-              <DropdownMenuItem
-                onClick={() => setShowConcierge(true)}
-                className="text-white hover:bg-goldenrod/20 cursor-pointer"
-              >
-                <Calendar className="h-4 w-4 mr-2" />
-                Plan a Date
-              </DropdownMenuItem>
-              
-              <DropdownMenuItem
-                onClick={() => setShowVideoCall(true)}
-                className="text-white hover:bg-blue-500/20 cursor-pointer"
-              >
-                <Video className="h-4 w-4 mr-2" />
-                Video Call
-              </DropdownMenuItem>
-              
-              <DropdownMenuSeparator className="bg-border" />
-              
-              <DropdownMenuItem
-                onClick={() => setShowUserActions(true)}
-                className="text-red-400 hover:bg-red-500/20 cursor-pointer"
-              >
-                <Shield className="h-4 w-4 mr-2" />
-                Report or Block
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={() => setShowUnmatchConfirm(true)}
+              className="text-muted-foreground"
+            >
+              <UserX className="h-4 w-4 mr-2" />
+              Unmatch
+            </DropdownMenuItem>
+            
+            <DropdownMenuSeparator />
+            
+            <DropdownMenuItem
+              onClick={() => setShowUserActions(true)}
+              className="text-destructive"
+            >
+              <Shield className="h-4 w-4 mr-2" />
+              Report or Block
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 ? (
           <div className="text-center text-muted-foreground py-8">
-            <p className="text-base">Start your conversation with {matchName}</p>
-            <p className="text-base mt-1">Say hello and share what's on your mind!</p>
+            <p>Start your conversation with {matchName}</p>
+            <p className="text-sm mt-1">Say hello!</p>
           </div>
         ) : (
           messages.map((message) => {
             const isOwnMessage = message.sender_user_id === user?.id;
-            const isSystemMessage = message.message_type === 'system';
-            
-            if (isSystemMessage) {
-              return (
-                <div key={message.id} className="text-center">
-                  <div className="text-sm text-muted-foreground bg-muted px-3 py-1 rounded-full inline-block">
-                    {message.content}
-                  </div>
-                </div>
-              );
-            }
             
             return (
               <div
@@ -291,13 +233,13 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                         : 'bg-secondary text-secondary-foreground mr-2'
                     }`}
                   >
-                    <p className="text-base">{message.content}</p>
-                     <div className={`text-sm mt-1 flex items-center justify-between ${
-                       isOwnMessage ? 'text-primary-foreground/70' : 'text-secondary-foreground/70'
-                     }`}>
-                       <span>{format(new Date(message.created_at), 'HH:mm')}</span>
-                       {getDeliveryStatusIcon(message)}
-                     </div>
+                    <p>{message.content}</p>
+                    <div className={`text-xs mt-1 flex items-center justify-between gap-2 ${
+                      isOwnMessage ? 'text-primary-foreground/70' : 'text-secondary-foreground/70'
+                    }`}>
+                      <span>{format(new Date(message.created_at), 'HH:mm')}</span>
+                      {getDeliveryStatusIcon(message)}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -305,22 +247,14 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           })
         )}
         
-        {/* Typing Indicators */}
+        {/* Typing Indicator */}
         {typingUsers.length > 0 && (
           <div className="flex justify-start">
-            <div className="max-w-xs lg:max-w-md">
-              <Avatar className="h-6 w-6 mb-1">
-                <AvatarImage src={matchImage} alt={matchName} />
-                <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                  {matchName.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
-              <div className="px-4 py-3 rounded-2xl bg-secondary text-secondary-foreground mr-2">
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                </div>
+            <div className="px-4 py-3 rounded-2xl bg-secondary">
+              <div className="flex space-x-1">
+                <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
               </div>
             </div>
           </div>
@@ -328,29 +262,45 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Message Input Area */}
+      {/* Message Input */}
       <div className="p-4 border-t border-border bg-card">
         <div className="flex items-end space-x-2">
-          <div className="flex-1">
-            <Textarea
-              ref={textareaRef}
-              value={messageText}
-              onChange={(e) => handleTyping(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder={`Message ${matchName}...`}
-              className="min-h-[44px] max-h-32 resize-none bg-input border-border text-foreground placeholder-muted-foreground focus:border-ring text-base"
-              disabled={isSending}
-            />
-          </div>
+          <Textarea
+            ref={textareaRef}
+            value={messageText}
+            onChange={(e) => handleTyping(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder={`Message ${matchName}...`}
+            className="min-h-[44px] max-h-32 resize-none flex-1"
+            disabled={isSending}
+          />
           <Button
             onClick={handleSendMessage}
             disabled={!messageText.trim() || isSending}
-            className="bg-goldenrod hover:bg-goldenrod/90 text-jet-black h-11 px-4"
+            className="h-11 px-4"
           >
             <Send className="h-4 w-4" />
           </Button>
         </div>
       </div>
+
+      {/* Unmatch Confirmation */}
+      <AlertDialog open={showUnmatchConfirm} onOpenChange={setShowUnmatchConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Unmatch {matchName}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will remove your match and conversation. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleUnmatch} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Unmatch
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Safety Actions Modal */}
       <UserActionsModal
@@ -358,25 +308,6 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
         onClose={() => setShowUserActions(false)}
         userId={matchUserId}
         userName={matchName}
-        conversationId={conversationId}
-      />
-
-      {/* AI Date Concierge Modal */}
-      <AIConciergeModal
-        isOpen={showConcierge}
-        onClose={() => setShowConcierge(false)}
-        matchUserId={matchUserId}
-        matchName={matchName}
-        conversationId={conversationId}
-        recentMessages={messages.slice(-10).map(m => m.content)}
-      />
-
-      {/* Video Call Modal */}
-      <VideoCallModal
-        isOpen={showVideoCall}
-        onClose={() => setShowVideoCall(false)}
-        matchName={matchName}
-        matchImage={matchImage}
         conversationId={conversationId}
       />
     </div>
