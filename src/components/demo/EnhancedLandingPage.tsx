@@ -84,7 +84,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   <div className="relative text-center mb-6">
                     <p className="text-xs font-caption text-goldenrod tracking-widest mb-3">LIMITED EARLY ACCESS</p>
                     <h2 className="text-2xl font-editorial-headline text-charcoal mb-2">Get Your 3</h2>
-                    <p className="text-sm text-charcoal-soft font-body">Join 2,400+ intentional daters on the waitlist</p>
+                    <p className="text-sm text-charcoal-soft font-body">Join 500+ intentional daters on the waitlist</p>
                   </div>
 
                   <Button
