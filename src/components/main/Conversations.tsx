@@ -3,31 +3,22 @@ import { Sparkles, Calendar, MessageCircle, Heart, Zap, RotateCcw, Archive } fro
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { RIFBehavioralNudge } from '../rif/RIFBehavioralNudge';
 import { RIFPostDateFeedback } from '../rif/RIFPostDateFeedback';
-import { AIConciergeModal } from '../date-concierge/AIConciergeModal';
 import { DateProposalCard } from '../date-concierge/DateProposalCard';
-import { ConversationHelper } from '../conversation/ConversationHelper';
 import { ChatModal } from '../chat/ChatModal';
 import { useRIF } from '@/hooks/useRIF';
 import { useDateConcierge } from '@/hooks/useDateConcierge';
-import { useConversationNudges } from '@/hooks/useConversationNudges';
 import { useAuth } from '@/hooks/useAuth';
 
 export const Conversations: React.FC = () => {
   const { user } = useAuth();
   const { rifSettings } = useRIF();
   const { proposals, updateConversationEngagement, dismissProposal, restoreProposal } = useDateConcierge();
-  const { updateConversationActivity } = useConversationNudges();
   
-  const [showNudge, setShowNudge] = useState(false);
   const [showPostDateFeedback, setShowPostDateFeedback] = useState(false);
-  const [showConciergeModal, setShowConciergeModal] = useState(false);
   const [showChatModal, setShowChatModal] = useState(false);
   const [activeChatConversation, setActiveChatConversation] = useState<any>(null);
-  const [nudgeType, setNudgeType] = useState<'conversation_pacing' | 'emotional_check' | 'boundary_reminder' | 'reflection_prompt'>('conversation_pacing');
   const [selectedConversation, setSelectedConversation] = useState<string>('');
-  const [activeConversation, setActiveConversation] = useState<any>(null);
 
   // Generate proper UUIDs for mock users
   const conversations = [
@@ -84,42 +75,8 @@ export const Conversations: React.FC = () => {
         conv.messageCount,
         conv.mutualEngagement
       );
-      updateConversationActivity(
-        conv.conversationId,
-        conv.messageCount,
-        conv.mutualEngagement
-      );
     });
   }, [user]);
-
-  // Check for AI concierge triggers
-  useEffect(() => {
-    const highEngagementConvs = conversations.filter(
-      conv => conv.mutualEngagement > 0.7 && conv.messageCount > 15
-    );
-
-    if (highEngagementConvs.length > 0 && Math.random() > 0.6) {
-      setTimeout(() => {
-        setActiveConversation(highEngagementConvs[0]);
-        setShowConciergeModal(true);
-      }, 3000);
-    }
-  }, []);
-
-  // Simulate RIF nudges based on conversation patterns
-  useEffect(() => {
-    if (!rifSettings?.rif_enabled) return;
-
-    const timer = setTimeout(() => {
-      const activeConversation = conversations.find(c => c.messageCount > 20);
-      if (activeConversation) {
-        setNudgeType('conversation_pacing');
-        setShowNudge(true);
-      }
-    }, 5000);
-
-    return () => clearTimeout(timer);
-  }, [rifSettings]);
 
   // Removed automatic post-date feedback trigger - now manual via button
 
@@ -127,17 +84,6 @@ export const Conversations: React.FC = () => {
     // Open chat modal for direct messaging
     setActiveChatConversation(conversation);
     setShowChatModal(true);
-
-    // Check if this conversation should trigger AI concierge
-    if (conversation.mutualEngagement > 0.7 && conversation.messageCount > 10) {
-      setActiveConversation(conversation);
-      setTimeout(() => setShowConciergeModal(true), 1000);
-    }
-
-    if (rifSettings?.rif_enabled && conversation.messageCount > 15) {
-      setNudgeType('emotional_check');
-      setTimeout(() => setShowNudge(true), 2000);
-    }
   };
 
   const handleSendMessage = async (conversationId: string, message: string) => {
@@ -352,21 +298,6 @@ export const Conversations: React.FC = () => {
                     Chat
                   </Button>
                   
-                  {conversation.mutualEngagement > 0.7 && conversation.messageCount > 15 && !conversation.hadDate && (
-                    <Button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActiveConversation(conversation);
-                        setShowConciergeModal(true);
-                      }}
-                      size="sm"
-                      className="bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/30"
-                      title="AI Date Concierge Ready"
-                    >
-                      <Calendar className="h-4 w-4 mr-1" />
-                      Plan Date
-                    </Button>
-                  )}
                   
                   {conversation.hadDate && rifSettings?.rif_enabled && (
                     <Button
@@ -411,31 +342,6 @@ export const Conversations: React.FC = () => {
         />
       )}
 
-      {/* AI Concierge Modal */}
-      {showConciergeModal && activeConversation && (
-        <AIConciergeModal
-          isOpen={showConciergeModal}
-          onClose={() => setShowConciergeModal(false)}
-          matchUserId={activeConversation.userId}
-          matchName={activeConversation.name}
-          conversationId={activeConversation.conversationId}
-          recentMessages={['Sample message 1', 'Sample message 2']}
-        />
-      )}
-
-      {/* RIF Behavioral Nudge */}
-      {showNudge && rifSettings?.rif_enabled && (
-        <RIFBehavioralNudge
-          type={nudgeType}
-          context={{
-            conversationDuration: 2,
-            messageCount: 24,
-            lastActivity: new Date()
-          }}
-          onDismiss={() => setShowNudge(false)}
-          onAction={() => setShowNudge(false)}
-        />
-      )}
 
       {/* Post-Date Feedback */}
       {showPostDateFeedback && selectedConversation && (
