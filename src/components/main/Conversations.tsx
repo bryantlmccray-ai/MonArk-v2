@@ -3,22 +3,23 @@ import { Sparkles, Calendar, MessageCircle, Heart, Zap, RotateCcw, Archive } fro
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { RIFPostDateFeedback } from '../rif/RIFPostDateFeedback';
+import { AfterDateFeedback } from '../feedback/AfterDateFeedback';
 import { DateProposalCard } from '../date-concierge/DateProposalCard';
 import { ChatModal } from '../chat/ChatModal';
 import { useRIF } from '@/hooks/useRIF';
 import { useDateConcierge } from '@/hooks/useDateConcierge';
 import { useAuth } from '@/hooks/useAuth';
+import { useAfterDateFeedback } from '@/hooks/useAfterDateFeedback';
 
 export const Conversations: React.FC = () => {
   const { user } = useAuth();
   const { rifSettings } = useRIF();
   const { proposals, updateConversationEngagement, dismissProposal, restoreProposal } = useDateConcierge();
+  const { pendingFeedback, showFeedback, setShowFeedback, dismissFeedback } = useAfterDateFeedback();
   
-  const [showPostDateFeedback, setShowPostDateFeedback] = useState(false);
   const [showChatModal, setShowChatModal] = useState(false);
   const [activeChatConversation, setActiveChatConversation] = useState<any>(null);
-  const [selectedConversation, setSelectedConversation] = useState<string>('');
+  const [feedbackConversation, setFeedbackConversation] = useState<{id: string; name: string; itineraryId: string} | null>(null);
 
   // Generate proper UUIDs for mock users
   const conversations = [
@@ -299,16 +300,19 @@ export const Conversations: React.FC = () => {
                   </Button>
                   
                   
-                  {conversation.hadDate && rifSettings?.rif_enabled && (
+                  {conversation.hadDate && (
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        setSelectedConversation(conversation.name);
-                        setShowPostDateFeedback(true);
+                        setFeedbackConversation({
+                          id: conversation.conversationId,
+                          name: conversation.name,
+                          itineraryId: '' // Would be populated from real itinerary
+                        });
                       }}
                       size="sm"
                       className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 border border-purple-500/30"
-                      title="Post-Date Reflection"
+                      title="Rate Date"
                     >
                       <Heart className="h-4 w-4" />
                     </Button>
@@ -342,13 +346,25 @@ export const Conversations: React.FC = () => {
         />
       )}
 
+      {/* After Date Feedback - Simple 3 questions */}
+      {feedbackConversation && (
+        <AfterDateFeedback
+          itineraryId={feedbackConversation.itineraryId}
+          matchUserId={feedbackConversation.id}
+          matchName={feedbackConversation.name}
+          open={!!feedbackConversation}
+          onClose={() => setFeedbackConversation(null)}
+        />
+      )}
 
-      {/* Post-Date Feedback */}
-      {showPostDateFeedback && selectedConversation && (
-        <RIFPostDateFeedback
-          dateName={selectedConversation}
-          onComplete={() => setShowPostDateFeedback(false)}
-          onSkip={() => setShowPostDateFeedback(false)}
+      {/* Auto-triggered feedback from hook */}
+      {showFeedback && pendingFeedback && (
+        <AfterDateFeedback
+          itineraryId={pendingFeedback.itineraryId}
+          matchUserId={pendingFeedback.matchUserId}
+          matchName={pendingFeedback.matchName}
+          open={showFeedback}
+          onClose={dismissFeedback}
         />
       )}
     </div>

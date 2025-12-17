@@ -1,148 +1,80 @@
-
 import React, { useState } from 'react';
 import { RelationalCompass } from '../rhythm/RelationalCompass';
 import { InsightsModule } from '../rhythm/InsightsModule';
 import { ReflectionPrompt } from '../rhythm/ReflectionPrompt';
-import { JournalEngagementFeatures } from '../journal/JournalEngagementFeatures';
-import { JournalInsightsDashboard } from '../journal/JournalInsightsDashboard';
-import { JournalEntryModal } from '../journal/JournalEntryModal';
-import { GrowthTimeline } from '../journal/GrowthTimeline';
 import { useRhythm } from '@/hooks/useRhythm';
-import { useJournalEngagement } from '@/hooks/useJournalEngagement';
+import { Calendar, Star } from 'lucide-react';
 
 interface DatesJournalProps {
   onStartDebrief: () => void;
-  initialTab?: 'journal' | 'ark';
+  initialTab?: 'dates' | 'ark';
 }
 
-export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, initialTab = 'journal' }) => {
+export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, initialTab = 'dates' }) => {
   const [activeTab, setActiveTab] = useState(initialTab);
-  const [showInsightsDashboard, setShowInsightsDashboard] = useState(false);
-  const [showJournalEntryModal, setShowJournalEntryModal] = useState(false);
   const { rifState, insights, reflections, currentPrompt, loading, saveReflection } = useRhythm();
-  const {
-    journalEntries,
-    currentStreak,
-    weeklyGoal,
-    entriesThisWeek,
-    achievements,
-    insights: journalInsights,
-    loading: journalLoading,
-    setReminder,
-    refetchEntries
-  } = useJournalEngagement();
 
   const tabs = [
-    { id: 'journal' as const, label: 'My Journal' },
+    { id: 'dates' as const, label: 'Past Dates' },
     { id: 'ark' as const, label: 'Your RIF Ark' },
   ];
 
-
-  const renderJournal = () => {
-    if (showInsightsDashboard) {
-      return (
-        <JournalInsightsDashboard
-          onBack={() => setShowInsightsDashboard(false)}
-          journalEntries={journalEntries}
-        />
-      );
-    }
+  // Simple past dates view - just shows completed dates with ratings
+  const renderDates = () => {
+    // Placeholder for completed dates - will be populated from itineraries
+    const completedDates = [
+      { id: '1', name: 'Maya', date: '2024-01-15', rating: 5, venue: 'Coffee Shop' },
+      { id: '2', name: 'Jordan', date: '2024-01-10', rating: 4, venue: 'Art Gallery' },
+    ];
 
     return (
-      <div className="space-y-8">
-        {/* Growth Timeline */}
-        <GrowthTimeline />
-
-        {/* Journal Entries */}
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-white font-medium text-lg">Recent Entries</h3>
-            <button
-              onClick={() => setShowJournalEntryModal(true)}
-              className="px-4 py-2 bg-goldenrod text-jet-black font-semibold rounded-lg hover:bg-goldenrod/90 transition-colors"
-            >
-              + New Entry
-            </button>
-          </div>
-          {journalLoading ? (
-            <div className="space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-charcoal-gray rounded-xl p-4 border border-gray-800 animate-pulse">
-                  <div className="h-4 bg-gray-700 rounded mb-2"></div>
-                  <div className="h-3 bg-gray-700 rounded w-3/4"></div>
-                </div>
-              ))}
-            </div>
-          ) : journalEntries.length > 0 ? (
-            journalEntries.slice(0, 5).map((entry) => (
-              <div
-                key={entry.id}
-                className="bg-charcoal-gray rounded-xl p-4 border border-gray-800"
-              >
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h3 className="text-white font-medium">{entry.partner_name}</h3>
-                    <p className="text-gray-400 text-sm">
-                      {new Date(entry.date_completed).toLocaleDateString()} • {entry.date_activity}
-                    </p>
-                  </div>
-                  {entry.rating && (
-                    <div className="flex items-center space-x-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <div
-                          key={star}
-                          className={`h-4 w-4 ${
-                            star <= entry.rating! ? 'text-goldenrod' : 'text-gray-600'
-                          }`}
-                        >
-                          ⭐
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                
-                {entry.learned_insights && (
-                  <p className="text-gray-300 text-sm">{entry.learned_insights}</p>
-                )}
-                
-                {entry.tags && entry.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {entry.tags.slice(0, 3).map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-1 bg-goldenrod/20 text-goldenrod text-xs rounded"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-gray-400">No journal entries yet.</p>
-              <p className="text-charcoal text-sm mt-1 font-bold">Start journaling to track your dating insights!</p>
-            </div>
-          )}
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-foreground font-medium text-lg">Completed Dates</h3>
         </div>
 
-        {/* Engagement Features */}
-        <JournalEngagementFeatures
-          totalEntries={journalEntries.length}
-          currentStreak={currentStreak}
-          weeklyGoal={weeklyGoal}
-          entriesThisWeek={entriesThisWeek}
-          insights={journalInsights}
-          achievements={achievements}
-          onViewInsights={() => setShowInsightsDashboard(true)}
-          onSetReminder={() => setReminder(true)}
-          onUpdateWeeklyGoal={(newGoal) => {
-            // This would update the goal in the hook
-            console.log('Updating weekly goal to:', newGoal);
-          }}
-        />
+        {completedDates.length > 0 ? (
+          completedDates.map((date) => (
+            <div
+              key={date.id}
+              className="bg-card rounded-xl p-4 border border-border"
+            >
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                    <Calendar className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-foreground font-medium">{date.name}</h3>
+                    <p className="text-muted-foreground text-sm">
+                      {new Date(date.date).toLocaleDateString()} • {date.venue}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      className={`w-4 h-4 ${
+                        star <= date.rating 
+                          ? 'text-yellow-400 fill-yellow-400' 
+                          : 'text-muted-foreground'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-center py-12 bg-card/50 rounded-xl border border-border">
+            <Calendar className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+            <p className="text-muted-foreground">No completed dates yet</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Accept a weekly option to plan your first date!
+            </p>
+          </div>
+        )}
       </div>
     );
   };
@@ -152,9 +84,9 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, init
       return (
         <div className="space-y-6">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-charcoal-gray rounded-xl p-6 border border-gray-800 animate-pulse">
-              <div className="h-6 bg-gray-700 rounded mb-4"></div>
-              <div className="h-4 bg-gray-700 rounded w-3/4"></div>
+            <div key={i} className="bg-card rounded-xl p-6 border border-border animate-pulse">
+              <div className="h-6 bg-muted rounded mb-4"></div>
+              <div className="h-4 bg-muted rounded w-3/4"></div>
             </div>
           ))}
         </div>
@@ -163,13 +95,8 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, init
 
     return (
       <div className="space-y-6">
-        {/* Relational Compass */}
         <RelationalCompass rifState={rifState} />
-        
-        {/* Insights Module */}
         <InsightsModule insights={insights} />
-        
-        {/* Reflection Prompt */}
         <ReflectionPrompt
           currentPrompt={currentPrompt}
           reflections={reflections}
@@ -181,35 +108,35 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, init
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'journal':
-        return renderJournal();
+      case 'dates':
+        return renderDates();
       case 'ark':
         return renderArk();
       default:
-        return renderJournal();
+        return renderDates();
     }
   };
 
   return (
-    <div className="min-h-screen bg-jet-black p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto space-y-8">
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-display font-semibold journal-header-text bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-semibold text-foreground">
             Dates & Insights
           </h1>
-          <p className="text-charcoal text-lg font-bold tracking-wide">Reflect, grow, and understand your dating journey</p>
+          <p className="text-muted-foreground">Track your dating journey</p>
         </div>
 
         {/* Tabs */}
-        <div className="flex space-x-1 bg-charcoal-gray rounded-xl p-1.5 border border-gray-800">
+        <div className="flex space-x-1 bg-card rounded-xl p-1.5 border border-border">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 ${
                 activeTab === tab.id
-                  ? 'bg-gradient-to-r from-goldenrod to-amber-accent text-gray-900 shadow-lg shadow-goldenrod/25 font-semibold'
-                  : 'text-gray-400 hover:text-white hover:bg-gray-700/30'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
               }`}
             >
               {tab.label}
@@ -218,16 +145,6 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, init
         </div>
 
         {renderContent()}
-        
-        {/* Journal Entry Modal */}
-        <JournalEntryModal
-          isOpen={showJournalEntryModal}
-          onClose={() => setShowJournalEntryModal(false)}
-          onSaved={() => {
-            refetchEntries();
-            setShowJournalEntryModal(false);
-          }}
-        />
       </div>
     </div>
   );
