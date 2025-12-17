@@ -308,18 +308,19 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 href="https://www.instagram.com/monark.eq/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative aspect-square rounded-xl overflow-hidden group cursor-pointer"
+                className="relative aspect-square rounded-xl overflow-hidden group cursor-pointer shadow-md hover:shadow-xl transition-all duration-500 animate-fade-in"
+                style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'backwards' }}
               >
-                {/* Actual brand image */}
+                {/* Actual brand image with scale effect */}
                 <img 
                   src={image} 
                   alt={`MonArk Instagram post ${i + 1}`}
-                  className="absolute inset-0 w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                 />
 
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-charcoal/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <Instagram className="h-8 w-8 text-white" />
+                {/* Hover overlay with icon animation */}
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+                  <Instagram className="h-8 w-8 text-white transform scale-0 group-hover:scale-100 transition-transform duration-300 delay-100" />
                 </div>
               </a>
             ))}
