@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { OnboardingWelcome } from './OnboardingWelcome';
+import { OnboardingDifference } from './OnboardingDifference';
+import { RIFIntro } from './RIFIntro';
 import { SimplifiedPhotosStep } from './SimplifiedPhotosStep';
 import { SimplifiedBioStep } from './SimplifiedBioStep';
 import { SimplifiedInterestsStep } from './SimplifiedInterestsStep';
@@ -6,7 +9,7 @@ import { LocationStep } from './LocationStep';
 import { SimplifiedIdentityStep } from './SimplifiedIdentityStep';
 import { RelationshipGoalsStep } from './RelationshipGoalsStep';
 import { DatingStyleQuiz, DatingStyleAnswers } from './DatingStyleQuiz';
-import { FinalWelcomeScreen } from './FinalWelcomeScreen';
+import { RIFComplete } from './RIFComplete';
 import { useProfile } from '@/hooks/useProfile';
 import { useRIF } from '@/hooks/useRIF';
 import { useToast } from '@/hooks/use-toast';
@@ -27,6 +30,19 @@ interface OnboardingData {
   datingStyleAnswers?: DatingStyleAnswers;
 }
 
+// Flow:
+// 0: Welcome screen
+// 1: Why MonArk is different
+// 2: RIF Intro
+// 3: Photos
+// 4: Bio
+// 5: Interests
+// 6: Location
+// 7: Identity
+// 8: Relationship Goals
+// 9: RIF Questions (DatingStyleQuiz)
+// 10: RIF Complete / Final Welcome
+
 export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({
@@ -46,10 +62,10 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
 
   // Skip handlers - move to next step without saving data
   const skipToNext = () => {
-    if (currentStep < 6) {
+    if (currentStep < 9) {
       setCurrentStep(currentStep + 1);
-    } else if (currentStep === 6) {
-      // Skip dating style quiz - just complete with empty answers
+    } else if (currentStep === 9) {
+      // Skip RIF quiz - just complete with empty answers
       handleDatingStyleComplete({
         attachmentStyle: '',
         energyType: '',
@@ -67,27 +83,27 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
 
   const handlePhotosNext = (photos: string[]) => {
     setOnboardingData(prev => ({ ...prev, photos }));
-    setCurrentStep(1);
+    setCurrentStep(4);
   };
 
   const handleBioNext = (data: { bio: string; occupation: string }) => {
     setOnboardingData(prev => ({ ...prev, bio: data.bio, occupation: data.occupation }));
-    setCurrentStep(2);
+    setCurrentStep(5);
   };
 
   const handleInterestsNext = (interests: string[]) => {
     setOnboardingData(prev => ({ ...prev, interests }));
-    setCurrentStep(3);
+    setCurrentStep(6);
   };
 
   const handleLocationNext = (location: string) => {
     setOnboardingData(prev => ({ ...prev, location }));
-    setCurrentStep(4);
+    setCurrentStep(7);
   };
 
   const handleIdentityNext = (data: { genderIdentity: string; sexualOrientation: string }) => {
     setOnboardingData(prev => ({ ...prev, ...data }));
-    setCurrentStep(5);
+    setCurrentStep(8);
   };
 
   const handleGoalsNext = async (goals: string[]) => {
@@ -105,7 +121,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
         gender_identity: updatedData.genderIdentity as any,
         sexual_orientation: updatedData.sexualOrientation as any,
         relationship_goals: updatedData.relationshipGoals,
-        is_profile_complete: false, // Will be true after dating style quiz
+        is_profile_complete: false, // Will be true after RIF quiz
       });
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -116,25 +132,25 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
       });
     }
     
-    setCurrentStep(6);
+    setCurrentStep(9);
   };
 
   const handleDatingStyleComplete = async (answers: DatingStyleAnswers) => {
     setOnboardingData(prev => ({ ...prev, datingStyleAnswers: answers }));
     
-    // Save dating style answers (powers matching behind the scenes)
+    // Save RIF answers (powers Smart Matching behind the scenes)
     try {
-      await submitFeedback('onboarding_dating_style', answers);
+      await submitFeedback('onboarding_rif', answers);
       
       // Mark profile as complete
       await updateProfile({
         is_profile_complete: true,
       });
     } catch (error) {
-      console.error('Error saving dating style answers:', error);
+      console.error('Error saving RIF answers:', error);
     }
     
-    setCurrentStep(7);
+    setCurrentStep(10);
   };
 
   const goBack = (step: number) => {
@@ -144,23 +160,29 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <SimplifiedPhotosStep onNext={handlePhotosNext} onSkip={skipToNext} />;
+        return <OnboardingWelcome onNext={() => setCurrentStep(1)} />;
       case 1:
-        return <SimplifiedBioStep onNext={handleBioNext} onBack={() => goBack(0)} onSkip={skipToNext} />;
+        return <OnboardingDifference onNext={() => setCurrentStep(2)} onBack={() => setCurrentStep(0)} />;
       case 2:
-        return <SimplifiedInterestsStep onNext={handleInterestsNext} onBack={() => goBack(1)} onSkip={skipToNext} />;
+        return <RIFIntro onNext={() => setCurrentStep(3)} onBack={() => setCurrentStep(1)} />;
       case 3:
-        return <LocationStep onNext={handleLocationNext} onBack={() => goBack(2)} onSkip={skipToNext} />;
-      case 4:
-        return <SimplifiedIdentityStep onNext={handleIdentityNext} onBack={() => goBack(3)} onSkip={skipToNext} />;
-      case 5:
-        return <RelationshipGoalsStep onNext={handleGoalsNext} onBack={() => goBack(4)} onSkip={skipToNext} />;
-      case 6:
-        return <DatingStyleQuiz onComplete={handleDatingStyleComplete} onSkip={skipToNext} />;
-      case 7:
-        return <FinalWelcomeScreen onNext={onComplete} />;
-      default:
         return <SimplifiedPhotosStep onNext={handlePhotosNext} onSkip={skipToNext} />;
+      case 4:
+        return <SimplifiedBioStep onNext={handleBioNext} onBack={() => goBack(3)} onSkip={skipToNext} />;
+      case 5:
+        return <SimplifiedInterestsStep onNext={handleInterestsNext} onBack={() => goBack(4)} onSkip={skipToNext} />;
+      case 6:
+        return <LocationStep onNext={handleLocationNext} onBack={() => goBack(5)} onSkip={skipToNext} />;
+      case 7:
+        return <SimplifiedIdentityStep onNext={handleIdentityNext} onBack={() => goBack(6)} onSkip={skipToNext} />;
+      case 8:
+        return <RelationshipGoalsStep onNext={handleGoalsNext} onBack={() => goBack(7)} onSkip={skipToNext} />;
+      case 9:
+        return <DatingStyleQuiz onComplete={handleDatingStyleComplete} onSkip={skipToNext} />;
+      case 10:
+        return <RIFComplete onComplete={onComplete} />;
+      default:
+        return <OnboardingWelcome onNext={() => setCurrentStep(1)} />;
     }
   };
 

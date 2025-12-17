@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { MonArkLogo } from '@/components/MonArkLogo';
-import { Heart, MessageCircle, Calendar } from 'lucide-react';
+import { Sparkles, Users, Calendar, ArrowRight } from 'lucide-react';
 import { useDemo } from '@/contexts/DemoContext';
 import { DemoMainApp } from './DemoMainApp';
 import { WaitlistModal } from './WaitlistModal';
@@ -25,7 +25,6 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
     }
   };
 
-
   if (showFullDemo) {
     return <DemoMainApp onClose={onExitToApp ? onExitToApp : () => setShowFullDemo(false)} />;
   }
@@ -48,17 +47,25 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 </h1>
                 <div className="w-24 h-px bg-taupe mx-auto"></div>
                 <p className="text-xl sm:text-2xl font-body text-charcoal-soft leading-relaxed max-w-lg mx-auto">
-                  Where Chemistry Meets Clarity
+                  3 curated matches. Every week.
                 </p>
               </div>
+            </div>
+
+            {/* Value Prop */}
+            <div className="max-w-2xl mx-auto">
+              <p className="text-lg sm:text-xl font-body text-charcoal-soft leading-relaxed">
+                No endless swiping. No algorithm games. Just <span className="text-charcoal font-medium">Smart Matching</span> that 
+                understands how you connect, communicate, and date.
+              </p>
             </div>
 
             {/* Waitlist CTA */}
             <div className="max-w-md mx-auto">
               <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 border border-taupe/20 shadow-xl">
                 <div className="text-center mb-6">
-                  <h2 className="text-2xl font-editorial-headline text-charcoal mb-2">Join the Waitlist</h2>
-                  <p className="text-sm text-charcoal-soft">Get early access + help shape MonArk</p>
+                  <h2 className="text-2xl font-editorial-headline text-charcoal mb-2">Get Your 3</h2>
+                  <p className="text-sm text-charcoal-soft">Join the waitlist for early access</p>
                 </div>
 
                 <Button
@@ -70,7 +77,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
                 <div className="bg-sand/30 rounded-lg p-4 border border-taupe/20 mt-4">
                   <p className="text-xs text-charcoal-soft font-body leading-relaxed text-center">
-                    <strong>Preview:</strong> After joining, you'll take a quick dating style quiz to see how our smart matching works.
+                    Answer 10 questions. We handle the rest.
                   </p>
                 </div>
               </div>
@@ -102,66 +109,88 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
-      {/* Founding Story Section */}
+      {/* How It Works Section */}
       <section className="py-20 bg-gradient-to-b from-charcoal-gray/5 to-charcoal-gray/15">
         <div className="max-w-4xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-charcoal mb-6">Why I Built MonArk</h2>
-            <div className="w-16 h-px bg-taupe mx-auto"></div>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-charcoal mb-4">How Smart Matching Works</h2>
+            <p className="text-lg text-charcoal-soft font-body">We use relational intelligence to curate your perfect 3</p>
           </div>
           
-          <div className="prose prose-lg max-w-3xl mx-auto text-charcoal-soft font-body leading-relaxed">
-            <p className="text-lg sm:text-xl leading-relaxed mb-6">
-              I spent years as a TV reporter telling other people's stories—while my own love life played out on dating apps that felt more like slot machines.
-            </p>
-            
-            <p className="mb-6">
-              Sure, we could meet people. But finding someone who truly got you? That was rare.
-            </p>
-            
-            <p className="mb-6">
-              I wanted something different...intentional. A way to match on emotional compatibility, not just a hot profile pic. A way to make first dates feel effortless, not awkward.
-            </p>
-            
-            <p className="font-medium text-charcoal mb-8">
-              That's why I built MonArk:
-            </p>
-
-            <div className="grid md:grid-cols-3 gap-8 my-12">
-              <div className="text-center space-y-4">
-                <div className="bg-taupe/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
-                  <Heart className="h-8 w-8 text-taupe" />
-                </div>
-                <h3 className="font-editorial-headline text-lg text-charcoal">Smart Matching</h3>
-                <p className="text-sm">We match on communication style, not just demographics.</p>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center space-y-4">
+              <div className="bg-taupe/10 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
+                <Sparkles className="h-10 w-10 text-taupe" />
               </div>
-              
-              <div className="text-center space-y-4">
-                <div className="bg-taupe/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
-                  <MessageCircle className="h-8 w-8 text-taupe" />
-                </div>
-                <h3 className="font-editorial-headline text-lg text-charcoal">Emotional Alignment</h3>
-                <p className="text-sm">We connect you with people who align emotionally.</p>
-              </div>
-              
-              <div className="text-center space-y-4">
-                <div className="bg-taupe/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
-                  <Calendar className="h-8 w-8 text-taupe" />
-                </div>
-                <h3 className="font-editorial-headline text-lg text-charcoal">Premium Dates</h3>
-                <p className="text-sm">We co-create premium first dates that actually mean something.</p>
-              </div>
+              <div className="text-4xl font-editorial-headline text-charcoal">01</div>
+              <h3 className="font-editorial-headline text-xl text-charcoal">Take the RIF</h3>
+              <p className="text-sm text-charcoal-soft leading-relaxed">
+                10 questions about how you communicate, connect, and date. Takes 5 minutes.
+              </p>
             </div>
+            
+            <div className="text-center space-y-4">
+              <div className="bg-taupe/10 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
+                <Users className="h-10 w-10 text-taupe" />
+              </div>
+              <div className="text-4xl font-editorial-headline text-charcoal">02</div>
+              <h3 className="font-editorial-headline text-xl text-charcoal">Get Your 3</h3>
+              <p className="text-sm text-charcoal-soft leading-relaxed">
+                Every Sunday, receive 3 matches who fit your style—not just your type.
+              </p>
+            </div>
+            
+            <div className="text-center space-y-4">
+              <div className="bg-taupe/10 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
+                <Calendar className="h-10 w-10 text-taupe" />
+              </div>
+              <div className="text-4xl font-editorial-headline text-charcoal">03</div>
+              <h3 className="font-editorial-headline text-xl text-charcoal">Date With Intention</h3>
+              <p className="text-sm text-charcoal-soft leading-relaxed">
+                We suggest premium first dates at vetted venues. No awkward coffee shop roulette.
+              </p>
+            </div>
+          </div>
 
-            <p className="text-center text-lg font-medium text-charcoal italic">
+          <div className="text-center mt-16">
+            <p className="text-xl font-editorial-headline text-charcoal italic">
               No swipes. No chaos. Just connection that feels like alignment.
             </p>
           </div>
         </div>
       </section>
 
+      {/* Founder Story Section */}
+      <section className="py-20 bg-gradient-to-b from-charcoal-gray/15 to-charcoal-gray/10">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-charcoal mb-6">Why I Built MonArk</h2>
+            <div className="w-16 h-px bg-taupe mx-auto"></div>
+          </div>
+          
+          <div className="prose prose-lg max-w-2xl mx-auto text-charcoal-soft font-body leading-relaxed">
+            <p className="text-lg leading-relaxed mb-6">
+              I spent years on dating apps that felt more like slot machines than places to find real connection.
+            </p>
+            
+            <p className="mb-6">
+              Sure, we could meet people. But finding someone who truly <em>got</em> you? That was rare.
+            </p>
+            
+            <p className="mb-6">
+              I wanted something intentional. A way to match on emotional compatibility, not just a hot profile pic. 
+              A way to make first dates feel effortless, not awkward.
+            </p>
+            
+            <p className="font-medium text-charcoal">
+              That's why MonArk matches on communication style, not just demographics.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing Section */}
-      <section className="py-20 bg-gradient-to-b from-charcoal-gray/15 to-charcoal-gray/25">
+      <section className="py-20 bg-gradient-to-b from-charcoal-gray/10 to-charcoal-gray/25">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-charcoal mb-4">Early-Bird Access</h2>
@@ -179,30 +208,27 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
             <div className="space-y-6">
               <div className="space-y-4">
-                <h3 className="font-editorial-headline text-lg text-charcoal">2–3 Curated Matches per Month</h3>
+                <h3 className="font-editorial-headline text-lg text-charcoal">Your 3 Every Week</h3>
                 <p className="text-charcoal-soft text-sm leading-relaxed">
-                  Matched using your dating style and compatibility profile. Each match comes with an AI-curated premium date suggestion at vetted partner venues.
+                  3 curated matches every Sunday, powered by Smart Matching. Each comes with an AI-suggested date idea.
                 </p>
               </div>
 
               <div className="border-t border-taupe/20 pt-6">
                 <h3 className="font-editorial-headline text-lg text-charcoal mb-3">Ark AI Concierge</h3>
                 <p className="text-charcoal-soft text-sm leading-relaxed">
-                  Chat-based AI that personalizes your date options and manages bookings with venues.
+                  Chat-based AI that personalizes your date options and helps coordinate plans.
                 </p>
               </div>
 
               <div className="border-t border-taupe/20 pt-6">
-                <div className="grid grid-cols-2 gap-4 text-center">
-                  <div className="space-y-2">
-                    <div className="text-2xl font-editorial-headline text-taupe">85%</div>
-                    <div className="text-xs text-charcoal-muted font-caption">SATISFACTION</div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="text-2xl font-editorial-headline text-taupe">3X</div>
-                    <div className="text-xs text-charcoal-muted font-caption">DEEPER CONNECTIONS</div>
-                  </div>
-                </div>
+                <Button
+                  onClick={() => setShowWaitlistModal(true)}
+                  className="w-full editorial-button-primary py-3 text-sm tracking-wide font-body"
+                >
+                  JOIN WAITLIST
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
               </div>
             </div>
           </div>
@@ -217,7 +243,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-4xl mx-auto px-6 text-center">
           <MonArkLogo size="md" variant="compact" className="mx-auto mb-8" />
           <p className="text-charcoal-soft font-body text-sm mb-6">
-            &copy; 2024 MonArk. Dating reimagined with emotional intelligence.
+            &copy; 2024 MonArk. Dating reimagined with Smart Matching.
           </p>
           <div className="flex items-center justify-center space-x-8 text-sm">
             <a href="/privacy" className="text-taupe hover:underline font-body">
