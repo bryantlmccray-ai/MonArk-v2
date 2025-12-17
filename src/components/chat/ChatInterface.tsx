@@ -124,13 +124,18 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
     if (!user) return;
     
     try {
-      // Delete the match
-      await supabase
+      // Delete matches where current user and match user are involved
+      // Match 1: user_id = current user AND liked_user_id = match user
+      // Match 2: user_id = match user AND liked_user_id = current user
+      const { error } = await supabase
         .from('matches')
         .delete()
-        .or(`user_id.eq.${user.id},liked_user_id.eq.${user.id}`)
-        .or(`user_id.eq.${matchUserId},liked_user_id.eq.${matchUserId}`);
+        .or(
+          `and(user_id.eq.${user.id},liked_user_id.eq.${matchUserId}),and(user_id.eq.${matchUserId},liked_user_id.eq.${user.id})`
+        );
 
+      if (error) throw error;
+      
       toast.success('Unmatched successfully');
       onClose?.();
     } catch (error) {
