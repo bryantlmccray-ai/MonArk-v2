@@ -23,7 +23,7 @@ import { useNotificationTriggers } from '@/hooks/useNotificationTriggers';
 
 export const MainApp: React.FC = () => {
   const [activeTab, setActiveTab] = useState('discover');
-  const [datesJournalTab, setDatesJournalTab] = useState<'journal' | 'ark'>('journal');
+  const [datesJournalTab, setDatesJournalTab] = useState<'dates' | 'ark'>('dates');
   const [showDebrief, setShowDebrief] = useState(false);
   const [showTrustScore, setShowTrustScore] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -37,15 +37,15 @@ export const MainApp: React.FC = () => {
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    // Reset journal tab to default when leaving dates tab
+    // Reset dates tab to default when leaving dates tab
     if (tab !== 'dates') {
-      setDatesJournalTab('journal');
+      setDatesJournalTab('dates');
     }
   };
 
   const handleJournalNavigation = () => {
     setActiveTab('dates');
-    setDatesJournalTab('journal');
+    setDatesJournalTab('dates');
   };
 
   const renderActiveScreen = () => {
