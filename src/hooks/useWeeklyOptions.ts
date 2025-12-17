@@ -54,7 +54,6 @@ export const useWeeklyOptions = () => {
         .select('*')
         .eq('user_id', user.id)
         .eq('week_start', weekStart.toISOString())
-        .eq('is_expired', false)
         .order('option_number');
 
       if (error) throw error;
@@ -101,17 +100,13 @@ export const useWeeklyOptions = () => {
     }
   };
 
-  const createItinerary = async (
-    optionId: string, 
-    mode: 'discovery' | 'matched' | 'byo',
-    counterpartUserId?: string
-  ) => {
+  // Accept an option - creates itinerary with share link
+  const acceptOption = async (optionId: string) => {
     try {
       const { data, error } = await supabase.functions.invoke('create-itinerary', {
         body: {
           weekly_option_id: optionId,
-          mode,
-          counterpart_user_id: counterpartUserId
+          mode: 'matched' // MVP: only matched mode
         }
       });
 
@@ -124,37 +119,52 @@ export const useWeeklyOptions = () => {
           .from('behavior_analytics')
           .insert({
             user_id: user.id,
-            event_type: 'option_tapped',
-            event_data: {
-              option_id: optionId,
-              mode
-            }
+            event_type: 'option_accepted',
+            event_data: { option_id: optionId }
           });
       }
 
-      toast.success('Itinerary created!');
+      // Refresh options list
+      await loadWeeklyOptions();
+      
+      toast.success('Date plan created!');
       return data;
     } catch (error) {
-      console.error('Error creating itinerary:', error);
-      toast.error('Failed to create itinerary');
+      console.error('Error accepting option:', error);
+      toast.error('Failed to create date plan');
       return null;
     }
   };
 
-  const logOptionView = async (optionId: string) => {
+  // Pass on an option - marks as expired
+  const passOption = async (optionId: string) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      const { error } = await supabase
+        .from('weekly_options')
+        .update({ is_expired: true })
+        .eq('id', optionId);
 
-      await supabase
-        .from('behavior_analytics')
-        .insert({
-          user_id: user.id,
-          event_type: 'option_viewed',
-          event_data: { option_id: optionId }
-        });
+      if (error) throw error;
+
+      // Log analytics
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase
+          .from('behavior_analytics')
+          .insert({
+            user_id: user.id,
+            event_type: 'option_passed',
+            event_data: { option_id: optionId }
+          });
+      }
+
+      // Refresh options list
+      await loadWeeklyOptions();
+      
+      toast.success('Option passed');
     } catch (error) {
-      console.error('Error logging option view:', error);
+      console.error('Error passing option:', error);
+      toast.error('Failed to pass option');
     }
   };
 
@@ -162,8 +172,8 @@ export const useWeeklyOptions = () => {
     options,
     loading,
     generating,
-    createItinerary,
-    logOptionView,
+    acceptOption,
+    passOption,
     refetch: loadWeeklyOptions
   };
 };
