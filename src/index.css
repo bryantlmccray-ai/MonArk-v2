@@ -84,6 +84,8 @@
     --shadow-gentle: 0 1px 8px rgba(0, 0, 0, 0.04);
     --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.12);
     --shadow-magazine: 0 8px 40px rgba(0, 0, 0, 0.06);
+    --shadow-glow: 0 0 40px rgba(212, 175, 55, 0.15);
+    --shadow-luxury: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 40px rgba(212, 175, 55, 0.08);
   }
 
   * {

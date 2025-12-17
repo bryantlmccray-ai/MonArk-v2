@@ -30,13 +30,24 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
   }
 
   return (
-    <div className="min-h-screen bg-bone">
+    <div className="min-h-screen bg-bone relative">
+      {/* Subtle texture overlay */}
+      <div className="fixed inset-0 opacity-[0.03] pointer-events-none" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+      }} />
+
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-sand/30 via-transparent to-parchment/20" />
+        {/* Layered gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-sand/40 via-bone to-parchment/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-goldenrod/5" />
+        
+        {/* Romantic ambient orbs */}
+        <div className="absolute top-20 left-1/4 w-96 h-96 bg-goldenrod/8 rounded-full blur-3xl animate-gentle-pulse" />
+        <div className="absolute bottom-40 right-1/4 w-80 h-80 bg-dusty-rose/5 rounded-full blur-3xl animate-gentle-pulse" style={{ animationDelay: '1s' }} />
         
         <div className="relative max-w-6xl mx-auto px-4 sm:px-8 py-20 sm:py-32">
-          <div className="text-center space-y-16">
+          <div className="text-center space-y-12">
             {/* Brand & Tagline */}
             <div className="space-y-8">
               <MonArkLogo size="xl" animated={true} rotateOnLoad={true} className="mx-auto" />
@@ -45,52 +56,61 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <h1 className="text-4xl sm:text-6xl lg:text-8xl font-editorial-headline text-charcoal leading-[0.85] tracking-tight">
                   MonArk
                 </h1>
-                <div className="w-24 h-px bg-taupe mx-auto"></div>
+                <div className="w-24 h-px bg-gradient-to-r from-transparent via-taupe to-transparent mx-auto"></div>
                 <p className="text-xl sm:text-2xl font-body text-charcoal-soft leading-relaxed max-w-lg mx-auto">
                   3 curated matches. Every week.
                 </p>
               </div>
             </div>
 
-            {/* Value Prop */}
+            {/* Value Prop - warmer copy */}
             <div className="max-w-2xl mx-auto">
               <p className="text-lg sm:text-xl font-body text-charcoal-soft leading-relaxed">
                 No endless swiping. No algorithm games. Just <span className="text-charcoal font-medium">Smart Matching</span> that 
-                understands how you connect, communicate, and date.
+                understands how you connect, communicate, and love.
               </p>
             </div>
 
-            {/* Waitlist CTA */}
+            {/* Glassmorphism Waitlist CTA */}
             <div className="max-w-md mx-auto">
-              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 border border-taupe/20 shadow-xl">
-                <div className="text-center mb-6">
-                  <h2 className="text-2xl font-editorial-headline text-charcoal mb-2">Get Your 3</h2>
-                  <p className="text-sm text-charcoal-soft">Join the waitlist for early access</p>
-                </div>
+              <div className="relative group">
+                {/* Glow effect behind card */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-goldenrod/20 via-taupe/10 to-dusty-rose/20 rounded-3xl blur-xl opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+                
+                <div className="relative bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-2xl">
+                  {/* Subtle inner glow */}
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/50 via-transparent to-transparent pointer-events-none" />
+                  
+                  <div className="relative text-center mb-6">
+                    <p className="text-xs font-caption text-goldenrod tracking-widest mb-3">LIMITED EARLY ACCESS</p>
+                    <h2 className="text-2xl font-editorial-headline text-charcoal mb-2">Get Your 3</h2>
+                    <p className="text-sm text-charcoal-soft font-body">Join 2,400+ intentional daters on the waitlist</p>
+                  </div>
 
-                <Button
-                  onClick={() => setShowWaitlistModal(true)}
-                  className="w-full editorial-button-primary py-3 text-sm tracking-wide font-body"
-                >
-                  JOIN WAITLIST
-                </Button>
+                  <Button
+                    onClick={() => setShowWaitlistModal(true)}
+                    className="relative w-full py-4 text-sm tracking-wide font-body bg-gradient-to-r from-taupe to-taupe/90 hover:from-taupe/90 hover:to-taupe text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    <span className="relative z-10">REQUEST EARLY ACCESS</span>
+                  </Button>
 
-                <div className="bg-sand/30 rounded-lg p-4 border border-taupe/20 mt-4">
-                  <p className="text-xs text-charcoal-soft font-body leading-relaxed text-center">
-                    Answer 10 questions. We handle the rest.
-                  </p>
+                  <div className="relative mt-5 pt-5 border-t border-taupe/10">
+                    <p className="text-sm text-charcoal font-body leading-relaxed text-center italic">
+                      "Answer 10 thoughtful questions. We find people who get you."
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Demo Button */}
-            <div className="space-y-4">
+            <div className="space-y-4 pt-4">
               <Button
                 onClick={startFullDemo}
                 variant="outline"
-                className="editorial-button-secondary px-8 py-3 text-sm tracking-wide font-body"
+                className="px-8 py-3 text-sm tracking-wide font-body bg-transparent border border-taupe/30 text-charcoal hover:bg-taupe/10 hover:border-taupe/50 rounded-xl transition-all duration-300"
               >
-                EXPERIENCE DEMO
+                EXPERIENCE THE APP
               </Button>
               
               {onExitToApp && (
