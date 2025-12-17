@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { BottomNavigation } from './BottomNavigation';
 import { SidebarNavigation } from './SidebarNavigation';
@@ -12,13 +11,10 @@ import { WeeklyOptionsList } from '../weekly/WeeklyOptionsList';
 import { DebriefOverlay } from './overlays/DebriefOverlay';
 import { TrustScoreOverlay } from './overlays/TrustScoreOverlay';
 import { SettingsOverlay } from './overlays/SettingsOverlay';
-import { NotificationCenter } from '../notifications/NotificationCenter';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Bell, Layers3 } from 'lucide-react';
+import { Layers3 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useNotifications } from '@/hooks/useNotifications';
 import { useNotificationTriggers } from '@/hooks/useNotificationTriggers';
 
 export const MainApp: React.FC = () => {
@@ -27,17 +23,14 @@ export const MainApp: React.FC = () => {
   const [showDebrief, setShowDebrief] = useState(false);
   const [showTrustScore, setShowTrustScore] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
   const [use3DNavigation, setUse3DNavigation] = useState(false);
   const isMobile = useIsMobile();
   
-  // Re-enable notification hooks with unique channel names
-  const { unreadCount } = useNotifications();
+  // Email notification triggers (no in-app notifications for MVP)
   useNotificationTriggers();
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    // Reset dates tab to default when leaving dates tab
     if (tab !== 'dates') {
       setDatesJournalTab('dates');
     }
@@ -82,25 +75,6 @@ export const MainApp: React.FC = () => {
 
         {/* Bottom Navigation */}
         <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
-        
-        {/* Notification Bell for Mobile */}
-        <div className="fixed bottom-36 right-4 z-30">
-          <Button
-            onClick={() => setShowNotifications(true)}
-            size="sm"
-            className="rounded-full w-12 h-12 bg-goldenrod text-jet-black hover:bg-goldenrod/90 shadow-lg relative"
-          >
-            <Bell className="h-5 w-5" />
-            {unreadCount > 0 && (
-              <Badge 
-                variant="secondary" 
-                className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs bg-red-500 text-white flex items-center justify-center"
-              >
-                {unreadCount > 99 ? '99+' : unreadCount}
-              </Badge>
-            )}
-          </Button>
-        </div>
 
         {/* Overlays */}
         {showDebrief && (
@@ -114,11 +88,6 @@ export const MainApp: React.FC = () => {
         {showSettings && (
           <SettingsOverlay onClose={() => setShowSettings(false)} />
         )}
-        
-        <NotificationCenter 
-          open={showNotifications} 
-          onOpenChange={setShowNotifications} 
-        />
       </div>
     );
   }
@@ -130,7 +99,7 @@ export const MainApp: React.FC = () => {
         <header className="fixed top-0 left-0 right-0 h-8 flex items-center justify-between bg-jet-black/95 backdrop-blur-xl border-b border-gray-800 z-40">
           <SidebarTrigger className="ml-4 text-white hover:text-goldenrod" />
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mr-4">
             <Button
               onClick={() => setUse3DNavigation(!use3DNavigation)}
               variant="ghost"
@@ -139,23 +108,6 @@ export const MainApp: React.FC = () => {
               title={use3DNavigation ? 'Switch to 2D Navigation' : 'Switch to 3D Navigation'}
             >
               <Layers3 className="h-4 w-4" />
-            </Button>
-            
-            <Button
-              onClick={() => setShowNotifications(true)}
-              variant="ghost"
-              size="sm"
-              className="relative text-white hover:text-goldenrod"
-            >
-              <Bell className="h-4 w-4" />
-              {unreadCount > 0 && (
-                <Badge 
-                  variant="secondary" 
-                  className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs bg-goldenrod text-jet-black flex items-center justify-center"
-                >
-                  {unreadCount > 99 ? '99+' : unreadCount}
-                </Badge>
-              )}
             </Button>
           </div>
         </header>
@@ -190,11 +142,6 @@ export const MainApp: React.FC = () => {
         {showSettings && (
           <SettingsOverlay onClose={() => setShowSettings(false)} />
         )}
-        
-        <NotificationCenter 
-          open={showNotifications} 
-          onOpenChange={setShowNotifications} 
-        />
       </div>
     </SidebarProvider>
   );

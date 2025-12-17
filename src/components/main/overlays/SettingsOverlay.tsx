@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { X, User, Bell, Shield, LogOut, Trash2, AlertTriangle } from 'lucide-react';
+import { X, User, Shield, LogOut, Trash2, AlertTriangle, Mail } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { ProfileCreation } from '@/components/profile/ProfileCreation';
 import { UserSafetyOverlay } from '@/components/safety/UserSafetyOverlay';
-import { NotificationSettings } from '../../notifications/NotificationSettings';
 
 interface SettingsOverlayProps {
   onClose: () => void;
@@ -17,7 +16,6 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
   const [isDeleting, setIsDeleting] = useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [showSafetyCenter, setShowSafetyCenter] = useState(false);
-  const [showNotificationSettings, setShowNotificationSettings] = useState(false);
   const { signOut, user } = useAuth();
   const { toast } = useToast();
 
@@ -25,14 +23,11 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
     try {
       setIsSigningOut(true);
       
-      // Clear session data and sign out
       await signOut();
       
-      // Clear any additional local storage data
       localStorage.removeItem('hasCompletedOnboarding');
       localStorage.removeItem('profileData');
       
-      // Clear any cookies if needed
       document.cookie = 'authToken=; Max-Age=0; path=/;';
       document.cookie = 'refreshToken=; Max-Age=0; path=/;';
       
@@ -45,7 +40,6 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
     } catch (error) {
       console.error('Sign out error:', error);
       
-      // Even if server-side logout fails, clear local data
       localStorage.removeItem('hasCompletedOnboarding');
       localStorage.removeItem('profileData');
       
@@ -67,7 +61,6 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
     try {
       setIsDeleting(true);
 
-      // Call the delete function using SQL query
       const { error } = await supabase
         .from('user_profiles')
         .select('id')
@@ -84,7 +77,6 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
         return;
       }
 
-      // Execute the deletion function via SQL
       const { error: deleteError } = await supabase.rpc('delete_user_completely' as any, {
         user_id_input: user.id
       });
@@ -99,7 +91,6 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
         return;
       }
 
-      // Clear local storage
       localStorage.removeItem('hasCompletedOnboarding');
       localStorage.removeItem('profileData');
 
@@ -108,7 +99,6 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
         description: "Your profile and all associated data have been permanently deleted.",
       });
 
-      // Sign out the user
       await signOut();
       onClose();
     } catch (error) {
@@ -126,11 +116,9 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
 
   const settingsItems = [
     { icon: User, label: 'Edit Profile', action: () => setShowEditProfile(true) },
-    { icon: Bell, label: 'Notifications', action: () => setShowNotificationSettings(true) },
     { icon: Shield, label: 'Safety Center', action: () => setShowSafetyCenter(true) },
   ];
 
-  // Handle edit profile completion
   const handleEditProfileComplete = () => {
     setShowEditProfile(false);
     toast({
@@ -139,12 +127,10 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
     });
   };
 
-  // Show safety center
   if (showSafetyCenter) {
     return <UserSafetyOverlay onClose={() => setShowSafetyCenter(false)} />;
   }
 
-  // Show edit profile modal
   if (showEditProfile) {
     return (
       <div className="fixed inset-0 z-50">
@@ -181,6 +167,17 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
               <span className="text-white font-medium">{item.label}</span>
             </button>
           ))}
+
+          {/* Email Notifications Info */}
+          <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+            <div className="flex items-center space-x-3 mb-2">
+              <Mail className="h-5 w-5 text-goldenrod" />
+              <span className="text-white font-medium">Email Notifications</span>
+            </div>
+            <p className="text-gray-400 text-sm">
+              You'll receive emails for new matches, messages, and date reminders at your registered email address.
+            </p>
+          </div>
 
           <div className="mt-8 pt-6 border-t border-gray-700 space-y-3">
             <button 
@@ -230,7 +227,6 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
                 <li>• Your profile information and photos</li>
                 <li>• All conversations and matches</li>
                 <li>• Date journal entries</li>
-                <li>• RIF insights and reflections</li>
                 <li>• All app preferences and settings</li>
               </ul>
               <p className="text-red-400 text-sm font-medium">
@@ -263,14 +259,6 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
             </div>
           </div>
         </div>
-      )}
-      
-      {/* Notification Settings Modal */}
-      {showNotificationSettings && (
-        <NotificationSettings 
-          isOpen={showNotificationSettings} 
-          onClose={() => setShowNotificationSettings(false)} 
-        />
       )}
     </div>
   );

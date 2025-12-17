@@ -2,36 +2,61 @@ import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 
+/**
+ * MVP Email Notification Triggers
+ * Sends emails for essential events only:
+ * - New match accepted your option
+ * - New message received
+ * - Date reminder (handled by scheduled function)
+ * - After-action prompt (handled by scheduled function)
+ * - Weekly options ready (handled by scheduled function)
+ */
 export const useNotificationTriggers = () => {
   const { user } = useAuth();
 
-  // Create notifications for various events
   useEffect(() => {
     if (!user?.id) return;
 
     let channel: any = null;
     let isSubscribed = false;
 
-    const createNotification = async (
+    const sendEmailNotification = async (
       type: 'match' | 'message' | 'date_proposal' | 'system' | 'safety',
       title: string,
       message: string,
-      data?: any,
       actionUrl?: string
     ) => {
       try {
-        await supabase
-          .from('notifications')
-          .insert({
-            user_id: user.id,
+        // Get user's email
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('email')
+          .eq('id', user.id)
+          .single();
+
+        if (!profile?.email) {
+          console.log('No email found for user, skipping notification');
+          return;
+        }
+
+        // Send email via edge function
+        const { error } = await supabase.functions.invoke('send-notification-email', {
+          body: {
+            to: profile.email,
             type,
             title,
             message,
-            data: data || {},
-            action_url: actionUrl
-          });
+            actionUrl
+          }
+        });
+
+        if (error) {
+          console.error('Error sending notification email:', error);
+        } else {
+          console.log('Notification email sent:', title);
+        }
       } catch (error) {
-        console.error('Error creating notification:', error);
+        console.error('Error in sendEmailNotification:', error);
       }
     };
 
@@ -39,10 +64,10 @@ export const useNotificationTriggers = () => {
       if (isSubscribed) return;
 
       try {
-        // Single channel for all notification triggers with unique timestamp
-        const channelName = `notification-triggers-${user.id}-${Date.now()}`;
+        const channelName = `email-triggers-${user.id}-${Date.now()}`;
         channel = supabase
           .channel(channelName)
+          // New mutual match notification
           .on(
             'postgres_changes',
             {
@@ -51,16 +76,15 @@ export const useNotificationTriggers = () => {
               table: 'matches',
               filter: `liked_user_id=eq.${user.id}`
             },
-            (payload) => {
+            async (payload) => {
               try {
                 const match = payload.new as any;
                 if (match.is_mutual && !payload.old?.is_mutual) {
-                  createNotification(
+                  await sendEmailNotification(
                     'match',
-                    '🎉 New Match!',
-                    'You have a new mutual match. Start a conversation!',
-                    { match_id: match.id },
-                    '/matches'
+                    'New Match!',
+                    'Someone accepted your connection! Start a conversation now.',
+                    'https://monark.app/matches'
                   );
                 }
               } catch (error) {
@@ -68,6 +92,7 @@ export const useNotificationTriggers = () => {
               }
             }
           )
+          // New message notification
           .on(
             'postgres_changes',
             {
@@ -76,55 +101,26 @@ export const useNotificationTriggers = () => {
               table: 'messages',
               filter: `recipient_user_id=eq.${user.id}`
             },
-            (payload) => {
+            async (payload) => {
               try {
                 const message = payload.new as any;
-                createNotification(
+                await sendEmailNotification(
                   'message',
-                  '💬 New Message',
+                  'New Message',
                   'You have a new message waiting for you.',
-                  { 
-                    message_id: message.id,
-                    conversation_id: message.conversation_id 
-                  },
-                  `/matches?conversation=${message.conversation_id}`
+                  `https://monark.app/matches?conversation=${message.conversation_id}`
                 );
               } catch (error) {
                 console.error('Error handling message notification:', error);
-              }
-            }
-          )
-          .on(
-            'postgres_changes',
-            {
-              event: 'INSERT',
-              schema: 'public',
-              table: 'date_proposals',
-              filter: `recipient_user_id=eq.${user.id}`
-            },
-            (payload) => {
-              try {
-                const proposal = payload.new as any;
-                createNotification(
-                  'date_proposal',
-                  '📅 Date Proposal',
-                  `Someone proposed a date: ${proposal.title}`,
-                  { 
-                    proposal_id: proposal.id,
-                    conversation_id: proposal.conversation_id 
-                  },
-                  `/matches?conversation=${proposal.conversation_id}`
-                );
-              } catch (error) {
-                console.error('Error handling date proposal notification:', error);
               }
             }
           );
 
         await channel.subscribe();
         isSubscribed = true;
+        console.log('Email notification triggers subscribed');
       } catch (error) {
-        console.error('Error setting up notification triggers subscription:', error);
+        console.error('Error setting up email notification triggers:', error);
       }
     };
 
@@ -140,7 +136,7 @@ export const useNotificationTriggers = () => {
         }
       }
     };
-  }, [user?.id]); // Use user.id instead of user object
+  }, [user?.id]);
 
   return null;
 };
