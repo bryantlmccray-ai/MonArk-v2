@@ -107,7 +107,13 @@ const Index = () => {
 
   // Show onboarding if user hasn't completed it yet
   if (!hasCompletedOnboarding) {
-    return <OnboardingFlow onComplete={() => setHasCompletedOnboarding(true)} />;
+    return (
+      <OnboardingFlow 
+        onComplete={() => setHasCompletedOnboarding(true)} 
+        onExit={isDemoMode ? () => exitDemoMode() : undefined}
+        showExitButton={isDemoMode}
+      />
+    );
   }
 
   // Show profile creation after onboarding
