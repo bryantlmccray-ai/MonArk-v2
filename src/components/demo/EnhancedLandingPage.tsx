@@ -14,6 +14,7 @@ import igManSuit from '@/assets/instagram/ig-man-suit.png';
 import igWelcomeCircle from '@/assets/instagram/ig-welcome-circle.png';
 import igChampagne from '@/assets/instagram/ig-champagne.png';
 import igSunglasses from '@/assets/instagram/ig-sunglasses.png';
+import igTestimonials from '@/assets/instagram/ig-testimonials.png';
 
 const instagramImages = [
   igWomanPortrait,
@@ -23,7 +24,7 @@ const instagramImages = [
   igWelcomeCircle,
   igChampagne,
   igSunglasses,
-  igWomanPortrait, // repeat for 8th slot
+  igTestimonials,
 ];
 interface EnhancedLandingPageProps {
   onExitToApp?: () => void;
