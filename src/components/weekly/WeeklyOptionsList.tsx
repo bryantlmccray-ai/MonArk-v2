@@ -3,7 +3,8 @@ import { useWeeklyOptions } from '@/hooks/useWeeklyOptions';
 import { WeeklyOptionsCard } from './WeeklyOptionsCard';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Calendar, Share2, Copy, Check } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { RefreshCw, Calendar, MessageSquare, Copy, Check, Mail, Phone } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
@@ -13,6 +14,7 @@ export const WeeklyOptionsList = () => {
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [createdItinerary, setCreatedItinerary] = useState<any>(null);
   const [copied, setCopied] = useState(false);
+  const [shareContact, setShareContact] = useState('');
 
   const handleAccept = async (optionId: string) => {
     setProcessingId(optionId);
@@ -36,6 +38,26 @@ export const WeeklyOptionsList = () => {
       toast.success('Link copied!');
       setTimeout(() => setCopied(false), 2000);
     }
+  };
+
+  const handleShareWithFriend = () => {
+    if (!shareContact.trim() || !createdItinerary) return;
+    
+    const itinerary = createdItinerary.itinerary;
+    const dateTime = itinerary?.time_window?.start 
+      ? format(new Date(itinerary.time_window.start), 'EEE, MMM d at h:mm a')
+      : 'TBD';
+    
+    const message = `Hey! I'm going on a date: "${itinerary?.title}" on ${dateTime}. Here's my safety link: ${createdItinerary.share_link}`;
+    
+    if (shareContact.includes('@')) {
+      window.open(`mailto:${shareContact}?subject=My Date Plans&body=${encodeURIComponent(message)}`);
+    } else {
+      window.open(`sms:${shareContact}?body=${encodeURIComponent(message)}`);
+    }
+    
+    toast.success('Opening share...');
+    setShareContact('');
   };
 
   if (loading) {
@@ -146,8 +168,33 @@ export const WeeklyOptionsList = () => {
                 </div>
               </div>
 
+              {/* Share with Friend */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground flex items-center gap-2">
+                  <Phone className="w-4 h-4" />
+                  Share with a Friend
+                </label>
+                <p className="text-xs text-muted-foreground">
+                  Let someone know your plans for safety
+                </p>
+                <div className="flex gap-2">
+                  <Input
+                    value={shareContact}
+                    onChange={(e) => setShareContact(e.target.value)}
+                    placeholder="Phone or email"
+                    className="flex-1"
+                  />
+                  <Button 
+                    onClick={handleShareWithFriend} 
+                    variant="outline"
+                    disabled={!shareContact.trim()}
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+
               <Button onClick={() => setCreatedItinerary(null)} className="w-full">
-                <Share2 className="w-4 h-4 mr-2" />
                 Done
               </Button>
             </div>

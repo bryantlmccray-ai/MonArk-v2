@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { UserActionsModal } from '@/components/safety/UserActionsModal';
+import { ReportBlockModal } from '@/components/safety/ReportBlockModal';
 import { useMessages } from '@/hooks/useMessages';
 import { useAuth } from '@/hooks/useAuth';
 import { useTypingIndicator } from '@/hooks/useTypingIndicator';
@@ -307,8 +307,8 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Safety Actions Modal */}
-      <UserActionsModal
+      {/* Report/Block Modal */}
+      <ReportBlockModal
         isOpen={showUserActions}
         onClose={() => setShowUserActions(false)}
         userId={matchUserId}
