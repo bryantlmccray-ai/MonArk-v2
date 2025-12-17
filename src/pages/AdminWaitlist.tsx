@@ -9,8 +9,9 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { 
   Check, X, Clock, ArrowLeft, Mail, MapPin, User, Calendar, 
-  MessageSquare, Loader2, RefreshCw, ChevronDown, ChevronUp 
+  MessageSquare, Loader2, RefreshCw, ChevronDown, ChevronUp, Info
 } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface WaitlistSubmission {
   id: string;
@@ -219,6 +220,81 @@ const AdminWaitlist: React.FC = () => {
             </Card>
           ))}
         </div>
+
+        {/* Approval Criteria Guide */}
+        <Collapsible className="mb-6">
+          <CollapsibleTrigger asChild>
+            <Button variant="outline" className="w-full justify-between border-gray-700 text-gray-300 hover:text-white">
+              <span className="flex items-center gap-2">
+                <Info className="h-4 w-4" />
+                Review Criteria Guide
+              </span>
+              <ChevronDown className="h-4 w-4" />
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="mt-2">
+            <Card className="bg-charcoal-gray border-gray-800">
+              <CardContent className="p-4">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="text-green-400 font-medium mb-3 flex items-center gap-2">
+                      <Check className="h-4 w-4" /> APPROVE if:
+                    </h4>
+                    <ul className="space-y-2 text-sm text-gray-300">
+                      <li className="flex items-start gap-2">
+                        <span className="text-green-400 mt-0.5">•</span>
+                        Lives in <strong className="text-white">Chicago</strong> (MUST HAVE)
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-green-400 mt-0.5">•</span>
+                        Age <strong className="text-white">23-50</strong> (target demographic)
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-green-400 mt-0.5">•</span>
+                        Wrote a <strong className="text-white">thoughtful answer</strong> to "Why MonArk?"
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-green-400 mt-0.5">•</span>
+                        Real email address (not spam)
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-green-400 mt-0.5">•</span>
+                        Seems genuine and ready for intentional dating
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="text-red-400 font-medium mb-3 flex items-center gap-2">
+                      <X className="h-4 w-4" /> REJECT if:
+                    </h4>
+                    <ul className="space-y-2 text-sm text-gray-300">
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-400 mt-0.5">•</span>
+                        Lives <strong className="text-white">outside Chicago</strong>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-400 mt-0.5">•</span>
+                        Too young (<strong className="text-white">&lt;23</strong>) or too old (<strong className="text-white">&gt;50</strong>)
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-400 mt-0.5">•</span>
+                        Lazy answer (<strong className="text-white">"idk"</strong> or <strong className="text-white">"seems cool"</strong>)
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-400 mt-0.5">•</span>
+                        Obvious <strong className="text-white">spam/bot</strong>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-400 mt-0.5">•</span>
+                        Rude or <strong className="text-white">aggressive vibes</strong>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </CollapsibleContent>
+        </Collapsible>
 
         {/* Filters */}
         <div className="flex gap-2 mb-6">
