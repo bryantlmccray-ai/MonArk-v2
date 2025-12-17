@@ -1,4 +1,4 @@
-import { Calendar, MapPin, Heart, Sparkles } from 'lucide-react';
+import { Calendar, MapPin, Heart, Check, X, Share2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,45 +7,53 @@ import type { WeeklyOption } from '@/hooks/useWeeklyOptions';
 
 interface WeeklyOptionsCardProps {
   option: WeeklyOption;
-  onTap: () => void;
-  onView: () => void;
+  onAccept: () => void;
+  onPass: () => void;
+  isProcessing?: boolean;
 }
 
-export const WeeklyOptionsCard = ({ option, onTap, onView }: WeeklyOptionsCardProps) => {
+export const WeeklyOptionsCard = ({ option, onAccept, onPass, isProcessing }: WeeklyOptionsCardProps) => {
   const startTime = new Date(option.time_window.start);
   const endTime = new Date(option.time_window.end);
   const duration = Math.round((endTime.getTime() - startTime.getTime()) / (1000 * 60));
 
   return (
-    <Card 
-      className="overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer border-border/50 bg-card/80 backdrop-blur-sm"
-      onClick={() => {
-        onView();
-        onTap();
-      }}
-    >
+    <Card className="overflow-hidden border-border/50 bg-card/80 backdrop-blur-sm">
       <CardContent className="p-6 space-y-4">
         {/* Header */}
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <h3 className="text-xl font-semibold text-foreground mb-1">
-              {option.title}
-            </h3>
-            <p className="text-sm text-muted-foreground italic">
-              {option.vibe_line}
-            </p>
+        <div>
+          <h3 className="text-xl font-semibold text-foreground mb-1">
+            {option.title}
+          </h3>
+          <p className="text-sm text-muted-foreground italic">
+            {option.vibe_line}
+          </p>
+        </div>
+
+        {/* Venue - The Key Info */}
+        {option.venue_data && (
+          <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
+            <div className="flex items-start gap-3">
+              <MapPin className="w-5 h-5 text-primary mt-0.5" />
+              <div>
+                <div className="font-medium text-foreground">{option.venue_data.name}</div>
+                <div className="text-sm text-muted-foreground">{option.venue_data.address}</div>
+              </div>
+            </div>
           </div>
-          {option.is_template && (
-            <Badge variant="secondary" className="ml-2">
-              <Sparkles className="w-3 h-3 mr-1" />
-              Curated
-            </Badge>
-          )}
+        )}
+
+        {/* Time */}
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <Calendar className="w-4 h-4" />
+          <span className="text-sm">
+            {format(startTime, 'EEE, MMM d')} · {format(startTime, 'h:mm a')} ({duration}min)
+          </span>
         </div>
 
         {/* EQ Fit Chips */}
         <div className="flex flex-wrap gap-2">
-          {option.eq_fit_chips.map((chip, idx) => (
+          {option.eq_fit_chips.slice(0, 3).map((chip, idx) => (
             <Badge 
               key={idx} 
               variant="outline"
@@ -56,52 +64,37 @@ export const WeeklyOptionsCard = ({ option, onTap, onView }: WeeklyOptionsCardPr
           ))}
         </div>
 
-        {/* Time & Location */}
-        <div className="space-y-2 text-sm">
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Calendar className="w-4 h-4" />
-            <span>
-              {format(startTime, 'EEE, MMM d')} · {format(startTime, 'h:mm a')} ({duration}min)
-            </span>
-          </div>
-          
-          {option.distance_km && (
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <MapPin className="w-4 h-4" />
-              <span>{option.distance_km.toFixed(1)} km away</span>
-            </div>
-          )}
-        </div>
-
-        {/* Care Index */}
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/20">
+        {/* Care Index - Simple */}
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Heart className="w-4 h-4 text-primary" />
-          <div className="flex-1">
-            <div className="text-xs font-medium text-foreground">Care Index</div>
-            <div className="text-xs text-muted-foreground">
-              Quality & Safety Score: {(option.care_index_score * 100).toFixed(0)}%
-            </div>
-          </div>
+          <span>Quality Score: {(option.care_index_score * 100).toFixed(0)}%</span>
         </div>
 
         {/* Why This For You */}
-        <div className="p-3 rounded-lg bg-accent/50 border border-accent">
-          <p className="text-xs text-foreground">
-            <span className="font-semibold">Why this for you:</span> {option.why_this_for_you}
-          </p>
-        </div>
+        <p className="text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">Why this:</span> {option.why_this_for_you}
+        </p>
 
-        {/* Action Button */}
-        <Button 
-          onClick={(e) => {
-            e.stopPropagation();
-            onTap();
-          }}
-          className="w-full"
-          size="lg"
-        >
-          Create Itinerary
-        </Button>
+        {/* Accept / Pass Buttons */}
+        <div className="flex gap-3 pt-2">
+          <Button 
+            variant="outline"
+            onClick={onPass}
+            disabled={isProcessing}
+            className="flex-1"
+          >
+            <X className="w-4 h-4 mr-2" />
+            Pass
+          </Button>
+          <Button 
+            onClick={onAccept}
+            disabled={isProcessing}
+            className="flex-1"
+          >
+            <Check className="w-4 h-4 mr-2" />
+            Accept
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

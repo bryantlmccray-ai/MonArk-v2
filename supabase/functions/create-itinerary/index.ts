@@ -26,7 +26,7 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const { weekly_option_id, mode, counterpart_user_id } = await req.json();
+    const { weekly_option_id } = await req.json();
 
     // Get the weekly option
     const { data: option, error: optionError } = await supabaseClient
@@ -45,24 +45,23 @@ serve(async (req) => {
       .update({ tapped_at: new Date().toISOString() })
       .eq('id', weekly_option_id);
 
-    // Generate share link
-    const shareLink = `https://monark.app/itinerary/${crypto.randomUUID()}`;
+    // Generate simple share link
+    const shareId = crypto.randomUUID().slice(0, 8);
+    const shareLink = `https://monark.app/date/${shareId}`;
 
-    // Create itinerary
+    // Create simple itinerary - just venue, time, share link
     const itineraryData = {
       user_id: user.id,
-      counterpart_user_id,
       weekly_option_id,
-      mode,
+      mode: 'matched',
       title: option.title,
       description: option.vibe_line,
       time_window: option.time_window,
-      location_data: option.venue_data || {
-        address: 'Location to be confirmed',
-        lat: null,
-        lng: null
+      location_data: option.venue_data || { 
+        name: 'Venue TBD',
+        address: 'Location to be confirmed' 
       },
-      status: counterpart_user_id ? 'proposed' : 'confirmed',
+      status: 'confirmed',
       safety_sharing_enabled: true,
       sos_visible: true,
       consent_nudge_shown: true,
@@ -75,7 +74,10 @@ serve(async (req) => {
       .select()
       .single();
 
-    if (itineraryError) throw itineraryError;
+    if (itineraryError) {
+      console.error('Itinerary insert error:', itineraryError);
+      throw itineraryError;
+    }
 
     // Log analytics
     await supabaseClient
@@ -85,25 +87,11 @@ serve(async (req) => {
         event_type: 'itinerary_created',
         event_data: {
           itinerary_id: itinerary.id,
-          mode,
-          has_counterpart: !!counterpart_user_id,
           from_weekly_option: true
         }
       });
 
-    // If there's a counterpart, send them a notification
-    if (counterpart_user_id) {
-      await supabaseClient
-        .from('notifications')
-        .insert({
-          user_id: counterpart_user_id,
-          type: 'date_proposal',
-          title: 'New Date Proposal',
-          message: `${user.email} has proposed a date: ${option.title}`,
-          data: { itinerary_id: itinerary.id },
-          action_url: `/itinerary/${itinerary.id}`
-        });
-    }
+    console.log('Itinerary created successfully:', itinerary.id);
 
     return new Response(
       JSON.stringify({ 

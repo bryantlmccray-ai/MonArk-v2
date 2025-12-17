@@ -3,29 +3,38 @@ import { useWeeklyOptions } from '@/hooks/useWeeklyOptions';
 import { WeeklyOptionsCard } from './WeeklyOptionsCard';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { Button } from '@/components/ui/button';
-import { RefreshCw } from 'lucide-react';
-import { ItineraryCreationModal } from './ItineraryCreationModal';
+import { RefreshCw, Calendar, Share2, Copy, Check } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { toast } from 'sonner';
+import { format } from 'date-fns';
 
 export const WeeklyOptionsList = () => {
-  const { options, loading, generating, createItinerary, logOptionView, refetch } = useWeeklyOptions();
-  const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const { options, loading, generating, acceptOption, passOption, refetch } = useWeeklyOptions();
+  const [processingId, setProcessingId] = useState<string | null>(null);
+  const [createdItinerary, setCreatedItinerary] = useState<any>(null);
+  const [copied, setCopied] = useState(false);
 
-  const handleTap = (optionId: string) => {
-    setSelectedOptionId(optionId);
-    setShowModal(true);
+  const handleAccept = async (optionId: string) => {
+    setProcessingId(optionId);
+    const result = await acceptOption(optionId);
+    setProcessingId(null);
+    if (result) {
+      setCreatedItinerary(result);
+    }
   };
 
-  const handleCreateItinerary = async (
-    mode: 'discovery' | 'matched' | 'byo',
-    counterpartUserId?: string
-  ) => {
-    if (!selectedOptionId) return;
-    
-    const result = await createItinerary(selectedOptionId, mode, counterpartUserId);
-    if (result) {
-      setShowModal(false);
-      setSelectedOptionId(null);
+  const handlePass = async (optionId: string) => {
+    setProcessingId(optionId);
+    await passOption(optionId);
+    setProcessingId(null);
+  };
+
+  const handleCopyLink = async () => {
+    if (createdItinerary?.share_link) {
+      await navigator.clipboard.writeText(createdItinerary.share_link);
+      setCopied(true);
+      toast.success('Link copied!');
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
@@ -37,6 +46,8 @@ export const WeeklyOptionsList = () => {
     );
   }
 
+  const activeOptions = options.filter(o => !o.is_expired && !o.tapped_at);
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -44,7 +55,7 @@ export const WeeklyOptionsList = () => {
         <div>
           <h2 className="text-2xl font-bold text-foreground">Your Weekly Options</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Three curated experiences, personalized for you
+            3 curated experiences, pick one to plan your date
           </p>
         </div>
         <Button
@@ -59,10 +70,14 @@ export const WeeklyOptionsList = () => {
       </div>
 
       {/* Options Grid */}
-      {options.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground mb-4">
+      {activeOptions.length === 0 ? (
+        <div className="text-center py-12 bg-card/50 rounded-xl border border-border/50">
+          <Calendar className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+          <p className="text-muted-foreground mb-2">
             {generating ? 'Generating your options...' : 'No options available this week'}
+          </p>
+          <p className="text-sm text-muted-foreground mb-4">
+            New options arrive every Sunday
           </p>
           {!generating && (
             <Button onClick={refetch}>
@@ -72,25 +87,73 @@ export const WeeklyOptionsList = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {options.map((option) => (
+          {activeOptions.map((option) => (
             <WeeklyOptionsCard
               key={option.id}
               option={option}
-              onTap={() => handleTap(option.id)}
-              onView={() => logOptionView(option.id)}
+              onAccept={() => handleAccept(option.id)}
+              onPass={() => handlePass(option.id)}
+              isProcessing={processingId === option.id}
             />
           ))}
         </div>
       )}
 
-      {/* Itinerary Creation Modal */}
-      {selectedOptionId && (
-        <ItineraryCreationModal
-          open={showModal}
-          onClose={() => setShowModal(false)}
-          onCreateItinerary={handleCreateItinerary}
-        />
-      )}
+      {/* Success Modal - Simple Share */}
+      <Dialog open={!!createdItinerary} onOpenChange={() => setCreatedItinerary(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Check className="w-5 h-5 text-green-500" />
+              Date Plan Created!
+            </DialogTitle>
+            <DialogDescription>
+              Share this link with your match to confirm the date
+            </DialogDescription>
+          </DialogHeader>
+
+          {createdItinerary && (
+            <div className="space-y-4">
+              {/* Date Summary */}
+              <div className="p-4 rounded-lg bg-muted/50 space-y-2">
+                <div className="font-semibold text-foreground">{createdItinerary.itinerary?.title}</div>
+                {createdItinerary.itinerary?.time_window && (
+                  <div className="text-sm text-muted-foreground flex items-center gap-2">
+                    <Calendar className="w-4 h-4" />
+                    {format(new Date(createdItinerary.itinerary.time_window.start), 'EEE, MMM d · h:mm a')}
+                  </div>
+                )}
+                {createdItinerary.itinerary?.location_data?.address && (
+                  <div className="text-sm text-muted-foreground">
+                    📍 {createdItinerary.itinerary.location_data.address}
+                  </div>
+                )}
+              </div>
+
+              {/* Share Link */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">Share Link</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={createdItinerary.share_link || ''}
+                    readOnly
+                    className="flex-1 px-3 py-2 text-sm bg-muted rounded-md border border-border"
+                  />
+                  <Button onClick={handleCopyLink} variant="outline" size="icon">
+                    {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  </Button>
+                </div>
+              </div>
+
+              <Button onClick={() => setCreatedItinerary(null)} className="w-full">
+                <Share2 className="w-4 h-4 mr-2" />
+                Done
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
