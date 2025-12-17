@@ -93,10 +93,10 @@ export const useProfile = () => {
       return;
     }
 
-    // In demo mode, use mock profile
+    // In demo mode, don't auto-create a profile - let onboarding handle it
     if (isDemoMode) {
-      console.log('Demo mode: using mock profile');
-      setProfile(createDemoProfile(user.id));
+      console.log('Demo mode: no profile yet, will be created during onboarding');
+      // Only return existing demo profile if already set, otherwise null for onboarding
       setLoading(false);
       return;
     }
