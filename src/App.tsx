@@ -15,6 +15,7 @@ import Terms from "./pages/Terms";
 import CookiePolicy from "./pages/CookiePolicy";
 import ResetPassword from "./pages/ResetPassword";
 import { Admin } from "./pages/Admin";
+import AdminWaitlist from "./pages/AdminWaitlist";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
                 <Route path="/cookie-policy" element={<CookiePolicy />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/admin/waitlist" element={<AdminWaitlist />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

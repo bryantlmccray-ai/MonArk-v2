@@ -1644,6 +1644,8 @@ export type Database = {
         Row: {
           accessibility_needs: string | null
           age_range: string | null
+          approval_notes: string | null
+          approval_status: string
           budget_band: string | null
           city: string | null
           conversation_style: string | null
@@ -1659,10 +1661,13 @@ export type Database = {
           ip_address: string | null
           last_name: string | null
           lgbtq_plus: boolean | null
+          looking_for: string | null
           orientation: string | null
           other_notes: string | null
           race_ethnicity: string[] | null
           relationship_goal: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
           smoking: string | null
           source_page: string | null
           state_region: string | null
@@ -1670,12 +1675,15 @@ export type Database = {
           time_window: string | null
           user_agent: string | null
           weekly_energy: string | null
+          why_monark: string | null
           willing_to_beta: boolean | null
           zip: string | null
         }
         Insert: {
           accessibility_needs?: string | null
           age_range?: string | null
+          approval_notes?: string | null
+          approval_status?: string
           budget_band?: string | null
           city?: string | null
           conversation_style?: string | null
@@ -1691,10 +1699,13 @@ export type Database = {
           ip_address?: string | null
           last_name?: string | null
           lgbtq_plus?: boolean | null
+          looking_for?: string | null
           orientation?: string | null
           other_notes?: string | null
           race_ethnicity?: string[] | null
           relationship_goal?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           smoking?: string | null
           source_page?: string | null
           state_region?: string | null
@@ -1702,12 +1713,15 @@ export type Database = {
           time_window?: string | null
           user_agent?: string | null
           weekly_energy?: string | null
+          why_monark?: string | null
           willing_to_beta?: boolean | null
           zip?: string | null
         }
         Update: {
           accessibility_needs?: string | null
           age_range?: string | null
+          approval_notes?: string | null
+          approval_status?: string
           budget_band?: string | null
           city?: string | null
           conversation_style?: string | null
@@ -1723,10 +1737,13 @@ export type Database = {
           ip_address?: string | null
           last_name?: string | null
           lgbtq_plus?: boolean | null
+          looking_for?: string | null
           orientation?: string | null
           other_notes?: string | null
           race_ethnicity?: string[] | null
           relationship_goal?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           smoking?: string | null
           source_page?: string | null
           state_region?: string | null
@@ -1734,6 +1751,7 @@ export type Database = {
           time_window?: string | null
           user_agent?: string | null
           weekly_energy?: string | null
+          why_monark?: string | null
           willing_to_beta?: boolean | null
           zip?: string | null
         }
