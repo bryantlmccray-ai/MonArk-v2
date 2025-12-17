@@ -429,7 +429,7 @@ const AdminWaitlist: React.FC = () => {
                       </div>
 
                       {/* Admin Notes & Actions */}
-                      {submission.approval_status === 'pending' && (
+                      {(submission.approval_status === 'pending' || submission.approval_status === 'hold') && (
                         <div className="mt-6 pt-4 border-t border-gray-700">
                           <Textarea
                             placeholder="Add notes (optional)..."
