@@ -421,6 +421,45 @@ export type Database = {
         }
         Relationships: []
       }
+      date_reflections: {
+        Row: {
+          created_at: string
+          date_occurred: string
+          different_energy_description: string | null
+          feeling_during: string
+          id: string
+          next_preference: string
+          partner_name: string
+          standout_qualities: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date_occurred?: string
+          different_energy_description?: string | null
+          feeling_during: string
+          id?: string
+          next_preference: string
+          partner_name: string
+          standout_qualities?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date_occurred?: string
+          different_energy_description?: string | null
+          feeling_during?: string
+          id?: string
+          next_preference?: string
+          partner_name?: string
+          standout_qualities?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       itineraries: {
         Row: {
           completed_at: string | null
