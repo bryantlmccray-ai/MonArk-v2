@@ -4,7 +4,7 @@ import { WeeklyOptionsCard } from './WeeklyOptionsCard';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { RefreshCw, Calendar, MessageSquare, Copy, Check, Mail, Phone } from 'lucide-react';
+import { RefreshCw, Calendar, MessageSquare, Copy, Check, Phone } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
