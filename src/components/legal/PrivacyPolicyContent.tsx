@@ -71,7 +71,7 @@ export const PrivacyPolicyContent: React.FC = () => {
               <div>
                 <h4 className="text-white font-medium mb-2">Emotional Wellness Data</h4>
                 <ul className="list-disc list-inside space-y-1 ml-4 text-sm">
-                  <li>RIF (Relationship Intelligence Framework) responses</li>
+                  <li>Dating style quiz responses</li>
                   <li>Emotional readiness assessments</li>
                   <li>Reflection prompts and journal entries</li>
                   <li>Relationship pattern insights</li>
