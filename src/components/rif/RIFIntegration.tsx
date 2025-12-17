@@ -1,8 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
 import { RIFConsentScreen } from './RIFConsentScreen';
-import { RIFDataCollector } from './RIFDataCollector';
-import { RIFPrivacyDashboard } from './RIFPrivacyDashboard';
 import { useRIF } from '@/hooks/useRIF';
 
 interface RIFIntegrationProps {
@@ -11,67 +8,52 @@ interface RIFIntegrationProps {
   onComplete?: () => void;
 }
 
+/**
+ * MVP RIF Integration - Basic Consent Only
+ * Full RIF framework (behavioral tracking, insights, dashboard) cut for MVP
+ * Only basic intake questions (10-15) to power matching
+ */
 export const RIFIntegration: React.FC<RIFIntegrationProps> = ({ 
   mode, 
-  collectionType = 'onboarding', 
   onComplete 
 }) => {
   const { rifSettings, loading } = useRIF();
   const [showConsent, setShowConsent] = useState(false);
 
-  // Add debugging
-  console.log('RIFIntegration props:', { mode, collectionType });
-  console.log('RIF settings:', rifSettings);
-  console.log('Loading:', loading);
-
   useEffect(() => {
     if (!loading && rifSettings && !rifSettings.rif_enabled && mode === 'collect') {
-      console.log('Setting showConsent to true');
       setShowConsent(true);
     }
   }, [loading, rifSettings, mode]);
 
   if (loading) {
-    console.log('RIF Integration loading...');
     return (
       <div className="min-h-screen bg-jet-black flex items-center justify-center">
-        <div className="text-white">Loading RIF system...</div>
+        <div className="text-white">Loading...</div>
       </div>
     );
   }
 
+  // All modes now show consent screen or complete immediately
+  // Full RIF dashboard and behavioral collection cut for MVP
   if (showConsent || mode === 'consent') {
-    console.log('Showing RIF consent screen');
     return (
       <RIFConsentScreen 
         onConsent={(consented) => {
-          console.log('RIF consent response:', consented);
           if (consented) {
             setShowConsent(false);
-            if (mode === 'consent') onComplete?.();
-          } else {
-            onComplete?.();
           }
+          onComplete?.();
         }} 
       />
     );
   }
 
-  if (mode === 'collect') {
-    console.log('Showing RIF data collector');
-    return (
-      <RIFDataCollector 
-        type={collectionType} 
-        onComplete={onComplete} 
-      />
-    );
+  // For collect and dashboard modes, just complete immediately (MVP simplification)
+  if (mode === 'collect' || mode === 'dashboard') {
+    onComplete?.();
+    return null;
   }
 
-  if (mode === 'dashboard') {
-    console.log('Showing RIF privacy dashboard');
-    return <RIFPrivacyDashboard />;
-  }
-
-  console.log('RIF Integration - no matching mode, returning null');
   return null;
 };

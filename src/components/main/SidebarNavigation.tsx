@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Map, MessageCircle, Users, BookOpen, Calendar } from 'lucide-react';
+import { User, MessageCircle, BookOpen, Calendar } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -9,8 +9,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarProvider,
-  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { MonArkLogo } from '../MonArkLogo';
 
@@ -21,12 +19,12 @@ interface SidebarNavigationProps {
 }
 
 export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab, onTabChange, onArkNavigation }) => {
+  // MVP: Weekly Options is the main view - no discovery/swiping
   const tabs = [
-    { id: 'profile', icon: User, label: 'Profile' },
-    { id: 'weekly', icon: Calendar, label: 'Weekly Options' },
+    { id: 'weekly', icon: Calendar, label: 'Your 3 Options' },
     { id: 'matches', icon: MessageCircle, label: 'Connections' },
-    { id: 'discover', icon: Map, label: 'Discover' },
-    { id: 'dates', icon: BookOpen, label: 'Dates & Journal' },
+    { id: 'dates', icon: BookOpen, label: 'Journal' },
+    { id: 'profile', icon: User, label: 'Profile' },
   ];
 
   return (
