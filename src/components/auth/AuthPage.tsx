@@ -22,7 +22,7 @@ export const AuthPage: React.FC = () => {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [resetSent, setResetSent] = useState(false);
-  const { user, signIn, signUp } = useAuth();
+  const { user, signIn, signUp, enterDemoMode } = useAuth();
   const { updateProfile } = useProfile();
   const { toast } = useToast();
 
@@ -394,6 +394,16 @@ export const AuthPage: React.FC = () => {
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
             {isLogin ? 'Continue with Google' : 'Sign up with Google'}
+          </Button>
+
+          {/* Demo Mode Button */}
+          <Button
+            onClick={enterDemoMode}
+            disabled={loading}
+            variant="outline"
+            className="w-full py-4 border-dashed border-2 border-primary/50 text-primary hover:bg-primary/10 font-medium rounded-xl transition-all duration-300"
+          >
+            🧪 Continue as Guest (Demo Mode)
           </Button>
         </div>
 
