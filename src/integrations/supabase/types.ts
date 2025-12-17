@@ -572,6 +572,93 @@ export type Database = {
           },
         ]
       }
+      kpi_snapshots: {
+        Row: {
+          active_users_daily: number | null
+          active_users_monthly: number | null
+          active_users_weekly: number | null
+          created_at: string
+          id: string
+          match_to_date_rate: number | null
+          snapshot_date: string
+          total_users: number | null
+          week2_retention_rate: number | null
+          week4_retention_rate: number | null
+          week8_retention_rate: number | null
+          weekly_options_view_rate: number | null
+        }
+        Insert: {
+          active_users_daily?: number | null
+          active_users_monthly?: number | null
+          active_users_weekly?: number | null
+          created_at?: string
+          id?: string
+          match_to_date_rate?: number | null
+          snapshot_date: string
+          total_users?: number | null
+          week2_retention_rate?: number | null
+          week4_retention_rate?: number | null
+          week8_retention_rate?: number | null
+          weekly_options_view_rate?: number | null
+        }
+        Update: {
+          active_users_daily?: number | null
+          active_users_monthly?: number | null
+          active_users_weekly?: number | null
+          created_at?: string
+          id?: string
+          match_to_date_rate?: number | null
+          snapshot_date?: string
+          total_users?: number | null
+          week2_retention_rate?: number | null
+          week4_retention_rate?: number | null
+          week8_retention_rate?: number | null
+          weekly_options_view_rate?: number | null
+        }
+        Relationships: []
+      }
+      match_conversions: {
+        Row: {
+          conversation_id: string
+          conversion_status: string
+          created_at: string
+          date_completed_at: string | null
+          date_proposed_at: string | null
+          first_message_at: string | null
+          id: string
+          match_user_id: string
+          matched_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          conversation_id: string
+          conversion_status?: string
+          created_at?: string
+          date_completed_at?: string | null
+          date_proposed_at?: string | null
+          first_message_at?: string | null
+          id?: string
+          match_user_id: string
+          matched_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          conversation_id?: string
+          conversion_status?: string
+          created_at?: string
+          date_completed_at?: string | null
+          date_proposed_at?: string | null
+          first_message_at?: string | null
+          id?: string
+          match_user_id?: string
+          matched_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       matches: {
         Row: {
           created_at: string
@@ -1548,6 +1635,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_sessions: {
+        Row: {
+          created_at: string
+          device_type: string | null
+          id: string
+          session_end: string | null
+          session_start: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_type?: string | null
+          id?: string
+          session_end?: string | null
+          session_start?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_type?: string | null
+          id?: string
+          session_end?: string | null
+          session_start?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       venue_care_scores: {
         Row: {
           accessibility_score: number
@@ -1901,6 +2015,39 @@ export type Database = {
           vibe_line?: string
           week_start?: string
           why_this_for_you?: string
+        }
+        Relationships: []
+      }
+      weekly_options_engagement: {
+        Row: {
+          created_at: string
+          id: string
+          options_tapped: number | null
+          options_viewed: number | null
+          updated_at: string
+          user_id: string
+          viewed_at: string | null
+          week_start: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          options_tapped?: number | null
+          options_viewed?: number | null
+          updated_at?: string
+          user_id: string
+          viewed_at?: string | null
+          week_start: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          options_tapped?: number | null
+          options_viewed?: number | null
+          updated_at?: string
+          user_id?: string
+          viewed_at?: string | null
+          week_start?: string
         }
         Relationships: []
       }

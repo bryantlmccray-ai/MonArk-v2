@@ -16,6 +16,7 @@ import CookiePolicy from "./pages/CookiePolicy";
 import ResetPassword from "./pages/ResetPassword";
 import { Admin } from "./pages/Admin";
 import AdminWaitlist from "./pages/AdminWaitlist";
+import AdminAnalytics from "./pages/AdminAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/admin/waitlist" element={<AdminWaitlist />} />
+                <Route path="/admin/analytics" element={<AdminAnalytics />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
