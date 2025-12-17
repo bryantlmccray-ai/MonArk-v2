@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from './useAuth';
 
 export interface RIFProfile {
   id: string;
@@ -33,15 +34,25 @@ export const useRIF = () => {
   const [rifProfile, setRifProfile] = useState<RIFProfile | null>(null);
   const [rifSettings, setRifSettings] = useState<RIFSettings | null>(null);
   const [loading, setLoading] = useState(true);
+  const { user, isDemoMode } = useAuth();
 
   useEffect(() => {
     loadRIFData();
-  }, []);
+  }, [user?.id, isDemoMode]);
 
   const loadRIFData = async () => {
+    // In demo mode, use mock data
+    if (isDemoMode) {
+      console.log('Demo mode: using mock RIF data');
+      setRifProfile(null);
+      setRifSettings(null);
+      setLoading(false);
+      return;
+    }
+
     try {
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      if (authError || !user) {
+      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
+      if (authError || !authUser) {
         console.log('No authenticated user for RIF data');
         setLoading(false);
         return;
@@ -51,7 +62,7 @@ export const useRIF = () => {
       const { data: profileData, error: profileError } = await supabase
         .from('rif_profiles')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', authUser.id)
         .eq('is_active', true)
         .maybeSingle();
 
@@ -63,7 +74,7 @@ export const useRIF = () => {
       const { data: settingsData, error: settingsError } = await supabase
         .from('rif_settings')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', authUser.id)
         .maybeSingle();
 
       if (settingsError) {
@@ -80,13 +91,19 @@ export const useRIF = () => {
   };
 
   const submitFeedback = async (type: string, data: any) => {
+    // In demo mode, just log and return success
+    if (isDemoMode) {
+      console.log('Demo mode: mock RIF feedback submitted', { type, data });
+      return;
+    }
+
     try {
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
       if (authError) {
         console.error('Auth error in submitFeedback:', authError);
         throw new Error('Authentication failed');
       }
-      if (!user) {
+      if (!authUser) {
         console.error('No user found in submitFeedback');
         throw new Error('User not authenticated');
       }
@@ -101,7 +118,7 @@ export const useRIF = () => {
       const { error: insertError } = await supabase
         .from('rif_feedback')
         .insert({
-          user_id: user.id,
+          user_id: authUser.id,
           feedback_type: type,
           data: encryptedData
         });
@@ -118,7 +135,7 @@ export const useRIF = () => {
 
       // Reload profile after feedback
       await loadRIFData();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting RIF feedback:', error);
       // Don't re-throw if it's just a network error
       if (error.message?.includes('Failed to fetch')) {
