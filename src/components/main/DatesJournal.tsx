@@ -1,17 +1,19 @@
 import React from 'react';
-import { Calendar, Star } from 'lucide-react';
+import { Calendar, Star, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface DatesJournalProps {
   onStartDebrief: () => void;
   initialTab?: 'dates' | 'ark';
+  onDateCompleted?: (partnerName?: string) => void;
 }
 
-export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) => {
+export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDateCompleted }) => {
   // Simple past dates view - shows completed dates with ratings
   // Placeholder data - will be populated from itineraries in full implementation
   const completedDates = [
-    { id: '1', name: 'Maya', date: '2024-01-15', rating: 5, venue: 'Coffee Shop' },
-    { id: '2', name: 'Jordan', date: '2024-01-10', rating: 4, venue: 'Art Gallery' },
+    { id: '1', name: 'Maya', date: '2024-01-15', rating: 5, venue: 'Coffee Shop', hasReflection: false },
+    { id: '2', name: 'Jordan', date: '2024-01-10', rating: 4, venue: 'Art Gallery', hasReflection: true },
   ];
 
   return (
@@ -58,6 +60,18 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief }) =>
                     ))}
                   </div>
                 </div>
+                {/* Add Reflection Button */}
+                {!date.hasReflection && onDateCompleted && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onDateCompleted(date.name)}
+                    className="mt-3 w-full border-goldenrod/50 text-goldenrod hover:bg-goldenrod/10"
+                  >
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Add Reflection
+                  </Button>
+                )}
               </div>
             ))
           ) : (
