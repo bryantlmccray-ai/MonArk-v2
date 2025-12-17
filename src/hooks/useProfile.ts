@@ -44,14 +44,59 @@ export interface UserProfile {
   updated_at: string;
 }
 
+// Demo profile for testing
+const createDemoProfile = (userId: string): UserProfile => ({
+  id: 'demo-profile-id',
+  user_id: userId,
+  bio: null,
+  age: null,
+  location: null,
+  interests: [],
+  photos: [],
+  date_preferences: {},
+  is_profile_complete: false,
+  location_data: null,
+  location_consent: false,
+  show_location_on_profile: true,
+  gender_identity: null,
+  gender_identity_custom: null,
+  sexual_orientation: null,
+  sexual_orientation_custom: null,
+  preference_to_see: [],
+  preference_to_be_seen_by: [],
+  discovery_privacy_mode: 'open',
+  identity_visibility: true,
+  last_preference_update: new Date().toISOString(),
+  date_of_birth: null,
+  age_verified: true, // Skip age verification in demo
+  age_verification_timestamp: new Date().toISOString(),
+  relationship_goals: null,
+  occupation: null,
+  education_level: null,
+  exercise_habits: null,
+  smoking_status: null,
+  drinking_status: null,
+  height_cm: null,
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+});
+
 export const useProfile = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, isDemoMode } = useAuth();
 
   const fetchProfile = async () => {
     if (!user) {
       setProfile(null);
+      setLoading(false);
+      return;
+    }
+
+    // In demo mode, use mock profile
+    if (isDemoMode) {
+      console.log('Demo mode: using mock profile');
+      setProfile(createDemoProfile(user.id));
       setLoading(false);
       return;
     }
@@ -96,6 +141,13 @@ export const useProfile = () => {
     if (!user) {
       console.error('No authenticated user');
       return false;
+    }
+
+    // In demo mode, just update local state
+    if (isDemoMode) {
+      console.log('Demo mode: updating mock profile locally');
+      setProfile(prev => prev ? { ...prev, ...updates, updated_at: new Date().toISOString() } : createDemoProfile(user.id));
+      return true;
     }
 
     try {
@@ -168,6 +220,13 @@ export const useProfile = () => {
       return false;
     }
 
+    // In demo mode, just update local state
+    if (isDemoMode) {
+      console.log('Demo mode: creating mock profile locally');
+      setProfile({ ...createDemoProfile(user.id), ...profileData });
+      return true;
+    }
+
     try {
       console.log('Creating profile for user:', user.id);
       
@@ -227,7 +286,7 @@ export const useProfile = () => {
     return () => {
       mounted = false;
     };
-  }, [user?.id]); // Only depend on user.id, not the entire user object
+  }, [user?.id, isDemoMode]); // Re-run when user or demo mode changes
 
   return {
     profile,
