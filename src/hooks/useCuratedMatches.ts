@@ -12,6 +12,7 @@ export interface CuratedMatch {
   compatibility_score?: number;
   match_reason?: string;
   profile: {
+    name?: string;
     photos?: string[];
     bio?: string;
     age?: number;
@@ -32,6 +33,7 @@ const DEMO_MATCHES: CuratedMatch[] = [
     compatibility_score: 0.92,
     match_reason: 'You both love hiking and value deep conversations',
     profile: {
+      name: 'Emma',
       photos: ['https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400'],
       bio: 'Coffee enthusiast, bookworm, and weekend hiker. Looking for someone to share adventures with.',
       age: 28,
@@ -49,6 +51,7 @@ const DEMO_MATCHES: CuratedMatch[] = [
     compatibility_score: 0.87,
     match_reason: 'Shared love for art and creative expression',
     profile: {
+      name: 'Marcus',
       photos: ['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400'],
       bio: 'Artist and musician. I believe in living life with intention and finding beauty in everyday moments.',
       age: 31,
@@ -66,6 +69,7 @@ const DEMO_MATCHES: CuratedMatch[] = [
     compatibility_score: 0.84,
     match_reason: 'Both value authenticity and meaningful connections',
     profile: {
+      name: 'Sophia',
       photos: ['https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400'],
       bio: 'Tech by day, yoga by night. Seeking genuine connection over endless swiping.',
       age: 29,
@@ -107,9 +111,9 @@ export const useCuratedMatches = () => {
     try {
       const weekStart = getCurrentWeekStart();
       
-      // Get curated matches for this week
+      // Get curated matches for this week - use type assertion since table is new
       const { data: curatedData, error: curatedError } = await supabase
-        .from('curated_matches')
+        .from('curated_matches' as any)
         .select('*')
         .eq('user_id', user.id)
         .eq('week_start', weekStart)
@@ -124,17 +128,27 @@ export const useCuratedMatches = () => {
       }
 
       // Get profile data for matched users
-      const matchedUserIds = curatedData.map(m => m.matched_user_id);
-      const { data: profiles, error: profileError } = await supabase
+      const matchedUserIds = curatedData.map((m: any) => m.matched_user_id);
+      
+      const { data: userProfiles, error: profileError } = await supabase
         .from('user_profiles')
         .select('user_id, photos, bio, age, location, interests, occupation, education_level')
         .in('user_id', matchedUserIds);
 
       if (profileError) throw profileError;
 
+      // Get names from profiles table
+      const { data: profiles, error: namesError } = await supabase
+        .from('profiles')
+        .select('id, name')
+        .in('id', matchedUserIds);
+
+      if (namesError) throw namesError;
+
       // Combine data
-      const enrichedMatches: CuratedMatch[] = curatedData.map(match => {
-        const profile = profiles?.find(p => p.user_id === match.matched_user_id);
+      const enrichedMatches: CuratedMatch[] = curatedData.map((match: any) => {
+        const userProfile = userProfiles?.find(p => p.user_id === match.matched_user_id);
+        const profile = profiles?.find(p => p.id === match.matched_user_id);
         return {
           id: match.id,
           matched_user_id: match.matched_user_id,
@@ -143,13 +157,14 @@ export const useCuratedMatches = () => {
           compatibility_score: match.compatibility_score,
           match_reason: match.match_reason,
           profile: {
-            photos: profile?.photos || [],
-            bio: profile?.bio || '',
-            age: profile?.age || undefined,
-            location: profile?.location || '',
-            interests: profile?.interests || [],
-            occupation: profile?.occupation || '',
-            education_level: profile?.education_level || ''
+            name: profile?.name || undefined,
+            photos: userProfile?.photos || [],
+            bio: userProfile?.bio || '',
+            age: userProfile?.age || undefined,
+            location: userProfile?.location || '',
+            interests: userProfile?.interests || [],
+            occupation: userProfile?.occupation || '',
+            education_level: userProfile?.education_level || ''
           }
         };
       });
@@ -182,7 +197,7 @@ export const useCuratedMatches = () => {
 
       // Update status to accepted
       const { error } = await supabase
-        .from('curated_matches')
+        .from('curated_matches' as any)
         .update({ 
           status: 'accepted',
           responded_at: new Date().toISOString()
@@ -233,7 +248,7 @@ export const useCuratedMatches = () => {
 
     try {
       const { error } = await supabase
-        .from('curated_matches')
+        .from('curated_matches' as any)
         .update({ 
           status: 'passed',
           responded_at: new Date().toISOString()
