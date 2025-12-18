@@ -302,6 +302,42 @@ export type Database = {
         }
         Relationships: []
       }
+      curated_matches: {
+        Row: {
+          compatibility_score: number | null
+          created_at: string
+          id: string
+          match_reason: string | null
+          matched_user_id: string
+          responded_at: string | null
+          status: string
+          user_id: string
+          week_start: string
+        }
+        Insert: {
+          compatibility_score?: number | null
+          created_at?: string
+          id?: string
+          match_reason?: string | null
+          matched_user_id: string
+          responded_at?: string | null
+          status?: string
+          user_id: string
+          week_start: string
+        }
+        Update: {
+          compatibility_score?: number | null
+          created_at?: string
+          id?: string
+          match_reason?: string | null
+          matched_user_id?: string
+          responded_at?: string | null
+          status?: string
+          user_id?: string
+          week_start?: string
+        }
+        Relationships: []
+      }
       date_journal: {
         Row: {
           created_at: string
@@ -2057,6 +2093,10 @@ export type Database = {
     }
     Functions: {
       calculate_age: { Args: { birth_date: string }; Returns: number }
+      check_mutual_match: {
+        Args: { user_a: string; user_b: string }
+        Returns: boolean
+      }
       delete_user_completely: {
         Args: { user_id_input: string }
         Returns: undefined
