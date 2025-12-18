@@ -9,6 +9,7 @@ interface MatchProfile {
   compatibility_score?: number;
   match_reason?: string;
   profile: {
+    name?: string;
     photos?: string[];
     bio?: string;
     age?: number;
@@ -55,7 +56,7 @@ export const MatchProfileCard = ({ match, onAccept, onPass, isProcessing }: Matc
         {/* Name & Age overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
           <h3 className="text-2xl font-bold">
-            {profile.age ? `${profile.age}` : ''}
+            {profile.name || 'Someone Special'}{profile.age ? `, ${profile.age}` : ''}
           </h3>
           
           {/* Location */}
