@@ -17,11 +17,7 @@ const Index = () => {
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = React.useState(false);
   const [showDemo, setShowDemo] = React.useState(false);
   const [showAuth, setShowAuth] = React.useState(false);
-  const [showSplash, setShowSplash] = React.useState(() => {
-    // Only show splash once per session
-    const hasSeenSplash = sessionStorage.getItem('monark-splash-seen');
-    return !hasSeenSplash;
-  });
+  const [showSplash, setShowSplash] = React.useState(true);
 
   const handleSplashComplete = () => {
     sessionStorage.setItem('monark-splash-seen', 'true');
