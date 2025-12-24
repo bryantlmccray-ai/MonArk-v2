@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 
 interface OnboardingFlowProps {
   onComplete: () => void;
+  onSkipToWaiting: () => void;
   onExit?: () => void;
   showExitButton?: boolean;
 }
@@ -47,7 +48,7 @@ interface OnboardingData {
 // 9: RIF Questions (DatingStyleQuiz)
 // 10: RIF Complete / Final Welcome
 
-export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onExit, showExitButton = false }) => {
+export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onSkipToWaiting, onExit, showExitButton = false }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({
     photos: [],
@@ -184,7 +185,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onEx
       case 9:
         return <DatingStyleQuiz onComplete={handleDatingStyleComplete} onSkip={skipToNext} />;
       case 10:
-        return <RIFComplete onComplete={onComplete} />;
+        return <RIFComplete onContinueToProfile={onComplete} onSkipProfile={onSkipToWaiting} />;
       default:
         return <OnboardingWelcome onNext={() => setCurrentStep(1)} />;
     }

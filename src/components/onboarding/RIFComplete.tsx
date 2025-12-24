@@ -1,14 +1,15 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, Calendar, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Calendar, ArrowRight, UserCircle, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { MonArkLogo } from '@/components/MonArkLogo';
 
 interface RIFCompleteProps {
-  onComplete: () => void;
+  onContinueToProfile: () => void;
+  onSkipProfile: () => void;
 }
 
-export const RIFComplete: React.FC<RIFCompleteProps> = ({ onComplete }) => {
+export const RIFComplete: React.FC<RIFCompleteProps> = ({ onContinueToProfile, onSkipProfile }) => {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
       <motion.div 
@@ -67,19 +68,45 @@ export const RIFComplete: React.FC<RIFCompleteProps> = ({ onComplete }) => {
           </div>
         </motion.div>
 
+        {/* Choice Section */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.4 }}
+          className="space-y-4"
         >
+          <p className="text-sm text-muted-foreground">
+            What would you like to do next?
+          </p>
+          
+          {/* Continue to Profile Button */}
           <Button 
-            onClick={onComplete}
+            onClick={onContinueToProfile}
             className="w-full py-6 text-lg font-medium"
             size="lg"
           >
-            Enter MonArk
+            <UserCircle className="mr-2 h-5 w-5" />
+            Complete My Profile
+          </Button>
+          
+          {/* Skip Button */}
+          <Button 
+            onClick={onSkipProfile}
+            variant="outline"
+            className="w-full py-5"
+            size="lg"
+          >
+            Skip for Now
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
+          
+          {/* Warning */}
+          <div className="flex items-start gap-2 text-left p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+            <AlertTriangle className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
+            <p className="text-xs text-muted-foreground">
+              A complete profile helps us find better matches for you. You can always finish later.
+            </p>
+          </div>
         </motion.div>
 
         <motion.div
