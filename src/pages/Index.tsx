@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { OnboardingFlow } from '../components/onboarding/OnboardingFlow';
 import { MainApp } from '../components/main/MainApp';
@@ -6,6 +5,7 @@ import { AuthPage } from '../components/auth/AuthPage';
 import { ProfileCreation } from '../components/profile/ProfileCreation';
 import { EnhancedLandingPage } from '@/components/demo/EnhancedLandingPage';
 import { DemoMainApp } from '@/components/demo/DemoMainApp';
+import { SplashScreen } from '@/components/splash/SplashScreen';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useDemo } from '@/contexts/DemoContext';
@@ -17,6 +17,16 @@ const Index = () => {
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = React.useState(false);
   const [showDemo, setShowDemo] = React.useState(false);
   const [showAuth, setShowAuth] = React.useState(false);
+  const [showSplash, setShowSplash] = React.useState(() => {
+    // Only show splash once per session
+    const hasSeenSplash = sessionStorage.getItem('monark-splash-seen');
+    return !hasSeenSplash;
+  });
+
+  const handleSplashComplete = () => {
+    sessionStorage.setItem('monark-splash-seen', 'true');
+    setShowSplash(false);
+  };
 
   // Listen for auth state changes to update UI immediately
   React.useEffect(() => {
@@ -46,6 +56,11 @@ const Index = () => {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, []);
 
+  // Show splash screen on first visit
+  if (showSplash) {
+    return <SplashScreen onComplete={handleSplashComplete} />;
+  }
+
   // Separate demo mode that shows DemoMainApp (for landing page "Try Demo" button)
   if (showDemo || demoData.isInDemo) {
     console.log('Rendering demo app, showDemo:', showDemo, 'demoData.isInDemo:', demoData.isInDemo);
@@ -63,8 +78,8 @@ const Index = () => {
   // Show loading screen while checking auth state
   if (authLoading || profileLoading) {
     return (
-      <div className="min-h-screen bg-jet-black flex items-center justify-center">
-        <div className="text-white text-lg">Loading...</div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-foreground text-lg">Loading...</div>
       </div>
     );
   }
