@@ -208,21 +208,21 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <div className="w-16 h-px bg-taupe mx-auto"></div>
           </div>
           
-          <div className="prose prose-lg max-w-2xl mx-auto text-charcoal-soft font-body leading-relaxed">
-            <p className="text-lg leading-relaxed mb-6">
+          <div className="max-w-2xl mx-auto space-y-6">
+            <p className="text-lg text-charcoal-soft font-body leading-relaxed">
               I spent years on dating apps that felt more like slot machines than places to find real connection.
             </p>
             
-            <p className="mb-6">
-              Sure, we could meet people. But finding someone who truly <em>got</em> you? That was rare.
+            <p className="text-base text-charcoal-soft font-body leading-relaxed">
+              Sure, we could meet people. But finding someone who truly <em className="font-medium not-italic">got</em> you? That was rare.
             </p>
             
-            <p className="mb-6">
+            <p className="text-base text-charcoal-soft font-body leading-relaxed">
               I wanted something intentional. A way to match on emotional compatibility, not just a hot profile pic. 
               A way to make first dates feel effortless, not awkward.
             </p>
             
-            <p className="font-medium text-charcoal">
+            <p className="text-base font-body leading-relaxed text-charcoal font-medium">
               That's why MonArk matches on communication style, not just demographics.
             </p>
           </div>
