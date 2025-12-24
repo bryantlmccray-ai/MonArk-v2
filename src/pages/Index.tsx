@@ -3,6 +3,7 @@ import { OnboardingFlow } from '../components/onboarding/OnboardingFlow';
 import { MainApp } from '../components/main/MainApp';
 import { AuthPage } from '../components/auth/AuthPage';
 import { ProfileCreation } from '../components/profile/ProfileCreation';
+import { ProfileCompleteScreen } from '../components/profile/ProfileCompleteScreen';
 import { EnhancedLandingPage } from '@/components/demo/EnhancedLandingPage';
 import { DemoMainApp } from '@/components/demo/DemoMainApp';
 import { SplashScreen } from '@/components/splash/SplashScreen';
@@ -18,6 +19,7 @@ const Index = () => {
   const [showDemo, setShowDemo] = React.useState(false);
   const [showAuth, setShowAuth] = React.useState(false);
   const [showSplash, setShowSplash] = React.useState(true);
+  const [showProfileComplete, setShowProfileComplete] = React.useState(false);
 
   const handleSplashComplete = () => {
     sessionStorage.setItem('monark-splash-seen', 'true');
@@ -99,6 +101,16 @@ const Index = () => {
     />;
   }
 
+  // Show profile complete screen after finishing profile
+  if (showProfileComplete) {
+    return (
+      <ProfileCompleteScreen 
+        onContinue={() => setShowProfileComplete(false)}
+        userName={profile?.bio?.split(' ')[0]} // Attempt to get name from bio if available
+      />
+    );
+  }
+
   // If user (real or demo) has a complete profile, show main app
   if (profile?.is_profile_complete) {
     return <MainApp />;
@@ -107,7 +119,10 @@ const Index = () => {
   // If user has a profile but it's not complete, show profile creation
   if (profile && !profile.is_profile_complete) {
     return <ProfileCreation 
-      onComplete={() => refetchProfile()} 
+      onComplete={async () => {
+        await refetchProfile();
+        setShowProfileComplete(true);
+      }} 
       onCancel={async () => {
         // Sign out the user and return to landing page
         console.log('Profile creation cancelled - signing out');
@@ -129,7 +144,10 @@ const Index = () => {
 
   // Show profile creation after onboarding
   return <ProfileCreation 
-    onComplete={() => refetchProfile()}
+    onComplete={async () => {
+      await refetchProfile();
+      setShowProfileComplete(true);
+    }}
     onCancel={async () => {
       // Sign out the user and return to landing page
       console.log('Profile creation cancelled - signing out');
