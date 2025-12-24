@@ -15,6 +15,8 @@ import { useNotificationTriggers } from '@/hooks/useNotificationTriggers';
 import { RifInsightsCard } from '@/components/rif/RifInsightsCard';
 import { PostDateReflection } from '@/components/rif/PostDateReflection';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import { useContactFeedback } from '@/hooks/useContactFeedback';
+import { ContactShareFeedback } from '@/components/feedback/ContactShareFeedback';
 
 export const MainApp: React.FC = () => {
   // Weekly is now the default/main view - no more discovery swiping
@@ -29,6 +31,15 @@ export const MainApp: React.FC = () => {
   
   // Email notification triggers
   useNotificationTriggers();
+  
+  // Contact share feedback
+  const { 
+    pendingFeedback, 
+    showFeedback, 
+    loading: feedbackLoading,
+    setShowFeedback, 
+    submitFeedback 
+  } = useContactFeedback();
   
   // Analytics tracking
   const { recordSession, recordWeeklyOptionsView } = useAnalytics();
@@ -123,6 +134,17 @@ export const MainApp: React.FC = () => {
           onClose={() => setShowPostDateReflection(false)}
           partnerName={reflectionPartnerName}
         />
+
+        {/* Contact Share Feedback Modal */}
+        {pendingFeedback && (
+          <ContactShareFeedback
+            matchName={pendingFeedback.matchName}
+            open={showFeedback}
+            onClose={() => setShowFeedback(false)}
+            onSubmit={submitFeedback}
+            loading={feedbackLoading}
+          />
+        )}
       </div>
     );
   }
@@ -164,6 +186,17 @@ export const MainApp: React.FC = () => {
           onClose={() => setShowPostDateReflection(false)}
           partnerName={reflectionPartnerName}
         />
+
+        {/* Contact Share Feedback Modal */}
+        {pendingFeedback && (
+          <ContactShareFeedback
+            matchName={pendingFeedback.matchName}
+            open={showFeedback}
+            onClose={() => setShowFeedback(false)}
+            onSubmit={submitFeedback}
+            loading={feedbackLoading}
+          />
+        )}
       </div>
     </SidebarProvider>
   );
