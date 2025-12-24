@@ -306,7 +306,11 @@ export type Database = {
         Row: {
           compatibility_score: number | null
           created_at: string
+          curated_by: string | null
+          curation_notes: string | null
+          delivered_at: string | null
           id: string
+          is_delivered: boolean | null
           match_reason: string | null
           matched_user_id: string
           responded_at: string | null
@@ -317,7 +321,11 @@ export type Database = {
         Insert: {
           compatibility_score?: number | null
           created_at?: string
+          curated_by?: string | null
+          curation_notes?: string | null
+          delivered_at?: string | null
           id?: string
+          is_delivered?: boolean | null
           match_reason?: string | null
           matched_user_id: string
           responded_at?: string | null
@@ -328,13 +336,50 @@ export type Database = {
         Update: {
           compatibility_score?: number | null
           created_at?: string
+          curated_by?: string | null
+          curation_notes?: string | null
+          delivered_at?: string | null
           id?: string
+          is_delivered?: boolean | null
           match_reason?: string | null
           matched_user_id?: string
           responded_at?: string | null
           status?: string
           user_id?: string
           week_start?: string
+        }
+        Relationships: []
+      }
+      curation_queue: {
+        Row: {
+          assigned_admin: string | null
+          created_at: string
+          id: string
+          last_curated_at: string | null
+          needs_curation: boolean | null
+          priority: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_admin?: string | null
+          created_at?: string
+          id?: string
+          last_curated_at?: string | null
+          needs_curation?: boolean | null
+          priority?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_admin?: string | null
+          created_at?: string
+          id?: string
+          last_curated_at?: string | null
+          needs_curation?: boolean | null
+          priority?: number | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -493,6 +538,39 @@ export type Database = {
           standout_qualities?: string[]
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      dating_pool: {
+        Row: {
+          compatibility_score: number | null
+          created_at: string
+          id: string
+          pool_user_id: string
+          responded_at: string | null
+          status: string
+          user_id: string
+          week_start: string
+        }
+        Insert: {
+          compatibility_score?: number | null
+          created_at?: string
+          id?: string
+          pool_user_id: string
+          responded_at?: string | null
+          status?: string
+          user_id: string
+          week_start: string
+        }
+        Update: {
+          compatibility_score?: number | null
+          created_at?: string
+          id?: string
+          pool_user_id?: string
+          responded_at?: string | null
+          status?: string
+          user_id?: string
+          week_start?: string
         }
         Relationships: []
       }
@@ -692,6 +770,39 @@ export type Database = {
           matched_at?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      match_delivery_log: {
+        Row: {
+          created_at: string
+          curated_count: number | null
+          delivered_at: string
+          delivery_method: string | null
+          id: string
+          pool_count: number | null
+          user_id: string
+          week_start: string
+        }
+        Insert: {
+          created_at?: string
+          curated_count?: number | null
+          delivered_at?: string
+          delivery_method?: string | null
+          id?: string
+          pool_count?: number | null
+          user_id: string
+          week_start: string
+        }
+        Update: {
+          created_at?: string
+          curated_count?: number | null
+          delivered_at?: string
+          delivery_method?: string | null
+          id?: string
+          pool_count?: number | null
+          user_id?: string
+          week_start?: string
         }
         Relationships: []
       }
