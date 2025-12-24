@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { OnboardingWelcome } from './OnboardingWelcome';
 import { OnboardingDifference } from './OnboardingDifference';
 import { RIFIntro } from './RIFIntro';
@@ -11,7 +11,6 @@ import { RelationshipGoalsStep } from './RelationshipGoalsStep';
 import { DatingStyleQuiz, DatingStyleAnswers } from './DatingStyleQuiz';
 import { RIFComplete } from './RIFComplete';
 import { useProfile } from '@/hooks/useProfile';
-import { useRIF } from '@/hooks/useRIF';
 import { useToast } from '@/hooks/use-toast';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -35,18 +34,18 @@ interface OnboardingData {
   datingStyleAnswers?: DatingStyleAnswers;
 }
 
-// Flow:
-// 0: Welcome screen
-// 1: Why MonArk is different
+// Onboarding Flow (11 screens total):
+// 0: Welcome Screen
+// 1: Why MonArk is Different
 // 2: RIF Intro
-// 3: Photos
-// 4: Bio
-// 5: Interests
+// 3: Photos (min 2)
+// 4: Bio & Occupation
+// 5: Interests Selection
 // 6: Location
-// 7: Identity
+// 7: Identity & Orientation
 // 8: Relationship Goals
-// 9: RIF Questions (DatingStyleQuiz)
-// 10: RIF Complete / Final Welcome
+// 9: Dating Style Quiz (RIF Assessment)
+// 10: Profile Complete Screen
 
 export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onSkipToWaiting, onExit, showExitButton = false }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -61,16 +60,56 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onSk
     relationshipGoals: [],
   });
   
-  const { updateProfile } = useProfile();
-  const { submitFeedback } = useRIF();
+  const { profile, updateProfile } = useProfile();
   const { toast } = useToast();
+
+  // Resume from saved step if user returns to onboarding
+  useEffect(() => {
+    if (profile?.onboarding_step && profile.onboarding_step > 0 && profile.onboarding_step < 10) {
+      setCurrentStep(profile.onboarding_step);
+      // Restore saved data
+      setOnboardingData({
+        photos: profile.photos || [],
+        bio: profile.bio || '',
+        occupation: profile.occupation || '',
+        interests: profile.interests || [],
+        location: profile.location || '',
+        genderIdentity: profile.gender_identity || '',
+        sexualOrientation: profile.sexual_orientation || '',
+        relationshipGoals: profile.relationship_goals || [],
+      });
+    }
+  }, [profile?.onboarding_step]);
+
+  // Save progress when step changes (for screens 3+)
+  const saveProgress = async (step: number, data?: Partial<OnboardingData>) => {
+    if (step < 3) return; // Don't save progress for intro screens
+    
+    try {
+      await updateProfile({
+        onboarding_step: step,
+        ...(data?.photos && { photos: data.photos }),
+        ...(data?.bio && { bio: data.bio }),
+        ...(data?.occupation && { occupation: data.occupation }),
+        ...(data?.interests && { interests: data.interests }),
+        ...(data?.location && { location: data.location }),
+        ...(data?.genderIdentity && { gender_identity: data.genderIdentity as any }),
+        ...(data?.sexualOrientation && { sexual_orientation: data.sexualOrientation as any }),
+        ...(data?.relationshipGoals && { relationship_goals: data.relationshipGoals }),
+      });
+    } catch (error) {
+      console.error('Error saving progress:', error);
+    }
+  };
 
   // Skip handlers - move to next step without saving data
   const skipToNext = () => {
     if (currentStep < 9) {
-      setCurrentStep(currentStep + 1);
+      const nextStep = currentStep + 1;
+      setCurrentStep(nextStep);
+      saveProgress(nextStep);
     } else if (currentStep === 9) {
-      // Skip RIF quiz - just complete with empty answers
+      // Skip RIF quiz - complete with empty answers
       handleDatingStyleComplete({
         attachmentStyle: '',
         energyType: '',
@@ -86,73 +125,65 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onSk
     }
   };
 
-  const handlePhotosNext = (photos: string[]) => {
-    setOnboardingData(prev => ({ ...prev, photos }));
+  const handlePhotosNext = async (photos: string[]) => {
+    const updatedData = { ...onboardingData, photos };
+    setOnboardingData(updatedData);
     setCurrentStep(4);
+    await saveProgress(4, { photos });
   };
 
-  const handleBioNext = (data: { bio: string; occupation: string }) => {
-    setOnboardingData(prev => ({ ...prev, bio: data.bio, occupation: data.occupation }));
+  const handleBioNext = async (data: { bio: string; occupation: string }) => {
+    const updatedData = { ...onboardingData, bio: data.bio, occupation: data.occupation };
+    setOnboardingData(updatedData);
     setCurrentStep(5);
+    await saveProgress(5, { bio: data.bio, occupation: data.occupation });
   };
 
-  const handleInterestsNext = (interests: string[]) => {
-    setOnboardingData(prev => ({ ...prev, interests }));
+  const handleInterestsNext = async (interests: string[]) => {
+    const updatedData = { ...onboardingData, interests };
+    setOnboardingData(updatedData);
     setCurrentStep(6);
+    await saveProgress(6, { interests });
   };
 
-  const handleLocationNext = (location: string) => {
-    setOnboardingData(prev => ({ ...prev, location }));
+  const handleLocationNext = async (location: string) => {
+    const updatedData = { ...onboardingData, location };
+    setOnboardingData(updatedData);
     setCurrentStep(7);
+    await saveProgress(7, { location });
   };
 
-  const handleIdentityNext = (data: { genderIdentity: string; sexualOrientation: string }) => {
-    setOnboardingData(prev => ({ ...prev, ...data }));
+  const handleIdentityNext = async (data: { genderIdentity: string; sexualOrientation: string }) => {
+    const updatedData = { ...onboardingData, ...data };
+    setOnboardingData(updatedData);
     setCurrentStep(8);
+    await saveProgress(8, data);
   };
 
   const handleGoalsNext = async (goals: string[]) => {
     const updatedData = { ...onboardingData, relationshipGoals: goals };
     setOnboardingData(updatedData);
-    
-    // Save profile data to database
-    try {
-      await updateProfile({
-        photos: updatedData.photos,
-        bio: updatedData.bio,
-        occupation: updatedData.occupation,
-        interests: updatedData.interests,
-        location: updatedData.location,
-        gender_identity: updatedData.genderIdentity as any,
-        sexual_orientation: updatedData.sexualOrientation as any,
-        relationship_goals: updatedData.relationshipGoals,
-        is_profile_complete: false, // Will be true after RIF quiz
-      });
-    } catch (error) {
-      console.error('Error saving profile:', error);
-      toast({
-        title: "Couldn't save profile",
-        description: "Don't worry, you can continue. We'll try again.",
-        variant: "destructive",
-      });
-    }
-    
     setCurrentStep(9);
+    await saveProgress(9, { relationshipGoals: goals });
   };
 
   const handleDatingStyleComplete = async (answers: DatingStyleAnswers) => {
     setOnboardingData(prev => ({ ...prev, datingStyleAnswers: answers }));
     
-    // Save RIF answers (powers Smart Matching behind the scenes)
+    // Save RIF quiz answers directly to user_profiles
     try {
-      await submitFeedback('onboarding_rif', answers);
-      
-      // Mark profile as complete
       await updateProfile({
+        rif_quiz_answers: answers,
+        onboarding_step: 10,
         is_profile_complete: true,
       });
     } catch (error) {
       console.error('Error saving RIF answers:', error);
+      toast({
+        title: "Couldn't save quiz answers",
+        description: "Don't worry, you can continue. We'll try again.",
+        variant: "destructive",
+      });
     }
     
     setCurrentStep(10);

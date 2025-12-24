@@ -1637,11 +1637,13 @@ export type Database = {
           location_consent: boolean | null
           location_data: Json | null
           occupation: string | null
+          onboarding_step: number | null
           phone_number: string | null
           photos: string[] | null
           preference_to_be_seen_by: string[] | null
           preference_to_see: string[] | null
           relationship_goals: string[] | null
+          rif_quiz_answers: Json | null
           sexual_orientation:
             | Database["public"]["Enums"]["sexual_orientation"]
             | null
@@ -1677,11 +1679,13 @@ export type Database = {
           location_consent?: boolean | null
           location_data?: Json | null
           occupation?: string | null
+          onboarding_step?: number | null
           phone_number?: string | null
           photos?: string[] | null
           preference_to_be_seen_by?: string[] | null
           preference_to_see?: string[] | null
           relationship_goals?: string[] | null
+          rif_quiz_answers?: Json | null
           sexual_orientation?:
             | Database["public"]["Enums"]["sexual_orientation"]
             | null
@@ -1717,11 +1721,13 @@ export type Database = {
           location_consent?: boolean | null
           location_data?: Json | null
           occupation?: string | null
+          onboarding_step?: number | null
           phone_number?: string | null
           photos?: string[] | null
           preference_to_be_seen_by?: string[] | null
           preference_to_see?: string[] | null
           relationship_goals?: string[] | null
+          rif_quiz_answers?: Json | null
           sexual_orientation?:
             | Database["public"]["Enums"]["sexual_orientation"]
             | null
