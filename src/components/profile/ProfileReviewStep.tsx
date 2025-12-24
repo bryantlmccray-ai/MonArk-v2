@@ -42,7 +42,7 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
     }
   };
   return (
-    <div className="min-h-screen bg-jet-black p-6 flex flex-col">
+    <div className="min-h-screen bg-jet-black p-6 flex flex-col relative">
       {/* Exit Button */}
       {onCancel && (
         <button
