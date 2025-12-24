@@ -89,7 +89,7 @@ export const useContactFeedback = () => {
 
     setLoading(true);
     try {
-      // Insert feedback
+      // Insert feedback - rating can be null if they didn't meet
       const { error: feedbackError } = await supabase
         .from('contact_share_feedback')
         .insert({
@@ -98,7 +98,7 @@ export const useContactFeedback = () => {
           match_user_id: pendingFeedback.matchUserId,
           conversation_id: pendingFeedback.conversationId,
           did_meet: didMeet,
-          rating,
+          rating: rating > 0 ? rating : null,
           see_again: seeAgain,
           comment: comment || null
         });
