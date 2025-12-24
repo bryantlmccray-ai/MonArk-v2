@@ -41,7 +41,7 @@ export interface UserProfile {
   drinking_status: string | null;
   height_cm: number | null;
   // Onboarding progress tracking
-  onboarding_step: number;
+  onboarding_step: number | null;
   rif_quiz_answers: any | null;
   created_at: string;
   updated_at: string;
