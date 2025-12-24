@@ -129,7 +129,7 @@
   }
 
   .font-body {
-    font-family: 'DM Sans', 'Inter', 'Helvetica Neue', sans-serif;
+    font-family: 'DM Sans', 'Inter', 'Helvetica Neue', sans-serif !important;
     font-weight: 400;
     letter-spacing: 0.01em;
     line-height: 1.7;
