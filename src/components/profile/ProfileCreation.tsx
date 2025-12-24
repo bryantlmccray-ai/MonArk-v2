@@ -62,9 +62,10 @@ export interface StepRequirements {
 }
 
 export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, onCancel }) => {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(-1); // -1 means not initialized yet
   const { profile, updateProfile, loading } = useProfile();
   const { toast } = useToast();
+  const [hasInitialized, setHasInitialized] = useState(false);
   
   // Track which steps have been completed vs skipped
   const [stepCompletion, setStepCompletion] = useState<StepCompletionStatus>({
@@ -104,11 +105,10 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
     height_cm: null,
   });
 
-  // Load existing profile data if available
+  // Load existing profile data and determine which steps to skip
   useEffect(() => {
-    if (profile && !loading) {
-      setProfileData(prev => ({
-        ...prev,
+    if (profile && !loading && !hasInitialized) {
+      const loadedData = {
         bio: profile.bio || '',
         interests: profile.interests || [],
         photos: profile.photos || [],
@@ -116,7 +116,6 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
         budget: profile.date_preferences?.budget || '$',
         timeOfDay: profile.date_preferences?.timeOfDay || [],
         activityType: profile.date_preferences?.activityType || [],
-        // Load lifestyle fields (with type casting until types are regenerated)
         occupation: (profile as any).occupation || '',
         education_level: (profile as any).education_level || '',
         relationship_goals: (profile as any).relationship_goals || [],
@@ -134,9 +133,43 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
           discoveryPrivacyMode: profile.discovery_privacy_mode || 'open',
           identityVisibility: profile.identity_visibility ?? true,
         },
-      }));
+      };
+      
+      setProfileData(prev => ({ ...prev, ...loadedData }));
+      
+      // Check which steps have data from onboarding and mark as complete
+      const newStepCompletion: StepCompletionStatus = {
+        bio: !!(loadedData.bio || loadedData.occupation),
+        interests: loadedData.interests.length >= 3,
+        photos: loadedData.photos.length > 0,
+        lifestyle: !!(loadedData.occupation && loadedData.relationship_goals.length > 0),
+        datePalette: loadedData.vibe.length > 0 || loadedData.activityType.length > 0,
+        identityPreferences: !!(loadedData.identityPreferences.genderIdentity && loadedData.identityPreferences.sexualOrientation),
+      };
+      
+      setStepCompletion(newStepCompletion);
+      
+      // Find the first incomplete step, or go to review if all are done
+      const stepKeys: (keyof StepCompletionStatus)[] = ['bio', 'interests', 'photos', 'lifestyle', 'datePalette', 'identityPreferences'];
+      const firstIncompleteIndex = stepKeys.findIndex(key => !newStepCompletion[key]);
+      
+      // If identity is complete (the critical step), go straight to review
+      // Otherwise, start at the first incomplete step or step 0
+      if (newStepCompletion.identityPreferences) {
+        setCurrentStep(6); // Review step
+      } else if (firstIncompleteIndex !== -1) {
+        setCurrentStep(firstIncompleteIndex);
+      } else {
+        setCurrentStep(0);
+      }
+      
+      setHasInitialized(true);
+    } else if (!loading && !profile && !hasInitialized) {
+      // No profile data, start from beginning
+      setCurrentStep(0);
+      setHasInitialized(true);
     }
-  }, [profile, loading]);
+  }, [profile, loading, hasInitialized]);
 
   const updateProfileData = (data: Partial<ProfileData>) => {
     setProfileData(prev => ({ ...prev, ...data }));
@@ -230,7 +263,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
     }
   };
 
-  if (loading) {
+  if (loading || currentStep === -1) {
     return (
       <div className="min-h-screen bg-jet-black flex items-center justify-center">
         <div className="text-white text-lg">Loading profile...</div>

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Briefcase, GraduationCap, Heart, Dumbbell, Cigarette, Wine, Ruler } from 'lucide-react';
+import { Briefcase, GraduationCap, Dumbbell, Cigarette, Wine, Ruler } from 'lucide-react';
 
 interface LifestyleStepProps {
   data: {
@@ -44,17 +43,6 @@ export const LifestyleStep: React.FC<LifestyleStepProps> = ({
     'Prefer not to say'
   ];
 
-  const relationshipGoalOptions = [
-    'Serious relationship',
-    'Casual dating',
-    'Marriage',
-    'Life partner',
-    'Fun and companionship',
-    'New friends',
-    'Not sure yet',
-    'Open to anything'
-  ];
-
   const exerciseOptions = [
     'Very active (5+ times/week)',
     'Active (3-4 times/week)',
@@ -82,15 +70,6 @@ export const LifestyleStep: React.FC<LifestyleStepProps> = ({
     'Prefer not to say'
   ];
 
-  const handleRelationshipGoalToggle = (goal: string) => {
-    const currentGoals = data.relationship_goals || [];
-    const updatedGoals = currentGoals.includes(goal)
-      ? currentGoals.filter(g => g !== goal)
-      : [...currentGoals, goal];
-    
-    onUpdate({ relationship_goals: updatedGoals });
-  };
-
   const handleHeightChange = (value: string) => {
     const height = value ? parseInt(value) : null;
     onUpdate({ height_cm: height });
@@ -106,14 +85,13 @@ export const LifestyleStep: React.FC<LifestyleStepProps> = ({
   const validateStep = () => {
     const newErrors: Record<string, string> = {};
 
+    // Only validate fields that aren't already collected in onboarding
+    // Relationship goals are collected in onboarding, so we don't require them here
     if (!data.occupation?.trim()) {
       newErrors.occupation = 'Please enter your occupation';
     }
     if (!data.education_level) {
       newErrors.education_level = 'Please select your education level';
-    }
-    if (!data.relationship_goals || data.relationship_goals.length === 0) {
-      newErrors.relationship_goals = 'Please select at least one relationship goal';
     }
     if (!data.exercise_habits) {
       newErrors.exercise_habits = 'Please select your exercise habits';
@@ -208,34 +186,7 @@ export const LifestyleStep: React.FC<LifestyleStepProps> = ({
           </div>
         </div>
 
-        {/* Relationship Goals */}
-        <div className="space-y-3">
-          <div className="flex items-center space-x-2">
-            <Heart className="h-5 w-5 text-goldenrod" />
-            <Label className="text-white font-medium">Relationship Goals</Label>
-          </div>
-          <p className="text-gray-400 text-sm">Select all that apply</p>
-          <div className="flex flex-wrap gap-2">
-            {relationshipGoalOptions.map((goal) => (
-              <Badge
-                key={goal}
-                variant={(data.relationship_goals || []).includes(goal) ? "default" : "outline"}
-                className={`cursor-pointer transition-colors ${
-                  (data.relationship_goals || []).includes(goal)
-                    ? 'bg-goldenrod text-jet-black hover:bg-goldenrod/90'
-                    : 'border-gray-600 text-gray-300 hover:border-goldenrod hover:text-goldenrod'
-                }`}
-                onClick={() => handleRelationshipGoalToggle(goal)}
-              >
-                {goal}
-              </Badge>
-            ))}
-          </div>
-          {errors.relationship_goals && (
-            <p className="text-red-400 text-sm">{errors.relationship_goals}</p>
-          )}
-        </div>
-
+        {/* Note: Relationship Goals are collected during onboarding, so we skip them here */}
         {/* Exercise Habits */}
         <div className="space-y-3">
           <div className="flex items-center space-x-2">
