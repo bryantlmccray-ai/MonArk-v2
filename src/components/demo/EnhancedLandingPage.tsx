@@ -77,7 +77,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   MonArk
                 </h1>
                 <div className="w-24 h-px bg-gradient-to-r from-transparent via-taupe to-transparent mx-auto"></div>
-                <p className="text-xl sm:text-2xl font-body text-charcoal-soft leading-relaxed max-w-lg mx-auto">
+                <p className="text-sm md:text-base font-body tracking-[0.2em] text-charcoal-soft uppercase max-w-lg mx-auto">
                   3 curated matches. Every week.
                 </p>
               </div>
