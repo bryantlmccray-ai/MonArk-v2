@@ -199,8 +199,8 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
 
                 {/* Click anywhere hint */}
                 <motion.p
-                  className="font-body text-xs tracking-[0.15em] text-muted-foreground uppercase"
-                  animate={{ opacity: [0.6, 1, 0.6] }}
+                  className="font-body text-xs tracking-[0.15em] text-foreground uppercase"
+                  animate={{ opacity: [0.5, 1, 0.5] }}
                   transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 >
                   click anywhere to continue
