@@ -20,12 +20,12 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'sans': ['Maison Neue', 'Inter', 'Helvetica Neue', 'sans-serif'],
-				'serif': ['Canela', 'Tiempos Text', 'Playfair Display', 'Georgia', 'serif'],
-				'editorial': ['Canela', 'Tiempos Text', 'Playfair Display', 'Georgia', 'serif'],
-				'body': ['Maison Neue', 'Inter', 'Helvetica Neue', 'sans-serif'],
-				'headline': ['Canela', 'Tiempos Text', 'Playfair Display', 'Georgia', 'serif'],
-				'caption': ['Maison Neue', 'Inter', 'Helvetica Neue', 'sans-serif'],
+				'sans': ['DM Sans', 'Inter', 'Helvetica Neue', 'sans-serif'],
+				'serif': ['Playfair Display', 'Georgia', 'serif'],
+				'editorial': ['Playfair Display', 'Georgia', 'serif'],
+				'body': ['DM Sans', 'Inter', 'Helvetica Neue', 'sans-serif'],
+				'headline': ['Playfair Display', 'Georgia', 'serif'],
+				'caption': ['DM Sans', 'Inter', 'Helvetica Neue', 'sans-serif'],
 			},
 			colors: {
 				/* Quiet Luxury Colors - Editorial magazine aesthetic - Using CSS variables */

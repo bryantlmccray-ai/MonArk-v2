@@ -85,7 +85,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
             {/* Value Prop - warmer copy */}
             <div className="max-w-2xl mx-auto">
-              <p className="text-lg sm:text-xl font-body text-charcoal-soft leading-relaxed">
+              <p className="text-lg sm:text-xl font-body text-charcoal-soft leading-relaxed tracking-wide">
                 No endless swiping. No algorithm games. Just <span className="text-charcoal font-medium">Smart Matching</span> that 
                 understands how you connect, communicate, and love.
               </p>
