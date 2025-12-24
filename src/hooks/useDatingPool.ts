@@ -208,18 +208,33 @@ export const useDatingPool = () => {
     loadPool();
   }, [loadPool]);
 
-  const likePoolMatch = async (matchId: string) => {
+  const likePoolMatch = async (matchId: string): Promise<{ success: boolean; isMutual?: boolean; conversationId?: string; matchName?: string; matchPhoto?: string }> => {
     if (demoData.isInDemo) {
+      const match = pool.find(m => m.id === matchId);
       setPool(prev => prev.filter(m => m.id !== matchId));
+      
+      // 20% chance of mutual match in demo for pool
+      const isMutual = Math.random() < 0.2;
+      if (isMutual) {
+        toast.success('It\'s a match!');
+        return { 
+          success: true, 
+          isMutual: true, 
+          conversationId: `demo_pool_${matchId}`,
+          matchName: match?.profile.name,
+          matchPhoto: match?.profile.photos?.[0]
+        };
+      }
+      
       toast.success('Interest sent!');
-      return true;
+      return { success: true, isMutual: false };
     }
 
-    if (!user) return false;
+    if (!user) return { success: false };
 
     try {
       const match = pool.find(m => m.id === matchId);
-      if (!match) return false;
+      if (!match) return { success: false };
 
       const { error } = await supabase
         .from('dating_pool' as any)
@@ -231,19 +246,40 @@ export const useDatingPool = () => {
 
       if (error) throw error;
 
-      // Create a match entry
-      await supabase.from('matches').insert({
-        user_id: user.id,
-        liked_user_id: match.pool_user_id
-      });
+      // Create a match entry - this triggers the handle_new_like function
+      const { data: matchData } = await supabase
+        .from('matches')
+        .insert({
+          user_id: user.id,
+          liked_user_id: match.pool_user_id
+        })
+        .select()
+        .single();
+
+      // Check if it became mutual
+      const isMutual = matchData?.is_mutual || false;
+      let conversationId: string | undefined;
+      
+      if (isMutual) {
+        conversationId = [user.id, match.pool_user_id].sort().join('_');
+        toast.success('It\'s a match!');
+      } else {
+        toast.success('Interest sent!');
+      }
 
       setPool(prev => prev.filter(m => m.id !== matchId));
-      toast.success('Interest sent!');
-      return true;
+      
+      return { 
+        success: true, 
+        isMutual,
+        conversationId,
+        matchName: match.profile.name,
+        matchPhoto: match.profile.photos?.[0]
+      };
     } catch (error) {
       console.error('Error liking pool match:', error);
       toast.error('Failed to send interest');
-      return false;
+      return { success: false };
     }
   };
 

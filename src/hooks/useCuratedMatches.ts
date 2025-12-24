@@ -182,18 +182,33 @@ export const useCuratedMatches = () => {
     loadMatches();
   }, [loadMatches]);
 
-  const acceptMatch = async (matchId: string) => {
+  const acceptMatch = async (matchId: string): Promise<{ success: boolean; isMutual?: boolean; conversationId?: string; matchName?: string; matchPhoto?: string }> => {
     if (demoData.isInDemo) {
+      const match = matches.find(m => m.id === matchId);
       setMatches(prev => prev.filter(m => m.id !== matchId));
+      
+      // 30% chance of mutual match in demo
+      const isMutual = Math.random() < 0.3;
+      if (isMutual) {
+        toast.success('It\'s a match! You can now message each other.');
+        return { 
+          success: true, 
+          isMutual: true, 
+          conversationId: `demo_${matchId}`,
+          matchName: match?.profile.name,
+          matchPhoto: match?.profile.photos?.[0]
+        };
+      }
+      
       toast.success('Interest sent! You\'ll be notified if it\'s mutual.');
-      return true;
+      return { success: true, isMutual: false };
     }
 
-    if (!user) return false;
+    if (!user) return { success: false };
 
     try {
       const match = matches.find(m => m.id === matchId);
-      if (!match) return false;
+      if (!match) return { success: false };
 
       // Update status to accepted
       const { error } = await supabase
@@ -213,9 +228,11 @@ export const useCuratedMatches = () => {
           user_b: match.matched_user_id
         });
 
+      let conversationId: string | undefined;
+      
       if (mutualCheck) {
         // Create conversation if mutual
-        const conversationId = [user.id, match.matched_user_id].sort().join('_');
+        conversationId = [user.id, match.matched_user_id].sort().join('_');
         
         await supabase.from('conversation_tracker').insert({
           conversation_id: conversationId,
@@ -229,11 +246,18 @@ export const useCuratedMatches = () => {
       }
 
       setMatches(prev => prev.filter(m => m.id !== matchId));
-      return true;
+      
+      return { 
+        success: true, 
+        isMutual: !!mutualCheck,
+        conversationId,
+        matchName: match.profile.name,
+        matchPhoto: match.profile.photos?.[0]
+      };
     } catch (error) {
       console.error('Error accepting match:', error);
       toast.error('Failed to accept match');
-      return false;
+      return { success: false };
     }
   };
 
