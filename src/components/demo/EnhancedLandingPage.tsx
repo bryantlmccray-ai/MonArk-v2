@@ -154,7 +154,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-charcoal mb-4">How Smart Matching Works</h2>
-            <p className="text-lg text-charcoal-soft font-body">We use relational intelligence to curate your perfect 3</p>
+            <p className="text-sm md:text-base font-body tracking-[0.1em] text-charcoal-soft uppercase">We use relational intelligence to curate your perfect 3</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -234,7 +234,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-charcoal mb-4">Early-Bird Access</h2>
-            <p className="text-xl text-charcoal-soft font-body">Limited-time founding member pricing</p>
+            <p className="text-sm md:text-base font-body tracking-[0.1em] text-charcoal-soft uppercase">Limited-time founding member pricing</p>
           </div>
 
           <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 sm:p-12 border border-taupe/20 shadow-2xl max-w-2xl mx-auto">
@@ -249,14 +249,14 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <div className="space-y-6">
               <div className="space-y-4">
                 <h3 className="font-editorial-headline text-lg text-charcoal">Your 3 Every Week</h3>
-                <p className="text-charcoal-soft text-sm leading-relaxed">
+                <p className="text-charcoal-soft text-sm font-body leading-relaxed tracking-wide">
                   3 curated matches every Sunday, powered by Smart Matching. Each comes with an AI-suggested date idea.
                 </p>
               </div>
 
               <div className="border-t border-taupe/20 pt-6">
                 <h3 className="font-editorial-headline text-lg text-charcoal mb-3">Ark AI Concierge</h3>
-                <p className="text-charcoal-soft text-sm leading-relaxed">
+                <p className="text-charcoal-soft text-sm font-body leading-relaxed tracking-wide">
                   Chat-based AI that personalizes your date options and helps coordinate plans.
                 </p>
               </div>
