@@ -11,8 +11,8 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
-    // Show the enter prompt after animations complete
-    const readyTimer = setTimeout(() => setIsReady(true), 2000);
+    // Show the enter prompt after animations complete (adjusted for new welcome animation)
+    const readyTimer = setTimeout(() => setIsReady(true), 2800);
     return () => clearTimeout(readyTimer);
   }, []);
 
@@ -133,18 +133,44 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               </motion.div>
             </motion.div>
 
+            {/* Welcome text with luxury letter reveal */}
+            <motion.div
+              className="overflow-hidden mb-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.7 }}
+            >
+              <motion.div className="flex justify-center">
+                {"Welcome to".split("").map((letter, index) => (
+                  <motion.span
+                    key={index}
+                    className="font-serif text-sm md:text-base tracking-[0.25em] text-muted-foreground italic"
+                    initial={{ opacity: 0, y: 20, rotateX: 90 }}
+                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                    transition={{
+                      duration: 0.6,
+                      delay: 0.8 + index * 0.05,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                  >
+                    {letter === " " ? "\u00A0" : letter}
+                  </motion.span>
+                ))}
+              </motion.div>
+            </motion.div>
+
             {/* Brand name */}
             <motion.div
               className="overflow-hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
+              transition={{ duration: 0.8, delay: 1.2 }}
             >
               <motion.h1
                 className="font-serif text-3xl md:text-4xl tracking-[0.3em] text-foreground uppercase"
                 initial={{ y: 40 }}
                 animate={{ y: 0 }}
-                transition={{ duration: 0.8, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.8, delay: 1.3, ease: [0.22, 1, 0.36, 1] }}
               >
                 Mon<span className="text-primary">A</span>rk
               </motion.h1>
@@ -155,7 +181,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               className="mt-6 font-body text-sm md:text-base tracking-[0.2em] text-muted-foreground uppercase"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.2, ease: "easeOut" }}
+              transition={{ duration: 0.6, delay: 1.6, ease: "easeOut" }}
             >
               The Art of Intentional Dating
             </motion.p>
@@ -165,7 +191,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               className="mt-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: 120, opacity: 1 }}
-              transition={{ duration: 1.2, delay: 1.4, ease: "easeOut" }}
+              transition={{ duration: 1.2, delay: 1.8, ease: "easeOut" }}
             />
           </div>
 
