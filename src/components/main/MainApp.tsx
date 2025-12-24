@@ -5,7 +5,7 @@ import { MonArkCircle } from './MonArkCircle';
 import { Conversations } from './Conversations';
 import { DatesJournal } from './DatesJournal';
 import { Profile } from './Profile';
-import { CuratedMatches } from '../matching/CuratedMatches';
+import { SundayMatches } from '../matching/SundayMatches';
 import { DebriefOverlay } from './overlays/DebriefOverlay';
 import { TrustScoreOverlay } from './overlays/TrustScoreOverlay';
 import { SettingsOverlay } from './overlays/SettingsOverlay';
@@ -68,7 +68,7 @@ export const MainApp: React.FC = () => {
   const renderActiveScreen = () => {
     switch (activeTab) {
       case 'weekly':
-        return <CuratedMatches />;
+        return <SundayMatches />;
       case 'circle':
         return <MonArkCircle />;
       case 'matches':
@@ -89,7 +89,7 @@ export const MainApp: React.FC = () => {
           />
         );
       default:
-        return <CuratedMatches />;
+        return <SundayMatches />;
     }
   };
 
