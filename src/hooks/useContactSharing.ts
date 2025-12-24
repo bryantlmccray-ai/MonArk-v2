@@ -41,7 +41,7 @@ export const useContactSharing = (conversationId: string, matchUserId: string) =
           .select('id')
           .eq('sharer_user_id', user.id)
           .eq('recipient_user_id', matchUserId)
-          .single();
+          .maybeSingle();
 
         setIHaveShared(!!myShare);
 
@@ -51,7 +51,7 @@ export const useContactSharing = (conversationId: string, matchUserId: string) =
           .select('id')
           .eq('sharer_user_id', matchUserId)
           .eq('recipient_user_id', user.id)
-          .single();
+          .maybeSingle();
 
         setTheyHaveShared(!!theirShare);
 
@@ -61,7 +61,7 @@ export const useContactSharing = (conversationId: string, matchUserId: string) =
             .from('user_profiles')
             .select('phone_number')
             .eq('user_id', matchUserId)
-            .single();
+            .maybeSingle();
 
           setMatchPhoneNumber(matchProfile?.phone_number || null);
         }
