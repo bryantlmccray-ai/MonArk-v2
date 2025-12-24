@@ -193,7 +193,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           </div>
 
           <div className="text-center mt-16">
-            <p className="text-xl font-editorial-headline text-charcoal italic">
+            <p className="text-sm md:text-base font-body tracking-[0.2em] text-charcoal-soft uppercase">
               No swipes. No chaos. Just connection that feels like alignment.
             </p>
           </div>
