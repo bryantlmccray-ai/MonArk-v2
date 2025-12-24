@@ -237,38 +237,46 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <p className="text-sm md:text-base font-body tracking-[0.1em] text-charcoal-soft uppercase">Limited-time founding member pricing</p>
           </div>
 
-          <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 sm:p-12 border border-taupe/20 shadow-2xl max-w-2xl mx-auto">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-baseline space-x-2">
-                <span className="text-5xl sm:text-6xl font-editorial-headline text-charcoal">$35</span>
-                <span className="text-xl text-charcoal-soft font-body">/mo</span>
-              </div>
-              <p className="text-lg font-editorial-headline text-charcoal mt-2">Core Access</p>
-            </div>
-
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <h3 className="font-editorial-headline text-lg text-charcoal">Your 3 Every Week</h3>
-                <p className="text-charcoal-soft text-sm font-body leading-relaxed tracking-wide">
-                  3 curated matches every Sunday, powered by Smart Matching. Each comes with an AI-suggested date idea.
-                </p>
-              </div>
-
-              <div className="border-t border-taupe/20 pt-6">
-                <h3 className="font-editorial-headline text-lg text-charcoal mb-3">Ark AI Concierge</h3>
-                <p className="text-charcoal-soft text-sm font-body leading-relaxed tracking-wide">
-                  Chat-based AI that personalizes your date options and helps coordinate plans.
-                </p>
+          <div className="relative group max-w-2xl mx-auto">
+            {/* Glow effect behind card - same as waitlist */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-goldenrod/20 via-taupe/10 to-dusty-rose/20 rounded-3xl blur-xl opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+            
+            <div className="relative bg-white/60 backdrop-blur-sm rounded-3xl p-8 sm:p-12 border border-taupe/20 shadow-2xl">
+              {/* Subtle inner glow */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/50 via-transparent to-transparent pointer-events-none" />
+              
+              <div className="relative text-center mb-8">
+                <div className="inline-flex items-baseline space-x-2">
+                  <span className="text-5xl sm:text-6xl font-editorial-headline text-charcoal">$35</span>
+                  <span className="text-xl text-charcoal-soft font-body">/mo</span>
+                </div>
+                <p className="text-lg font-editorial-headline text-charcoal mt-2">Core Access</p>
               </div>
 
-              <div className="border-t border-taupe/20 pt-6">
-                <Button
-                  onClick={() => setShowWaitlistModal(true)}
-                  className="w-full editorial-button-primary py-3 text-sm tracking-wide font-body"
-                >
-                  JOIN WAITLIST
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+              <div className="relative space-y-6">
+                <div className="space-y-4">
+                  <h3 className="font-editorial-headline text-lg text-charcoal">Your 3 Every Week</h3>
+                  <p className="text-charcoal-soft text-sm font-body leading-relaxed tracking-wide">
+                    3 curated matches every Sunday, powered by Smart Matching. Each comes with an AI-suggested date idea.
+                  </p>
+                </div>
+
+                <div className="border-t border-taupe/20 pt-6">
+                  <h3 className="font-editorial-headline text-lg text-charcoal mb-3">Ark AI Concierge</h3>
+                  <p className="text-charcoal-soft text-sm font-body leading-relaxed tracking-wide">
+                    Chat-based AI that personalizes your date options and helps coordinate plans.
+                  </p>
+                </div>
+
+                <div className="border-t border-taupe/20 pt-6">
+                  <Button
+                    onClick={() => setShowWaitlistModal(true)}
+                    className="w-full editorial-button-primary py-3 text-sm tracking-wide font-body"
+                  >
+                    JOIN WAITLIST
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
