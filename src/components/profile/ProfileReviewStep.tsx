@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Edit, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
+import { Edit, CheckCircle, Clock, AlertTriangle, X } from 'lucide-react';
 import { ProfileData, StepCompletionStatus, StepRequirements } from './ProfileCreation';
 
 interface ProfileReviewStepProps {
@@ -9,9 +9,10 @@ interface ProfileReviewStepProps {
   stepRequirements: StepRequirements;
   onEdit: (step: number) => void;
   onComplete: () => void;
+  onCancel?: () => void;
 }
 
-export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileData, stepCompletion, stepRequirements, onEdit, onComplete }) => {
+export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileData, stepCompletion, stepRequirements, onEdit, onComplete, onCancel }) => {
   
   const getStepIcon = (stepKey: keyof StepCompletionStatus, stepRequirement: 'critical' | 'important' | 'optional') => {
     const isCompleted = stepCompletion[stepKey];
@@ -42,6 +43,17 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
   };
   return (
     <div className="min-h-screen bg-jet-black p-6 flex flex-col">
+      {/* Exit Button */}
+      {onCancel && (
+        <button
+          onClick={onCancel}
+          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-white transition-colors z-10"
+          aria-label="Exit profile review"
+        >
+          <X className="h-6 w-6" />
+        </button>
+      )}
+      
       <div className="flex-1 max-w-2xl mx-auto w-full space-y-6">
         {/* Header */}
         <div className="text-center space-y-2 pt-8">
