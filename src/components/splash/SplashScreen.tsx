@@ -1,34 +1,35 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
 interface SplashScreenProps {
   onComplete: () => void;
-  duration?: number;
 }
 
-export const SplashScreen = ({ onComplete, duration = 3500 }: SplashScreenProps) => {
-  const [phase, setPhase] = useState<'logo' | 'tagline' | 'exit'>('logo');
+export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
+  const [isReady, setIsReady] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
-    const logoTimer = setTimeout(() => setPhase('tagline'), 1200);
-    const exitTimer = setTimeout(() => setPhase('exit'), duration - 800);
-    const completeTimer = setTimeout(onComplete, duration);
+    // Show the enter prompt after animations complete
+    const readyTimer = setTimeout(() => setIsReady(true), 2000);
+    return () => clearTimeout(readyTimer);
+  }, []);
 
-    return () => {
-      clearTimeout(logoTimer);
-      clearTimeout(exitTimer);
-      clearTimeout(completeTimer);
-    };
-  }, [onComplete, duration]);
+  const handleEnter = () => {
+    setIsExiting(true);
+    setTimeout(onComplete, 800);
+  };
 
   return (
     <AnimatePresence>
-      {phase !== 'exit' ? (
+      {!isExiting ? (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-background overflow-hidden"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-background overflow-hidden cursor-pointer"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
+          onClick={isReady ? handleEnter : undefined}
         >
           {/* Animated background gradient */}
           <motion.div
@@ -110,9 +111,9 @@ export const SplashScreen = ({ onComplete, duration = 3500 }: SplashScreenProps)
                   className="absolute inset-0 rounded-full bg-primary/5"
                   animate={{ 
                     boxShadow: [
-                      "0 0 20px rgba(var(--primary), 0.1)",
-                      "0 0 40px rgba(var(--primary), 0.2)",
-                      "0 0 20px rgba(var(--primary), 0.1)",
+                      "0 0 20px hsl(var(--primary) / 0.1)",
+                      "0 0 40px hsl(var(--primary) / 0.2)",
+                      "0 0 20px hsl(var(--primary) / 0.1)",
                     ]
                   }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -150,40 +151,63 @@ export const SplashScreen = ({ onComplete, duration = 3500 }: SplashScreenProps)
             </motion.div>
 
             {/* Tagline */}
-            <AnimatePresence>
-              {phase === 'tagline' && (
-                <motion.p
-                  className="mt-6 font-body text-sm md:text-base tracking-[0.2em] text-muted-foreground uppercase"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                >
-                  The Art of Intentional Dating
-                </motion.p>
-              )}
-            </AnimatePresence>
+            <motion.p
+              className="mt-6 font-body text-sm md:text-base tracking-[0.2em] text-muted-foreground uppercase"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.2, ease: "easeOut" }}
+            >
+              The Art of Intentional Dating
+            </motion.p>
 
             {/* Subtle line accent */}
             <motion.div
               className="mt-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: 120, opacity: 1 }}
-              transition={{ duration: 1.2, delay: 1.2, ease: "easeOut" }}
+              transition={{ duration: 1.2, delay: 1.4, ease: "easeOut" }}
             />
           </div>
 
-          {/* Bottom subtle branding */}
-          <motion.div
-            className="absolute bottom-8 left-1/2 -translate-x-1/2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.4 }}
-            transition={{ duration: 1, delay: 1.5 }}
-          >
-            <p className="text-xs tracking-[0.15em] text-muted-foreground/60 uppercase">
-              Curated Connections
-            </p>
-          </motion.div>
+          {/* Enter section */}
+          <AnimatePresence>
+            {isReady && (
+              <motion.div
+                className="absolute bottom-12 md:bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
+                {/* Enter button */}
+                <motion.button
+                  onClick={handleEnter}
+                  className="group flex items-center gap-3 px-8 py-3 border border-primary/30 rounded-full bg-transparent hover:bg-primary/5 transition-all duration-500"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <span className="font-body text-sm tracking-[0.2em] text-foreground uppercase">
+                    Enter
+                  </span>
+                  <motion.div
+                    animate={{ x: [0, 4, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <ArrowRight className="w-4 h-4 text-primary" />
+                  </motion.div>
+                </motion.button>
+
+                {/* Click anywhere hint */}
+                <motion.p
+                  className="text-xs tracking-[0.15em] text-muted-foreground/50 uppercase"
+                  animate={{ opacity: [0.3, 0.6, 0.3] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  or click anywhere to enter
+                </motion.p>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       ) : null}
     </AnimatePresence>
