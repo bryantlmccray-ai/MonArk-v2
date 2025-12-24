@@ -97,7 +97,7 @@ export const AfterDateFeedback = ({
         .select('eq_adjustments')
         .eq('itinerary_id', itinId)
         .eq('user_id', matchId)
-        .single();
+        .maybeSingle();
 
       const matchRating = (matchFeedback?.eq_adjustments as any)?.rating;
       

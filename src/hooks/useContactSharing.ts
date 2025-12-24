@@ -31,7 +31,7 @@ export const useContactSharing = (conversationId: string, matchUserId: string) =
           .from('user_profiles')
           .select('phone_number')
           .eq('user_id', user.id)
-          .single();
+          .maybeSingle();
 
         setMyPhoneNumber(myProfile?.phone_number || null);
 
@@ -92,7 +92,7 @@ export const useContactSharing = (conversationId: string, matchUserId: string) =
               .from('user_profiles')
               .select('phone_number')
               .eq('user_id', matchUserId)
-              .single()
+              .maybeSingle()
               .then(({ data }) => {
                 setMatchPhoneNumber(data?.phone_number || null);
               });
