@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { MonArkLogo } from '@/components/MonArkLogo';
-import { Sparkles, Users, Calendar, ArrowRight, Instagram } from 'lucide-react';
+import { PenLine, Heart, MapPin, ArrowRight, Instagram } from 'lucide-react';
 import { useDemo } from '@/contexts/DemoContext';
 import { DemoMainApp } from './DemoMainApp';
 import { WaitlistModal } from './WaitlistModal';
@@ -159,34 +159,34 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center space-y-4">
-              <div className="bg-taupe/10 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
-                <Sparkles className="h-10 w-10 text-taupe" />
+              <div className="border border-taupe/20 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
+                <PenLine className="h-8 w-8 text-charcoal" strokeWidth={1.5} />
               </div>
               <div className="text-4xl font-editorial-headline text-charcoal">01</div>
               <h3 className="font-editorial-headline text-xl text-charcoal">Take the RIF</h3>
-              <p className="text-sm text-charcoal-soft leading-relaxed">
+              <p className="text-sm text-charcoal-soft font-body leading-relaxed">
                 10 questions about how you communicate, connect, and date. Takes 5 minutes.
               </p>
             </div>
             
             <div className="text-center space-y-4">
-              <div className="bg-taupe/10 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
-                <Users className="h-10 w-10 text-taupe" />
+              <div className="border border-taupe/20 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
+                <Heart className="h-8 w-8 text-charcoal" strokeWidth={1.5} />
               </div>
               <div className="text-4xl font-editorial-headline text-charcoal">02</div>
               <h3 className="font-editorial-headline text-xl text-charcoal">Get Your 3</h3>
-              <p className="text-sm text-charcoal-soft leading-relaxed">
+              <p className="text-sm text-charcoal-soft font-body leading-relaxed">
                 Every Sunday, receive 3 matches who fit your style—not just your type.
               </p>
             </div>
             
             <div className="text-center space-y-4">
-              <div className="bg-taupe/10 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
-                <Calendar className="h-10 w-10 text-taupe" />
+              <div className="border border-taupe/20 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
+                <MapPin className="h-8 w-8 text-charcoal" strokeWidth={1.5} />
               </div>
               <div className="text-4xl font-editorial-headline text-charcoal">03</div>
               <h3 className="font-editorial-headline text-xl text-charcoal">Date With Intention</h3>
-              <p className="text-sm text-charcoal-soft leading-relaxed">
+              <p className="text-sm text-charcoal-soft font-body leading-relaxed">
                 We suggest premium first dates at vetted venues. No awkward coffee shop roulette.
               </p>
             </div>
