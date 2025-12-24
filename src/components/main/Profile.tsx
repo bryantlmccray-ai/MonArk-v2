@@ -101,7 +101,11 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
       <ProfileCreation 
         onComplete={() => {
           setShowProfileCreation(false);
-        }} 
+        }}
+        onCancel={() => {
+          console.log('Profile creation cancelled');
+          setShowProfileCreation(false);
+        }}
       />
     );
   }
