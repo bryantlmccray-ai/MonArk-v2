@@ -351,7 +351,8 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
             stepCompletion={stepCompletion}
             stepRequirements={stepRequirements}
             onEdit={goToStep} 
-            onComplete={handleComplete} 
+            onComplete={handleComplete}
+            onCancel={onCancel}
           />
         );
       default:
