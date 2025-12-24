@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, MoreVertical, Shield, Check, CheckCheck, UserX } from 'lucide-react';
+import { Send, MoreVertical, Shield, Check, CheckCheck, UserX, Phone, PhoneCall } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -9,6 +9,7 @@ import { useMessages } from '@/hooks/useMessages';
 import { useAuth } from '@/hooks/useAuth';
 import { useTypingIndicator } from '@/hooks/useTypingIndicator';
 import { useRealTimePresence } from '@/hooks/useRealTimePresence';
+import { useContactSharing } from '@/hooks/useContactSharing';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -49,6 +50,14 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const { user } = useAuth();
   const { typingUsers, startTyping, stopTyping } = useTypingIndicator(conversationId);
   const { isUserOnline } = useRealTimePresence();
+  const { 
+    loading: shareLoading, 
+    matchPhoneNumber, 
+    iHaveShared, 
+    theyHaveShared, 
+    shareContact, 
+    canShare 
+  } = useContactSharing(conversationId, matchUserId);
 
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
 
@@ -178,6 +187,32 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           </div>
         </div>
         
+        {/* Share Contact Button */}
+        {canShare ? (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={shareContact}
+            disabled={shareLoading}
+            className="text-primary border-primary hover:bg-primary hover:text-primary-foreground"
+          >
+            <Phone className="h-4 w-4 mr-1" />
+            Share Contact
+          </Button>
+        ) : iHaveShared && theyHaveShared && matchPhoneNumber ? (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => window.open(`tel:${matchPhoneNumber}`)}
+            className="text-green-500 border-green-500 hover:bg-green-500 hover:text-white"
+          >
+            <PhoneCall className="h-4 w-4 mr-1" />
+            {matchPhoneNumber}
+          </Button>
+        ) : iHaveShared ? (
+          <span className="text-xs text-muted-foreground px-2">Contact shared ✓</span>
+        ) : null}
+        
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm">
@@ -205,6 +240,26 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      {/* Contact Shared Banner */}
+      {theyHaveShared && matchPhoneNumber && (
+        <div className="px-4 py-2 bg-green-500/10 border-b border-green-500/20">
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-green-400">
+              <Phone className="h-4 w-4 inline mr-1" />
+              {matchName} shared their number: <span className="font-medium">{matchPhoneNumber}</span>
+            </p>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => window.open(`tel:${matchPhoneNumber}`)}
+              className="text-green-400 hover:text-green-300"
+            >
+              Call
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
