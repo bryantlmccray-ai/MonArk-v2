@@ -160,8 +160,8 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center space-y-4">
               <div className="relative mx-auto w-20 h-20 group">
-                {/* Glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-goldenrod/25 via-taupe/15 to-dusty-rose/25 rounded-full blur-xl opacity-50 group-hover:opacity-70 transition-opacity duration-500" />
+                {/* Pulsating glow effect */}
+                <div className="absolute -inset-2 bg-gradient-to-r from-goldenrod/40 via-taupe/30 to-dusty-rose/40 rounded-full blur-xl opacity-70 animate-gentle-pulse" />
                 <div className="relative border border-taupe/20 rounded-full w-20 h-20 flex items-center justify-center bg-bone/50 backdrop-blur-sm">
                   <PenLine className="h-8 w-8 text-charcoal" strokeWidth={1.5} />
                 </div>
@@ -175,8 +175,8 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             
             <div className="text-center space-y-4">
               <div className="relative mx-auto w-20 h-20 group">
-                {/* Glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-dusty-rose/25 via-goldenrod/15 to-taupe/25 rounded-full blur-xl opacity-50 group-hover:opacity-70 transition-opacity duration-500" />
+                {/* Pulsating glow effect */}
+                <div className="absolute -inset-2 bg-gradient-to-r from-dusty-rose/40 via-goldenrod/30 to-taupe/40 rounded-full blur-xl opacity-70 animate-gentle-pulse" style={{ animationDelay: '0.5s' }} />
                 <div className="relative border border-taupe/20 rounded-full w-20 h-20 flex items-center justify-center bg-bone/50 backdrop-blur-sm">
                   <Heart className="h-8 w-8 text-charcoal" strokeWidth={1.5} />
                 </div>
@@ -190,8 +190,8 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             
             <div className="text-center space-y-4">
               <div className="relative mx-auto w-20 h-20 group">
-                {/* Glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-taupe/25 via-dusty-rose/15 to-goldenrod/25 rounded-full blur-xl opacity-50 group-hover:opacity-70 transition-opacity duration-500" />
+                {/* Pulsating glow effect */}
+                <div className="absolute -inset-2 bg-gradient-to-r from-taupe/40 via-dusty-rose/30 to-goldenrod/40 rounded-full blur-xl opacity-70 animate-gentle-pulse" style={{ animationDelay: '1s' }} />
                 <div className="relative border border-taupe/20 rounded-full w-20 h-20 flex items-center justify-center bg-bone/50 backdrop-blur-sm">
                   <MapPin className="h-8 w-8 text-charcoal" strokeWidth={1.5} />
                 </div>
