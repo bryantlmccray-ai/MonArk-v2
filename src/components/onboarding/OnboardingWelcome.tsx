@@ -23,7 +23,7 @@ export const OnboardingWelcome: React.FC<OnboardingWelcomeProps> = ({ onNext }) 
           <h1 className="text-3xl sm:text-4xl font-semibold text-foreground">
             Welcome to MonArk
           </h1>
-          <p className="text-lg text-muted-foreground leading-relaxed">
+          <p className="text-sm md:text-base font-body tracking-[0.1em] text-muted-foreground uppercase leading-relaxed">
             We're different. Instead of endless swiping, we send you <span className="text-foreground font-medium">3 curated matches</span> every week.
           </p>
         </div>
