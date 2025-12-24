@@ -159,8 +159,12 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center space-y-4">
-              <div className="border border-taupe/20 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
-                <PenLine className="h-8 w-8 text-charcoal" strokeWidth={1.5} />
+              <div className="relative mx-auto w-20 h-20 group">
+                {/* Glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-goldenrod/25 via-taupe/15 to-dusty-rose/25 rounded-full blur-xl opacity-50 group-hover:opacity-70 transition-opacity duration-500" />
+                <div className="relative border border-taupe/20 rounded-full w-20 h-20 flex items-center justify-center bg-bone/50 backdrop-blur-sm">
+                  <PenLine className="h-8 w-8 text-charcoal" strokeWidth={1.5} />
+                </div>
               </div>
               <div className="text-4xl font-editorial-headline text-charcoal">01</div>
               <h3 className="font-editorial-headline text-xl text-charcoal">Take the RIF</h3>
@@ -170,8 +174,12 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             </div>
             
             <div className="text-center space-y-4">
-              <div className="border border-taupe/20 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
-                <Heart className="h-8 w-8 text-charcoal" strokeWidth={1.5} />
+              <div className="relative mx-auto w-20 h-20 group">
+                {/* Glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-dusty-rose/25 via-goldenrod/15 to-taupe/25 rounded-full blur-xl opacity-50 group-hover:opacity-70 transition-opacity duration-500" />
+                <div className="relative border border-taupe/20 rounded-full w-20 h-20 flex items-center justify-center bg-bone/50 backdrop-blur-sm">
+                  <Heart className="h-8 w-8 text-charcoal" strokeWidth={1.5} />
+                </div>
               </div>
               <div className="text-4xl font-editorial-headline text-charcoal">02</div>
               <h3 className="font-editorial-headline text-xl text-charcoal">Get Your 3</h3>
@@ -181,8 +189,12 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             </div>
             
             <div className="text-center space-y-4">
-              <div className="border border-taupe/20 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
-                <MapPin className="h-8 w-8 text-charcoal" strokeWidth={1.5} />
+              <div className="relative mx-auto w-20 h-20 group">
+                {/* Glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-taupe/25 via-dusty-rose/15 to-goldenrod/25 rounded-full blur-xl opacity-50 group-hover:opacity-70 transition-opacity duration-500" />
+                <div className="relative border border-taupe/20 rounded-full w-20 h-20 flex items-center justify-center bg-bone/50 backdrop-blur-sm">
+                  <MapPin className="h-8 w-8 text-charcoal" strokeWidth={1.5} />
+                </div>
               </div>
               <div className="text-4xl font-editorial-headline text-charcoal">03</div>
               <h3 className="font-editorial-headline text-xl text-charcoal">Date With Intention</h3>
