@@ -188,9 +188,64 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_share_feedback: {
+        Row: {
+          comment: string | null
+          contact_share_id: string
+          conversation_id: string
+          created_at: string
+          did_meet: boolean
+          id: string
+          match_user_id: string
+          notification_sent_at: string | null
+          rating: number | null
+          see_again: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          contact_share_id: string
+          conversation_id: string
+          created_at?: string
+          did_meet: boolean
+          id?: string
+          match_user_id: string
+          notification_sent_at?: string | null
+          rating?: number | null
+          see_again?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          contact_share_id?: string
+          conversation_id?: string
+          created_at?: string
+          did_meet?: boolean
+          id?: string
+          match_user_id?: string
+          notification_sent_at?: string | null
+          rating?: number | null
+          see_again?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contact_share_feedback_contact_share_id_fkey"
+            columns: ["contact_share_id"]
+            isOneToOne: false
+            referencedRelation: "contact_shares"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contact_shares: {
         Row: {
           conversation_id: string
+          feedback_notification_sent: boolean | null
+          feedback_notification_sent_at: string | null
           id: string
           recipient_user_id: string
           shared_at: string
@@ -199,6 +254,8 @@ export type Database = {
         }
         Insert: {
           conversation_id: string
+          feedback_notification_sent?: boolean | null
+          feedback_notification_sent_at?: string | null
           id?: string
           recipient_user_id: string
           shared_at?: string
@@ -207,6 +264,8 @@ export type Database = {
         }
         Update: {
           conversation_id?: string
+          feedback_notification_sent?: boolean | null
+          feedback_notification_sent_at?: string | null
           id?: string
           recipient_user_id?: string
           shared_at?: string

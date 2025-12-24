@@ -41,3 +41,6 @@ verify_jwt = false
 
 [functions.share-contact]
 verify_jwt = true
+
+[functions.check-date-feedback]
+verify_jwt = false
