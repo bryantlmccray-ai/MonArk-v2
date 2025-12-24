@@ -188,6 +188,33 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_shares: {
+        Row: {
+          conversation_id: string
+          id: string
+          recipient_user_id: string
+          shared_at: string
+          sharer_user_id: string
+          sms_sent: boolean | null
+        }
+        Insert: {
+          conversation_id: string
+          id?: string
+          recipient_user_id: string
+          shared_at?: string
+          sharer_user_id: string
+          sms_sent?: boolean | null
+        }
+        Update: {
+          conversation_id?: string
+          id?: string
+          recipient_user_id?: string
+          shared_at?: string
+          sharer_user_id?: string
+          sms_sent?: boolean | null
+        }
+        Relationships: []
+      }
       conversation_events: {
         Row: {
           conversation_id: string
@@ -1551,6 +1578,7 @@ export type Database = {
           location_consent: boolean | null
           location_data: Json | null
           occupation: string | null
+          phone_number: string | null
           photos: string[] | null
           preference_to_be_seen_by: string[] | null
           preference_to_see: string[] | null
@@ -1590,6 +1618,7 @@ export type Database = {
           location_consent?: boolean | null
           location_data?: Json | null
           occupation?: string | null
+          phone_number?: string | null
           photos?: string[] | null
           preference_to_be_seen_by?: string[] | null
           preference_to_see?: string[] | null
@@ -1629,6 +1658,7 @@ export type Database = {
           location_consent?: boolean | null
           location_data?: Json | null
           occupation?: string | null
+          phone_number?: string | null
           photos?: string[] | null
           preference_to_be_seen_by?: string[] | null
           preference_to_see?: string[] | null
