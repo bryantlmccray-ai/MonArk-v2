@@ -11,7 +11,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { useDemo } from '@/contexts/DemoContext';
 
 const Index = () => {
-  const { user, loading: authLoading, isDemoMode, exitDemoMode } = useAuth();
+  const { user, loading: authLoading, isDemoMode, exitDemoMode, signOut } = useAuth();
   const { profile, loading: profileLoading, refetchProfile } = useProfile();
   const { demoData, setDemoMode } = useDemo();
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = React.useState(false);
@@ -108,10 +108,10 @@ const Index = () => {
   if (profile && !profile.is_profile_complete) {
     return <ProfileCreation 
       onComplete={() => refetchProfile()} 
-      onCancel={() => {
-        // For now, we'll keep user on the profile creation
-        // In the future, this could redirect to main app or logout
-        console.log('Profile creation cancelled');
+      onCancel={async () => {
+        // Sign out the user and return to landing page
+        console.log('Profile creation cancelled - signing out');
+        await signOut();
       }}
     />;
   }
@@ -130,9 +130,10 @@ const Index = () => {
   // Show profile creation after onboarding
   return <ProfileCreation 
     onComplete={() => refetchProfile()}
-    onCancel={() => {
-      // User can cancel and be redirected to main app
-      console.log('Profile creation cancelled from onboarding');
+    onCancel={async () => {
+      // Sign out the user and return to landing page
+      console.log('Profile creation cancelled - signing out');
+      await signOut();
     }}
   />;
 };

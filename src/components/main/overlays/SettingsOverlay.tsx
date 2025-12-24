@@ -134,7 +134,10 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
   if (showEditProfile) {
     return (
       <div className="fixed inset-0 z-50">
-        <ProfileCreation onComplete={handleEditProfileComplete} />
+        <ProfileCreation 
+          onComplete={handleEditProfileComplete} 
+          onCancel={() => setShowEditProfile(false)}
+        />
       </div>
     );
   }
