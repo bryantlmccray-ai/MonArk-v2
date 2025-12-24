@@ -20,6 +20,7 @@ const Index = () => {
   const [showAuth, setShowAuth] = React.useState(false);
   const [showSplash, setShowSplash] = React.useState(true);
   const [showProfileComplete, setShowProfileComplete] = React.useState(false);
+  const [skippedProfile, setSkippedProfile] = React.useState(false);
 
   const handleSplashComplete = () => {
     sessionStorage.setItem('monark-splash-seen', 'true');
@@ -101,12 +102,16 @@ const Index = () => {
     />;
   }
 
-  // Show profile complete screen after finishing profile
-  if (showProfileComplete) {
+  // Show profile complete screen after finishing profile OR when user skipped profile
+  if (showProfileComplete || skippedProfile) {
     return (
       <ProfileCompleteScreen 
-        onContinue={() => setShowProfileComplete(false)}
-        userName={profile?.bio?.split(' ')[0]} // Attempt to get name from bio if available
+        onContinue={() => {
+          setShowProfileComplete(false);
+          setSkippedProfile(false);
+        }}
+        userName={profile?.bio?.split(' ')[0]}
+        isProfileIncomplete={skippedProfile}
       />
     );
   }
@@ -136,6 +141,7 @@ const Index = () => {
     return (
       <OnboardingFlow 
         onComplete={() => setHasCompletedOnboarding(true)} 
+        onSkipToWaiting={() => setSkippedProfile(true)}
         onExit={isDemoMode ? () => exitDemoMode() : undefined}
         showExitButton={isDemoMode}
       />

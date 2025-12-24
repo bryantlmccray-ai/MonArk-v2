@@ -1,15 +1,20 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, Calendar, Sparkles, MessageCircle, Settings, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Calendar, Sparkles, MessageCircle, Settings, ArrowRight, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { MonArkLogo } from '@/components/MonArkLogo';
 
 interface ProfileCompleteScreenProps {
   onContinue: () => void;
   userName?: string;
+  isProfileIncomplete?: boolean;
 }
 
-export const ProfileCompleteScreen: React.FC<ProfileCompleteScreenProps> = ({ onContinue, userName }) => {
+export const ProfileCompleteScreen: React.FC<ProfileCompleteScreenProps> = ({ 
+  onContinue, 
+  userName,
+  isProfileIncomplete = false 
+}) => {
   const firstName = userName ? userName.split(' ')[0] : '';
 
   return (
@@ -41,18 +46,38 @@ export const ProfileCompleteScreen: React.FC<ProfileCompleteScreenProps> = ({ on
           className="space-y-3"
         >
           <h1 className="text-2xl sm:text-3xl font-serif text-foreground">
-            You're All Set{firstName ? `, ${firstName}` : ''}!
+            {isProfileIncomplete ? "You're In!" : `You're All Set${firstName ? `, ${firstName}` : ''}!`}
           </h1>
           <p className="text-muted-foreground font-body leading-relaxed">
-            Your profile is complete. Now the magic begins.
+            {isProfileIncomplete 
+              ? "Your RIF is complete. Now the magic begins." 
+              : "Your profile is complete. Now the magic begins."}
           </p>
         </motion.div>
+
+        {/* Incomplete Profile Warning */}
+        {isProfileIncomplete && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.4 }}
+            className="flex items-start gap-3 text-left p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl"
+          >
+            <AlertTriangle className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-foreground">Your profile isn't complete yet</p>
+              <p className="text-sm text-muted-foreground">
+                Without photos and a bio, we can't do a comprehensive job matching you. You can complete your profile anytime from settings.
+              </p>
+            </div>
+          </motion.div>
+        )}
 
         {/* Matches Arrival Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.4 }}
+          transition={{ delay: isProfileIncomplete ? 0.5 : 0.5, duration: 0.4 }}
           className="relative group"
         >
           <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-2xl blur-lg opacity-60" />
@@ -72,7 +97,7 @@ export const ProfileCompleteScreen: React.FC<ProfileCompleteScreenProps> = ({ on
                   key={i}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ delay: 0.7 + i * 0.1, type: "spring" }}
+                  transition={{ delay: (isProfileIncomplete ? 0.7 : 0.7) + i * 0.1, type: "spring" }}
                   className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30"
                 >
                   <span className="text-primary font-semibold">{i}</span>
@@ -90,7 +115,7 @@ export const ProfileCompleteScreen: React.FC<ProfileCompleteScreenProps> = ({ on
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.4 }}
+          transition={{ delay: isProfileIncomplete ? 0.9 : 0.8, duration: 0.4 }}
           className="space-y-4"
         >
           <p className="text-sm text-muted-foreground font-body uppercase tracking-wider">
@@ -108,7 +133,9 @@ export const ProfileCompleteScreen: React.FC<ProfileCompleteScreenProps> = ({ on
               <div className="w-10 h-10 mx-auto rounded-full bg-muted/50 flex items-center justify-center">
                 <Settings className="h-5 w-5 text-muted-foreground" />
               </div>
-              <p className="text-xs text-muted-foreground font-body">Adjust preferences</p>
+              <p className="text-xs text-muted-foreground font-body">
+                {isProfileIncomplete ? 'Complete profile' : 'Adjust preferences'}
+              </p>
             </div>
             <div className="text-center space-y-2">
               <div className="w-10 h-10 mx-auto rounded-full bg-muted/50 flex items-center justify-center">
@@ -123,7 +150,7 @@ export const ProfileCompleteScreen: React.FC<ProfileCompleteScreenProps> = ({ on
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.4 }}
+          transition={{ delay: isProfileIncomplete ? 1.1 : 1, duration: 0.4 }}
         >
           <Button 
             onClick={onContinue}
@@ -139,7 +166,7 @@ export const ProfileCompleteScreen: React.FC<ProfileCompleteScreenProps> = ({ on
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.4 }}
+          transition={{ delay: isProfileIncomplete ? 1.3 : 1.2, duration: 0.4 }}
         >
           <MonArkLogo size="sm" variant="compact" className="mx-auto opacity-50" />
         </motion.div>
