@@ -204,8 +204,9 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       <section className="py-20 bg-gradient-to-b from-charcoal-gray/15 to-charcoal-gray/10">
         <div className="max-w-3xl mx-auto px-6">
           <div className="text-center mb-12">
-            <p className="text-sm md:text-base font-body tracking-[0.2em] text-charcoal-soft uppercase mb-6">Why I Built MonArk</p>
-            <div className="w-16 h-px bg-taupe mx-auto"></div>
+            <p className="text-sm md:text-base font-body tracking-[0.2em] text-charcoal-soft uppercase mb-4">Why I Built MonArk</p>
+            <p className="text-sm md:text-base font-body tracking-[0.1em] text-charcoal-soft uppercase">A founder's note on intentional dating</p>
+            <div className="w-16 h-px bg-taupe mx-auto mt-6"></div>
           </div>
           
           <div className="max-w-2xl mx-auto space-y-6">
