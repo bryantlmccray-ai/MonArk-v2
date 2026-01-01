@@ -229,8 +229,16 @@ export const ShareableMilestoneCard: React.FC<ShareableMilestoneCardProps> = ({
             strokeWidth="0.3"
             strokeLinecap="round"
             initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 0.6 }}
-            transition={{ duration: 2, ease: "easeOut" }}
+            animate={{ 
+              pathLength: [0, 1, 1, 0],
+              opacity: [0, 0.6, 0.6, 0]
+            }}
+            transition={{ 
+              duration: 4, 
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatDelay: 1
+            }}
           />
           <motion.path
             d="M -5 80 Q 30 70, 45 55 T 75 40 T 115 25"
@@ -240,15 +248,33 @@ export const ShareableMilestoneCard: React.FC<ShareableMilestoneCardProps> = ({
             strokeLinecap="round"
             strokeDasharray="2 4"
             initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 0.4 }}
-            transition={{ duration: 2.5, ease: "easeOut", delay: 0.3 }}
+            animate={{ 
+              pathLength: [0, 1, 1, 0],
+              opacity: [0, 0.4, 0.4, 0]
+            }}
+            transition={{ 
+              duration: 4.5, 
+              ease: "easeInOut",
+              delay: 0.3,
+              repeat: Infinity,
+              repeatDelay: 0.5
+            }}
           />
         </svg>
 
-        {/* Subtle glow effect */}
-        <div 
+        {/* Subtle glow effect - pulsing */}
+        <motion.div 
           className="absolute top-1/3 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full blur-3xl pointer-events-none"
           style={{ background: colors.glow }}
+          animate={{ 
+            scale: [1, 1.1, 1],
+            opacity: [0.3, 0.5, 0.3]
+          }}
+          transition={{
+            duration: 3,
+            ease: "easeInOut",
+            repeat: Infinity
+          }}
         />
 
         {/* Content container */}
