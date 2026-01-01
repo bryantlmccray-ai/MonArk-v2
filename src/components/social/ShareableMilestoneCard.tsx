@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { MonArkLogo } from '../MonArkLogo';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Share2, Download, Check, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
+import html2canvas from 'html2canvas';
 
 interface ShareableMilestoneCardProps {
   variant?: 'story' | 'feed';
@@ -9,6 +13,7 @@ interface ShareableMilestoneCardProps {
   headline?: string;
   subtext?: string;
   accentColor?: 'terracotta' | 'sage' | 'navy';
+  showShareButton?: boolean;
 }
 
 export const ShareableMilestoneCard: React.FC<ShareableMilestoneCardProps> = ({
@@ -16,8 +21,13 @@ export const ShareableMilestoneCard: React.FC<ShareableMilestoneCardProps> = ({
   milestoneType = 'first-match',
   headline = 'MY FIRST MATCH',
   subtext,
-  accentColor = 'terracotta'
+  accentColor = 'terracotta',
+  showShareButton = true
 }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isSharing, setIsSharing] = useState(false);
+  const [shareSuccess, setShareSuccess] = useState(false);
+
   const isStory = variant === 'story';
   
   // Aspect ratio classes
@@ -62,176 +72,307 @@ export const ShareableMilestoneCard: React.FC<ShareableMilestoneCardProps> = ({
     }
   };
 
+  // Generate image from card
+  const generateImage = async (): Promise<Blob | null> => {
+    if (!cardRef.current) return null;
+
+    try {
+      const canvas = await html2canvas(cardRef.current, {
+        scale: 2, // Higher resolution
+        backgroundColor: null,
+        useCORS: true,
+        logging: false
+      });
+
+      return new Promise((resolve) => {
+        canvas.toBlob((blob) => resolve(blob), 'image/png', 1.0);
+      });
+    } catch (error) {
+      console.error('Error generating image:', error);
+      return null;
+    }
+  };
+
+  // Share via Web Share API
+  const handleShare = async () => {
+    setIsSharing(true);
+
+    try {
+      const imageBlob = await generateImage();
+      
+      if (!imageBlob) {
+        toast.error('Failed to generate image');
+        setIsSharing(false);
+        return;
+      }
+
+      const file = new File([imageBlob], `monark-${milestoneType}-${Date.now()}.png`, {
+        type: 'image/png'
+      });
+
+      // Check if Web Share API is available and supports files
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'MonArk Milestone',
+          text: `${headline} ✨ #MonArk #DatingJourney`
+        });
+        
+        setShareSuccess(true);
+        toast.success('Shared successfully!');
+        setTimeout(() => setShareSuccess(false), 2000);
+      } else {
+        // Fallback: Download the image
+        handleDownload(imageBlob);
+        toast.info('Opening download - share from your camera roll', {
+          description: 'Web Share not supported on this device'
+        });
+      }
+    } catch (error: any) {
+      if (error.name !== 'AbortError') {
+        console.error('Share error:', error);
+        toast.error('Share cancelled or failed');
+      }
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
+  // Download image fallback
+  const handleDownload = async (existingBlob?: Blob) => {
+    setIsSharing(true);
+
+    try {
+      const imageBlob = existingBlob || await generateImage();
+      
+      if (!imageBlob) {
+        toast.error('Failed to generate image');
+        setIsSharing(false);
+        return;
+      }
+
+      const url = URL.createObjectURL(imageBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `monark-${milestoneType}-${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      toast.success('Image downloaded!');
+    } catch (error) {
+      console.error('Download error:', error);
+      toast.error('Failed to download image');
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
   return (
-    <div 
-      className={`${containerClass} relative overflow-hidden rounded-2xl`}
-      style={{
-        background: 'linear-gradient(165deg, hsl(220, 25%, 12%) 0%, hsl(220, 30%, 8%) 100%)'
-      }}
-    >
-      {/* Grain texture overlay */}
+    <div className="flex flex-col items-center gap-4">
+      {/* The card itself */}
       <div 
-        className="absolute inset-0 opacity-[0.08] pointer-events-none mix-blend-overlay"
+        ref={cardRef}
+        className={`${containerClass} relative overflow-hidden rounded-2xl`}
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          background: 'linear-gradient(165deg, hsl(220, 25%, 12%) 0%, hsl(220, 30%, 8%) 100%)'
         }}
-      />
-
-      {/* Abstract journey line - the "Ark" motif */}
-      <svg 
-        className="absolute inset-0 w-full h-full pointer-events-none"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
       >
-        <motion.path
-          d="M -10 75 Q 25 65, 40 50 T 70 35 T 110 20"
-          fill="none"
-          stroke={colors.accent}
-          strokeWidth="0.3"
-          strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.6 }}
-          transition={{ duration: 2, ease: "easeOut" }}
+        {/* Grain texture overlay */}
+        <div 
+          className="absolute inset-0 opacity-[0.08] pointer-events-none mix-blend-overlay"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          }}
         />
-        <motion.path
-          d="M -5 80 Q 30 70, 45 55 T 75 40 T 115 25"
-          fill="none"
-          stroke={colors.accentLight}
-          strokeWidth="0.15"
-          strokeLinecap="round"
-          strokeDasharray="2 4"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.4 }}
-          transition={{ duration: 2.5, ease: "easeOut", delay: 0.3 }}
-        />
-      </svg>
 
-      {/* Subtle glow effect */}
-      <div 
-        className="absolute top-1/3 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full blur-3xl pointer-events-none"
-        style={{ background: colors.glow }}
-      />
-
-      {/* Content container */}
-      <div className="relative z-10 h-full flex flex-col justify-between p-8">
-        {/* Top section - decorative */}
-        <motion.div 
-          className="flex justify-end"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
+        {/* Abstract journey line - the "Ark" motif */}
+        <svg 
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
         >
-          <div 
-            className="text-3xl opacity-20"
-            style={{ color: colors.accent }}
-          >
-            {getMilestoneSymbol()}
-          </div>
-        </motion.div>
+          <motion.path
+            d="M -10 75 Q 25 65, 40 50 T 70 35 T 110 20"
+            fill="none"
+            stroke={colors.accent}
+            strokeWidth="0.3"
+            strokeLinecap="round"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 0.6 }}
+            transition={{ duration: 2, ease: "easeOut" }}
+          />
+          <motion.path
+            d="M -5 80 Q 30 70, 45 55 T 75 40 T 115 25"
+            fill="none"
+            stroke={colors.accentLight}
+            strokeWidth="0.15"
+            strokeLinecap="round"
+            strokeDasharray="2 4"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 0.4 }}
+            transition={{ duration: 2.5, ease: "easeOut", delay: 0.3 }}
+          />
+        </svg>
 
-        {/* Middle section - main content */}
-        <div className={`flex-1 flex flex-col ${isStory ? 'justify-center' : 'justify-center'} items-start`}>
-          {/* Pre-headline */}
-          <motion.p 
-            className="text-sm tracking-[0.25em] uppercase mb-4 font-light"
-            style={{ 
-              color: colors.accentLight,
-              fontFamily: "'Inter', 'system-ui', sans-serif"
-            }}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            This week my ark brought me
-          </motion.p>
+        {/* Subtle glow effect */}
+        <div 
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full blur-3xl pointer-events-none"
+          style={{ background: colors.glow }}
+        />
 
-          {/* Main headline */}
-          <motion.h1 
-            className="text-3xl md:text-4xl font-normal tracking-[0.15em] leading-tight mb-6"
-            style={{ 
-              fontFamily: "'Canela', 'Playfair Display', 'Georgia', serif",
-              color: 'hsl(35, 30%, 92%)'
-            }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+        {/* Content container */}
+        <div className="relative z-10 h-full flex flex-col justify-between p-8">
+          {/* Top section - decorative */}
+          <motion.div 
+            className="flex justify-end"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            {headline}
-          </motion.h1>
-
-          {/* Optional subtext */}
-          {subtext && (
-            <motion.p 
-              className="text-sm opacity-60 max-w-[200px]"
-              style={{ 
-                fontFamily: "'Inter', 'system-ui', sans-serif",
-                color: 'hsl(35, 20%, 80%)'
-              }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
-              transition={{ delay: 0.7 }}
-            >
-              {subtext}
-            </motion.p>
-          )}
-
-          {/* Emotional Intelligence indicator */}
-          <motion.div 
-            className="mt-8 flex items-center gap-3"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-          >
             <div 
-              className="w-8 h-8 rounded-full flex items-center justify-center border"
-              style={{ 
-                borderColor: colors.accent,
-                background: `${colors.accent}15`
-              }}
+              className="text-3xl opacity-20"
+              style={{ color: colors.accent }}
             >
-              <span 
-                className="text-xs"
-                style={{ color: colors.accent }}
-              >
-                EQ
-              </span>
+              {getMilestoneSymbol()}
             </div>
-            <span 
-              className="text-xs tracking-wider opacity-50"
-              style={{ color: 'hsl(35, 20%, 80%)' }}
-            >
-              Emotional Intelligence Match
-            </span>
           </motion.div>
-        </div>
 
-        {/* Bottom section - branding */}
-        <motion.div 
-          className="flex items-center justify-between"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-        >
-          <div className="flex items-center gap-3">
-            <MonArkLogo size="sm" showTitle={false} />
-            <span 
-              className="text-lg tracking-[0.2em] font-light"
+          {/* Middle section - main content */}
+          <div className={`flex-1 flex flex-col ${isStory ? 'justify-center' : 'justify-center'} items-start`}>
+            {/* Pre-headline */}
+            <motion.p 
+              className="text-sm tracking-[0.25em] uppercase mb-4 font-light"
               style={{ 
-                fontFamily: "'Canela', 'Playfair Display', serif",
+                color: colors.accentLight,
+                fontFamily: "'Inter', 'system-ui', sans-serif"
+              }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              This week my ark brought me
+            </motion.p>
+
+            {/* Main headline */}
+            <motion.h1 
+              className="text-3xl md:text-4xl font-normal tracking-[0.15em] leading-tight mb-6"
+              style={{ 
+                fontFamily: "'Canela', 'Playfair Display', 'Georgia', serif",
                 color: 'hsl(35, 30%, 92%)'
               }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
             >
-              MonArk
-            </span>
+              {headline}
+            </motion.h1>
+
+            {/* Optional subtext */}
+            {subtext && (
+              <motion.p 
+                className="text-sm opacity-60 max-w-[200px]"
+                style={{ 
+                  fontFamily: "'Inter', 'system-ui', sans-serif",
+                  color: 'hsl(35, 20%, 80%)'
+                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.6 }}
+                transition={{ delay: 0.7 }}
+              >
+                {subtext}
+              </motion.p>
+            )}
+
+            {/* Emotional Intelligence indicator */}
+            <motion.div 
+              className="mt-8 flex items-center gap-3"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+            >
+              <div 
+                className="w-8 h-8 rounded-full flex items-center justify-center border"
+                style={{ 
+                  borderColor: colors.accent,
+                  background: `${colors.accent}15`
+                }}
+              >
+                <span 
+                  className="text-xs"
+                  style={{ color: colors.accent }}
+                >
+                  EQ
+                </span>
+              </div>
+              <span 
+                className="text-xs tracking-wider opacity-50"
+                style={{ color: 'hsl(35, 20%, 80%)' }}
+              >
+                Emotional Intelligence Match
+              </span>
+            </motion.div>
           </div>
-          <Badge 
-            variant="outline" 
-            className="border-white/20 bg-white/5 text-white/60 text-[10px] tracking-wider"
+
+          {/* Bottom section - branding */}
+          <motion.div 
+            className="flex items-center justify-between"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
           >
-            BETA
-          </Badge>
-        </motion.div>
+            <div className="flex items-center gap-3">
+              <MonArkLogo size="sm" showTitle={false} />
+              <span 
+                className="text-lg tracking-[0.2em] font-light"
+                style={{ 
+                  fontFamily: "'Canela', 'Playfair Display', serif",
+                  color: 'hsl(35, 30%, 92%)'
+                }}
+              >
+                MonArk
+              </span>
+            </div>
+            <Badge 
+              variant="outline" 
+              className="border-white/20 bg-white/5 text-white/60 text-[10px] tracking-wider"
+            >
+              BETA
+            </Badge>
+          </motion.div>
+        </div>
       </div>
+
+      {/* Share buttons */}
+      {showShareButton && (
+        <div className="flex items-center gap-3">
+          <Button
+            onClick={handleShare}
+            disabled={isSharing}
+            className="gap-2 bg-primary hover:bg-primary/90"
+          >
+            {isSharing ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : shareSuccess ? (
+              <Check className="h-4 w-4" />
+            ) : (
+              <Share2 className="h-4 w-4" />
+            )}
+            {shareSuccess ? 'Shared!' : 'Share to Instagram'}
+          </Button>
+          
+          <Button
+            variant="outline"
+            onClick={() => handleDownload()}
+            disabled={isSharing}
+            className="gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Download
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
