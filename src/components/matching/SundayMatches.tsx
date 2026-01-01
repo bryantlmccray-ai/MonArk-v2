@@ -11,10 +11,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   Sparkles, Users, Calendar, Heart, MapPin, 
-  ChevronRight, Target, Sun, Coffee, Wine, Palette, Music, Compass
+  ChevronRight, Target, Sun, Coffee, Wine, Palette, Music, Compass,
+  Moon
 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { WeeklyRhythmPlans } from '@/components/weekly/WeeklyRhythmPlans';
 
 interface UnifiedMatch {
   id: string;
@@ -328,14 +330,21 @@ export const SundayMatches = () => {
       <div className="max-w-2xl mx-auto px-4 py-6">
         {/* This section removed - we always show demo data now */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2 h-12">
+            <TabsList className="grid w-full grid-cols-3 h-12">
               <TabsTrigger value="curated" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                 <Sparkles className="w-4 h-4" />
-                Your 3 ({displayCurated.length})
+                <span className="hidden sm:inline">Your 3</span>
+                <span className="sm:hidden">Matches</span>
+              </TabsTrigger>
+              <TabsTrigger value="plans" className="flex items-center gap-2">
+                <Moon className="w-4 h-4" />
+                <span className="hidden sm:inline">Date Plans</span>
+                <span className="sm:hidden">Plans</span>
               </TabsTrigger>
               <TabsTrigger value="pool" className="flex items-center gap-2">
                 <Users className="w-4 h-4" />
-                Explore ({displayPool.length})
+                <span className="hidden sm:inline">Explore</span>
+                <span className="sm:hidden">Pool</span>
               </TabsTrigger>
             </TabsList>
 
@@ -425,6 +434,11 @@ export const SundayMatches = () => {
                   </Card>
                 ))}
               </div>
+            </TabsContent>
+
+            {/* Rhythm Plans Tab */}
+            <TabsContent value="plans" className="space-y-4">
+              <WeeklyRhythmPlans />
             </TabsContent>
 
             {/* Pool Tab */}
