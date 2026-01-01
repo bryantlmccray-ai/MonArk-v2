@@ -153,10 +153,12 @@ export const AuthPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !password) {
+    // For login: only email is required (password optional for testing)
+    // For signup: email and password are required
+    if (!email) {
       toast({
         title: "Missing information",
-        description: "Please fill in all required fields",
+        description: "Please enter your email address",
         variant: "destructive"
       });
       return;
@@ -171,7 +173,8 @@ export const AuthPage: React.FC = () => {
       return;
     }
 
-    if (password.length < 6) {
+    // Password validation only required for signup
+    if (!isLogin && password.length < 6) {
       toast({
         title: "Password too short",
         description: "Password must be at least 6 characters long",
@@ -202,7 +205,9 @@ export const AuthPage: React.FC = () => {
 
     try {
       if (isLogin) {
-        const { error } = await signIn(email, password);
+        // For testing: use a default test password if none provided
+        const testPassword = password || 'testpass123';
+        const { error } = await signIn(email, testPassword);
         if (error) {
           // More specific error handling
           if (error.message.includes('Invalid login credentials')) {
@@ -318,9 +323,9 @@ export const AuthPage: React.FC = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
+              placeholder={isLogin ? "Enter password (optional for testing)" : "Enter your password"}
               className="bg-input border-border text-white placeholder:text-gray-400 focus:border-ring"
-              required
+              required={!isLogin}
             />
             {!isLogin && (
               <p className="text-xs text-gray-500">Must be at least 6 characters</p>
