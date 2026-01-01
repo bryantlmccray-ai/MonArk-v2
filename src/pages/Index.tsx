@@ -22,6 +22,7 @@ const Index = () => {
   const [showProfileComplete, setShowProfileComplete] = React.useState(false);
   const [skippedProfile, setSkippedProfile] = React.useState(false);
   const [initialTab, setInitialTab] = React.useState<'weekly' | 'profile'>('weekly');
+  const [hasEnteredApp, setHasEnteredApp] = React.useState(false);
 
   const handleSplashComplete = () => {
     sessionStorage.setItem('monark-splash-seen', 'true');
@@ -110,6 +111,7 @@ const Index = () => {
         onContinue={(destination) => {
           setShowProfileComplete(false);
           setSkippedProfile(false);
+          setHasEnteredApp(true);
           // Set the initial tab based on user's choice
           setInitialTab(destination === 'matches' ? 'weekly' : 'profile');
         }}
@@ -117,6 +119,11 @@ const Index = () => {
         isProfileIncomplete={skippedProfile}
       />
     );
+  }
+
+  // User has entered the app from profile complete screen - show MainApp regardless of profile status
+  if (hasEnteredApp) {
+    return <MainApp initialTab={initialTab} />;
   }
 
   // If user (real or demo) has a complete profile, show main app
