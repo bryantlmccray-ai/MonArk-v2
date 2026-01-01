@@ -171,7 +171,7 @@ export const ProfileCompleteScreen: React.FC<ProfileCompleteScreenProps> = ({
             size="lg"
           >
             <Map className="mr-2 h-5 w-5" />
-            Explore Discovery Map
+            View Profile
           </Button>
         </motion.div>
 
