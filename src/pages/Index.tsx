@@ -21,6 +21,7 @@ const Index = () => {
   const [showSplash, setShowSplash] = React.useState(true);
   const [showProfileComplete, setShowProfileComplete] = React.useState(false);
   const [skippedProfile, setSkippedProfile] = React.useState(false);
+  const [initialTab, setInitialTab] = React.useState<'weekly' | 'profile'>('weekly');
 
   const handleSplashComplete = () => {
     sessionStorage.setItem('monark-splash-seen', 'true');
@@ -106,9 +107,11 @@ const Index = () => {
   if (showProfileComplete || skippedProfile) {
     return (
       <ProfileCompleteScreen 
-        onContinue={() => {
+        onContinue={(destination) => {
           setShowProfileComplete(false);
           setSkippedProfile(false);
+          // Set the initial tab based on user's choice
+          setInitialTab(destination === 'matches' ? 'weekly' : 'profile');
         }}
         userName={profile?.bio?.split(' ')[0]}
         isProfileIncomplete={skippedProfile}
@@ -118,7 +121,7 @@ const Index = () => {
 
   // If user (real or demo) has a complete profile, show main app
   if (profile?.is_profile_complete) {
-    return <MainApp />;
+    return <MainApp initialTab={initialTab} />;
   }
 
   // If user has a profile but it's not complete, show profile creation

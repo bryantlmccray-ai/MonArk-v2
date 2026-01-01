@@ -18,9 +18,13 @@ import { useAnalytics } from '@/hooks/useAnalytics';
 import { useContactFeedback } from '@/hooks/useContactFeedback';
 import { ContactShareFeedback } from '@/components/feedback/ContactShareFeedback';
 
-export const MainApp: React.FC = () => {
+interface MainAppProps {
+  initialTab?: string;
+}
+
+export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   // Weekly is now the default/main view - no more discovery swiping
-  const [activeTab, setActiveTab] = useState('weekly');
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [datesJournalTab, setDatesJournalTab] = useState<'dates' | 'ark'>('dates');
   const [showDebrief, setShowDebrief] = useState(false);
   const [showTrustScore, setShowTrustScore] = useState(false);
