@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ReportBlockModal } from '@/components/safety/ReportBlockModal';
+import { CloseTheLoopCard } from './CloseTheLoopCard';
 import { useMessages } from '@/hooks/useMessages';
 import { useAuth } from '@/hooks/useAuth';
 import { useTypingIndicator } from '@/hooks/useTypingIndicator';
@@ -43,6 +44,8 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const [isSending, setIsSending] = useState(false);
   const [showUserActions, setShowUserActions] = useState(false);
   const [showUnmatchConfirm, setShowUnmatchConfirm] = useState(false);
+  const [showCloseTheLoop, setShowCloseTheLoop] = useState(true);
+  const [closeTheLoopDismissed, setCloseTheLoopDismissed] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   
@@ -305,6 +308,23 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
               </div>
             );
           })
+        )}
+
+        {/* Anti-Ghosting: Close the Loop Card */}
+        {iHaveShared && theyHaveShared && showCloseTheLoop && !closeTheLoopDismissed && (
+          <CloseTheLoopCard
+            matchName={matchName}
+            onAdvance={(suggestion) => {
+              setMessageText(suggestion);
+              toast.success('Message ready to send!');
+            }}
+            onClose={(message) => {
+              sendMessage(message, matchUserId);
+              setShowCloseTheLoop(false);
+              toast.success('Gracefully closed the loop');
+            }}
+            onDismiss={() => setCloseTheLoopDismissed(true)}
+          />
         )}
         
         {/* Typing Indicator */}
