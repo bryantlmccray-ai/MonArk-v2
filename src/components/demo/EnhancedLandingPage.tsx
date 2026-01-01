@@ -205,7 +205,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-3xl mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-charcoal mb-4">Why I Built MonArk</h2>
-            <p className="text-base text-charcoal-soft font-body leading-relaxed uppercase">A Founder's Note on Intentional Dating</p>
+            <p className="text-lg text-charcoal-soft font-body leading-relaxed uppercase">A Founder's Note on Intentional Dating</p>
             <div className="w-16 h-px bg-taupe mx-auto mt-6"></div>
           </div>
           
