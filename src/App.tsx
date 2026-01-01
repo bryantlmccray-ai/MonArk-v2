@@ -18,6 +18,7 @@ import { Admin } from "./pages/Admin";
 import AdminWaitlist from "./pages/AdminWaitlist";
 import AdminAnalytics from "./pages/AdminAnalytics";
 import AdminMatchCuration from "./pages/AdminMatchCuration";
+import { MilestoneCardShowcase } from "./components/social/MilestoneCardShowcase";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
                 <Route path="/admin/waitlist" element={<AdminWaitlist />} />
                 <Route path="/admin/analytics" element={<AdminAnalytics />} />
                 <Route path="/admin/curation" element={<AdminMatchCuration />} />
+                <Route path="/milestone-cards" element={<MilestoneCardShowcase />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
