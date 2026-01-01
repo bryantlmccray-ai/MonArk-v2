@@ -157,6 +157,11 @@ export const SundayMatches = () => {
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [mutualMatch, setMutualMatch] = useState<{ name: string; photo?: string; conversationId?: string } | null>(null);
   const [activeTab, setActiveTab] = useState('curated');
+  
+  // Check if this is the user's first visit to show welcome tip - must be before any early returns
+  const [showWelcomeTip, setShowWelcomeTip] = useState(() => {
+    return !sessionStorage.getItem('monark-welcome-tip-dismissed');
+  });
 
   const loading = curatedLoading || poolLoading;
   const nextRefresh = getNextRefreshDate();
@@ -255,11 +260,6 @@ export const SundayMatches = () => {
   const isUsingDemoData = unifiedCurated.length === 0 && unifiedPool.length === 0;
 
   const totalMatches = displayCurated.length + displayPool.length;
-
-  // Check if this is the user's first visit to show welcome tip
-  const [showWelcomeTip, setShowWelcomeTip] = useState(() => {
-    return !sessionStorage.getItem('monark-welcome-tip-dismissed');
-  });
 
   const dismissWelcomeTip = () => {
     sessionStorage.setItem('monark-welcome-tip-dismissed', 'true');
