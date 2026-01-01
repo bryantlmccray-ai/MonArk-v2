@@ -147,8 +147,40 @@ export const SundayMatches = () => {
 
   const totalMatches = unifiedCurated.length + unifiedPool.length;
 
+  // Check if this is the user's first visit to show welcome tip
+  const [showWelcomeTip, setShowWelcomeTip] = useState(() => {
+    return !sessionStorage.getItem('monark-welcome-tip-dismissed');
+  });
+
+  const dismissWelcomeTip = () => {
+    sessionStorage.setItem('monark-welcome-tip-dismissed', 'true');
+    setShowWelcomeTip(false);
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Welcome Tip Banner */}
+      {showWelcomeTip && (
+        <div className="bg-primary/10 border-b border-primary/20 px-4 py-3">
+          <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-sm">
+              <Sparkles className="w-4 h-4 text-primary flex-shrink-0" />
+              <span className="text-foreground">
+                Welcome to MonArk! View and edit your profile anytime in the <strong>Profile</strong> tab below.
+              </span>
+            </div>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={dismissWelcomeTip}
+              className="text-muted-foreground hover:text-foreground flex-shrink-0"
+            >
+              Got it
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b border-border">
         <div className="px-4 py-4 max-w-2xl mx-auto">
