@@ -74,21 +74,39 @@ export const ShareableMilestoneCard: React.FC<ShareableMilestoneCardProps> = ({
 
   // Generate image from card
   const generateImage = async (): Promise<Blob | null> => {
-    if (!cardRef.current) return null;
+    if (!cardRef.current) {
+      console.error('Card ref not found');
+      return null;
+    }
 
     try {
+      // Wait for any animations to complete
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const canvas = await html2canvas(cardRef.current, {
-        scale: 2, // Higher resolution
-        backgroundColor: null,
+        scale: 2,
+        backgroundColor: '#1a1a2e', // Fallback background
         useCORS: true,
-        logging: false
+        logging: false,
+        allowTaint: true,
+        foreignObjectRendering: false
       });
 
       return new Promise((resolve) => {
-        canvas.toBlob((blob) => resolve(blob), 'image/png', 1.0);
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              console.error('Failed to create blob from canvas');
+            }
+            resolve(blob);
+          }, 
+          'image/png', 
+          1.0
+        );
       });
     } catch (error) {
       console.error('Error generating image:', error);
+      toast.error('Failed to capture image');
       return null;
     }
   };
@@ -101,7 +119,6 @@ export const ShareableMilestoneCard: React.FC<ShareableMilestoneCardProps> = ({
       const imageBlob = await generateImage();
       
       if (!imageBlob) {
-        toast.error('Failed to generate image');
         setIsSharing(false);
         return;
       }
@@ -111,28 +128,40 @@ export const ShareableMilestoneCard: React.FC<ShareableMilestoneCardProps> = ({
       });
 
       // Check if Web Share API is available and supports files
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: 'MonArk Milestone',
-          text: `${headline} ✨ #MonArk #DatingJourney`
-        });
-        
-        setShareSuccess(true);
-        toast.success('Shared successfully!');
-        setTimeout(() => setShareSuccess(false), 2000);
+      const canShareFiles = typeof navigator !== 'undefined' && 
+                           navigator.share && 
+                           navigator.canShare && 
+                           navigator.canShare({ files: [file] });
+      
+      if (canShareFiles) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: 'MonArk Milestone',
+            text: `${headline} ✨ #MonArk #DatingJourney`
+          });
+          
+          setShareSuccess(true);
+          toast.success('Shared successfully!');
+          setTimeout(() => setShareSuccess(false), 2000);
+        } catch (shareError: any) {
+          // User cancelled or share failed
+          if (shareError.name === 'AbortError') {
+            // User cancelled, no error message needed
+          } else {
+            console.error('Share failed:', shareError);
+            // Fallback to download
+            await handleDownload(imageBlob);
+          }
+        }
       } else {
-        // Fallback: Download the image
-        handleDownload(imageBlob);
-        toast.info('Opening download - share from your camera roll', {
-          description: 'Web Share not supported on this device'
-        });
+        // Web Share API not supported - download and show instructions
+        await handleDownload(imageBlob);
+        toast.info('Image downloaded! Open Instagram and share from your gallery.');
       }
     } catch (error: any) {
-      if (error.name !== 'AbortError') {
-        console.error('Share error:', error);
-        toast.error('Share cancelled or failed');
-      }
+      console.error('Share error:', error);
+      toast.error('Something went wrong. Try the download button instead.');
     } finally {
       setIsSharing(false);
     }
