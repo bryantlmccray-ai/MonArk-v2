@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, MessageCircle, BookOpen, Calendar } from 'lucide-react';
+import { User, MessageCircle, BookOpen, Calendar, Share2 } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -24,6 +24,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
     { id: 'weekly', icon: Calendar, label: 'Your 3 Options' },
     { id: 'matches', icon: MessageCircle, label: 'Connections' },
     { id: 'dates', icon: BookOpen, label: 'Journal' },
+    { id: 'shareables', icon: Share2, label: 'MonArk Shareables' },
     { id: 'profile', icon: User, label: 'Profile' },
   ];
 
