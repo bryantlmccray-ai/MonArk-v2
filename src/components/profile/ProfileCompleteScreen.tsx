@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, Calendar, Sparkles, MessageCircle, Settings, ArrowRight, AlertTriangle } from 'lucide-react';
+import { CheckCircle2, Calendar, Sparkles, MessageCircle, Settings, ArrowRight, AlertTriangle, Map, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { MonArkLogo } from '@/components/MonArkLogo';
 
 interface ProfileCompleteScreenProps {
-  onContinue: () => void;
+  onContinue: (destination: 'discovery' | 'matches') => void;
   userName?: string;
   isProfileIncomplete?: boolean;
 }
@@ -146,19 +146,32 @@ export const ProfileCompleteScreen: React.FC<ProfileCompleteScreenProps> = ({
           </div>
         </motion.div>
 
-        {/* Enter Button */}
+        {/* Destination Choice */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: isProfileIncomplete ? 1.1 : 1, duration: 0.4 }}
+          className="space-y-3"
         >
+          <p className="text-sm text-muted-foreground font-body">Where would you like to start?</p>
+          
           <Button 
-            onClick={onContinue}
+            onClick={() => onContinue('matches')}
             className="w-full py-6 text-lg font-medium"
             size="lg"
           >
-            Enter MonArk
-            <ArrowRight className="ml-2 h-5 w-5" />
+            <Heart className="mr-2 h-5 w-5" />
+            View Curated Matches
+          </Button>
+          
+          <Button 
+            onClick={() => onContinue('discovery')}
+            variant="outline"
+            className="w-full py-6 text-lg font-medium"
+            size="lg"
+          >
+            <Map className="mr-2 h-5 w-5" />
+            Explore Discovery Map
           </Button>
         </motion.div>
 
