@@ -37,108 +37,109 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, boolean>>({});
   const { toast } = useToast();
 
   const totalSteps = 3;
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear error for this field when user starts typing
+    if (fieldErrors[field]) {
+      setFieldErrors(prev => ({ ...prev, [field]: false }));
+    }
   };
 
   const validateStep = (step: number): boolean => {
+    const errors: Record<string, boolean> = {};
+    let isValid = true;
+
     switch (step) {
       case 1:
         if (!formData.firstName.trim()) {
-          toast({
-            title: "Name Required",
-            description: "Please enter your first name",
-            variant: "destructive"
-          });
-          return false;
+          errors.firstName = true;
+          isValid = false;
         }
         if (!formData.email.trim()) {
-          toast({
-            title: "Email Required",
-            description: "Please enter your email address",
-            variant: "destructive"
-          });
-          return false;
+          errors.email = true;
+          isValid = false;
         }
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(formData.email)) {
+        if (formData.email.trim() && !emailRegex.test(formData.email)) {
+          errors.email = true;
+          isValid = false;
           toast({
             title: "Invalid Email",
             description: "Please enter a valid email address",
             variant: "destructive"
           });
-          return false;
         }
-        return true;
+        if (!isValid && !errors.email) {
+          toast({
+            title: "Required Fields Missing",
+            description: "Please fill in the highlighted fields",
+            variant: "destructive"
+          });
+        }
+        break;
       case 2:
         if (!formData.ageRange) {
-          toast({
-            title: "Age Required",
-            description: "Please select your age range",
-            variant: "destructive"
-          });
-          return false;
+          errors.ageRange = true;
+          isValid = false;
         }
         if (!formData.city.trim()) {
-          toast({
-            title: "City Required",
-            description: "Please enter your city",
-            variant: "destructive"
-          });
-          return false;
+          errors.city = true;
+          isValid = false;
         }
         // Check if city is Chicago (case insensitive)
         const cityLower = formData.city.toLowerCase().trim();
-        if (!cityLower.includes('chicago')) {
+        if (formData.city.trim() && !cityLower.includes('chicago')) {
+          errors.city = true;
           toast({
             title: "Chicago Only for MVP",
             description: "We're launching in Chicago first! We'll notify you when we expand to your area.",
             variant: "destructive"
           });
+          setFieldErrors(errors);
           return false;
         }
         if (!formData.genderIdentity.trim()) {
-          toast({
-            title: "Gender Required",
-            description: "Please tell us how you identify",
-            variant: "destructive"
-          });
-          return false;
+          errors.genderIdentity = true;
+          isValid = false;
         }
         if (!formData.lookingFor.trim()) {
-          toast({
-            title: "Looking For Required",
-            description: "Please tell us who you're looking for",
-            variant: "destructive"
-          });
-          return false;
+          errors.lookingFor = true;
+          isValid = false;
         }
         if (!formData.relationshipGoal) {
+          errors.relationshipGoal = true;
+          isValid = false;
+        }
+        if (!isValid) {
           toast({
-            title: "Relationship Goal Required",
-            description: "Please select your relationship goal",
+            title: "Required Fields Missing",
+            description: "Please fill in the highlighted fields",
             variant: "destructive"
           });
-          return false;
         }
-        return true;
+        break;
       case 3:
         if (!formData.whyMonark.trim() || formData.whyMonark.trim().length < 20) {
+          errors.whyMonark = true;
+          isValid = false;
           toast({
             title: "Tell Us More",
             description: "Please write at least a sentence about why you want to join MonArk",
             variant: "destructive"
           });
-          return false;
         }
-        return true;
+        break;
       default:
-        return true;
+        break;
     }
+
+    setFieldErrors(errors);
+    return isValid;
   };
 
   const handleNext = () => {
@@ -240,17 +241,23 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
               <div className="space-y-2">
                 <Label htmlFor="firstName" className="text-white text-sm">First Name *</Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${fieldErrors.firstName ? 'text-red-400' : 'text-gray-400'}`} />
                   <Input
                     id="firstName"
                     type="text"
                     value={formData.firstName}
                     onChange={(e) => handleInputChange('firstName', e.target.value)}
-                    className="bg-white border-gray-700 text-black pl-10"
+                    className={`bg-white border-gray-700 text-black pl-10 ${fieldErrors.firstName ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
                     placeholder="First name"
                     disabled={isSubmitting}
                   />
                 </div>
+                {fieldErrors.firstName && (
+                  <p className="text-xs text-red-400 flex items-center gap-1">
+                    <AlertCircle className="h-3 w-3" />
+                    First name is required
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="lastName" className="text-white text-sm">Last Name</Label>
@@ -269,17 +276,23 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
             <div className="space-y-2">
               <Label htmlFor="email" className="text-white text-sm">Email Address *</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Mail className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${fieldErrors.email ? 'text-red-400' : 'text-gray-400'}`} />
                 <Input
                   id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  className="bg-white border-gray-700 text-black pl-10"
+                  className={`bg-white border-gray-700 text-black pl-10 ${fieldErrors.email ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
                   placeholder="your@email.com"
                   disabled={isSubmitting}
                 />
               </div>
+              {fieldErrors.email && (
+                <p className="text-xs text-red-400 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  Valid email is required
+                </p>
+              )}
             </div>
           </div>
         );
@@ -290,7 +303,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
             <div className="space-y-2">
               <Label htmlFor="ageRange" className="text-white text-sm">Age Range *</Label>
               <Select value={formData.ageRange} onValueChange={(val) => handleInputChange('ageRange', val)} disabled={isSubmitting}>
-                <SelectTrigger className="bg-white border-gray-700 text-black">
+                <SelectTrigger className={`bg-white border-gray-700 text-black ${fieldErrors.ageRange ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}>
                   <SelectValue placeholder="Select age range" />
                 </SelectTrigger>
                 <SelectContent>
@@ -301,25 +314,38 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   <SelectItem value="55+">55+</SelectItem>
                 </SelectContent>
               </Select>
+              {fieldErrors.ageRange && (
+                <p className="text-xs text-red-400 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  Age range is required
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="city" className="text-white text-sm">City *</Label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <MapPin className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${fieldErrors.city ? 'text-red-400' : 'text-gray-400'}`} />
                 <Input
                   id="city"
                   value={formData.city}
                   onChange={(e) => handleInputChange('city', e.target.value)}
-                  className="bg-white border-gray-700 text-black pl-10"
+                  className={`bg-white border-gray-700 text-black pl-10 ${fieldErrors.city ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
                   placeholder="Chicago"
                   disabled={isSubmitting}
                 />
               </div>
-              <p className="text-xs text-goldenrod/80 flex items-center gap-1">
-                <AlertCircle className="h-3 w-3" />
-                We're launching in Chicago first
-              </p>
+              {fieldErrors.city ? (
+                <p className="text-xs text-red-400 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  City is required (Chicago only for MVP)
+                </p>
+              ) : (
+                <p className="text-xs text-goldenrod/80 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  We're launching in Chicago first
+                </p>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -329,10 +355,16 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   id="genderIdentity"
                   value={formData.genderIdentity}
                   onChange={(e) => handleInputChange('genderIdentity', e.target.value)}
-                  className="bg-white border-gray-700 text-black"
+                  className={`bg-white border-gray-700 text-black ${fieldErrors.genderIdentity ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
                   placeholder="e.g. Woman, Man, Non-binary"
                   disabled={isSubmitting}
                 />
+                {fieldErrors.genderIdentity && (
+                  <p className="text-xs text-red-400 flex items-center gap-1">
+                    <AlertCircle className="h-3 w-3" />
+                    Required
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="lookingFor" className="text-white text-sm">Looking for... *</Label>
@@ -340,17 +372,23 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   id="lookingFor"
                   value={formData.lookingFor}
                   onChange={(e) => handleInputChange('lookingFor', e.target.value)}
-                  className="bg-white border-gray-700 text-black"
+                  className={`bg-white border-gray-700 text-black ${fieldErrors.lookingFor ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
                   placeholder="e.g. Women, Men, Everyone"
                   disabled={isSubmitting}
                 />
+                {fieldErrors.lookingFor && (
+                  <p className="text-xs text-red-400 flex items-center gap-1">
+                    <AlertCircle className="h-3 w-3" />
+                    Required
+                  </p>
+                )}
               </div>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="relationshipGoal" className="text-white text-sm">What are you looking for? *</Label>
               <Select value={formData.relationshipGoal} onValueChange={(val) => handleInputChange('relationshipGoal', val)} disabled={isSubmitting}>
-                <SelectTrigger className="bg-white border-gray-700 text-black">
+                <SelectTrigger className={`bg-white border-gray-700 text-black ${fieldErrors.relationshipGoal ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}>
                   <SelectValue placeholder="Select your goal" />
                 </SelectTrigger>
                 <SelectContent>
@@ -360,6 +398,12 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   <SelectItem value="not sure">Not sure yet</SelectItem>
                 </SelectContent>
               </Select>
+              {fieldErrors.relationshipGoal && (
+                <p className="text-xs text-red-400 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  Relationship goal is required
+                </p>
+              )}
             </div>
           </div>
         );
@@ -373,11 +417,18 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 id="whyMonark"
                 value={formData.whyMonark}
                 onChange={(e) => handleInputChange('whyMonark', e.target.value)}
-                className="bg-white border-gray-700 text-black min-h-[120px]"
+                className={`bg-white border-gray-700 text-black min-h-[120px] ${fieldErrors.whyMonark ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
                 placeholder="Tell us a bit about yourself and what you're hoping to find. What's not working with other dating apps? What excites you about MonArk's approach?"
                 disabled={isSubmitting}
               />
-              <p className="text-xs text-gray-400">This helps us understand if MonArk is a good fit for you</p>
+              {fieldErrors.whyMonark ? (
+                <p className="text-xs text-red-400 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  Please write at least a sentence (20+ characters)
+                </p>
+              ) : (
+                <p className="text-xs text-gray-400">This helps us understand if MonArk is a good fit for you</p>
+              )}
             </div>
 
             <div className="space-y-2">
