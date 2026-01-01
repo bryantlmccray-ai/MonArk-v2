@@ -17,6 +17,7 @@ import { PostDateReflection } from '@/components/rif/PostDateReflection';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { useContactFeedback } from '@/hooks/useContactFeedback';
 import { ContactShareFeedback } from '@/components/feedback/ContactShareFeedback';
+import { MilestoneCardShowcase } from '@/components/social/MilestoneCardShowcase';
 
 interface MainAppProps {
   initialTab?: string;
@@ -96,6 +97,8 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
             onDateCompleted={handleDateCompleted}
           />
         );
+      case 'shareables':
+        return <MilestoneCardShowcase />;
       case 'profile':
         return (
           <Profile
