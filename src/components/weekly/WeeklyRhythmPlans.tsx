@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Moon, Sparkles, Compass, Clock, MapPin, Shield, 
   Heart, Users, Check, ArrowRight, Calendar, 
-  MessageCircle, AlertTriangle
+  MessageCircle, AlertTriangle, Ghost, Zap, Coffee, X
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -450,6 +450,126 @@ export const WeeklyRhythmPlans = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Anti-Ghosting Feature Showcase */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.9 }}
+        className="px-6 pb-12"
+      >
+        <div className="max-w-4xl mx-auto">
+          <Card className="overflow-hidden border-2 border-purple-500/30 bg-gradient-to-br from-purple-500/10 via-fuchsia-500/5 to-violet-500/10">
+            <CardContent className="p-6">
+              {/* Header */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
+                  <Ghost className="w-6 h-6 text-purple-400" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-purple-500/20 text-purple-300 border-0">
+                      <X className="w-3 h-3 mr-1" />
+                      Anti-Ghosting
+                    </Badge>
+                    <Badge variant="outline" className="border-purple-500/30 text-purple-300">
+                      Built-in
+                    </Badge>
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground mt-1">
+                    Close the Loop
+                  </h3>
+                </div>
+              </div>
+
+              <p className="text-muted-foreground mb-6">
+                After every meet, we help both people move forward — no awkward drift, no wondering what happened.
+              </p>
+
+              {/* Demo Flow */}
+              <div className="space-y-4">
+                {/* Step 1: How did it feel? */}
+                <div className="p-4 rounded-xl bg-background/60 border border-border/50">
+                  <div className="flex items-center gap-2 mb-3 text-sm font-medium text-muted-foreground">
+                    <span className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs">1</span>
+                    After-Action Check-in
+                  </div>
+                  <p className="text-foreground font-medium mb-3">How did it feel?</p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge className="bg-emerald-500/20 text-emerald-300 border-0 px-4 py-2 text-sm cursor-pointer hover:bg-emerald-500/30 transition-colors">
+                      <Zap className="w-4 h-4 mr-2" />
+                      Great energy
+                    </Badge>
+                    <Badge className="bg-amber-500/20 text-amber-300 border-0 px-4 py-2 text-sm cursor-pointer hover:bg-amber-500/30 transition-colors">
+                      Neutral
+                    </Badge>
+                    <Badge className="bg-muted/50 text-muted-foreground border-0 px-4 py-2 text-sm cursor-pointer hover:bg-muted/70 transition-colors">
+                      Not a fit
+                    </Badge>
+                  </div>
+                </div>
+
+                {/* Step 2: Micro-prompts */}
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {/* Advance */}
+                  <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                    <div className="flex items-center gap-2 mb-2 text-sm font-medium text-emerald-400">
+                      <span className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs">2A</span>
+                      If it clicked...
+                    </div>
+                    <p className="text-foreground font-medium mb-2">Micro-prompt (Advance)</p>
+                    <div className="p-3 rounded-lg bg-background/60 border border-border/50">
+                      <div className="flex items-center gap-2 text-sm text-foreground">
+                        <Coffee className="w-4 h-4 text-emerald-400" />
+                        <span className="font-medium">Next step:</span>
+                      </div>
+                      <p className="text-muted-foreground text-sm mt-1 italic">
+                        "Coffee Sunday 11:00?"
+                      </p>
+                    </div>
+                    <Button size="sm" className="w-full mt-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-0">
+                      <ArrowRight className="w-4 h-4 mr-2" />
+                      Keep it going
+                    </Button>
+                  </div>
+
+                  {/* Graceful Close */}
+                  <div className="p-4 rounded-xl bg-muted/20 border border-border/50">
+                    <div className="flex items-center gap-2 mb-2 text-sm font-medium text-muted-foreground">
+                      <span className="w-5 h-5 rounded-full bg-muted/50 flex items-center justify-center text-xs">2B</span>
+                      If not a match...
+                    </div>
+                    <p className="text-foreground font-medium mb-2">Micro-prompt (Close Kindly)</p>
+                    <div className="p-3 rounded-lg bg-background/60 border border-border/50">
+                      <div className="flex items-center gap-2 text-sm text-foreground">
+                        <Heart className="w-4 h-4 text-muted-foreground" />
+                        <span className="font-medium">Kind close:</span>
+                      </div>
+                      <p className="text-muted-foreground text-sm mt-1 italic">
+                        "Thanks for meeting, not a match for me but wishing you well!"
+                      </p>
+                    </div>
+                    <Button size="sm" variant="outline" className="w-full mt-3 border-border/50">
+                      <Check className="w-4 h-4 mr-2" />
+                      End gracefully
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Result */}
+                <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 text-center">
+                  <p className="text-sm text-purple-300 font-medium">
+                    Two taps. Everyone knows where they stand.
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    No limbo. No ghosting. Just clarity.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </motion.div>
     </div>
   );
 };
