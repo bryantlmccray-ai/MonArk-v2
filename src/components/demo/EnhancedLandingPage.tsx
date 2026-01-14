@@ -149,6 +149,65 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
+      {/* Instagram Feed Section */}
+      <section className="py-20 bg-gradient-to-b from-bone to-charcoal-gray/5">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <a 
+              href="https://www.instagram.com/monark.eq/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 group"
+            >
+              <div className="p-3 rounded-xl bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737] shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                <Instagram className="h-6 w-6 text-white" />
+              </div>
+              <div className="text-left">
+                <h2 className="text-2xl sm:text-3xl font-editorial-headline text-charcoal group-hover:text-taupe transition-colors">
+                  @monark.eq
+                </h2>
+                <p className="text-sm text-charcoal-soft font-body">Follow us on Instagram</p>
+              </div>
+            </a>
+          </div>
+
+          {/* Instagram Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            {instagramImages.map((image, i) => (
+              <a
+                key={i}
+                href="https://www.instagram.com/monark.eq/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative aspect-square rounded-xl overflow-hidden group cursor-pointer shadow-md hover:shadow-xl transition-all duration-500 animate-fade-in"
+                style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'backwards' }}
+              >
+                <img 
+                  src={image} 
+                  alt={`MonArk Instagram post ${i + 1}`}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+                  <Instagram className="h-8 w-8 text-white transform scale-0 group-hover:scale-100 transition-transform duration-300 delay-100" />
+                </div>
+              </a>
+            ))}
+          </div>
+
+          <div className="text-center mt-10">
+            <a
+              href="https://www.instagram.com/monark.eq/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-taupe/30 bg-white/50 backdrop-blur-sm text-charcoal hover:bg-white/70 hover:border-taupe/50 transition-all duration-300 font-body text-sm tracking-wide"
+            >
+              View More on Instagram
+              <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* How It Works Section */}
       <section className="py-20 bg-gradient-to-b from-charcoal-gray/5 to-charcoal-gray/15">
         <div className="max-w-4xl mx-auto px-6">
@@ -286,69 +345,6 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
       {/* Waitlist Modal */}
       <WaitlistModal isOpen={showWaitlistModal} onClose={() => setShowWaitlistModal(false)} sourcePage="enhanced-landing" />
-
-      {/* Instagram Feed Section */}
-      <section className="py-20 bg-gradient-to-b from-charcoal-gray/25 to-charcoal-gray/30">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <a 
-              href="https://www.instagram.com/monark.eq/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 group"
-            >
-              <div className="p-3 rounded-xl bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737] shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                <Instagram className="h-6 w-6 text-white" />
-              </div>
-              <div className="text-left">
-                <h2 className="text-2xl sm:text-3xl font-editorial-headline text-charcoal group-hover:text-taupe transition-colors">
-                  @monark.eq
-                </h2>
-                <p className="text-sm text-charcoal-soft font-body">Follow us on Instagram</p>
-              </div>
-            </a>
-          </div>
-
-          {/* Instagram Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            {instagramImages.map((image, i) => (
-              <a
-                key={i}
-                href="https://www.instagram.com/monark.eq/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative aspect-square rounded-xl overflow-hidden group cursor-pointer shadow-md hover:shadow-xl transition-all duration-500 animate-fade-in"
-                style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'backwards' }}
-              >
-                {/* Actual brand image with scale effect */}
-                <img 
-                  src={image} 
-                  alt={`MonArk Instagram post ${i + 1}`}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
-                />
-
-                {/* Hover overlay with icon animation */}
-                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-                  <Instagram className="h-8 w-8 text-white transform scale-0 group-hover:scale-100 transition-transform duration-300 delay-100" />
-                </div>
-              </a>
-            ))}
-          </div>
-
-          {/* CTA */}
-          <div className="text-center mt-10">
-            <a
-              href="https://www.instagram.com/monark.eq/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-taupe/30 bg-white/50 backdrop-blur-sm text-charcoal hover:bg-white/70 hover:border-taupe/50 transition-all duration-300 font-body text-sm tracking-wide"
-            >
-              View More on Instagram
-              <ArrowRight className="h-4 w-4" />
-            </a>
-          </div>
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="py-16 bg-charcoal-gray/30">
