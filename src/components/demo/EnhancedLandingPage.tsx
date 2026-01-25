@@ -333,24 +333,24 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             >
-              <p className="text-lg text-charcoal-soft font-body leading-relaxed uppercase">
+              <p className="text-base text-charcoal-soft font-body leading-relaxed tracking-wide">
                 I spent years on dating apps that felt more like slot machines than places to find real connection.
               </p>
               
-              <p className="text-base text-charcoal-soft font-body leading-relaxed uppercase">
+              <p className="text-base text-charcoal-soft font-body leading-relaxed tracking-wide">
                 Sure, we could meet people. But finding someone who truly <em className="font-medium not-italic">got</em> you? That was rare.
               </p>
               
-              <p className="text-base text-charcoal-soft font-body leading-relaxed uppercase">
+              <p className="text-base text-charcoal-soft font-body leading-relaxed tracking-wide">
                 I wanted something intentional. A way to match on emotional compatibility, not just a hot profile pic. 
                 A way to make first dates feel effortless, not awkward.
               </p>
               
-              <p className="text-base font-body leading-relaxed text-charcoal font-medium uppercase">
+              <p className="text-base text-charcoal font-body leading-relaxed tracking-wide font-medium">
                 That's why MonArk matches on communication style, not just demographics.
               </p>
               
-              <p className="text-base font-editorial-headline text-taupe italic mt-8">
+              <p className="text-base text-taupe font-body tracking-wide italic mt-8">
                 — Bryant McCray, CEO & Founder
               </p>
             </motion.div>
