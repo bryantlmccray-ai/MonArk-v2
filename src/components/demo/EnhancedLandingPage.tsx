@@ -508,19 +508,19 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               </p>
             </motion.div>
             
-            {/* Team Member 3 */}
+            {/* Team Member 3 - Grace O'Malley */}
             <div className="text-center space-y-4 group">
               <div className="relative mx-auto w-32 h-32 rounded-full overflow-hidden border-2 border-taupe/20 group-hover:border-taupe/40 transition-colors duration-300">
                 <div className="absolute inset-0 bg-gradient-to-br from-dusty-rose/20 to-goldenrod/20 flex items-center justify-center">
-                  <span className="text-3xl font-editorial-headline text-charcoal-soft">MK</span>
+                  <span className="text-3xl font-editorial-headline text-charcoal-soft">GO</span>
                 </div>
               </div>
               <div>
-                <h3 className="font-editorial-headline text-xl text-charcoal">Morgan Kim</h3>
-                <p className="text-sm text-taupe font-body tracking-wide uppercase">Lead Engineer</p>
+                <h3 className="font-editorial-headline text-xl text-charcoal">Grace O'Malley</h3>
+                <p className="text-sm text-taupe font-body tracking-wide uppercase">Relationship Therapist & Clinical Advisor</p>
               </div>
               <p className="text-sm text-charcoal-soft font-body leading-relaxed">
-                Built the Smart Matching engine. Passionate about using AI for human connection.
+                Relationship therapist and licensed clinical social worker. Advises on emotional health and relationship dynamics.
               </p>
             </div>
           </div>
