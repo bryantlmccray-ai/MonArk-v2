@@ -5,6 +5,7 @@ import { PenLine, Heart, MapPin, ArrowRight, Instagram } from 'lucide-react';
 import { motion } from 'framer-motion';
 import founderPortrait from '@/assets/founder-portrait.jpeg';
 import sheezaPortrait from '@/assets/team/sheeza-anwar.png';
+import suryaPortrait from '@/assets/team/surya-nulu.png';
 import { useDemo } from '@/contexts/DemoContext';
 import { DemoMainApp } from './DemoMainApp';
 import { WaitlistModal } from './WaitlistModal';
@@ -438,21 +439,74 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               </p>
             </motion.div>
             
-            {/* Team Member 2 */}
-            <div className="text-center space-y-4 group">
-              <div className="relative mx-auto w-32 h-32 rounded-full overflow-hidden border-2 border-taupe/20 group-hover:border-taupe/40 transition-colors duration-300">
-                <div className="absolute inset-0 bg-gradient-to-br from-goldenrod/20 to-taupe/20 flex items-center justify-center">
-                  <span className="text-3xl font-editorial-headline text-charcoal-soft">AS</span>
-                </div>
-              </div>
+            {/* Team Member 2 - Surya Teja Nulu */}
+            <motion.div 
+              className="text-center space-y-4 group"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+            >
+              <motion.div 
+                className="relative mx-auto w-32 h-32"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {/* Ambient glow behind image */}
+                <motion.div 
+                  className="absolute -inset-2 bg-gradient-to-br from-goldenrod/15 via-taupe/10 to-dusty-rose/15 rounded-full blur-xl"
+                  animate={{ 
+                    opacity: [0.5, 0.7, 0.5],
+                    scale: [1, 1.02, 1]
+                  }}
+                  transition={{ 
+                    duration: 6, 
+                    repeat: Infinity, 
+                    ease: "easeInOut" 
+                  }}
+                />
+                
+                {/* Gold frame accent */}
+                <motion.div 
+                  className="absolute -inset-0.5 rounded-full bg-gradient-to-br from-goldenrod/40 via-taupe/20 to-goldenrod/30"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.2, delay: 0.3 }}
+                />
+                
+                {/* Image container */}
+                <motion.div 
+                  className="relative w-full h-full overflow-hidden rounded-full shadow-lg"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <img 
+                    src={suryaPortrait} 
+                    alt="Surya Teja Nulu" 
+                    className="w-full h-full object-cover"
+                  />
+                  
+                  {/* Subtle shine overlay */}
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent"
+                    initial={{ x: "-100%", opacity: 0 }}
+                    whileInView={{ x: "100%", opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.5, delay: 0.8, ease: "easeInOut" }}
+                  />
+                </motion.div>
+              </motion.div>
               <div>
-                <h3 className="font-editorial-headline text-xl text-charcoal">Alex Smith</h3>
-                <p className="text-sm text-taupe font-body tracking-wide uppercase">Head of Product</p>
+                <h3 className="font-editorial-headline text-xl text-charcoal">Surya Teja Nulu</h3>
+                <p className="text-sm text-taupe font-body tracking-wide uppercase">Founding Mobile & AI Engineer</p>
               </div>
               <p className="text-sm text-charcoal-soft font-body leading-relaxed">
-                Psychology PhD who obsesses over what makes relationships work. Chief empathy officer.
+                AI engineer and computer science graduate student. Focused on building practical, scalable AI systems.
               </p>
-            </div>
+            </motion.div>
             
             {/* Team Member 3 */}
             <div className="text-center space-y-4 group">
