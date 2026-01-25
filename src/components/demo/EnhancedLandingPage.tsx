@@ -289,6 +289,67 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
+      {/* Team Section */}
+      <section className="py-20 bg-gradient-to-b from-charcoal-gray/10 to-charcoal-gray/15">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-charcoal mb-4">Meet the Team</h2>
+            <p className="text-sm md:text-base font-body tracking-[0.1em] text-charcoal-soft uppercase">The people behind intentional dating</p>
+            <div className="w-16 h-px bg-taupe mx-auto mt-6"></div>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Team Member 1 */}
+            <div className="text-center space-y-4 group">
+              <div className="relative mx-auto w-32 h-32 rounded-full overflow-hidden border-2 border-taupe/20 group-hover:border-taupe/40 transition-colors duration-300">
+                <div className="absolute inset-0 bg-gradient-to-br from-taupe/20 to-dusty-rose/20 flex items-center justify-center">
+                  <span className="text-3xl font-editorial-headline text-charcoal-soft">JD</span>
+                </div>
+              </div>
+              <div>
+                <h3 className="font-editorial-headline text-xl text-charcoal">Jane Doe</h3>
+                <p className="text-sm text-taupe font-body tracking-wide uppercase">Founder & CEO</p>
+              </div>
+              <p className="text-sm text-charcoal-soft font-body leading-relaxed">
+                Former tech exec turned dating optimist. Believes everyone deserves connection that clicks.
+              </p>
+            </div>
+            
+            {/* Team Member 2 */}
+            <div className="text-center space-y-4 group">
+              <div className="relative mx-auto w-32 h-32 rounded-full overflow-hidden border-2 border-taupe/20 group-hover:border-taupe/40 transition-colors duration-300">
+                <div className="absolute inset-0 bg-gradient-to-br from-goldenrod/20 to-taupe/20 flex items-center justify-center">
+                  <span className="text-3xl font-editorial-headline text-charcoal-soft">AS</span>
+                </div>
+              </div>
+              <div>
+                <h3 className="font-editorial-headline text-xl text-charcoal">Alex Smith</h3>
+                <p className="text-sm text-taupe font-body tracking-wide uppercase">Head of Product</p>
+              </div>
+              <p className="text-sm text-charcoal-soft font-body leading-relaxed">
+                Psychology PhD who obsesses over what makes relationships work. Chief empathy officer.
+              </p>
+            </div>
+            
+            {/* Team Member 3 */}
+            <div className="text-center space-y-4 group">
+              <div className="relative mx-auto w-32 h-32 rounded-full overflow-hidden border-2 border-taupe/20 group-hover:border-taupe/40 transition-colors duration-300">
+                <div className="absolute inset-0 bg-gradient-to-br from-dusty-rose/20 to-goldenrod/20 flex items-center justify-center">
+                  <span className="text-3xl font-editorial-headline text-charcoal-soft">MK</span>
+                </div>
+              </div>
+              <div>
+                <h3 className="font-editorial-headline text-xl text-charcoal">Morgan Kim</h3>
+                <p className="text-sm text-taupe font-body tracking-wide uppercase">Lead Engineer</p>
+              </div>
+              <p className="text-sm text-charcoal-soft font-body leading-relaxed">
+                Built the Smart Matching engine. Passionate about using AI for human connection.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing Section */}
       <section className="py-20 bg-gradient-to-b from-charcoal-gray/10 to-charcoal-gray/25">
         <div className="max-w-4xl mx-auto px-6">
