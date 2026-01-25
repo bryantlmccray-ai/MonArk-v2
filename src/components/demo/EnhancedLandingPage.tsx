@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { MonArkLogo } from '@/components/MonArkLogo';
 import { PenLine, Heart, MapPin, ArrowRight, Instagram } from 'lucide-react';
+import { motion } from 'framer-motion';
+import founderPortrait from '@/assets/founder-portrait.jpeg';
 import { useDemo } from '@/contexts/DemoContext';
 import { DemoMainApp } from './DemoMainApp';
 import { WaitlistModal } from './WaitlistModal';
@@ -260,31 +262,94 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       </section>
 
       {/* Founder Story Section */}
-      <section className="py-20 bg-gradient-to-b from-charcoal-gray/15 to-charcoal-gray/10">
-        <div className="max-w-3xl mx-auto px-6">
-          <div className="text-center mb-12">
+      <section className="py-20 bg-gradient-to-b from-charcoal-gray/15 to-charcoal-gray/10 overflow-hidden">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-charcoal mb-4">Why I Built MonArk</h2>
             <p className="text-lg text-charcoal-soft font-body leading-relaxed uppercase">A Founder's Note on Intentional Dating</p>
             <div className="w-16 h-px bg-taupe mx-auto mt-6"></div>
           </div>
           
-          <div className="max-w-2xl mx-auto space-y-6">
-            <p className="text-lg text-charcoal-soft font-body leading-relaxed uppercase">
-              I spent years on dating apps that felt more like slot machines than places to find real connection.
-            </p>
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* Founder Image with Luxury Animation */}
+            <motion.div 
+              className="relative order-2 md:order-1"
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {/* Ambient glow behind image */}
+              <motion.div 
+                className="absolute -inset-4 bg-gradient-to-br from-goldenrod/15 via-taupe/10 to-dusty-rose/15 rounded-2xl blur-2xl"
+                animate={{ 
+                  opacity: [0.5, 0.7, 0.5],
+                  scale: [1, 1.02, 1]
+                }}
+                transition={{ 
+                  duration: 6, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+              />
+              
+              {/* Gold frame accent */}
+              <motion.div 
+                className="absolute -inset-1 rounded-xl bg-gradient-to-br from-goldenrod/40 via-taupe/20 to-goldenrod/30"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.2, delay: 0.3 }}
+              />
+              
+              {/* Image container */}
+              <motion.div 
+                className="relative overflow-hidden rounded-lg shadow-2xl"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <img 
+                  src={founderPortrait} 
+                  alt="MonArk Founder" 
+                  className="w-full h-auto object-cover"
+                />
+                
+                {/* Subtle shine overlay */}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent"
+                  initial={{ x: "-100%", opacity: 0 }}
+                  whileInView={{ x: "100%", opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.5, delay: 0.8, ease: "easeInOut" }}
+                />
+              </motion.div>
+            </motion.div>
             
-            <p className="text-base text-charcoal-soft font-body leading-relaxed uppercase">
-              Sure, we could meet people. But finding someone who truly <em className="font-medium not-italic">got</em> you? That was rare.
-            </p>
-            
-            <p className="text-base text-charcoal-soft font-body leading-relaxed uppercase">
-              I wanted something intentional. A way to match on emotional compatibility, not just a hot profile pic. 
-              A way to make first dates feel effortless, not awkward.
-            </p>
-            
-            <p className="text-base font-body leading-relaxed text-charcoal font-medium uppercase">
-              That's why MonArk matches on communication style, not just demographics.
-            </p>
+            {/* Text Content */}
+            <motion.div 
+              className="space-y-6 order-1 md:order-2"
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <p className="text-lg text-charcoal-soft font-body leading-relaxed uppercase">
+                I spent years on dating apps that felt more like slot machines than places to find real connection.
+              </p>
+              
+              <p className="text-base text-charcoal-soft font-body leading-relaxed uppercase">
+                Sure, we could meet people. But finding someone who truly <em className="font-medium not-italic">got</em> you? That was rare.
+              </p>
+              
+              <p className="text-base text-charcoal-soft font-body leading-relaxed uppercase">
+                I wanted something intentional. A way to match on emotional compatibility, not just a hot profile pic. 
+                A way to make first dates feel effortless, not awkward.
+              </p>
+              
+              <p className="text-base font-body leading-relaxed text-charcoal font-medium uppercase">
+                That's why MonArk matches on communication style, not just demographics.
+              </p>
+            </motion.div>
           </div>
         </div>
       </section>
