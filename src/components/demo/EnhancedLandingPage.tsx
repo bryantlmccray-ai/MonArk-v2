@@ -349,6 +349,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               <p className="text-base font-body leading-relaxed text-charcoal font-medium uppercase">
                 That's why MonArk matches on communication style, not just demographics.
               </p>
+              
+              <p className="text-base font-editorial-headline text-taupe italic mt-8">
+                — Bryant McCray, CEO & Founder
+              </p>
             </motion.div>
           </div>
         </div>
