@@ -1171,6 +1171,39 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          action_type: string
+          created_at: string
+          id: string
+          ip_address: string | null
+          request_count: number | null
+          updated_at: string
+          user_id: string | null
+          window_start: string
+        }
+        Insert: {
+          action_type: string
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          request_count?: number | null
+          updated_at?: string
+          user_id?: string | null
+          window_start?: string
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          request_count?: number | null
+          updated_at?: string
+          user_id?: string | null
+          window_start?: string
+        }
+        Relationships: []
+      }
       relationship_outcomes: {
         Row: {
           created_at: string
@@ -1462,6 +1495,54 @@ export type Database = {
           rif_enabled?: boolean | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      security_audit_log: {
+        Row: {
+          action: string
+          created_at: string
+          error_message: string | null
+          event_type: string
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          resource_id: string | null
+          resource_type: string | null
+          success: boolean | null
+          target_user_id: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          error_message?: string | null
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type?: string | null
+          success?: boolean | null
+          target_user_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          error_message?: string | null
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type?: string | null
+          success?: boolean | null
+          target_user_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -2299,10 +2380,24 @@ export type Database = {
     }
     Functions: {
       calculate_age: { Args: { birth_date: string }; Returns: number }
+      can_view_profile: {
+        Args: { target_id: string; viewer_id: string }
+        Returns: boolean
+      }
       check_mutual_match: {
         Args: { user_a: string; user_b: string }
         Returns: boolean
       }
+      check_rate_limit: {
+        Args: {
+          p_action_type: string
+          p_max_requests: number
+          p_user_id: string
+          p_window_minutes: number
+        }
+        Returns: boolean
+      }
+      cleanup_old_rate_limits: { Args: never; Returns: undefined }
       delete_user_completely: {
         Args: { user_id_input: string }
         Returns: undefined
@@ -2322,6 +2417,10 @@ export type Database = {
           walkability_score: number
         }[]
       }
+      has_mutual_match: {
+        Args: { user_a: string; user_b: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -2338,6 +2437,19 @@ export type Database = {
           target_table: string
         }
         Returns: undefined
+      }
+      log_security_event: {
+        Args: {
+          p_action: string
+          p_error_message?: string
+          p_event_type: string
+          p_metadata?: Json
+          p_resource_id?: string
+          p_resource_type?: string
+          p_success?: boolean
+          p_target_user_id?: string
+        }
+        Returns: string
       }
       mark_messages_as_read: {
         Args: { p_conversation_id: string; p_user_id: string }
