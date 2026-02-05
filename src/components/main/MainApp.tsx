@@ -18,6 +18,7 @@ import { useAnalytics } from '@/hooks/useAnalytics';
 import { useContactFeedback } from '@/hooks/useContactFeedback';
 import { ContactShareFeedback } from '@/components/feedback/ContactShareFeedback';
 import { MilestoneCardShowcase } from '@/components/social/MilestoneCardShowcase';
+ import { ProfileGate } from '@/components/common/ProfileGate';
 
 interface MainAppProps {
   initialTab?: string;
@@ -83,12 +84,33 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
 
   const renderActiveScreen = () => {
     switch (activeTab) {
-      case 'weekly':
-        return <SundayMatches />;
+       case 'weekly':
+         return (
+           <ProfileGate 
+             featureName="weekly matches"
+             onNavigateToProfile={() => handleTabChange('profile')}
+           >
+             <SundayMatches />
+           </ProfileGate>
+         );
       case 'circle':
-        return <MonArkCircle />;
+         return (
+           <ProfileGate 
+             featureName="your circle"
+             onNavigateToProfile={() => handleTabChange('profile')}
+           >
+             <MonArkCircle />
+           </ProfileGate>
+         );
       case 'matches':
-        return <Conversations />;
+         return (
+           <ProfileGate 
+             featureName="conversations"
+             onNavigateToProfile={() => handleTabChange('profile')}
+           >
+             <Conversations />
+           </ProfileGate>
+         );
       case 'dates':
         return (
           <DatesJournal 
@@ -100,14 +122,21 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
       case 'shareables':
         return <MilestoneCardShowcase />;
       case 'profile':
-        return (
+         return (
           <Profile
             onOpenTrustScore={() => setShowTrustScore(true)}
             onOpenSettings={() => setShowSettings(true)}
           />
         );
       default:
-        return <SundayMatches />;
+         return (
+           <ProfileGate 
+             featureName="weekly matches"
+             onNavigateToProfile={() => handleTabChange('profile')}
+           >
+             <SundayMatches />
+           </ProfileGate>
+         );
     }
   };
 
