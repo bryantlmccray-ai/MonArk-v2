@@ -6,11 +6,14 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ReportBlockModal } from '@/components/safety/ReportBlockModal';
 import { CloseTheLoopCard } from './CloseTheLoopCard';
+ import { MessagingLockCard } from './MessagingLockCard';
+ import { ApiErrorFallback } from '@/components/common/ApiErrorFallback';
 import { useMessages } from '@/hooks/useMessages';
 import { useAuth } from '@/hooks/useAuth';
 import { useTypingIndicator } from '@/hooks/useTypingIndicator';
 import { useRealTimePresence } from '@/hooks/useRealTimePresence';
 import { useContactSharing } from '@/hooks/useContactSharing';
+ import { useActionProtection } from '@/hooks/useActionProtection';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -31,6 +34,8 @@ interface ChatInterfaceProps {
   matchName: string;
   matchImage?: string;
   onClose?: () => void;
+   /** Whether the user has a mutual match (enables messaging) */
+   isMatched?: boolean;
 }
 
 export const ChatInterface: React.FC<ChatInterfaceProps> = ({
@@ -38,21 +43,23 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   matchUserId,
   matchName,
   matchImage,
-  onClose
+   onClose,
+   isMatched = true // Default to true for backwards compatibility
 }) => {
   const [messageText, setMessageText] = useState('');
-  const [isSending, setIsSending] = useState(false);
   const [showUserActions, setShowUserActions] = useState(false);
   const [showUnmatchConfirm, setShowUnmatchConfirm] = useState(false);
   const [showCloseTheLoop, setShowCloseTheLoop] = useState(true);
   const [closeTheLoopDismissed, setCloseTheLoopDismissed] = useState(false);
+   const [loadError, setLoadError] = useState<Error | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   
-  const { messages, loading, sendMessage } = useMessages(conversationId);
+   const { messages, loading, sendMessage } = useMessages(conversationId);
   const { user } = useAuth();
   const { typingUsers, startTyping, stopTyping } = useTypingIndicator(conversationId);
   const { isUserOnline } = useRealTimePresence();
+   const { protectedAction, isProcessing: isSending } = useActionProtection({ debounceMs: 1000 });
   const { 
     loading: shareLoading, 
     matchPhoneNumber, 
@@ -94,18 +101,19 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
   const handleSendMessage = async () => {
     if (!messageText.trim() || isSending) return;
+     if (!isMatched) return; // Prevent sending if not matched
     
     stopTyping();
     if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
-  
-    setIsSending(true);
-    const success = await sendMessage(messageText, matchUserId);
-  
-    if (success) {
-      setMessageText('');
-      if (textareaRef.current) textareaRef.current.style.height = 'auto';
-    }
-    setIsSending(false);
+     
+     await protectedAction(async () => {
+       const success = await sendMessage(messageText, matchUserId);
+       if (success) {
+         setMessageText('');
+         if (textareaRef.current) textareaRef.current.style.height = 'auto';
+       }
+       return success;
+     });
   };
 
   const getDeliveryStatusIcon = (message: any) => {
@@ -164,6 +172,50 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
     );
   }
 
+   // Show error state for failed message loading
+   if (loadError) {
+     return (
+       <div className="flex items-center justify-center h-96 p-4">
+         <ApiErrorFallback 
+           error={loadError}
+           onRetry={() => {
+             setLoadError(null);
+             // Messages will reload via the hook
+           }}
+           title="Couldn't Load Messages"
+           description="We had trouble loading this conversation. Please try again."
+         />
+       </div>
+     );
+   }
+ 
+   // Show messaging lock if not matched
+   if (!isMatched) {
+     return (
+       <div className="flex flex-col h-full bg-background">
+         {/* Chat Header - still show for context */}
+         <div className="flex items-center justify-between p-4 border-b border-border bg-card">
+           <div className="flex items-center space-x-3">
+             <Avatar className="h-10 w-10">
+               <AvatarImage src={matchImage} alt={matchName} />
+               <AvatarFallback className="bg-primary text-primary-foreground">
+                 {matchName.charAt(0)}
+               </AvatarFallback>
+             </Avatar>
+             <div>
+               <h3 className="text-foreground font-medium">{matchName}</h3>
+               <p className="text-muted-foreground text-sm">Not yet matched</p>
+             </div>
+           </div>
+         </div>
+         
+         <div className="flex-1 flex items-center justify-center p-6">
+           <MessagingLockCard matchName={matchName} />
+         </div>
+       </div>
+     );
+   }
+ 
   return (
     <div className="flex flex-col h-full bg-background">
       {/* Chat Header */}
@@ -352,16 +404,21 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             onKeyPress={handleKeyPress}
             placeholder={`Message ${matchName}...`}
             className="min-h-[44px] max-h-32 resize-none flex-1"
-            disabled={isSending}
+             disabled={isSending || !isMatched}
           />
           <Button
             onClick={handleSendMessage}
-            disabled={!messageText.trim() || isSending}
+             disabled={!messageText.trim() || isSending || !isMatched}
             className="h-11 px-4"
           >
             <Send className="h-4 w-4" />
           </Button>
         </div>
+         {!isMatched && (
+           <p className="text-xs text-muted-foreground text-center mt-2">
+             Messaging unlocks after matching
+           </p>
+         )}
       </div>
 
       {/* Unmatch Confirmation */}

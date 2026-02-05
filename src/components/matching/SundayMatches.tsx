@@ -17,6 +17,8 @@ import {
 import { format, formatDistanceToNow } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { WeeklyRhythmPlans } from '@/components/weekly/WeeklyRhythmPlans';
+ import { ApiErrorFallback } from '@/components/common/ApiErrorFallback';
+ import { useActionProtection } from '@/hooks/useActionProtection';
 
 interface UnifiedMatch {
   id: string;
@@ -152,13 +154,17 @@ export const SundayMatches = () => {
     pool, 
     loading: poolLoading, 
     likePoolMatch, 
-    passPoolMatch 
+     passPoolMatch,
   } = useDatingPool();
 
   const [selectedMatch, setSelectedMatch] = useState<UnifiedMatch | null>(null);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [mutualMatch, setMutualMatch] = useState<{ name: string; photo?: string; conversationId?: string } | null>(null);
   const [activeTab, setActiveTab] = useState('curated');
+   const [actionError, setActionError] = useState<Error | null>(null);
+   
+   // Abuse protection for like/pass actions
+   const { protectedAction, isProcessing: isActionBlocked } = useActionProtection({ debounceMs: 800 });
   
   // Check if this is the user's first visit to show welcome tip - must be before any early returns
   const [showWelcomeTip, setShowWelcomeTip] = useState(() => {
@@ -202,43 +208,67 @@ export const SundayMatches = () => {
 
   const handleLike = async () => {
     if (!selectedMatch) return;
+     if (isActionBlocked) return;
     
-    setProcessingId(selectedMatch.id);
-    
-    let result: { success: boolean; isMutual?: boolean; conversationId?: string; matchName?: string; matchPhoto?: string };
-    
-    if (selectedMatch.isCurated) {
-      result = await acceptCurated(selectedMatch.id);
-    } else {
-      result = await likePoolMatch(selectedMatch.id);
-    }
-
-    // Check for mutual match
-    if (result.success && result.isMutual) {
-      setMutualMatch({
-        name: result.matchName || selectedMatch.name || 'Your Match',
-        photo: result.matchPhoto || selectedMatch.photos?.[0],
-        conversationId: result.conversationId
-      });
-    }
-
-    setProcessingId(null);
-    setSelectedMatch(null);
+     setProcessingId(selectedMatch.id);
+     setActionError(null);
+     
+     await protectedAction(async () => {
+       try {
+         let result: { success: boolean; isMutual?: boolean; conversationId?: string; matchName?: string; matchPhoto?: string };
+         
+         if (selectedMatch.isCurated) {
+           result = await acceptCurated(selectedMatch.id);
+         } else {
+           result = await likePoolMatch(selectedMatch.id);
+         }
+ 
+         // Check for mutual match
+         if (result.success && result.isMutual) {
+           setMutualMatch({
+             name: result.matchName || selectedMatch.name || 'Your Match',
+             photo: result.matchPhoto || selectedMatch.photos?.[0],
+             conversationId: result.conversationId
+           });
+         }
+         
+         setSelectedMatch(null);
+         return result;
+       } catch (error) {
+         console.error('Error liking match:', error);
+         setActionError(error instanceof Error ? error : new Error('Failed to like match'));
+         throw error;
+       } finally {
+         setProcessingId(null);
+       }
+     });
   };
 
   const handlePass = async () => {
     if (!selectedMatch) return;
+     if (isActionBlocked) return;
     
     setProcessingId(selectedMatch.id);
+     setActionError(null);
     
-    if (selectedMatch.isCurated) {
-      await passCurated(selectedMatch.id);
-    } else {
-      await passPoolMatch(selectedMatch.id);
-    }
-
-    setProcessingId(null);
-    setSelectedMatch(null);
+     await protectedAction(async () => {
+       try {
+         if (selectedMatch.isCurated) {
+           await passCurated(selectedMatch.id);
+         } else {
+           await passPoolMatch(selectedMatch.id);
+         }
+         
+         setSelectedMatch(null);
+         return true;
+       } catch (error) {
+         console.error('Error passing match:', error);
+         setActionError(error instanceof Error ? error : new Error('Failed to pass match'));
+         throw error;
+       } finally {
+         setProcessingId(null);
+       }
+     });
   };
 
   const handleStartChat = () => {
