@@ -16,7 +16,7 @@ verify_jwt = true
 verify_jwt = true
 
 [functions.google-maps-config]
-verify_jwt = false
+verify_jwt = true
 
 [functions.weekly-scheduler]
 verify_jwt = true
@@ -44,3 +44,6 @@ verify_jwt = true
 
 [functions.check-date-feedback]
 verify_jwt = false
+
+[functions.security-middleware]
+verify_jwt = true
