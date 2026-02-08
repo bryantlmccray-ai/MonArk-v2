@@ -1,18 +1,8 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
+import { corsHeaders, validateEmail, validateLength, validationErrorResponse, errorResponse } from '../_shared/security.ts'
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
-};
-
-interface ApprovalEmailRequest {
-  email: string;
-  firstName: string;
-}
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
@@ -20,14 +10,28 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, firstName }: ApprovalEmailRequest = await req.json();
-
-    if (!email || !firstName) {
-      return new Response(
-        JSON.stringify({ error: "Email and firstName are required" }),
-        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+    let body: Record<string, unknown>;
+    try {
+      body = await req.json();
+    } catch {
+      return validationErrorResponse(['Invalid request body']);
     }
+
+    const { email, firstName } = body as { email?: string; firstName?: string };
+
+    // Validate inputs
+    const errors: string[] = [];
+    const emailError = validateEmail(email);
+    if (emailError) errors.push(emailError);
+    const nameError = validateLength(firstName, 'firstName', 1, 100);
+    if (nameError) errors.push(nameError);
+
+    if (errors.length > 0) {
+      return validationErrorResponse(errors);
+    }
+
+    // Sanitize firstName for use in HTML (prevent XSS in emails)
+    const safeName = (firstName as string).replace(/[<>"'&]/g, '');
 
     // TODO: Replace with actual app URL when deployed
     const appUrl = Deno.env.get("APP_URL") || "https://your-app-url.lovable.app";
@@ -39,7 +43,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const emailResponse = await resend.emails.send({
       from: "MonArk <onboarding@resend.dev>",
-      to: [email],
+      to: [email as string],
       subject: "Welcome to MonArk! 🎉",
       html: `
         <!DOCTYPE html>
@@ -53,24 +57,18 @@ const handler = async (req: Request): Promise<Response> => {
             <tr>
               <td align="center">
                 <table width="600" cellpadding="0" cellspacing="0" style="background-color: #2a2a2a; border-radius: 12px; overflow: hidden;">
-                  <!-- Header -->
                   <tr>
                     <td style="padding: 40px 40px 20px; text-align: center; border-bottom: 1px solid #3a3a3a;">
                       <h1 style="margin: 0; color: #D4AF37; font-size: 32px; font-weight: 300; letter-spacing: 2px;">MonArk</h1>
                       <p style="margin: 8px 0 0; color: #8a8a8a; font-size: 14px;">Where Chemistry Meets Clarity</p>
                     </td>
                   </tr>
-                  
-                  <!-- Content -->
                   <tr>
                     <td style="padding: 40px;">
-                      <h2 style="margin: 0 0 20px; color: #ffffff; font-size: 24px; font-weight: 400;">Hi ${firstName},</h2>
-                      
+                      <h2 style="margin: 0 0 20px; color: #ffffff; font-size: 24px; font-weight: 400;">Hi ${safeName},</h2>
                       <p style="margin: 0 0 25px; color: #cccccc; font-size: 16px; line-height: 1.6;">
                         Great news—<strong style="color: #D4AF37;">you're approved!</strong>
                       </p>
-                      
-                      <!-- CTA Button -->
                       <table width="100%" cellpadding="0" cellspacing="0">
                         <tr>
                           <td align="center" style="padding: 10px 0 30px;">
@@ -80,24 +78,19 @@ const handler = async (req: Request): Promise<Response> => {
                           </td>
                         </tr>
                       </table>
-                      
                       <p style="margin: 0 0 10px; color: #8a8a8a; font-size: 14px; text-align: center;">
                         This link expires on ${expiryString} (7 days)
                       </p>
-                      
                       <div style="background-color: #3a3a3a; border-radius: 8px; padding: 20px; margin: 30px 0; text-align: center;">
                         <p style="margin: 0; color: #D4AF37; font-size: 16px; font-weight: 500;">
                           ✨ Your first "Your 3" will arrive this Sunday at 9 AM
                         </p>
                       </div>
-                      
                       <p style="margin: 0; color: #8a8a8a; font-size: 14px; line-height: 1.6;">
                         Questions? Just reply to this email.
                       </p>
                     </td>
                   </tr>
-                  
-                  <!-- Footer -->
                   <tr>
                     <td style="padding: 30px 40px; background-color: #232323; border-top: 1px solid #3a3a3a;">
                       <p style="margin: 0; color: #666666; font-size: 12px; text-align: center;">
@@ -115,18 +108,14 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
-    console.log("Approval email sent:", emailResponse);
+    console.log("Approval email sent successfully");
 
-    return new Response(JSON.stringify(emailResponse), {
+    return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
   } catch (error: any) {
-    console.error("Error in waitlist-approval-email:", error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
-    );
+    return errorResponse(error, 'Failed to send approval email');
   }
 };
 
