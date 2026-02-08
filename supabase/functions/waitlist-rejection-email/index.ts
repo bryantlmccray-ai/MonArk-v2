@@ -1,19 +1,8 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
+import { corsHeaders, validateEmail, validateLength, validationErrorResponse, errorResponse } from '../_shared/security.ts'
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
-};
-
-interface RejectionEmailRequest {
-  email: string;
-  firstName: string;
-  city?: string;
-}
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
@@ -21,24 +10,44 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, firstName, city }: RejectionEmailRequest = await req.json();
-
-    if (!email || !firstName) {
-      return new Response(
-        JSON.stringify({ error: "Email and firstName are required" }),
-        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+    let body: Record<string, unknown>;
+    try {
+      body = await req.json();
+    } catch {
+      return validationErrorResponse(['Invalid request body']);
     }
 
+    const { email, firstName, city } = body as { email?: string; firstName?: string; city?: string };
+
+    // Validate inputs
+    const errors: string[] = [];
+    const emailError = validateEmail(email);
+    if (emailError) errors.push(emailError);
+    const nameError = validateLength(firstName, 'firstName', 1, 100);
+    if (nameError) errors.push(nameError);
+    // city is optional, but validate length if provided
+    if (city) {
+      const cityError = validateLength(city, 'city', 0, 200);
+      if (cityError) errors.push(cityError);
+    }
+
+    if (errors.length > 0) {
+      return validationErrorResponse(errors);
+    }
+
+    // Sanitize inputs for use in HTML
+    const safeName = (firstName as string).replace(/[<>"'&]/g, '');
+    const safeCity = city ? city.replace(/[<>"'&]/g, '') : null;
+
     // Customize message based on city
-    const isChicago = city?.toLowerCase().includes('chicago');
+    const isChicago = safeCity?.toLowerCase().includes('chicago');
     const cityMessage = isChicago 
       ? "We're currently at capacity but will reach out when spots open up."
-      : `Right now we're only launching in Chicago, but we'll expand to ${city || 'your area'} soon. We'll reach out when we're ready for ${city || 'your area'} users.`;
+      : `Right now we're only launching in Chicago, but we'll expand to ${safeCity || 'your area'} soon. We'll reach out when we're ready for ${safeCity || 'your area'} users.`;
 
     const emailResponse = await resend.emails.send({
       from: "MonArk <onboarding@resend.dev>",
-      to: [email],
+      to: [email as string],
       subject: "MonArk Waitlist Update",
       html: `
         <!DOCTYPE html>
@@ -52,38 +61,29 @@ const handler = async (req: Request): Promise<Response> => {
             <tr>
               <td align="center">
                 <table width="600" cellpadding="0" cellspacing="0" style="background-color: #2a2a2a; border-radius: 12px; overflow: hidden;">
-                  <!-- Header -->
                   <tr>
                     <td style="padding: 40px 40px 20px; text-align: center; border-bottom: 1px solid #3a3a3a;">
                       <h1 style="margin: 0; color: #D4AF37; font-size: 32px; font-weight: 300; letter-spacing: 2px;">MonArk</h1>
                       <p style="margin: 8px 0 0; color: #8a8a8a; font-size: 14px;">Where Chemistry Meets Clarity</p>
                     </td>
                   </tr>
-                  
-                  <!-- Content -->
                   <tr>
                     <td style="padding: 40px;">
-                      <h2 style="margin: 0 0 20px; color: #ffffff; font-size: 24px; font-weight: 400;">Hi ${firstName},</h2>
-                      
+                      <h2 style="margin: 0 0 20px; color: #ffffff; font-size: 24px; font-weight: 400;">Hi ${safeName},</h2>
                       <p style="margin: 0 0 20px; color: #cccccc; font-size: 16px; line-height: 1.6;">
                         Thanks for your interest in MonArk!
                       </p>
-                      
                       <p style="margin: 0 0 20px; color: #cccccc; font-size: 16px; line-height: 1.6;">
                         ${cityMessage}
                       </p>
-                      
                       <p style="margin: 0 0 20px; color: #cccccc; font-size: 16px; line-height: 1.6;">
                         We appreciate your patience as we build something special.
                       </p>
-                      
                       <p style="margin: 0; color: #8a8a8a; font-size: 14px; line-height: 1.6;">
                         Questions? Just reply to this email.
                       </p>
                     </td>
                   </tr>
-                  
-                  <!-- Footer -->
                   <tr>
                     <td style="padding: 30px 40px; background-color: #232323; border-top: 1px solid #3a3a3a;">
                       <p style="margin: 0; color: #666666; font-size: 12px; text-align: center;">
@@ -101,18 +101,14 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
-    console.log("Rejection email sent:", emailResponse);
+    console.log("Rejection email sent successfully");
 
-    return new Response(JSON.stringify(emailResponse), {
+    return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
   } catch (error: any) {
-    console.error("Error in waitlist-rejection-email:", error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
-    );
+    return errorResponse(error, 'Failed to send rejection email');
   }
 };
 

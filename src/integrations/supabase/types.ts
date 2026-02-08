@@ -2376,7 +2376,103 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_user_profiles: {
+        Row: {
+          age: number | null
+          age_verified: boolean | null
+          bio: string | null
+          created_at: string | null
+          date_preferences: Json | null
+          discovery_privacy_mode: string | null
+          drinking_status: string | null
+          education_level: string | null
+          exercise_habits: string | null
+          gender_identity: Database["public"]["Enums"]["gender_identity"] | null
+          gender_identity_custom: string | null
+          height_cm: number | null
+          identity_visibility: boolean | null
+          interests: string[] | null
+          is_profile_complete: boolean | null
+          location: string | null
+          occupation: string | null
+          photos: string[] | null
+          preference_to_be_seen_by: string[] | null
+          preference_to_see: string[] | null
+          relationship_goals: string[] | null
+          sexual_orientation:
+            | Database["public"]["Enums"]["sexual_orientation"]
+            | null
+          sexual_orientation_custom: string | null
+          smoking_status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          age?: number | null
+          age_verified?: boolean | null
+          bio?: string | null
+          created_at?: string | null
+          date_preferences?: Json | null
+          discovery_privacy_mode?: string | null
+          drinking_status?: string | null
+          education_level?: string | null
+          exercise_habits?: string | null
+          gender_identity?:
+            | Database["public"]["Enums"]["gender_identity"]
+            | null
+          gender_identity_custom?: string | null
+          height_cm?: number | null
+          identity_visibility?: boolean | null
+          interests?: string[] | null
+          is_profile_complete?: boolean | null
+          location?: string | null
+          occupation?: string | null
+          photos?: string[] | null
+          preference_to_be_seen_by?: string[] | null
+          preference_to_see?: string[] | null
+          relationship_goals?: string[] | null
+          sexual_orientation?:
+            | Database["public"]["Enums"]["sexual_orientation"]
+            | null
+          sexual_orientation_custom?: string | null
+          smoking_status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          age?: number | null
+          age_verified?: boolean | null
+          bio?: string | null
+          created_at?: string | null
+          date_preferences?: Json | null
+          discovery_privacy_mode?: string | null
+          drinking_status?: string | null
+          education_level?: string | null
+          exercise_habits?: string | null
+          gender_identity?:
+            | Database["public"]["Enums"]["gender_identity"]
+            | null
+          gender_identity_custom?: string | null
+          height_cm?: number | null
+          identity_visibility?: boolean | null
+          interests?: string[] | null
+          is_profile_complete?: boolean | null
+          location?: string | null
+          occupation?: string | null
+          photos?: string[] | null
+          preference_to_be_seen_by?: string[] | null
+          preference_to_see?: string[] | null
+          relationship_goals?: string[] | null
+          sexual_orientation?:
+            | Database["public"]["Enums"]["sexual_orientation"]
+            | null
+          sexual_orientation_custom?: string | null
+          smoking_status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       calculate_age: { Args: { birth_date: string }; Returns: number }

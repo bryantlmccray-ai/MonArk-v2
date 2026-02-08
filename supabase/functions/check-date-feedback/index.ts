@@ -6,16 +6,82 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+/**
+ * Verify the request is from a trusted source (cron job or admin).
+ * Accepts either:
+ * 1. A valid admin JWT in the Authorization header
+ * 2. A matching CRON_SECRET in the x-cron-secret header
+ */
+async function verifyCronOrAdmin(req: Request): Promise<{ authorized: boolean; method: string }> {
+  // Check for cron secret first (for scheduled invocations)
+  const cronSecret = req.headers.get('x-cron-secret');
+  const expectedSecret = Deno.env.get('CRON_SECRET');
+  if (expectedSecret && cronSecret && cronSecret === expectedSecret) {
+    return { authorized: true, method: 'cron_secret' };
+  }
+
+  // Fall back to admin JWT auth
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader) {
+    return { authorized: false, method: 'none' };
+  }
+
+  const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+  const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
+
+  const userClient = createClient(supabaseUrl, supabaseAnonKey, {
+    global: { headers: { Authorization: authHeader } }
+  });
+
+  const { data: { user }, error: authError } = await userClient.auth.getUser();
+  if (authError || !user) {
+    return { authorized: false, method: 'invalid_jwt' };
+  }
+
+  // Check admin role
+  const supabaseAdmin = createClient(supabaseUrl, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '');
+  const { data: roleData } = await supabaseAdmin
+    .from('user_roles')
+    .select('role')
+    .eq('user_id', user.id)
+    .single();
+
+  if (roleData?.role === 'admin') {
+    return { authorized: true, method: 'admin_jwt' };
+  }
+
+  return { authorized: false, method: 'insufficient_role' };
+}
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // Verify authorization
+    const { authorized, method } = await verifyCronOrAdmin(req);
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    if (!authorized) {
+      // Log the denied attempt
+      await supabase.from('security_audit_log').insert({
+        event_type: 'unauthorized_cron_access',
+        action: 'check-date-feedback',
+        success: false,
+        metadata: { method }
+      });
+      console.error(`Unauthorized check-date-feedback attempt (method: ${method})`);
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    console.log(`check-date-feedback authorized via: ${method}`);
 
     // Find contact shares that are 48+ hours old and haven't had feedback notifications sent
     const fortyEightHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
@@ -148,7 +214,7 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error: any) {
     console.error("Error in check-date-feedback function:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "An internal error occurred" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
