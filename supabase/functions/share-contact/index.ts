@@ -1,52 +1,44 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.50.0";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
-
-interface ShareContactRequest {
-  recipientUserId: string;
-  conversationId: string;
-}
+import { corsHeaders, verifyAuth, errorResponse, validationErrorResponse, validateUUID, validateLength } from '../_shared/security.ts'
 
 const handler = async (req: Request): Promise<Response> => {
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    // Verify authentication
+    const authResult = await verifyAuth(req)
+    if (authResult.error || !authResult.user || !authResult.supabaseClient) {
+      return new Response(
+        JSON.stringify({ error: authResult.error || 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      )
+    }
+
+    const user = authResult.user
+    const supabase = authResult.supabaseClient
+
+    let body: Record<string, unknown>
+    try {
+      body = await req.json()
+    } catch {
+      return validationErrorResponse(['Invalid request body'])
+    }
+
+    const { recipientUserId, conversationId } = body
+
+    // Validate inputs
+    const errors: string[] = []
+    const recipientError = validateUUID(recipientUserId as string, 'recipientUserId')
+    if (recipientError) errors.push(recipientError)
+    const convError = validateLength(conversationId as string, 'conversationId', 1, 255)
+    if (convError) errors.push(convError)
     
-    // Get the authorization header
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      console.error("No authorization header");
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+    if (errors.length > 0) {
+      return validationErrorResponse(errors)
     }
 
-    // Create client with user's auth
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } }
-    });
-
-    // Get the current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      console.error("User auth error:", userError);
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    const { recipientUserId, conversationId }: ShareContactRequest = await req.json();
     console.log(`User ${user.id} sharing contact with ${recipientUserId} in conversation ${conversationId}`);
 
     // Get the sharer's phone number
@@ -57,7 +49,6 @@ const handler = async (req: Request): Promise<Response> => {
       .single();
 
     if (sharerError || !sharerProfile?.phone_number) {
-      console.error("Sharer profile error:", sharerError);
       return new Response(
         JSON.stringify({ error: "Please add your phone number to your profile first" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -73,7 +64,6 @@ const handler = async (req: Request): Promise<Response> => {
       .single();
 
     if (existingShare) {
-      console.log("Contact already shared");
       return new Response(
         JSON.stringify({ success: true, alreadyShared: true }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -85,9 +75,9 @@ const handler = async (req: Request): Promise<Response> => {
       .from("contact_shares")
       .insert({
         sharer_user_id: user.id,
-        recipient_user_id: recipientUserId,
-        conversation_id: conversationId,
-        sms_sent: false, // SMS sending can be added later with Twilio
+        recipient_user_id: recipientUserId as string,
+        conversation_id: conversationId as string,
+        sms_sent: false,
       });
 
     if (shareError) {
@@ -110,14 +100,12 @@ const handler = async (req: Request): Promise<Response> => {
     await supabase
       .from("messages")
       .insert({
-        conversation_id: conversationId,
+        conversation_id: conversationId as string,
         sender_user_id: user.id,
-        recipient_user_id: recipientUserId,
+        recipient_user_id: recipientUserId as string,
         content: systemMessage,
         message_type: "system",
       });
-
-    console.log("Contact shared successfully");
 
     return new Response(
       JSON.stringify({ 
@@ -129,11 +117,7 @@ const handler = async (req: Request): Promise<Response> => {
     );
 
   } catch (error: any) {
-    console.error("Error in share-contact function:", error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return errorResponse(error, 'Failed to share contact')
   }
 };
 

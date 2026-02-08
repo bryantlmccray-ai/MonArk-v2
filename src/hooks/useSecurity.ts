@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { toast } from '@/hooks/use-toast';
+import { messageContentSchema, profileUpdateSchema, securityMiddlewareSchema, getFirstError } from '@/lib/validation';
 
 interface SecurityCheckResult {
   allowed: boolean;
@@ -28,14 +29,17 @@ export const useSecurity = () => {
       return { allowed: false, error: 'Authentication required' };
     }
 
+    // Validate inputs with Zod before sending to edge function
+    const validation = securityMiddlewareSchema.safeParse({
+      action, targetUserId, resourceType, resourceId
+    });
+    if (!validation.success) {
+      return { allowed: false, error: getFirstError(validation) || 'Invalid request' };
+    }
+
     try {
       const { data, error } = await supabase.functions.invoke('security-middleware', {
-        body: {
-          action,
-          targetUserId,
-          resourceType,
-          resourceId
-        }
+        body: validation.data
       });
 
       if (error) {
@@ -44,7 +48,6 @@ export const useSecurity = () => {
       }
 
       if (data.error) {
-        // Handle rate limit specifically
         if (data.retryAfter) {
           const minutes = Math.ceil(data.retryAfter / 60);
           toast({
@@ -73,7 +76,6 @@ export const useSecurity = () => {
   const handlePermissionError = useCallback((error: unknown) => {
     const errorMessage = error instanceof Error ? error.message : String(error);
     
-    // Check for common permission errors
     if (errorMessage.includes('row-level security') || 
         errorMessage.includes('policy') ||
         errorMessage.includes('permission denied')) {
@@ -100,41 +102,21 @@ export const useSecurity = () => {
   }, []);
 
   /**
-   * Validate message content before sending
+   * Validate message content before sending (Zod-based)
    */
   const validateMessage = useCallback((content: string): string | null => {
-    if (!content || content.trim().length === 0) {
-      return 'Message cannot be empty';
-    }
-    if (content.length > 5000) {
-      return 'Message is too long (max 5000 characters)';
-    }
-    return null;
+    const result = messageContentSchema.safeParse(content);
+    if (result.success) return null;
+    return getFirstError(result);
   }, []);
 
   /**
-   * Validate profile data before updating
+   * Validate profile data before updating (Zod-based)
    */
   const validateProfileUpdate = useCallback((data: Record<string, unknown>): string[] => {
-    const errors: string[] = [];
-
-    if (data.bio && typeof data.bio === 'string' && data.bio.length > 1000) {
-      errors.push('Bio must be less than 1000 characters');
-    }
-
-    if (data.occupation && typeof data.occupation === 'string' && data.occupation.length > 100) {
-      errors.push('Occupation must be less than 100 characters');
-    }
-
-    if (data.interests && Array.isArray(data.interests) && data.interests.length > 20) {
-      errors.push('You can select up to 20 interests');
-    }
-
-    if (data.photos && Array.isArray(data.photos) && data.photos.length > 6) {
-      errors.push('You can upload up to 6 photos');
-    }
-
-    return errors;
+    const result = profileUpdateSchema.safeParse(data);
+    if (result.success) return [];
+    return result.error.issues.map(i => i.message);
   }, []);
 
   return {

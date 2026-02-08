@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Mail, User, Loader2, MapPin, Heart, ChevronRight, ChevronLeft, AlertCircle } from 'lucide-react';
+import { waitlistStep1Schema, waitlistStep2Schema, waitlistStep3Schema, getFieldErrors } from '@/lib/validation';
 
 interface WaitlistModalProps {
   isOpen: boolean;
@@ -19,17 +20,14 @@ interface WaitlistModalProps {
 export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, sourcePage = 'demo-landing' }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
-    // Step 1: Contact
     firstName: '',
     lastName: '',
     email: '',
-    // Step 2: About You
     ageRange: '',
     city: '',
     genderIdentity: '',
     lookingFor: '',
     relationshipGoal: '',
-    // Step 3: Why MonArk
     whyMonark: '',
     heardAboutUs: '',
     willingToBeta: false,
@@ -37,109 +35,56 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState<Record<string, boolean>>({});
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
 
   const totalSteps = 3;
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    // Clear error for this field when user starts typing
     if (fieldErrors[field]) {
-      setFieldErrors(prev => ({ ...prev, [field]: false }));
+      setFieldErrors(prev => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
     }
   };
 
   const validateStep = (step: number): boolean => {
-    const errors: Record<string, boolean> = {};
-    let isValid = true;
-
+    let result;
     switch (step) {
       case 1:
-        if (!formData.firstName.trim()) {
-          errors.firstName = true;
-          isValid = false;
-        }
-        if (!formData.email.trim()) {
-          errors.email = true;
-          isValid = false;
-        }
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (formData.email.trim() && !emailRegex.test(formData.email)) {
-          errors.email = true;
-          isValid = false;
-          toast({
-            title: "Invalid Email",
-            description: "Please enter a valid email address",
-            variant: "destructive"
-          });
-        }
-        if (!isValid && !errors.email) {
-          toast({
-            title: "Required Fields Missing",
-            description: "Please fill in the highlighted fields",
-            variant: "destructive"
-          });
-        }
+        result = waitlistStep1Schema.safeParse(formData);
         break;
       case 2:
-        if (!formData.ageRange) {
-          errors.ageRange = true;
-          isValid = false;
-        }
-        if (!formData.city.trim()) {
-          errors.city = true;
-          isValid = false;
-        }
-        // Check if city is Chicago (case insensitive)
-        const cityLower = formData.city.toLowerCase().trim();
-        if (formData.city.trim() && !cityLower.includes('chicago')) {
-          errors.city = true;
-          toast({
-            title: "Chicago Only for MVP",
-            description: "We're launching in Chicago first! We'll notify you when we expand to your area.",
-            variant: "destructive"
-          });
-          setFieldErrors(errors);
-          return false;
-        }
-        if (!formData.genderIdentity.trim()) {
-          errors.genderIdentity = true;
-          isValid = false;
-        }
-        if (!formData.lookingFor.trim()) {
-          errors.lookingFor = true;
-          isValid = false;
-        }
-        if (!formData.relationshipGoal) {
-          errors.relationshipGoal = true;
-          isValid = false;
-        }
-        if (!isValid) {
-          toast({
-            title: "Required Fields Missing",
-            description: "Please fill in the highlighted fields",
-            variant: "destructive"
-          });
-        }
+        result = waitlistStep2Schema.safeParse(formData);
         break;
       case 3:
-        if (!formData.whyMonark.trim() || formData.whyMonark.trim().length < 20) {
-          errors.whyMonark = true;
-          isValid = false;
-          toast({
-            title: "Tell Us More",
-            description: "Please write at least a sentence about why you want to join MonArk",
-            variant: "destructive"
-          });
-        }
+        result = waitlistStep3Schema.safeParse(formData);
         break;
       default:
-        break;
+        return true;
     }
 
+    if (result.success) {
+      setFieldErrors({});
+      return true;
+    }
+
+    const errors = getFieldErrors(result);
     setFieldErrors(errors);
-    return isValid;
+
+    // Show the first error as a toast
+    const firstError = Object.values(errors)[0];
+    if (firstError) {
+      toast({
+        title: step === 2 && errors.city?.includes('Chicago') ? "Chicago Only for MVP" : "Please fix the highlighted fields",
+        description: firstError,
+        variant: "destructive"
+      });
+    }
+    return false;
   };
 
   const handleNext = () => {
@@ -155,14 +100,11 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateStep(currentStep)) {
-      return;
-    }
+    if (!validateStep(currentStep)) return;
 
     setIsSubmitting(true);
 
     try {
-      // Insert waitlist submission
       const { error } = await supabase
         .from('waitlist_submissions')
         .insert({
@@ -192,7 +134,6 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
         return;
       }
 
-      // Send confirmation email
       try {
         await supabase.functions.invoke('waitlist-confirmation-email', {
           body: {
@@ -202,7 +143,6 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
         });
       } catch (emailError) {
         console.error('Email error (non-blocking):', emailError);
-        // Don't block submission if email fails
       }
 
       setIsSubmitted(true);
@@ -228,6 +168,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
       });
       setIsSubmitted(false);
       setCurrentStep(1);
+      setFieldErrors({});
       onClose();
     }
   };
@@ -250,12 +191,13 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                     className={`bg-white border-gray-700 text-black pl-10 ${fieldErrors.firstName ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
                     placeholder="First name"
                     disabled={isSubmitting}
+                    maxLength={100}
                   />
                 </div>
                 {fieldErrors.firstName && (
                   <p className="text-xs text-red-400 flex items-center gap-1">
                     <AlertCircle className="h-3 w-3" />
-                    First name is required
+                    {fieldErrors.firstName}
                   </p>
                 )}
               </div>
@@ -269,6 +211,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   className="bg-white border-gray-700 text-black"
                   placeholder="Last name"
                   disabled={isSubmitting}
+                  maxLength={100}
                 />
               </div>
             </div>
@@ -285,12 +228,13 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   className={`bg-white border-gray-700 text-black pl-10 ${fieldErrors.email ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
                   placeholder="your@email.com"
                   disabled={isSubmitting}
+                  maxLength={255}
                 />
               </div>
               {fieldErrors.email && (
                 <p className="text-xs text-red-400 flex items-center gap-1">
                   <AlertCircle className="h-3 w-3" />
-                  Valid email is required
+                  {fieldErrors.email}
                 </p>
               )}
             </div>
@@ -317,7 +261,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
               {fieldErrors.ageRange && (
                 <p className="text-xs text-red-400 flex items-center gap-1">
                   <AlertCircle className="h-3 w-3" />
-                  Age range is required
+                  {fieldErrors.ageRange}
                 </p>
               )}
             </div>
@@ -333,12 +277,13 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   className={`bg-white border-gray-700 text-black pl-10 ${fieldErrors.city ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
                   placeholder="Chicago"
                   disabled={isSubmitting}
+                  maxLength={100}
                 />
               </div>
               {fieldErrors.city ? (
                 <p className="text-xs text-red-400 flex items-center gap-1">
                   <AlertCircle className="h-3 w-3" />
-                  City is required (Chicago only for MVP)
+                  {fieldErrors.city}
                 </p>
               ) : (
                 <p className="text-xs text-goldenrod/80 flex items-center gap-1">
@@ -358,11 +303,12 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   className={`bg-white border-gray-700 text-black ${fieldErrors.genderIdentity ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
                   placeholder="e.g. Woman, Man, Non-binary"
                   disabled={isSubmitting}
+                  maxLength={100}
                 />
                 {fieldErrors.genderIdentity && (
                   <p className="text-xs text-red-400 flex items-center gap-1">
                     <AlertCircle className="h-3 w-3" />
-                    Required
+                    {fieldErrors.genderIdentity}
                   </p>
                 )}
               </div>
@@ -375,11 +321,12 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   className={`bg-white border-gray-700 text-black ${fieldErrors.lookingFor ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
                   placeholder="e.g. Women, Men, Everyone"
                   disabled={isSubmitting}
+                  maxLength={100}
                 />
                 {fieldErrors.lookingFor && (
                   <p className="text-xs text-red-400 flex items-center gap-1">
                     <AlertCircle className="h-3 w-3" />
-                    Required
+                    {fieldErrors.lookingFor}
                   </p>
                 )}
               </div>
@@ -401,7 +348,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
               {fieldErrors.relationshipGoal && (
                 <p className="text-xs text-red-400 flex items-center gap-1">
                   <AlertCircle className="h-3 w-3" />
-                  Relationship goal is required
+                  {fieldErrors.relationshipGoal}
                 </p>
               )}
             </div>
@@ -420,11 +367,12 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 className={`bg-white border-gray-700 text-black min-h-[120px] ${fieldErrors.whyMonark ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
                 placeholder="Tell us a bit about yourself and what you're hoping to find. What's not working with other dating apps? What excites you about MonArk's approach?"
                 disabled={isSubmitting}
+                maxLength={2000}
               />
               {fieldErrors.whyMonark ? (
                 <p className="text-xs text-red-400 flex items-center gap-1">
                   <AlertCircle className="h-3 w-3" />
-                  Please write at least a sentence (20+ characters)
+                  {fieldErrors.whyMonark}
                 </p>
               ) : (
                 <p className="text-xs text-gray-400">This helps us understand if MonArk is a good fit for you</p>
@@ -440,6 +388,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 className="bg-white border-gray-700 text-black"
                 placeholder="Social media, friend, article, etc."
                 disabled={isSubmitting}
+                maxLength={500}
               />
             </div>
 
@@ -450,21 +399,23 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   checked={formData.willingToBeta}
                   onCheckedChange={(checked) => handleInputChange('willingToBeta', checked as boolean)}
                   disabled={isSubmitting}
+                  className="border-gray-600 data-[state=checked]:bg-goldenrod data-[state=checked]:border-goldenrod"
                 />
-                <Label htmlFor="willingToBeta" className="text-white text-sm font-normal cursor-pointer">
-                  I'm interested in beta testing and giving feedback
+                <Label htmlFor="willingToBeta" className="text-white text-sm cursor-pointer">
+                  I'm interested in beta testing new features
                 </Label>
               </div>
-
+              
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="emailOptIn"
                   checked={formData.emailOptIn}
                   onCheckedChange={(checked) => handleInputChange('emailOptIn', checked as boolean)}
                   disabled={isSubmitting}
+                  className="border-gray-600 data-[state=checked]:bg-goldenrod data-[state=checked]:border-goldenrod"
                 />
-                <Label htmlFor="emailOptIn" className="text-white text-sm font-normal cursor-pointer">
-                  Send me updates about MonArk
+                <Label htmlFor="emailOptIn" className="text-white text-sm cursor-pointer">
+                  Keep me updated about MonArk's launch
                 </Label>
               </div>
             </div>
@@ -476,99 +427,104 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
     }
   };
 
-  if (isSubmitted) {
-    return (
-      <Dialog open={isOpen} onOpenChange={handleClose}>
-        <DialogContent className="bg-charcoal-gray border-goldenrod/20 max-w-md">
-          <div className="text-center py-8">
-            <div className="bg-goldenrod/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-              <Heart className="h-8 w-8 text-goldenrod" />
-            </div>
-            <h3 className="text-2xl font-light text-white mb-2">You're on the waitlist!</h3>
-            <p className="text-gray-300 mb-4">
-              Thanks for applying, {formData.firstName}! We're reviewing applications now and will let you know within 1-2 days.
-            </p>
-            <p className="text-sm text-gray-400">
-              Check your email for a confirmation. We're launching with a small group in Chicago to make sure everyone gets great matches.
-            </p>
-          </div>
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
-  const getStepTitle = () => {
-    switch (currentStep) {
-      case 1: return 'Contact Info';
-      case 2: return 'About You';
-      case 3: return 'Why MonArk?';
-      default: return 'Join Waitlist';
-    }
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-charcoal-gray border-goldenrod/20 max-w-md max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-lg bg-charcoal-gray border-gray-700 text-white max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-light text-white text-center">
-            {getStepTitle()}
+          <DialogTitle className="text-xl font-light text-white">
+            {isSubmitted ? '🎉 You\'re on the List!' : 'Join the MonArk Waitlist'}
           </DialogTitle>
-          <DialogDescription className="text-gray-300 text-center">
-            Step {currentStep} of {totalSteps}
+          <DialogDescription className="text-gray-400">
+            {isSubmitted 
+              ? 'We\'ll review your application and get back to you soon.'
+              : `Step ${currentStep} of ${totalSteps}`
+            }
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6 mt-4">
-          {renderStepContent()}
-
-          <div className="flex gap-3 pt-4">
-            {currentStep > 1 && (
-              <Button
-                type="button"
-                onClick={handleBack}
-                variant="outline"
-                className="flex-1 text-white border-gray-700 hover:bg-gray-800"
-                disabled={isSubmitting}
-              >
-                <ChevronLeft className="h-4 w-4 mr-1" />
-                Back
-              </Button>
-            )}
-            
-            {currentStep < totalSteps ? (
-              <Button
-                type="button"
-                onClick={handleNext}
-                variant="outline"
-                className="flex-1 border-goldenrod/60 text-goldenrod hover:text-goldenrod/90 hover:border-goldenrod"
-                disabled={isSubmitting}
-              >
-                Next
-                <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            ) : (
-              <Button
-                type="submit"
-                variant="outline"
-                className="flex-1 border-goldenrod/60 text-goldenrod hover:text-goldenrod/90 hover:border-goldenrod"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  'Submit Application'
-                )}
-              </Button>
-            )}
+        {isSubmitted ? (
+          <div className="space-y-6 py-4">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-goldenrod/20 rounded-full flex items-center justify-center mx-auto">
+                <Heart className="h-8 w-8 text-goldenrod" />
+              </div>
+              <h3 className="text-lg text-white font-medium">Welcome, {formData.firstName}!</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                Thank you for your interest in MonArk. We're reviewing applications now and will let you know within <span className="text-goldenrod font-medium">1-2 days</span>.
+              </p>
+              <p className="text-gray-500 text-xs">
+                Check your email for a confirmation from us.
+              </p>
+            </div>
+            <Button
+              onClick={handleClose}
+              className="w-full bg-goldenrod text-jet-black hover:bg-goldenrod/90"
+            >
+              Done
+            </Button>
           </div>
-        </form>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Progress bar */}
+            <div className="flex gap-2">
+              {Array.from({ length: totalSteps }, (_, i) => (
+                <div
+                  key={i}
+                  className={`h-1 flex-1 rounded-full transition-colors ${
+                    i < currentStep ? 'bg-goldenrod' : 'bg-gray-700'
+                  }`}
+                />
+              ))}
+            </div>
 
-        <div className="text-center text-xs text-gray-500 mt-4">
-          We review every application. No spam, ever.
-        </div>
+            {renderStepContent()}
+
+            {/* Navigation */}
+            <div className="flex justify-between pt-2">
+              {currentStep > 1 ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={handleBack}
+                  disabled={isSubmitting}
+                  className="text-gray-400 hover:text-white"
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  Back
+                </Button>
+              ) : (
+                <div />
+              )}
+
+              {currentStep < totalSteps ? (
+                <Button
+                  type="button"
+                  onClick={handleNext}
+                  disabled={isSubmitting}
+                  className="bg-goldenrod text-jet-black hover:bg-goldenrod/90"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-goldenrod text-jet-black hover:bg-goldenrod/90 min-w-[140px]"
+                >
+                  {isSubmitting ? (
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Submitting...
+                    </div>
+                  ) : (
+                    'Submit Application'
+                  )}
+                </Button>
+              )}
+            </div>
+          </form>
+        )}
       </DialogContent>
     </Dialog>
   );
