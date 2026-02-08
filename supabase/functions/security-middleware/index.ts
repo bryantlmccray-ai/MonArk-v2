@@ -1,21 +1,20 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+import { corsHeaders, verifyAuth, errorResponse, validationErrorResponse } from '../_shared/security.ts'
+import { validateLength, validateEmail, validateUUID } from '../_shared/security.ts'
 
 // Rate limit configurations per action type
 const RATE_LIMITS: Record<string, { maxRequests: number; windowMinutes: number }> = {
-  'message_send': { maxRequests: 30, windowMinutes: 5 },        // 30 messages per 5 minutes
-  'profile_update': { maxRequests: 10, windowMinutes: 15 },     // 10 updates per 15 minutes
-  'auth_attempt': { maxRequests: 5, windowMinutes: 15 },        // 5 login attempts per 15 minutes
-  'match_response': { maxRequests: 20, windowMinutes: 5 },      // 20 match responses per 5 minutes
-  'date_proposal': { maxRequests: 10, windowMinutes: 30 },      // 10 proposals per 30 minutes
-  'report_user': { maxRequests: 5, windowMinutes: 60 },         // 5 reports per hour
-  'block_user': { maxRequests: 10, windowMinutes: 60 },         // 10 blocks per hour
+  'message_send': { maxRequests: 30, windowMinutes: 5 },
+  'profile_update': { maxRequests: 10, windowMinutes: 15 },
+  'auth_attempt': { maxRequests: 5, windowMinutes: 15 },
+  'match_response': { maxRequests: 20, windowMinutes: 5 },
+  'date_proposal': { maxRequests: 10, windowMinutes: 30 },
+  'report_user': { maxRequests: 5, windowMinutes: 60 },
+  'block_user': { maxRequests: 10, windowMinutes: 60 },
 }
+
+const VALID_ACTIONS = new Set(Object.keys(RATE_LIMITS))
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -23,14 +22,16 @@ serve(async (req) => {
   }
 
   try {
-    // Verify authentication
-    const authHeader = req.headers.get('Authorization')
-    if (!authHeader) {
+    // Verify authentication using shared utility
+    const authResult = await verifyAuth(req)
+    if (authResult.error || !authResult.user || !authResult.supabaseClient) {
       return new Response(
-        JSON.stringify({ error: 'Authentication required' }),
+        JSON.stringify({ error: authResult.error || 'Authentication required' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
+
+    const user = authResult.user
 
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
@@ -38,32 +39,39 @@ serve(async (req) => {
       { auth: { persistSession: false } }
     )
 
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      { global: { headers: { Authorization: authHeader } } }
-    )
-
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser()
-    if (authError || !user) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid or expired authentication' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+    let body: Record<string, unknown>
+    try {
+      body = await req.json()
+    } catch {
+      return validationErrorResponse(['Invalid request body'])
     }
 
-    const { action, targetUserId, resourceType, resourceId, metadata } = await req.json()
+    const { action, targetUserId, resourceType, resourceId, metadata } = body
 
     // Validate action type
-    if (!action || typeof action !== 'string') {
-      return new Response(
-        JSON.stringify({ error: 'Invalid action type' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+    const actionError = validateLength(action as string, 'action', 1, 100)
+    if (actionError) {
+      return validationErrorResponse([actionError])
+    }
+
+    // Validate optional UUIDs
+    if (targetUserId) {
+      const uuidError = validateUUID(targetUserId as string, 'targetUserId')
+      if (uuidError) return validationErrorResponse([uuidError])
+    }
+
+    // Validate optional string fields
+    if (resourceType) {
+      const rtError = validateLength(resourceType as string, 'resourceType', 0, 100)
+      if (rtError) return validationErrorResponse([rtError])
+    }
+    if (resourceId) {
+      const riError = validateLength(resourceId as string, 'resourceId', 0, 255)
+      if (riError) return validationErrorResponse([riError])
     }
 
     // Check rate limit
-    const rateLimitConfig = RATE_LIMITS[action]
+    const rateLimitConfig = RATE_LIMITS[action as string]
     if (rateLimitConfig) {
       const { data: allowed, error: rateLimitError } = await supabaseAdmin.rpc('check_rate_limit', {
         p_user_id: user.id,
@@ -75,7 +83,6 @@ serve(async (req) => {
       if (rateLimitError) {
         console.error('Rate limit check error:', rateLimitError)
       } else if (!allowed) {
-        // Log the rate limit violation
         await supabaseAdmin.rpc('log_security_event', {
           p_event_type: 'rate_limit_exceeded',
           p_action: action,
@@ -102,8 +109,7 @@ serve(async (req) => {
 
     // Check for blocked user relationships
     if (targetUserId) {
-      // Check if current user blocked target or vice versa
-      const { data: blocks } = await supabaseClient
+      const { data: blocks } = await authResult.supabaseClient
         .from('blocked_users')
         .select('id')
         .or(`and(blocker_user_id.eq.${user.id},blocked_user_id.eq.${targetUserId}),and(blocker_user_id.eq.${targetUserId},blocked_user_id.eq.${user.id})`)
@@ -118,15 +124,19 @@ serve(async (req) => {
     }
 
     // Log successful security check
-    await supabaseAdmin.rpc('log_security_event', {
-      p_event_type: 'security_check',
-      p_action: action,
-      p_target_user_id: targetUserId || null,
-      p_resource_type: resourceType || null,
-      p_resource_id: resourceId || null,
-      p_success: true,
-      p_metadata: metadata || {}
-    })
+    try {
+      await supabaseAdmin.rpc('log_security_event', {
+        p_event_type: 'security_check',
+        p_action: action,
+        p_target_user_id: targetUserId || null,
+        p_resource_type: resourceType || null,
+        p_resource_id: resourceId || null,
+        p_success: true,
+        p_metadata: metadata || {}
+      })
+    } catch (logError) {
+      console.error('Failed to log security event:', logError)
+    }
 
     return new Response(
       JSON.stringify({ 
@@ -137,10 +147,6 @@ serve(async (req) => {
     )
 
   } catch (error) {
-    console.error('Security middleware error:', error)
-    return new Response(
-      JSON.stringify({ error: 'Security check failed' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    )
+    return errorResponse(error, 'Security check failed')
   }
 })

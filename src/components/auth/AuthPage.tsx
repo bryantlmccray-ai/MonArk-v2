@@ -9,6 +9,7 @@ import { AgeVerificationStep } from './AgeVerificationStep';
 import { useProfile } from '@/hooks/useProfile';
 import { MonArkLogo } from '@/components/MonArkLogo';
 import { supabase } from '@/integrations/supabase/client';
+import { signInSchema, signUpSchema, emailSchema, getFirstError } from '@/lib/validation';
 
 export const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -26,10 +27,8 @@ export const AuthPage: React.FC = () => {
   const { updateProfile } = useProfile();
   const { toast } = useToast();
 
-  // Add effect to listen for successful authentication
   React.useEffect(() => {
     const handleAuthChange = () => {
-      // This will be triggered when auth state changes
       if (user) {
         toast({
           title: "Welcome back!",
@@ -42,16 +41,12 @@ export const AuthPage: React.FC = () => {
     return () => window.removeEventListener('auth-change', handleAuthChange);
   }, [user, toast]);
 
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
   const handlePasswordReset = async () => {
-    if (!resetEmail || !validateEmail(resetEmail)) {
+    const result = emailSchema.safeParse(resetEmail);
+    if (!result.success) {
       toast({
         title: "Invalid email",
-        description: "Please enter a valid email address",
+        description: getFirstError(result) || "Please enter a valid email address",
         variant: "destructive"
       });
       return;
@@ -59,13 +54,11 @@ export const AuthPage: React.FC = () => {
 
     setLoading(true);
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+      const { error } = await supabase.auth.resetPasswordForEmail(result.data, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
       setResetSent(true);
       toast({
@@ -75,7 +68,7 @@ export const AuthPage: React.FC = () => {
     } catch (error: any) {
       toast({
         title: "Reset failed",
-        description: error.message || "Failed to send reset email",
+        description: "Unable to send reset email. Please try again.",
         variant: "destructive"
       });
     } finally {
@@ -96,7 +89,7 @@ export const AuthPage: React.FC = () => {
       if (error) {
         toast({
           title: "Google Sign-in failed",
-          description: error.message,
+          description: "Something went wrong with Google sign-in. Please try again.",
           variant: "destructive"
         });
       }
@@ -116,17 +109,15 @@ export const AuthPage: React.FC = () => {
 
     setLoading(true);
     try {
-      // Complete the signup
       const { error } = await signUp(signupData.email, signupData.password, signupData.name);
       
       if (error) {
         toast({
           title: "Signup failed",
-          description: error.message,
+          description: "Unable to create your account. Please try again.",
           variant: "destructive"
         });
       } else {
-        // Update profile with age verification data
         await updateProfile({
           date_of_birth: ageData.dateOfBirth.toISOString().split('T')[0],
           age_verified: true,
@@ -153,63 +144,37 @@ export const AuthPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // For login: only email is required (password optional for testing)
-    // For signup: email and password are required
-    if (!email) {
-      toast({
-        title: "Missing information",
-        description: "Please enter your email address",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      toast({
-        title: "Invalid email",
-        description: "Please enter a valid email address",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Password validation only required for signup
-    if (!isLogin && password.length < 6) {
-      toast({
-        title: "Password too short",
-        description: "Password must be at least 6 characters long",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (!isLogin && !name.trim()) {
-      toast({
-        title: "Name required",
-        description: "Please enter your name",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (!isLogin && !agreedToTerms) {
-      toast({
-        title: "Agreement required",
-        description: "Please agree to the Terms of Service and Privacy Policy",
-        variant: "destructive"
-      });
-      return;
+    if (isLogin) {
+      // Validate sign-in fields
+      const result = signInSchema.safeParse({ email, password: password || 'testpass123' });
+      if (!result.success) {
+        toast({
+          title: "Validation error",
+          description: getFirstError(result) || "Please check your inputs",
+          variant: "destructive"
+        });
+        return;
+      }
+    } else {
+      // Validate sign-up fields
+      const result = signUpSchema.safeParse({ email, password, name, agreedToTerms });
+      if (!result.success) {
+        toast({
+          title: "Validation error",
+          description: getFirstError(result) || "Please check your inputs",
+          variant: "destructive"
+        });
+        return;
+      }
     }
 
     setLoading(true);
 
     try {
       if (isLogin) {
-        // For testing: use a default test password if none provided
         const testPassword = password || 'testpass123';
         const { error } = await signIn(email, testPassword);
         if (error) {
-          // More specific error handling
           if (error.message.includes('Invalid login credentials')) {
             toast({
               title: "Login failed",
@@ -231,16 +196,14 @@ export const AuthPage: React.FC = () => {
           } else {
             toast({
               title: "Login failed",
-              description: error.message,
+              description: "Unable to sign in. Please try again.",
               variant: "destructive"
             });
           }
         } else {
-          // Sign in successful - don't show toast yet, let auth state handle UI update
           console.log('Sign in successful, waiting for auth state change');
         }
       } else {
-        // For signup, show age verification first
         setSignupData({ email, password, name });
         setShowAgeVerification(true);
         setLoading(false);
@@ -295,6 +258,7 @@ export const AuthPage: React.FC = () => {
                 placeholder="Enter your full name"
                 className="bg-input border-border text-white placeholder:text-gray-400 focus:border-ring"
                 required={!isLogin}
+                maxLength={100}
               />
             </div>
           )}
@@ -311,6 +275,7 @@ export const AuthPage: React.FC = () => {
               placeholder="Enter your email"
               className="bg-input border-border text-white placeholder:text-gray-400 focus:border-ring"
               required
+              maxLength={255}
             />
           </div>
 
@@ -326,6 +291,7 @@ export const AuthPage: React.FC = () => {
               placeholder={isLogin ? "Enter password (optional for testing)" : "Enter your password"}
               className="bg-input border-border text-white placeholder:text-gray-400 focus:border-ring"
               required={!isLogin}
+              maxLength={128}
             />
             {!isLogin && (
               <p className="text-xs text-gray-500">Must be at least 6 characters</p>
@@ -465,6 +431,7 @@ export const AuthPage: React.FC = () => {
                     onChange={(e) => setResetEmail(e.target.value)}
                     placeholder="Enter your email"
                     className="bg-input border-border text-white placeholder:text-gray-400 focus:border-ring"
+                    maxLength={255}
                   />
                 </div>
                 
@@ -488,22 +455,14 @@ export const AuthPage: React.FC = () => {
             ) : (
               <div className="text-center py-4">
                 <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                  <span className="text-green-400 text-xl">✓</span>
                 </div>
-                <p className="text-white font-medium mb-1">Reset email sent!</p>
+                <p className="text-white mb-2">Check your email!</p>
                 <p className="text-gray-400 text-sm">
-                  Check your email for instructions to reset your password.
+                  We've sent a password reset link to <span className="text-goldenrod">{resetEmail}</span>
                 </p>
               </div>
             )}
-          </div>
-        )}
-
-        {!isLogin && (
-          <div className="text-center text-xs text-gray-500">
-            <p>You must be 18 years or older to use MonArk</p>
           </div>
         )}
       </div>
