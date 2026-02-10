@@ -36,7 +36,7 @@ const Index = () => {
   React.useEffect(() => {
     const handleAuthChange = () => {
       // Force component re-render on auth change
-      console.log('Auth state changed in Index, user:', user?.id, 'isDemoMode:', isDemoMode);
+      
       // Reset showAuth when user is authenticated or demo mode is active
       if (user || isDemoMode) {
         setShowAuth(false);
@@ -50,9 +50,7 @@ const Index = () => {
   // Add escape key listener to exit demo
   React.useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      console.log('Key pressed:', e.key); // Debug log
       if (e.key === 'Escape') {
-        console.log('Exiting demo via Escape key'); // Debug log
         setShowDemo(false);
       }
     };
@@ -67,9 +65,7 @@ const Index = () => {
 
   // Separate demo mode that shows DemoMainApp (for landing page "Try Demo" button)
   if (showDemo || demoData.isInDemo) {
-    console.log('Rendering demo app, showDemo:', showDemo, 'demoData.isInDemo:', demoData.isInDemo);
     return <DemoMainApp onClose={() => {
-      console.log('Closing demo');
       setShowDemo(false);
       setDemoMode(false);
     }} />;
@@ -97,11 +93,11 @@ const Index = () => {
   if (!user && !isDemoMode) {
     return <EnhancedLandingPage 
       onExitToApp={() => {
-        console.log('onExitToApp called - going to auth');
+        
         setShowAuth(true);
       }}
       onStartDemo={() => {
-        console.log('Starting demo mode');
+        
         setShowDemo(true);
       }}
     />;
@@ -156,8 +152,6 @@ const Index = () => {
         setShowProfileComplete(true);
       }} 
       onCancel={async () => {
-        // Sign out the user and return to landing page
-        console.log('Profile creation cancelled - signing out');
         await signOut();
       }}
     />;
@@ -182,8 +176,6 @@ const Index = () => {
       setShowProfileComplete(true);
     }}
     onCancel={async () => {
-      // Sign out the user and return to landing page
-      console.log('Profile creation cancelled - signing out');
       await signOut();
     }}
   />;

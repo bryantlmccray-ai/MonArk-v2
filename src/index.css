@@ -103,14 +103,17 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Force visible text in all input fields */
-  input, textarea {
-    color: #000 !important;
-    background-color: #fff !important;
+  /* Ensure visible text in light-background input fields */
+  .bg-background input, .bg-background textarea,
+  .bg-bone input, .bg-bone textarea,
+  .bg-card input, .bg-card textarea {
+    color: hsl(var(--color-charcoal));
   }
 
-  input::placeholder, textarea::placeholder {
-    color: #666 !important;
+  .bg-background input::placeholder, .bg-background textarea::placeholder,
+  .bg-bone input::placeholder, .bg-bone textarea::placeholder,
+  .bg-card input::placeholder, .bg-card textarea::placeholder {
+    color: hsl(var(--muted-foreground));
   }
 
   /* Editorial Typography System - Inspired by design magazines */
