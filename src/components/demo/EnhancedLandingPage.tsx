@@ -537,14 +537,6 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                     className="w-full h-full object-cover"
                   />
                   
-                  {/* MonArk logo overlay */}
-                  <div className="absolute inset-0 flex items-end justify-center pb-3">
-                    <div className="bg-charcoal/60 backdrop-blur-sm rounded-full px-2.5 py-1 flex items-center space-x-1">
-                      <span className="text-[8px] font-serif text-ivory tracking-wider">MonArk</span>
-                      <span className="text-[6px] text-ivory/70 italic font-body">Date well.</span>
-                    </div>
-                  </div>
-                  
                   {/* Subtle shine overlay */}
                   <motion.div 
                     className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent"
