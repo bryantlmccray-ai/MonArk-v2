@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { MonArkLogo } from "@/components/MonArkLogo";
 
 const NotFound = () => {
   const location = useLocation();
@@ -12,14 +13,18 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">404</h1>
-        <p className="text-xl text-gray-600 mb-4">Oops! Page not found</p>
-        <a href="/" className="text-blue-500 hover:text-blue-700 underline">
-          Return to Home
-        </a>
-      </div>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background px-6">
+      <MonArkLogo size="md" className="mb-12" />
+      <h1 className="text-5xl font-editorial-headline text-foreground mb-4">404</h1>
+      <p className="text-lg text-muted-foreground font-body mb-8">
+        This page doesn't exist.
+      </p>
+      <a
+        href="/"
+        className="editorial-button editorial-button-primary px-8 py-3 text-sm tracking-wide font-body rounded-xl"
+      >
+        Return Home
+      </a>
     </div>
   );
 };

@@ -657,7 +657,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           </div>
           
           <p className="text-charcoal-soft font-body text-sm mb-6">
-            &copy; 2024 MonArk. Dating reimagined with Smart Matching.
+            &copy; {new Date().getFullYear()} MonArk. Dating reimagined with Smart Matching.
           </p>
           <div className="flex items-center justify-center space-x-8 text-sm">
             <a href="/privacy" className="text-taupe hover:underline font-body">

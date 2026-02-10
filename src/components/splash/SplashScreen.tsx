@@ -10,14 +10,19 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isReady, setIsReady] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
 
+  // Skip splash if already seen this browser
   useEffect(() => {
-    // Show the enter prompt after animations complete (adjusted for new welcome animation)
+    if (localStorage.getItem('monark-splash-seen')) {
+      onComplete();
+      return;
+    }
     const readyTimer = setTimeout(() => setIsReady(true), 2800);
     return () => clearTimeout(readyTimer);
   }, []);
 
   const handleEnter = () => {
     setIsExiting(true);
+    localStorage.setItem('monark-splash-seen', 'true');
     setTimeout(onComplete, 800);
   };
 

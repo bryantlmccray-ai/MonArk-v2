@@ -146,7 +146,7 @@ export const AuthPage: React.FC = () => {
     
     if (isLogin) {
       // Validate sign-in fields
-      const result = signInSchema.safeParse({ email, password: password || 'testpass123' });
+      const result = signInSchema.safeParse({ email, password });
       if (!result.success) {
         toast({
           title: "Validation error",
@@ -172,8 +172,7 @@ export const AuthPage: React.FC = () => {
 
     try {
       if (isLogin) {
-        const testPassword = password || 'testpass123';
-        const { error } = await signIn(email, testPassword);
+        const { error } = await signIn(email, password);
         if (error) {
           if (error.message.includes('Invalid login credentials')) {
             toast({
@@ -201,7 +200,7 @@ export const AuthPage: React.FC = () => {
             });
           }
         } else {
-          console.log('Sign in successful, waiting for auth state change');
+          // Sign in successful
         }
       } else {
         setSignupData({ email, password, name });
@@ -288,9 +287,9 @@ export const AuthPage: React.FC = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder={isLogin ? "Enter password (optional for testing)" : "Enter your password"}
+              placeholder="Enter your password"
               className="bg-input border-border text-white placeholder:text-gray-400 focus:border-ring"
-              required={!isLogin}
+              required
               maxLength={128}
             />
             {!isLogin && (
