@@ -10,7 +10,6 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isReady, setIsReady] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
 
-  // Skip splash if already seen this browser
   useEffect(() => {
     if (localStorage.getItem('monark-splash-seen')) {
       onComplete();
@@ -30,59 +29,70 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     <AnimatePresence>
       {!isExiting ? (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-background overflow-hidden cursor-pointer"
+          className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden cursor-pointer"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
           onClick={isReady ? handleEnter : undefined}
+          style={{ background: "linear-gradient(160deg, hsl(220, 20%, 12%) 0%, hsl(220, 18%, 18%) 40%, hsl(15, 15%, 20%) 100%)" }}
         >
-          {/* Animated background gradient */}
+          {/* Warm ambient light */}
           <motion.div
-            className="absolute inset-0 opacity-30"
+            className="absolute inset-0"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.3 }}
-            transition={{ duration: 2 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 2.5 }}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-secondary/20" />
+            {/* Rosegold warm orb — top center */}
             <motion.div
-              className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-primary/10 blur-3xl"
+              className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full"
+              style={{ background: "radial-gradient(circle, hsla(15, 50%, 65%, 0.2) 0%, transparent 70%)" }}
               animate={{
-                x: [0, 50, 0],
-                y: [0, 30, 0],
+                scale: [1, 1.15, 1],
+                opacity: [0.6, 0.9, 0.6],
+              }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* Gold accent — bottom */}
+            <motion.div
+              className="absolute bottom-1/3 right-1/3 w-[400px] h-[400px] rounded-full"
+              style={{ background: "radial-gradient(circle, hsla(35, 55%, 52%, 0.12) 0%, transparent 70%)" }}
+              animate={{
+                x: [0, -30, 0],
+                y: [0, -20, 0],
                 scale: [1, 1.1, 1],
               }}
-              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-secondary/10 blur-3xl"
-              animate={{
-                x: [0, -40, 0],
-                y: [0, -20, 0],
-                scale: [1, 1.15, 1],
-              }}
-              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             />
           </motion.div>
 
-          {/* Subtle floating particles */}
+          {/* Cinematic letterbox bars */}
+          <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-black/40 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/40 to-transparent" />
+
+          {/* Floating warm particles */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {[...Array(6)].map((_, i) => (
+            {[...Array(8)].map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute w-1 h-1 rounded-full bg-primary/30"
+                className="absolute w-1 h-1 rounded-full"
                 style={{
-                  left: `${20 + i * 12}%`,
-                  top: `${30 + (i % 3) * 20}%`,
+                  left: `${15 + i * 10}%`,
+                  top: `${25 + (i % 4) * 15}%`,
+                  background: i % 2 === 0 
+                    ? "hsla(15, 50%, 65%, 0.5)" 
+                    : "hsla(35, 55%, 52%, 0.4)",
                 }}
                 animate={{
-                  y: [-20, 20, -20],
-                  opacity: [0.2, 0.5, 0.2],
+                  y: [-15, 25, -15],
+                  x: [-5, 5, -5],
+                  opacity: [0.2, 0.6, 0.2],
                 }}
                 transition={{
-                  duration: 4 + i * 0.5,
+                  duration: 5 + i * 0.7,
                   repeat: Infinity,
                   ease: "easeInOut",
-                  delay: i * 0.3,
+                  delay: i * 0.4,
                 }}
               />
             ))}
@@ -90,35 +100,49 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
 
           {/* Main content */}
           <div className="relative flex flex-col items-center">
-            {/* Logo mark */}
+            {/* Logo mark with warm glow */}
             <motion.div
-              className="relative mb-8"
+              className="relative mb-10"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
             >
-              {/* Outer ring */}
+              {/* Warm glow behind logo */}
               <motion.div
-                className="w-32 h-32 md:w-40 md:h-40 rounded-full border border-primary/30"
+                className="absolute -inset-8 rounded-full"
+                style={{ background: "radial-gradient(circle, hsla(15, 50%, 65%, 0.15) 0%, transparent 70%)" }}
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.5, 0.8, 0.5],
+                }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              />
+
+              {/* Outer ring — rosegold */}
+              <motion.div
+                className="w-36 h-36 md:w-44 md:h-44 rounded-full"
+                style={{ border: "1px solid hsla(15, 50%, 65%, 0.3)" }}
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
               />
               
-              {/* Inner ring with glow */}
+              {/* Inner ring with warm glow */}
               <motion.div
-                className="absolute inset-4 rounded-full border border-primary/50"
+                className="absolute inset-4 rounded-full"
+                style={{ border: "1px solid hsla(15, 50%, 65%, 0.5)" }}
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 1, ease: "easeOut", delay: 0.4 }}
               >
                 <motion.div
-                  className="absolute inset-0 rounded-full bg-primary/5"
+                  className="absolute inset-0 rounded-full"
+                  style={{ background: "hsla(15, 50%, 65%, 0.05)" }}
                   animate={{ 
                     boxShadow: [
-                      "0 0 20px hsl(var(--primary) / 0.1)",
-                      "0 0 40px hsl(var(--primary) / 0.2)",
-                      "0 0 20px hsl(var(--primary) / 0.1)",
+                      "0 0 25px hsla(15, 50%, 65%, 0.1)",
+                      "0 0 50px hsla(15, 50%, 65%, 0.25)",
+                      "0 0 25px hsla(15, 50%, 65%, 0.1)",
                     ]
                   }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -132,15 +156,15 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
               >
-                <span className="font-serif text-4xl md:text-5xl tracking-widest text-foreground">
+                <span className="font-serif text-5xl md:text-6xl tracking-widest" style={{ color: "hsl(30, 25%, 92%)" }}>
                   M
                 </span>
               </motion.div>
             </motion.div>
 
-            {/* Welcome text with luxury letter reveal */}
+            {/* "Welcome to" letter reveal */}
             <motion.div
-              className="overflow-hidden mb-2"
+              className="overflow-hidden mb-3"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.7 }}
@@ -149,7 +173,8 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 {"Welcome to".split("").map((letter, index) => (
                   <motion.span
                     key={index}
-                    className="font-serif text-sm md:text-base tracking-[0.25em] text-muted-foreground italic"
+                    className="font-serif text-sm md:text-base tracking-[0.3em] italic"
+                    style={{ color: "hsla(15, 50%, 65%, 0.8)" }}
                     initial={{ opacity: 0, y: 20, rotateX: 90 }}
                     animate={{ opacity: 1, y: 0, rotateX: 0 }}
                     transition={{
@@ -164,7 +189,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               </motion.div>
             </motion.div>
 
-            {/* Brand name */}
+            {/* Brand name — larger, warmer */}
             <motion.div
               className="overflow-hidden"
               initial={{ opacity: 0 }}
@@ -172,18 +197,20 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               transition={{ duration: 0.8, delay: 1.2 }}
             >
               <motion.h1
-                className="font-serif text-3xl md:text-4xl tracking-[0.3em] text-foreground uppercase"
+                className="font-serif text-4xl md:text-5xl tracking-[0.25em] uppercase"
+                style={{ color: "hsl(30, 25%, 92%)" }}
                 initial={{ y: 40 }}
                 animate={{ y: 0 }}
                 transition={{ duration: 0.8, delay: 1.3, ease: [0.22, 1, 0.36, 1] }}
               >
-                Mon<span className="text-primary">A</span>rk
+                Mon<span style={{ color: "hsl(15, 50%, 65%)" }}>A</span>rk
               </motion.h1>
             </motion.div>
 
-            {/* Tagline */}
+            {/* Tagline — larger and warmer */}
             <motion.p
-              className="mt-6 font-body text-sm md:text-base tracking-[0.2em] text-muted-foreground uppercase"
+              className="mt-8 font-body text-base md:text-lg tracking-[0.2em] uppercase"
+              style={{ color: "hsla(30, 15%, 75%, 0.8)" }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 1.6, ease: "easeOut" }}
@@ -191,11 +218,12 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               The Art of Intentional Dating
             </motion.p>
 
-            {/* Subtle line accent */}
+            {/* Warm gradient line */}
             <motion.div
-              className="mt-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"
+              className="mt-10 h-px"
+              style={{ background: "linear-gradient(to right, transparent, hsla(15, 50%, 65%, 0.5), hsla(35, 55%, 52%, 0.3), transparent)" }}
               initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 120, opacity: 1 }}
+              animate={{ width: 160, opacity: 1 }}
               transition={{ duration: 1.2, delay: 1.8, ease: "easeOut" }}
             />
           </div>
@@ -204,37 +232,45 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           <AnimatePresence>
             {isReady && (
               <motion.div
-                className="absolute bottom-12 md:bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6"
+                className="absolute bottom-14 md:bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
               >
-                {/* Enter button */}
+                {/* Warm glass CTA button */}
                 <motion.button
                   onClick={handleEnter}
-                  className="group flex items-center gap-3 px-8 py-3 border border-primary/30 rounded-full bg-transparent hover:bg-primary/5 transition-all duration-500"
-                  whileHover={{ scale: 1.02 }}
+                  className="group flex items-center gap-3 px-10 py-4 rounded-full transition-all duration-500"
+                  style={{
+                    background: "hsla(15, 50%, 65%, 0.1)",
+                    border: "1px solid hsla(15, 50%, 65%, 0.3)",
+                    backdropFilter: "blur(12px)",
+                  }}
+                  whileHover={{ 
+                    scale: 1.03,
+                    boxShadow: "0 0 30px hsla(15, 50%, 65%, 0.2)",
+                  }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <span className="font-body text-sm tracking-[0.2em] text-foreground uppercase">
+                  <span className="font-body text-sm tracking-[0.2em] uppercase" style={{ color: "hsl(30, 25%, 92%)" }}>
                     Enter
                   </span>
                   <motion.div
-                    animate={{ x: [0, 4, 0] }}
+                    animate={{ x: [0, 5, 0] }}
                     transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                   >
-                    <ArrowRight className="w-4 h-4 text-primary" />
+                    <ArrowRight className="w-4 h-4" style={{ color: "hsl(15, 50%, 65%)" }} />
                   </motion.div>
                 </motion.button>
 
-                {/* Click anywhere hint */}
                 <motion.p
-                  className="font-body text-xs tracking-[0.15em] text-foreground uppercase"
-                  animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  className="font-body text-xs tracking-[0.15em] uppercase"
+                  style={{ color: "hsla(30, 15%, 70%, 0.6)" }}
+                  animate={{ opacity: [0.4, 0.8, 0.4] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  click anywhere to continue
+                  tap anywhere to continue
                 </motion.p>
               </motion.div>
             )}
