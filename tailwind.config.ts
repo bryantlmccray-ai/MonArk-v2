@@ -28,23 +28,26 @@ export default {
 				'caption': ['DM Sans', 'Inter', 'Helvetica Neue', 'sans-serif'],
 			},
 			colors: {
-				/* Quiet Luxury Colors - Editorial magazine aesthetic - Using CSS variables */
-				'bone': 'hsl(var(--color-bone))', /* Soft ivory/bone - warm neutral background */
-				'sand': 'hsl(var(--color-sand))', /* Subtle sand for surfaces */
-				'parchment': 'hsl(var(--color-parchment))', /* Softer ivory for elevated surfaces */
-				'charcoal': 'hsl(var(--color-charcoal))', /* Very dark green for maximum readability */
-				'charcoal-soft': 'hsl(var(--color-charcoal-soft))', /* Dark green for secondary text */
-				'charcoal-muted': 'hsl(var(--color-charcoal-muted))', /* Dark brown for muted elements */
-				'taupe': 'hsl(var(--color-taupe))', /* Muted taupe - editorial accent */
-				'olive': 'hsl(var(--color-olive))', /* Muted olive - sparingly used */
-				'dusty-rose': 'hsl(var(--color-dusty-rose))', /* Dusty rose for gentle alerts */
-				'goldenrod': 'hsl(var(--color-goldenrod))', /* Rich gold for accents */
-				'gold-dark': 'hsl(var(--color-gold-dark))', /* Darker gold for hover states */
+				/* Warm Luxury Colors — using CSS variables */
+				'bone': 'hsl(var(--color-bone))',
+				'sand': 'hsl(var(--color-sand))',
+				'parchment': 'hsl(var(--color-parchment))',
+				'charcoal': 'hsl(var(--color-charcoal))',
+				'charcoal-soft': 'hsl(var(--color-charcoal-soft))',
+				'charcoal-muted': 'hsl(var(--color-charcoal-muted))',
+				'taupe': 'hsl(var(--color-taupe))',
+				'olive': 'hsl(var(--color-olive))',
+				'dusty-rose': 'hsl(var(--color-dusty-rose))',
+				'goldenrod': 'hsl(var(--color-goldenrod))',
+				'gold-dark': 'hsl(var(--color-gold-dark))',
+				'rosegold': 'hsl(var(--color-rosegold))',
+				'rosegold-deep': 'hsl(var(--color-rosegold-deep))',
+				'warm-glow': 'hsl(var(--color-warm-glow))',
 
-				/* Legacy support for gradual migration */
-				'warm-ivory': 'hsl(35, 15%, 96%)', /* same as bone */
-				'metallic-gold': 'hsl(25, 25%, 25%)', /* now taupe for editorial feel */
-				'deep-navy': 'hsl(220, 15%, 15%)', /* now charcoal */
+				/* Legacy support */
+				'warm-ivory': 'hsl(30, 25%, 96%)',
+				'metallic-gold': 'hsl(20, 18%, 35%)',
+				'deep-navy': 'hsl(220, 20%, 16%)',
 
 				/* Shadcn integration */
 				border: 'hsl(var(--border))',
@@ -100,10 +103,11 @@ export default {
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-				'editorial': 'linear-gradient(135deg, hsl(35, 15%, 96%) 0%, hsl(35, 8%, 92%) 100%)',
-				'surface': 'linear-gradient(180deg, hsl(35, 20%, 98%) 0%, hsl(35, 8%, 92%) 100%)',
-				'subtle-accent': 'linear-gradient(135deg, hsl(25, 25%, 25%) 0%, hsl(80, 15%, 65%) 100%)',
-				'magazine': 'linear-gradient(45deg, hsl(35, 15%, 96%), hsl(35, 20%, 98%), hsl(35, 8%, 92%))',
+				'editorial': 'linear-gradient(135deg, hsl(30, 25%, 96%) 0%, hsl(30, 15%, 91%) 100%)',
+				'surface': 'linear-gradient(180deg, hsl(30, 30%, 97%) 0%, hsl(30, 15%, 91%) 100%)',
+				'subtle-accent': 'linear-gradient(135deg, hsl(15, 50%, 65%, 0.1) 0%, hsl(35, 55%, 52%, 0.05) 100%)',
+				'magazine': 'linear-gradient(45deg, hsl(30, 25%, 96%), hsl(30, 30%, 97%), hsl(30, 15%, 91%))',
+				'cta-warm': 'linear-gradient(135deg, hsl(20, 18%, 35%), hsl(12, 40%, 50%))',
 			},
 			boxShadow: {
 				'editorial': '0 2px 16px rgba(0, 0, 0, 0.08)',

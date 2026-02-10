@@ -4,28 +4,31 @@
 
 @layer base {
   :root {
-    /* Quiet Luxury Color System - Editorial magazine aesthetic */
-    --color-bone: 35 15% 45%; /* Much darker warm neutral background */
-    --color-sand: 35 8% 42%; /* Much darker sand for surfaces */
-    --color-parchment: 35 20% 47%; /* Much darker ivory for elevated surfaces */
-    --color-charcoal: 213 30% 17%; /* Sophisticated navy with a modern twist */
-    --color-charcoal-soft: 213 30% 17%; /* Same as main text for consistency */
-    --color-charcoal-muted: 213 30% 17%; /* Same as main text for consistency */
-    --color-taupe: 25 25% 25%; /* Muted taupe - editorial accent */
-    --color-olive: 80 15% 65%; /* Muted olive - sparingly used */
-    --color-dusty-rose: 355 40% 55%; /* Dusty rose for gentle alerts */
+    /* Warm Luxury Color System — Raya meets Aesop */
+    --color-bone: 30 25% 96%;        /* Warm ivory background */
+    --color-sand: 30 15% 91%;        /* Soft sand for surfaces */
+    --color-parchment: 30 30% 97%;   /* Cream for elevated surfaces */
+    --color-charcoal: 220 20% 16%;   /* Deep ink for text */
+    --color-charcoal-soft: 220 15% 30%; /* Softer charcoal for secondary */
+    --color-charcoal-muted: 220 10% 45%; /* Muted for tertiary */
+    --color-taupe: 20 18% 35%;       /* Warm taupe — editorial accent */
+    --color-olive: 45 12% 58%;       /* Warm gold-olive — sparingly used */
+    --color-dusty-rose: 350 45% 60%; /* Dusty rose for warmth */
     
-    /* Muted gold accent colors - quiet luxury aesthetic */
-    --color-goldenrod: 40 30% 58%; /* Muted warm brass for accents */
-    --color-gold-dark: 35 25% 45%; /* Darker muted gold for hover states */
+    /* Warm gold + rosegold accent system */
+    --color-goldenrod: 35 55% 52%;   /* Rich warm gold */
+    --color-gold-dark: 30 40% 40%;   /* Deep gold for hover */
+    --color-rosegold: 15 50% 65%;    /* Emotional rosegold accent */
+    --color-rosegold-deep: 12 40% 50%; /* Deeper rosegold for CTAs */
+    --color-warm-glow: 25 80% 75%;   /* Warm ambient glow */
 
-    /* Editorial design tokens - inspired by The Row, Aesop, Celine */
+    /* Editorial design tokens */
     --color-editorial-bg: var(--color-bone);
     --color-editorial-surface: var(--color-sand);
     --color-editorial-text: var(--color-charcoal);
     --color-editorial-accent: var(--color-taupe);
 
-    /* Shadcn variables for quiet luxury aesthetic */
+    /* Shadcn variables */
     --background: var(--color-bone);
     --foreground: var(--color-charcoal);
 
@@ -36,37 +39,37 @@
     --popover-foreground: var(--color-charcoal);
 
     --primary: var(--color-taupe);
-    --primary-foreground: var(--color-bone);
+    --primary-foreground: 30 25% 96%;
 
     --secondary: var(--color-sand);
     --secondary-foreground: var(--color-charcoal);
 
-    --muted: 35 10% 88%; /* Muted sand */
-    --muted-foreground: 214 9% 27%; /* Cool, dusky alternative to navy */
+    --muted: 30 12% 90%;
+    --muted-foreground: 220 10% 45%;
 
-    --accent: var(--color-olive);
+    --accent: var(--color-rosegold);
     --accent-foreground: var(--color-charcoal);
 
     --destructive: var(--color-dusty-rose);
-    --destructive-foreground: var(--color-bone);
+    --destructive-foreground: 30 25% 96%;
 
-    --border: 35 8% 85%; /* Subtle bone borders */
-    --input: 220 15% 15%; /* Dark input backgrounds for contrast */
-    --ring: var(--color-taupe); /* Taupe for focus rings */
+    --border: 30 12% 88%;
+    --input: 220 15% 15%;
+    --ring: var(--color-rosegold);
 
-    /* Sidebar colors for editorial theme */
+    /* Sidebar */
     --sidebar-background: var(--color-sand);
     --sidebar-foreground: var(--color-charcoal);
     --sidebar-primary: var(--color-taupe);
-    --sidebar-primary-foreground: var(--color-bone);
-    --sidebar-accent: var(--color-olive);
+    --sidebar-primary-foreground: 30 25% 96%;
+    --sidebar-accent: var(--color-rosegold);
     --sidebar-accent-foreground: var(--color-charcoal);
-    --sidebar-border: 35 8% 85%;
-    --sidebar-ring: var(--color-taupe);
+    --sidebar-border: 30 12% 88%;
+    --sidebar-ring: var(--color-rosegold);
 
-    --radius: 2px; /* Minimal editorial radius */
+    --radius: 2px;
 
-    /* Editorial spacing system - generous for breathing room */
+    /* Editorial spacing */
     --spacing-xs: 8px;
     --spacing-sm: 16px;
     --spacing-md: 32px;
@@ -74,18 +77,21 @@
     --spacing-xl: 64px;
     --spacing-xxl: 96px;
 
-    /* Quiet luxury gradients - subtle and refined */
+    /* Luxury gradients — warm and inviting */
     --gradient-editorial: linear-gradient(135deg, hsl(var(--color-bone)), hsl(var(--color-sand)));
     --gradient-surface: linear-gradient(180deg, hsl(var(--color-parchment)), hsl(var(--color-sand)));
-    --gradient-subtle-accent: linear-gradient(135deg, hsl(var(--color-taupe) / 0.1), hsl(var(--color-olive) / 0.05));
+    --gradient-subtle-accent: linear-gradient(135deg, hsl(var(--color-rosegold) / 0.08), hsl(var(--color-goldenrod) / 0.05));
+    --gradient-cta: linear-gradient(135deg, hsl(var(--color-taupe)), hsl(var(--color-rosegold-deep)));
+    --gradient-warm: linear-gradient(135deg, hsl(var(--color-rosegold) / 0.15), hsl(var(--color-goldenrod) / 0.1));
 
-    /* Editorial shadows - soft and understated */
-    --shadow-editorial: 0 2px 16px rgba(0, 0, 0, 0.08);
-    --shadow-gentle: 0 1px 8px rgba(0, 0, 0, 0.04);
-    --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.12);
-    --shadow-magazine: 0 8px 40px rgba(0, 0, 0, 0.06);
-    --shadow-glow: 0 0 40px rgba(212, 175, 55, 0.15);
-    --shadow-luxury: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 40px rgba(212, 175, 55, 0.08);
+    /* Shadows — warm-tinted for luxury feel */
+    --shadow-editorial: 0 2px 20px rgba(120, 80, 50, 0.06);
+    --shadow-gentle: 0 1px 10px rgba(120, 80, 50, 0.04);
+    --shadow-elevated: 0 8px 32px rgba(120, 80, 50, 0.1);
+    --shadow-magazine: 0 12px 48px rgba(120, 80, 50, 0.08);
+    --shadow-glow: 0 0 40px rgba(200, 140, 100, 0.2);
+    --shadow-luxury: 0 25px 50px -12px rgba(0, 0, 0, 0.12), 0 0 60px rgba(200, 140, 100, 0.1);
+    --shadow-warm-glow: 0 4px 30px rgba(200, 140, 100, 0.15);
   }
 
   * {
@@ -116,19 +122,19 @@
     color: hsl(var(--muted-foreground));
   }
 
-  /* Editorial Typography System - Inspired by design magazines */
+  /* Editorial Typography System — confident and warm */
   .font-editorial {
     font-family: 'Playfair Display', 'Georgia', serif;
-    font-weight: 400;
-    letter-spacing: 0.1em;
-    line-height: 1.3;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
   }
 
   .font-editorial-headline {
     font-family: 'Playfair Display', 'Georgia', serif;
-    font-weight: 400;
-    letter-spacing: 0.1em;
-    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
   }
 
   .font-body {
@@ -140,18 +146,18 @@
 
   .font-caption {
     font-family: 'DM Sans', 'Inter', 'Helvetica Neue', sans-serif;
-    font-weight: 500;
-    letter-spacing: 0.1em;
+    font-weight: 600;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
   }
 
-  /* Headline utility - matches MonArk splash styling */
+  /* Headlines — editorial weight for confidence */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', 'Georgia', serif;
-    font-weight: 400;
-    letter-spacing: 0.1em;
-    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
   }
 
   /* Editorial Design System Utilities */

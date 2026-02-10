@@ -56,84 +56,119 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
   return (
     <div className="min-h-screen bg-bone relative">
-      {/* Subtle texture overlay */}
-      <div className="fixed inset-0 opacity-[0.03] pointer-events-none" style={{
+      {/* Subtle warm texture overlay */}
+      <div className="fixed inset-0 opacity-[0.02] pointer-events-none" style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
       }} />
 
-      {/* Hero Section */}
+      {/* Hero Section — emotionally warm, cinematic */}
       <section className="relative overflow-hidden">
-        {/* Layered gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-sand/40 via-bone to-parchment/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-goldenrod/5" />
+        {/* Layered warm gradients */}
+        <div className="absolute inset-0 bg-gradient-to-b from-bone via-parchment to-sand" />
+        <div className="absolute inset-0 bg-gradient-to-br from-rosegold/5 via-transparent to-goldenrod/3" />
         
-        {/* Romantic ambient orbs */}
-        <div className="absolute top-20 left-1/4 w-96 h-96 bg-goldenrod/8 rounded-full blur-3xl animate-gentle-pulse" />
-        <div className="absolute bottom-40 right-1/4 w-80 h-80 bg-dusty-rose/5 rounded-full blur-3xl animate-gentle-pulse" style={{ animationDelay: '1s' }} />
+        {/* Warm ambient orbs */}
+        <motion.div
+          className="absolute top-16 left-1/3 w-[500px] h-[500px] rounded-full"
+          style={{ background: "radial-gradient(circle, hsla(15, 50%, 65%, 0.08) 0%, transparent 70%)" }}
+          animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.8, 0.5] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-1/4 w-[400px] h-[400px] rounded-full"
+          style={{ background: "radial-gradient(circle, hsla(35, 55%, 52%, 0.06) 0%, transparent 70%)" }}
+          animate={{ scale: [1, 1.15, 1], x: [0, -20, 0] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        />
         
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-8 py-20 sm:py-32">
-          <div className="text-center space-y-12">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-24">
+          <div className="text-center space-y-10">
             {/* Brand & Tagline */}
-            <div className="space-y-8">
+            <motion.div
+              className="space-y-6"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            >
               <MonArkLogo size="xl" animated={true} rotateOnLoad={true} className="mx-auto" />
               
-              <div className="space-y-6">
-                <h1 className="text-4xl sm:text-6xl lg:text-8xl font-editorial-headline text-charcoal leading-[0.85] tracking-tight">
-                  MonArk
+              <div className="space-y-4">
+                <h1 className="text-5xl sm:text-7xl lg:text-8xl font-serif font-semibold text-charcoal leading-[0.9] tracking-tight">
+                  Mon<span className="text-rosegold">A</span>rk
                 </h1>
-                <div className="w-24 h-px bg-gradient-to-r from-transparent via-taupe to-transparent mx-auto"></div>
-                <p className="text-sm md:text-base font-body tracking-[0.2em] text-charcoal-soft uppercase max-w-lg mx-auto">
+                <div className="w-20 h-[2px] mx-auto" style={{ background: "linear-gradient(to right, transparent, hsl(var(--color-rosegold)), transparent)" }} />
+                <p className="text-sm md:text-base font-body tracking-[0.25em] text-charcoal-soft uppercase max-w-lg mx-auto">
                   3 curated matches. Every week.
                 </p>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Value Prop - warmer copy */}
-            <div className="max-w-2xl mx-auto">
-              <p className="text-sm md:text-base font-body tracking-[0.15em] text-charcoal-soft leading-relaxed uppercase">
-                No endless swiping. No algorithm games. Just <span className="text-charcoal font-medium">Smart Matching</span> that 
+            {/* Value Prop — stronger, warmer copy */}
+            <motion.div
+              className="max-w-xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <p className="text-base md:text-lg font-body text-charcoal-soft leading-relaxed">
+                No endless swiping. No algorithm games. Just{' '}
+                <span className="text-charcoal font-medium">Smart Matching</span> that 
                 understands how you connect, communicate, and love.
               </p>
-            </div>
+            </motion.div>
 
-            {/* Glassmorphism Waitlist CTA */}
-            <div className="max-w-md mx-auto">
+            {/* Glassmorphism Waitlist CTA — warmer, deeper */}
+            <motion.div
+              className="max-w-md mx-auto"
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            >
               <div className="relative group">
-                {/* Glow effect behind card */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-goldenrod/20 via-taupe/10 to-dusty-rose/20 rounded-3xl blur-xl opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+                {/* Warm glow behind card */}
+                <div className="absolute -inset-2 rounded-3xl blur-2xl opacity-50 group-hover:opacity-70 transition-opacity duration-700"
+                  style={{ background: "linear-gradient(135deg, hsla(15, 50%, 65%, 0.2), hsla(35, 55%, 52%, 0.15), hsla(350, 45%, 60%, 0.1))" }}
+                />
                 
-                <div className="relative bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-2xl">
-                  {/* Subtle inner glow */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/50 via-transparent to-transparent pointer-events-none" />
+                <div className="relative bg-white/80 backdrop-blur-2xl rounded-2xl p-8 border border-white/60 shadow-luxury">
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/40 via-transparent to-rosegold/5 pointer-events-none" />
                   
                   <div className="relative text-center mb-6">
-                    <p className="text-xs font-caption text-goldenrod tracking-widest mb-3">LIMITED EARLY ACCESS</p>
-                    <h2 className="text-2xl font-editorial-headline text-charcoal mb-2">Get Your 3</h2>
+                    <p className="text-xs font-caption text-rosegold-deep tracking-[0.2em] mb-3">LIMITED EARLY ACCESS</p>
+                    <h2 className="text-2xl sm:text-3xl font-serif font-semibold text-charcoal mb-2">Get Your 3</h2>
                     <p className="text-sm text-charcoal-soft font-body">Join 500+ intentional daters on the waitlist</p>
                   </div>
 
-                  <Button
-                    onClick={() => setShowWaitlistModal(true)}
-                    className="relative w-full py-4 text-sm tracking-wide font-body bg-gradient-to-r from-taupe to-taupe/90 hover:from-taupe/90 hover:to-taupe text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    <span className="relative z-10">REQUEST EARLY ACCESS</span>
-                  </Button>
+                  <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+                    <Button
+                      onClick={() => setShowWaitlistModal(true)}
+                      className="relative w-full py-4 text-sm tracking-[0.1em] font-body text-white rounded-xl shadow-warm-glow hover:shadow-lg transition-all duration-300"
+                      style={{ background: "linear-gradient(135deg, hsl(var(--color-taupe)), hsl(var(--color-rosegold-deep)))" }}
+                    >
+                      <span className="relative z-10">REQUEST EARLY ACCESS</span>
+                    </Button>
+                  </motion.div>
 
-                  <div className="relative mt-5 pt-5 border-t border-taupe/10">
+                  <div className="relative mt-5 pt-5 border-t border-rosegold/10">
                     <p className="text-sm text-charcoal font-body leading-relaxed text-center italic">
                       "Answer 10 thoughtful questions. We find people who get you."
                     </p>
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Demo Button */}
-            <div className="space-y-4 pt-4">
+            {/* Demo Button — warmer styling */}
+            <motion.div
+              className="space-y-3 pt-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+            >
               <Button
                 onClick={startFullDemo}
                 variant="outline"
-                className="px-8 py-3 text-sm tracking-wide font-body bg-transparent border border-taupe/30 text-charcoal hover:bg-taupe/10 hover:border-taupe/50 rounded-xl transition-all duration-300"
+                className="px-8 py-3 text-sm tracking-[0.1em] font-body bg-transparent border border-rosegold/25 text-charcoal hover:bg-rosegold/5 hover:border-rosegold/40 rounded-xl transition-all duration-300"
               >
                 EXPERIENCE THE APP
               </Button>
@@ -143,19 +178,19 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   <Button
                     onClick={onExitToApp}
                     variant="ghost"
-                    className="editorial-button-ghost px-6 py-2 text-xs tracking-wide font-body"
+                    className="px-6 py-2 text-xs tracking-[0.1em] font-body text-charcoal-muted hover:text-charcoal"
                   >
                     RETURN HOME
                   </Button>
                 </div>
               )}
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Instagram Feed Section */}
-      <section className="py-20 bg-gradient-to-b from-bone to-charcoal-gray/5">
+      <section className="py-20 bg-gradient-to-b from-bone to-sand/30">
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-12">
             <a 
@@ -213,65 +248,77 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="py-20 bg-gradient-to-b from-charcoal-gray/5 to-charcoal-gray/15">
+      {/* How It Works Section — warmer cards with hover */}
+      <section className="py-20 bg-gradient-to-b from-sand/30 to-bone">
         <div className="max-w-4xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-charcoal mb-4">How Smart Matching Works</h2>
-            <p className="text-sm md:text-base font-body tracking-[0.1em] text-charcoal-soft uppercase">We use relational intelligence to curate your perfect 3</p>
-          </div>
+          <motion.div
+            className="text-center mb-14"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl sm:text-5xl font-serif font-semibold text-charcoal mb-4">How Smart Matching Works</h2>
+            <p className="text-sm md:text-base font-body tracking-[0.15em] text-charcoal-soft uppercase">Relational intelligence curates your perfect 3</p>
+          </motion.div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center space-y-4">
-              <div className="border border-taupe/20 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
-                <PenLine className="h-8 w-8 text-charcoal" strokeWidth={1.5} />
-              </div>
-              <div className="text-4xl font-editorial-headline text-charcoal">01</div>
-              <h3 className="font-editorial-headline text-xl text-charcoal">Take the RIF</h3>
-              <p className="text-sm text-charcoal-soft font-body leading-relaxed">
-                10 questions about how you communicate, connect, and date. Takes 5 minutes.
-              </p>
-            </div>
-            
-            <div className="text-center space-y-4">
-              <div className="border border-taupe/20 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
-                <Heart className="h-8 w-8 text-charcoal" strokeWidth={1.5} />
-              </div>
-              <div className="text-4xl font-editorial-headline text-charcoal">02</div>
-              <h3 className="font-editorial-headline text-xl text-charcoal">Get Your 3</h3>
-              <p className="text-sm text-charcoal-soft font-body leading-relaxed">
-                Every Sunday, receive 3 matches who fit your style—not just your type.
-              </p>
-            </div>
-            
-            <div className="text-center space-y-4">
-              <div className="border border-taupe/20 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
-                <MapPin className="h-8 w-8 text-charcoal" strokeWidth={1.5} />
-              </div>
-              <div className="text-4xl font-editorial-headline text-charcoal">03</div>
-              <h3 className="font-editorial-headline text-xl text-charcoal">Date With Intention</h3>
-              <p className="text-sm text-charcoal-soft font-body leading-relaxed">
-                We suggest premium first dates at vetted venues. No awkward coffee shop roulette.
-              </p>
-            </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { icon: PenLine, num: "01", title: "Take the RIF", desc: "10 questions about how you communicate, connect, and date. Takes 5 minutes." },
+              { icon: Heart, num: "02", title: "Get Your 3", desc: "Every Sunday, receive 3 matches who fit your style—not just your type." },
+              { icon: MapPin, num: "03", title: "Date With Intention", desc: "We suggest premium first dates at vetted venues. No awkward coffee shop roulette." },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                className="text-center space-y-4 p-6 rounded-2xl transition-all duration-500 hover:bg-white/60 hover:shadow-elevated group"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.15 }}
+              >
+                <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105"
+                  style={{ 
+                    background: "linear-gradient(135deg, hsla(15, 50%, 65%, 0.08), hsla(35, 55%, 52%, 0.06))",
+                    border: "1px solid hsla(15, 50%, 65%, 0.15)",
+                  }}
+                >
+                  <item.icon className="h-8 w-8 text-charcoal" strokeWidth={1.5} />
+                </div>
+                <div className="text-4xl font-serif font-semibold text-rosegold/60">{item.num}</div>
+                <h3 className="font-serif font-semibold text-xl text-charcoal">{item.title}</h3>
+                <p className="text-sm text-charcoal-soft font-body leading-relaxed">{item.desc}</p>
+              </motion.div>
+            ))}
           </div>
 
-          <div className="text-center mt-16">
-            <p className="text-sm md:text-base font-body tracking-[0.2em] text-charcoal-soft uppercase">
+          <motion.div
+            className="text-center mt-14"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+          >
+            <p className="text-base font-body tracking-[0.15em] text-charcoal-muted uppercase">
               No swipes. No chaos. Just connection that feels like alignment.
             </p>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Founder Story Section */}
-      <section className="py-20 bg-gradient-to-b from-charcoal-gray/15 to-charcoal-gray/10 overflow-hidden">
+      <section className="py-20 bg-gradient-to-b from-bone to-sand/40 overflow-hidden">
         <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-charcoal mb-4">Why I Built MonArk</h2>
-            <p className="text-lg text-charcoal-soft font-body leading-relaxed uppercase">A Founder's Note on Intentional Dating</p>
-            <div className="w-16 h-px bg-taupe mx-auto mt-6"></div>
-          </div>
+          <motion.div
+            className="text-center mb-14"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl sm:text-5xl font-serif font-semibold text-charcoal mb-4">Why I Built MonArk</h2>
+            <p className="text-base text-charcoal-soft font-body leading-relaxed uppercase tracking-[0.1em]">A Founder's Note on Intentional Dating</p>
+            <div className="w-16 h-[2px] mx-auto mt-6" style={{ background: "linear-gradient(to right, transparent, hsl(var(--color-rosegold)), transparent)" }} />
+          </motion.div>
           
           <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Founder Image with Luxury Animation */}
@@ -362,13 +409,13 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       </section>
 
       {/* Team Section */}
-      <section className="py-20 bg-gradient-to-b from-charcoal-gray/10 to-charcoal-gray/15">
+      <section className="py-20 bg-gradient-to-b from-sand/40 to-bone">
         <div className="max-w-4xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-charcoal mb-4">Meet the Team</h2>
-            <p className="text-sm md:text-base font-body tracking-[0.1em] text-charcoal-soft uppercase">The people behind intentional dating</p>
-            <div className="w-16 h-px bg-taupe mx-auto mt-6"></div>
-          </div>
+          <motion.div className="text-center mb-14" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+            <h2 className="text-3xl sm:text-5xl font-serif font-semibold text-charcoal mb-4">Meet the Team</h2>
+            <p className="text-sm md:text-base font-body tracking-[0.15em] text-charcoal-soft uppercase">The people behind intentional dating</p>
+            <div className="w-16 h-[2px] mx-auto mt-6" style={{ background: "linear-gradient(to right, transparent, hsl(var(--color-rosegold)), transparent)" }} />
+          </motion.div>
           
           <div className="grid md:grid-cols-3 gap-8">
             {/* Team Member 1 - Sheeza Anwar */}
@@ -582,76 +629,85 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       </section>
 
       {/* Pricing Section */}
-      <section className="py-20 bg-gradient-to-b from-charcoal-gray/10 to-charcoal-gray/25">
+      <section className="py-20 bg-gradient-to-b from-bone to-sand/50">
         <div className="max-w-4xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-charcoal mb-4">Early-Bird Access</h2>
-            <p className="text-sm md:text-base font-body tracking-[0.1em] text-charcoal-soft uppercase">Limited-time founding member pricing</p>
-          </div>
+          <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+            <h2 className="text-3xl sm:text-5xl font-serif font-semibold text-charcoal mb-4">Early-Bird Access</h2>
+            <p className="text-sm md:text-base font-body tracking-[0.15em] text-charcoal-soft uppercase">Limited-time founding member pricing</p>
+          </motion.div>
 
-          <div className="relative group max-w-2xl mx-auto">
-            {/* Glow effect behind card - same as waitlist */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-goldenrod/20 via-taupe/10 to-dusty-rose/20 rounded-3xl blur-xl opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+          <motion.div
+            className="relative group max-w-2xl mx-auto"
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+          >
+            <div className="absolute -inset-2 rounded-3xl blur-2xl opacity-50 group-hover:opacity-70 transition-opacity duration-700"
+              style={{ background: "linear-gradient(135deg, hsla(15, 50%, 65%, 0.2), hsla(35, 55%, 52%, 0.15), hsla(350, 45%, 60%, 0.1))" }}
+            />
             
-            <div className="relative bg-white/60 backdrop-blur-sm rounded-3xl p-8 sm:p-12 border border-taupe/20 shadow-2xl">
-              {/* Subtle inner glow */}
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/50 via-transparent to-transparent pointer-events-none" />
+            <div className="relative bg-white/80 backdrop-blur-2xl rounded-3xl p-8 sm:p-12 border border-white/60 shadow-luxury">
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/40 via-transparent to-rosegold/5 pointer-events-none" />
               
               <div className="relative text-center mb-8">
                 <div className="inline-flex items-baseline space-x-2">
-                  <span className="text-5xl sm:text-6xl font-editorial-headline text-charcoal">$35</span>
+                  <span className="text-5xl sm:text-7xl font-serif font-semibold text-charcoal">$35</span>
                   <span className="text-xl text-charcoal-soft font-body">/mo</span>
                 </div>
-                <p className="text-lg font-editorial-headline text-charcoal mt-2">Core Access</p>
+                <p className="text-lg font-serif font-semibold text-charcoal mt-2">Core Access</p>
               </div>
 
               <div className="relative space-y-6">
-                <div className="space-y-4">
-                  <h3 className="font-editorial-headline text-lg text-charcoal">Your 3 Every Week</h3>
-                  <p className="text-charcoal-soft text-sm font-body leading-relaxed tracking-wide">
+                <div className="space-y-3">
+                  <h3 className="font-serif font-semibold text-lg text-charcoal">Your 3 Every Week</h3>
+                  <p className="text-charcoal-soft text-sm font-body leading-relaxed">
                     3 curated matches every Sunday, powered by Smart Matching. Each comes with an AI-suggested date idea.
                   </p>
                 </div>
 
-                <div className="border-t border-taupe/20 pt-6">
-                  <h3 className="font-editorial-headline text-lg text-charcoal mb-3">Ark AI Concierge</h3>
-                  <p className="text-charcoal-soft text-sm font-body leading-relaxed tracking-wide">
+                <div className="border-t border-rosegold/10 pt-6">
+                  <h3 className="font-serif font-semibold text-lg text-charcoal mb-3">Ark AI Concierge</h3>
+                  <p className="text-charcoal-soft text-sm font-body leading-relaxed">
                     Chat-based AI that personalizes your date options and helps coordinate plans.
                   </p>
                 </div>
 
-                <div className="border-t border-taupe/20 pt-6">
-                  <Button
-                    onClick={() => setShowWaitlistModal(true)}
-                    className="w-full editorial-button-primary py-3 text-sm tracking-wide font-body"
-                  >
-                    JOIN WAITLIST
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
+                <div className="border-t border-rosegold/10 pt-6">
+                  <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+                    <Button
+                      onClick={() => setShowWaitlistModal(true)}
+                      className="w-full py-3 text-sm tracking-[0.1em] font-body text-white rounded-xl shadow-warm-glow"
+                      style={{ background: "linear-gradient(135deg, hsl(var(--color-taupe)), hsl(var(--color-rosegold-deep)))" }}
+                    >
+                      JOIN WAITLIST
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </motion.div>
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Waitlist Modal */}
       <WaitlistModal isOpen={showWaitlistModal} onClose={() => setShowWaitlistModal(false)} sourcePage="enhanced-landing" />
 
-      {/* Footer */}
-      <footer className="py-16 bg-charcoal-gray/30">
+      {/* Footer — warm and grounded */}
+      <footer className="py-16" style={{ background: "linear-gradient(180deg, hsl(var(--color-sand)), hsl(30, 20%, 88%))" }}>
         <div className="max-w-4xl mx-auto px-6 text-center">
           <MonArkLogo size="md" variant="compact" className="mx-auto mb-8" />
           
-          {/* Social Link */}
           <div className="mb-8">
             <a 
               href="https://www.instagram.com/monark.eq/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-taupe/20 bg-white/40 backdrop-blur-sm text-charcoal hover:bg-white/60 hover:border-taupe/40 transition-all duration-300 group"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border bg-white/60 backdrop-blur-sm text-charcoal hover:bg-white/80 transition-all duration-300 group"
+              style={{ borderColor: "hsla(15, 50%, 65%, 0.2)" }}
             >
-              <Instagram className="h-4 w-4 text-taupe group-hover:text-charcoal transition-colors" />
+              <Instagram className="h-4 w-4 text-rosegold group-hover:text-charcoal transition-colors" />
               <span className="text-sm font-body tracking-wide">@monark.eq</span>
             </a>
           </div>
@@ -660,10 +716,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             &copy; {new Date().getFullYear()} MonArk. Dating reimagined with Smart Matching.
           </p>
           <div className="flex items-center justify-center space-x-8 text-sm">
-            <a href="/privacy" className="text-taupe hover:underline font-body">
+            <a href="/privacy" className="text-charcoal-muted hover:text-charcoal hover:underline font-body transition-colors">
               Privacy Policy
             </a>
-            <a href="/terms" className="text-taupe hover:underline font-body">
+            <a href="/terms" className="text-charcoal-muted hover:text-charcoal hover:underline font-body transition-colors">
               Terms of Service
             </a>
           </div>

@@ -10,6 +10,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { MonArkLogo } from '@/components/MonArkLogo';
 import { supabase } from '@/integrations/supabase/client';
 import { signInSchema, signUpSchema, emailSchema, getFirstError } from '@/lib/validation';
+import { motion } from 'framer-motion';
 
 export const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -145,7 +146,6 @@ export const AuthPage: React.FC = () => {
     e.preventDefault();
     
     if (isLogin) {
-      // Validate sign-in fields
       const result = signInSchema.safeParse({ email, password });
       if (!result.success) {
         toast({
@@ -156,7 +156,6 @@ export const AuthPage: React.FC = () => {
         return;
       }
     } else {
-      // Validate sign-up fields
       const result = signUpSchema.safeParse({ email, password, name, agreedToTerms });
       if (!result.success) {
         toast({
@@ -175,32 +174,14 @@ export const AuthPage: React.FC = () => {
         const { error } = await signIn(email, password);
         if (error) {
           if (error.message.includes('Invalid login credentials')) {
-            toast({
-              title: "Login failed",
-              description: "The email or password you entered is incorrect. Please try again.",
-              variant: "destructive"
-            });
+            toast({ title: "Login failed", description: "The email or password you entered is incorrect.", variant: "destructive" });
           } else if (error.message.includes('Email not confirmed')) {
-            toast({
-              title: "Email not verified",
-              description: "Please check your email and click the verification link before signing in.",
-              variant: "destructive"
-            });
+            toast({ title: "Email not verified", description: "Please check your email and click the verification link.", variant: "destructive" });
           } else if (error.message.includes('Too many requests')) {
-            toast({
-              title: "Too many attempts",
-              description: "Please wait a moment before trying again.",
-              variant: "destructive"
-            });
+            toast({ title: "Too many attempts", description: "Please wait a moment before trying again.", variant: "destructive" });
           } else {
-            toast({
-              title: "Login failed",
-              description: "Unable to sign in. Please try again.",
-              variant: "destructive"
-            });
+            toast({ title: "Login failed", description: "Unable to sign in. Please try again.", variant: "destructive" });
           }
-        } else {
-          // Sign in successful
         }
       } else {
         setSignupData({ email, password, name });
@@ -209,11 +190,7 @@ export const AuthPage: React.FC = () => {
         return;
       }
     } catch (err) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive"
-      });
+      toast({ title: "Error", description: "Something went wrong. Please try again.", variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -224,18 +201,32 @@ export const AuthPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-jet-black flex items-center justify-center px-6">
-      <div className="w-full max-w-md space-y-8">
-        {/* MonArk Logo */}
+    <div
+      className="min-h-screen flex items-center justify-center px-6 relative overflow-hidden"
+      style={{ background: "linear-gradient(160deg, hsl(220, 20%, 10%) 0%, hsl(220, 18%, 16%) 50%, hsl(15, 12%, 18%) 100%)" }}
+    >
+      {/* Warm ambient glow behind form */}
+      <div
+        className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
+        style={{ background: "radial-gradient(circle, hsla(15, 50%, 65%, 0.08) 0%, transparent 70%)" }}
+      />
+
+      <motion.div
+        className="w-full max-w-md space-y-8 relative z-10"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {/* Logo */}
         <div className="text-center">
-          <MonArkLogo size="xl" rotateOnLoad={true} className="mb-12" />
+          <MonArkLogo size="xl" rotateOnLoad={true} className="mb-10" />
         </div>
 
-        <div className="text-center space-y-4">
-          <h1 className="text-3xl font-light text-white">
+        <div className="text-center space-y-3">
+          <h1 className="text-3xl font-serif font-semibold tracking-wide" style={{ color: "hsl(30, 25%, 92%)" }}>
             {isLogin ? 'Welcome Back' : 'Join MonArk'}
           </h1>
-          <p className="text-gray-400">
+          <p className="font-body text-sm tracking-wide" style={{ color: "hsla(30, 15%, 70%, 0.7)" }}>
             {isLogin 
               ? 'Sign in to continue your journey' 
               : 'Create your account to start meaningful connections'
@@ -243,10 +234,10 @@ export const AuthPage: React.FC = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {!isLogin && (
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-white text-sm font-medium">
+              <Label htmlFor="name" className="text-sm font-medium" style={{ color: "hsl(30, 20%, 85%)" }}>
                 Full Name
               </Label>
               <Input
@@ -255,7 +246,7 @@ export const AuthPage: React.FC = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter your full name"
-                className="bg-input border-border text-white placeholder:text-gray-400 focus:border-ring"
+                className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-rosegold/50 focus:ring-rosegold/20 rounded-xl h-12"
                 required={!isLogin}
                 maxLength={100}
               />
@@ -263,7 +254,7 @@ export const AuthPage: React.FC = () => {
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-white text-sm font-medium">
+            <Label htmlFor="email" className="text-sm font-medium" style={{ color: "hsl(30, 20%, 85%)" }}>
               Email Address
             </Label>
             <Input
@@ -272,14 +263,14 @@ export const AuthPage: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="bg-input border-border text-white placeholder:text-gray-400 focus:border-ring"
+              className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-rosegold/50 focus:ring-rosegold/20 rounded-xl h-12"
               required
               maxLength={255}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-white text-sm font-medium">
+            <Label htmlFor="password" className="text-sm font-medium" style={{ color: "hsl(30, 20%, 85%)" }}>
               Password
             </Label>
             <Input
@@ -288,74 +279,75 @@ export const AuthPage: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
-              className="bg-input border-border text-white placeholder:text-gray-400 focus:border-ring"
+              className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-rosegold/50 focus:ring-rosegold/20 rounded-xl h-12"
               required
               maxLength={128}
             />
             {!isLogin && (
-              <p className="text-xs text-gray-500">Must be at least 6 characters</p>
+              <p className="text-xs" style={{ color: "hsla(30, 15%, 60%, 0.6)" }}>Must be at least 6 characters</p>
             )}
           </div>
 
           {!isLogin && (
-            <div className="flex items-start gap-3 pt-2">
+            <div className="flex items-start gap-3 pt-1">
               <Checkbox
                 checked={agreedToTerms}
                 onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
-                className="mt-1 border-goldenrod/50 data-[state=checked]:bg-goldenrod data-[state=checked]:border-goldenrod"
+                className="mt-1 border-rosegold/40 data-[state=checked]:bg-rosegold data-[state=checked]:border-rosegold"
               />
-              <p className="text-sm text-gray-400 leading-relaxed">
+              <p className="text-sm leading-relaxed" style={{ color: "hsla(30, 15%, 70%, 0.7)" }}>
                 I agree to MonArk's{' '}
-                <a href="/terms" className="text-goldenrod hover:underline" target="_blank" rel="noopener noreferrer">
-                  Terms of Service
-                </a>{' '}
+                <a href="/terms" className="text-rosegold hover:underline" target="_blank" rel="noopener noreferrer">Terms of Service</a>{' '}
                 and{' '}
-                <a href="/privacy" className="text-goldenrod hover:underline" target="_blank" rel="noopener noreferrer">
-                  Privacy Policy
-                </a>
-                . I consent to the collection and use of my data as described in these policies.
+                <a href="/privacy" className="text-rosegold hover:underline" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
               </p>
             </div>
           )}
 
-          <button
+          <motion.button
             type="submit"
             disabled={loading || (!isLogin && !agreedToTerms)}
-            className={`w-full py-4 font-semibold rounded-xl transition-all duration-300 ${
-              loading || (!isLogin && !agreedToTerms)
-                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                : 'bg-goldenrod-gradient text-jet-black hover:shadow-golden-glow'
-            }`}
+            className="w-full py-4 font-semibold rounded-xl transition-all duration-300 text-sm tracking-wide"
+            style={{
+              background: loading || (!isLogin && !agreedToTerms)
+                ? "hsla(220, 10%, 30%, 0.5)"
+                : "linear-gradient(135deg, hsl(20, 18%, 35%), hsl(15, 50%, 55%))",
+              color: loading || (!isLogin && !agreedToTerms)
+                ? "hsla(30, 10%, 50%, 0.5)"
+                : "hsl(30, 25%, 96%)",
+            }}
+            whileHover={!loading ? { scale: 1.01, boxShadow: "0 4px 25px hsla(15, 50%, 55%, 0.3)" } : {}}
+            whileTap={!loading ? { scale: 0.99 } : {}}
           >
             {loading 
               ? (
                 <div className="flex items-center justify-center space-x-2">
-                  <div className="w-4 h-4 border-2 border-jet-black/30 border-t-jet-black rounded-full animate-spin"></div>
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                   <span>{isLogin ? 'Signing in...' : 'Creating account...'}</span>
                 </div>
               )
               : (isLogin ? 'Sign In' : 'Create Account')
             }
-          </button>
+          </motion.button>
         </form>
 
         {/* Divider */}
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-700"></div>
+            <div className="w-full" style={{ borderTop: "1px solid hsla(30, 15%, 50%, 0.15)" }}></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-jet-black text-gray-400">or</span>
+            <span className="px-3 font-body" style={{ background: "hsl(220, 19%, 14%)", color: "hsla(30, 15%, 60%, 0.5)" }}>or</span>
           </div>
         </div>
 
-        {/* Google Sign-in */}
+        {/* Google + Demo */}
         <div className="space-y-3">
           <Button
             onClick={handleGoogleSignIn}
             disabled={loading}
             variant="outline"
-            className="w-full py-4 bg-white text-gray-800 border-gray-300 hover:bg-gray-50 font-semibold rounded-xl transition-all duration-300"
+            className="w-full py-4 bg-white text-gray-800 border-gray-200 hover:bg-gray-50 font-semibold rounded-xl transition-all duration-300"
           >
             <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -366,12 +358,16 @@ export const AuthPage: React.FC = () => {
             {isLogin ? 'Continue with Google' : 'Sign up with Google'}
           </Button>
 
-          {/* Demo Mode Button */}
           <Button
             onClick={enterDemoMode}
             disabled={loading}
             variant="outline"
-            className="w-full py-4 border-dashed border-2 border-primary/50 text-primary hover:bg-primary/10 font-medium rounded-xl transition-all duration-300"
+            className="w-full py-4 font-medium rounded-xl transition-all duration-300"
+            style={{
+              background: "transparent",
+              border: "1px dashed hsla(15, 50%, 65%, 0.3)",
+              color: "hsl(15, 50%, 65%)",
+            }}
           >
             🧪 Continue as Guest (Demo Mode)
           </Button>
@@ -384,7 +380,8 @@ export const AuthPage: React.FC = () => {
               setShowForgotPassword(false);
               setResetSent(false);
             }}
-            className="text-goldenrod hover:text-goldenrod/80 transition-colors"
+            className="transition-colors font-body text-sm"
+            style={{ color: "hsl(15, 50%, 65%)" }}
           >
             {isLogin 
               ? "Don't have an account? Sign up" 
@@ -399,7 +396,8 @@ export const AuthPage: React.FC = () => {
                   setShowForgotPassword(!showForgotPassword);
                   setResetEmail(email);
                 }}
-                className="text-sm text-gray-400 hover:text-goldenrod transition-colors"
+                className="text-sm transition-colors"
+                style={{ color: "hsla(30, 15%, 60%, 0.6)" }}
               >
                 Forgot your password?
               </button>
@@ -407,20 +405,20 @@ export const AuthPage: React.FC = () => {
           )}
         </div>
 
-        {/* Forgot Password Form */}
+        {/* Forgot Password */}
         {showForgotPassword && (
-          <div className="border-t border-gray-700 pt-6 space-y-4">
+          <div className="pt-6 space-y-4" style={{ borderTop: "1px solid hsla(30, 15%, 50%, 0.15)" }}>
             <div className="text-center">
-              <h3 className="text-white font-medium mb-2">Reset Password</h3>
-              <p className="text-gray-400 text-sm">
-                Enter your email address and we'll send you a link to reset your password.
+              <h3 className="font-serif font-medium mb-2" style={{ color: "hsl(30, 25%, 92%)" }}>Reset Password</h3>
+              <p className="text-sm font-body" style={{ color: "hsla(30, 15%, 60%, 0.6)" }}>
+                Enter your email and we'll send you a reset link.
               </p>
             </div>
             
             {!resetSent ? (
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="reset-email" className="text-white text-sm font-medium">
+                  <Label htmlFor="reset-email" className="text-sm font-medium" style={{ color: "hsl(30, 20%, 85%)" }}>
                     Email Address
                   </Label>
                   <Input
@@ -429,7 +427,7 @@ export const AuthPage: React.FC = () => {
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}
                     placeholder="Enter your email"
-                    className="bg-input border-border text-white placeholder:text-gray-400 focus:border-ring"
+                    className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-rosegold/50 rounded-xl h-12"
                     maxLength={255}
                   />
                 </div>
@@ -438,14 +436,19 @@ export const AuthPage: React.FC = () => {
                   <button
                     onClick={handlePasswordReset}
                     disabled={loading}
-                    className="flex-1 py-3 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50"
+                    className="flex-1 py-3 font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 text-sm"
+                    style={{
+                      background: "linear-gradient(135deg, hsl(20, 18%, 35%), hsl(15, 50%, 55%))",
+                      color: "hsl(30, 25%, 96%)",
+                    }}
                   >
                     {loading ? 'Sending...' : 'Send Reset Link'}
                   </button>
                   
                   <button
                     onClick={() => setShowForgotPassword(false)}
-                    className="px-4 py-3 text-gray-400 hover:text-white transition-colors"
+                    className="px-4 py-3 transition-colors"
+                    style={{ color: "hsla(30, 15%, 60%, 0.6)" }}
                   >
                     Cancel
                   </button>
@@ -453,18 +456,18 @@ export const AuthPage: React.FC = () => {
               </div>
             ) : (
               <div className="text-center py-4">
-                <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <span className="text-green-400 text-xl">✓</span>
+                <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: "hsla(140, 50%, 50%, 0.15)" }}>
+                  <span className="text-xl" style={{ color: "hsl(140, 50%, 60%)" }}>✓</span>
                 </div>
-                <p className="text-white mb-2">Check your email!</p>
-                <p className="text-gray-400 text-sm">
-                  We've sent a password reset link to <span className="text-goldenrod">{resetEmail}</span>
+                <p className="mb-2 font-body" style={{ color: "hsl(30, 25%, 92%)" }}>Check your email!</p>
+                <p className="text-sm font-body" style={{ color: "hsla(30, 15%, 60%, 0.6)" }}>
+                  Reset link sent to <span style={{ color: "hsl(15, 50%, 65%)" }}>{resetEmail}</span>
                 </p>
               </div>
             )}
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };
