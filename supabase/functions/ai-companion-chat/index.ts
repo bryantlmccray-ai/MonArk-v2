@@ -129,8 +129,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         error: 'Failed to generate response',
-        message: "I'm here to support you on your dating journey!",
-        details: error.message 
+        message: "I'm here to support you on your dating journey!"
       }),
       {
         status: 200, // Return 200 with fallback message
