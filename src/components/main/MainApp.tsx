@@ -113,14 +113,26 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
          );
       case 'dates':
         return (
-          <DatesJournal 
-            onStartDebrief={() => setShowDebrief(true)} 
-            initialTab={datesJournalTab}
-            onDateCompleted={handleDateCompleted}
-          />
+          <ProfileGate 
+            featureName="your journal"
+            onNavigateToProfile={() => handleTabChange('profile')}
+          >
+            <DatesJournal 
+              onStartDebrief={() => setShowDebrief(true)} 
+              initialTab={datesJournalTab}
+              onDateCompleted={handleDateCompleted}
+            />
+          </ProfileGate>
         );
       case 'shareables':
-        return <MilestoneCardShowcase />;
+        return (
+          <ProfileGate 
+            featureName="shareables"
+            onNavigateToProfile={() => handleTabChange('profile')}
+          >
+            <MilestoneCardShowcase />
+          </ProfileGate>
+        );
       case 'profile':
          return (
           <Profile

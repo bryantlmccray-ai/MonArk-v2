@@ -1,5 +1,4 @@
 import React from 'react';
- import { Navigate } from 'react-router-dom';
 import { OnboardingFlow } from '../components/onboarding/OnboardingFlow';
 import { MainApp } from '../components/main/MainApp';
 import { AuthPage } from '../components/auth/AuthPage';
@@ -11,7 +10,6 @@ import { SplashScreen } from '@/components/splash/SplashScreen';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useDemo } from '@/contexts/DemoContext';
- import { ProfileGate } from '@/components/common/ProfileGate';
 
 const Index = () => {
   const { user, loading: authLoading, isDemoMode, exitDemoMode, signOut } = useAuth();
@@ -25,7 +23,6 @@ const Index = () => {
   const [skippedProfile, setSkippedProfile] = React.useState(false);
   const [initialTab, setInitialTab] = React.useState<'weekly' | 'profile'>('weekly');
   const [hasEnteredApp, setHasEnteredApp] = React.useState(false);
-   const [navigateToProfile, setNavigateToProfile] = React.useState(false);
 
   const handleSplashComplete = () => {
     sessionStorage.setItem('monark-splash-seen', 'true');
