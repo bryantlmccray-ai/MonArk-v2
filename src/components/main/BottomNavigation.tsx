@@ -7,7 +7,6 @@ interface BottomNavigationProps {
 }
 
 export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, onTabChange }) => {
-  // MVP: Weekly Options is the main view - no discovery/swiping
   const tabs = [
     { id: 'weekly', icon: Calendar, label: 'Your 3' },
     { id: 'matches', icon: MessageCircle, label: 'Chats' },
@@ -17,8 +16,8 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, o
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-charcoal-gray/95 backdrop-blur-xl border-t border-gray-800 safe-area-pb">
-      <div className="flex justify-around items-center py-4 px-2">
+    <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-xl border-t border-border safe-area-pb z-50">
+      <div className="flex justify-around items-center py-3 px-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -27,14 +26,19 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, o
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={`flex flex-col items-center justify-center p-2 min-w-0 transition-colors ${
+              className={`flex flex-col items-center justify-center p-2 min-w-0 transition-all duration-200 rounded-xl ${
                 isActive 
-                  ? 'text-goldenrod' 
-                  : 'text-gray-400 hover:text-white'
+                  ? 'text-primary' 
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              <Icon className="h-7 w-7 mb-2" />
-              <span className="text-xs font-medium leading-tight text-center">{tab.label}</span>
+              <div className={`relative ${isActive ? '' : ''}`}>
+                {isActive && (
+                  <div className="absolute -inset-2 bg-primary/10 rounded-full" />
+                )}
+                <Icon className={`h-6 w-6 mb-1.5 relative ${isActive ? 'drop-shadow-[0_0_6px_hsl(var(--primary)/0.4)]' : ''}`} />
+              </div>
+              <span className={`text-[11px] font-medium leading-tight text-center ${isActive ? 'font-semibold' : ''}`}>{tab.label}</span>
             </button>
           );
         })}
