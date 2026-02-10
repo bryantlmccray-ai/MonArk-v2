@@ -122,26 +122,12 @@ const Index = () => {
 
   // User has entered the app from profile complete screen - show MainApp regardless of profile status
   if (hasEnteredApp) {
-     return (
-       <ProfileGate 
-         featureName="matches and messaging"
-         onNavigateToProfile={() => setNavigateToProfile(true)}
-       >
-         <MainApp initialTab={navigateToProfile ? 'profile' : initialTab} />
-       </ProfileGate>
-     );
+    return <MainApp initialTab={initialTab} />;
   }
 
   // If user (real or demo) has a complete profile, show main app
   if (profile?.is_profile_complete) {
-     return (
-       <ProfileGate 
-         featureName="matches and messaging"
-         onNavigateToProfile={() => setNavigateToProfile(true)}
-       >
-         <MainApp initialTab={navigateToProfile ? 'profile' : initialTab} />
-       </ProfileGate>
-     );
+    return <MainApp initialTab={initialTab} />;
   }
 
   // If user has a profile but it's not complete, show profile creation
