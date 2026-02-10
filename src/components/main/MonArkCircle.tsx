@@ -36,39 +36,42 @@ export const MonArkCircle: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-jet-black p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-light text-white">MonArk Circle</h1>
-          <p className="text-gray-400 text-sm mt-1">Curated community experiences</p>
+          <h1 className="text-2xl font-serif text-foreground">MonArk Circle</h1>
+          <p className="text-muted-foreground text-sm mt-1">Curated community experiences</p>
         </div>
 
         <div className="space-y-4">
           {events.map((event) => (
             <div
               key={event.id}
-              className="bg-charcoal-gray rounded-xl overflow-hidden border border-gray-800 hover:border-goldenrod/30 transition-all duration-300 hover:shadow-glow"
+              className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/30 transition-all duration-300 hover:shadow-warm-glow group"
             >
-              <img
-                src={event.image}
-                alt={event.title}
-                className="w-full h-32 object-cover"
-              />
-              <div className="p-4 space-y-3">
+              <div className="relative overflow-hidden">
+                <img
+                  src={event.image}
+                  alt={event.title}
+                  className="w-full h-36 object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-card/60 to-transparent" />
+              </div>
+              <div className="p-5 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="bg-goldenrod/20 text-goldenrod px-2 py-1 rounded-md text-xs font-medium">
+                  <span className="bg-primary/15 text-primary px-3 py-1 rounded-full text-xs font-medium tracking-wide">
                     {event.category}
                   </span>
-                  <span className="text-goldenrod font-semibold text-sm">
+                  <span className="text-primary font-semibold text-sm">
                     {event.price}
                   </span>
                 </div>
                 
-                <h3 className="text-white font-medium text-lg">
+                <h3 className="text-foreground font-medium text-lg leading-snug">
                   {event.title}
                 </h3>
                 
-                <div className="flex justify-between text-gray-400 text-sm">
+                <div className="flex justify-between text-muted-foreground text-sm">
                   <span>{event.date} • {event.time}</span>
                   <span>{event.location}</span>
                 </div>

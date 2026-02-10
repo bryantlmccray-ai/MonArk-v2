@@ -20,61 +20,13 @@ export default {
     	},
     	extend: {
     		fontFamily: {
-    			sans: [
-    				'Inter',
-    				'ui-sans-serif',
-    				'system-ui',
-    				'-apple-system',
-    				'BlinkMacSystemFont',
-    				'Segoe UI',
-    				'Roboto',
-    				'Helvetica Neue',
-    				'Arial',
-    				'Noto Sans',
-    				'sans-serif'
-    			],
-    			serif: [
-    				'Lora',
-    				'ui-serif',
-    				'Georgia',
-    				'Cambria',
-    				'Times New Roman',
-    				'Times',
-    				'serif'
-    			],
-    			editorial: [
-    				'Playfair Display',
-    				'Georgia',
-    				'serif'
-    			],
-    			body: [
-    				'DM Sans',
-    				'Inter',
-    				'Helvetica Neue',
-    				'sans-serif'
-    			],
-    			headline: [
-    				'Playfair Display',
-    				'Georgia',
-    				'serif'
-    			],
-    			caption: [
-    				'DM Sans',
-    				'Inter',
-    				'Helvetica Neue',
-    				'sans-serif'
-    			],
-    			mono: [
-    				'Space Mono',
-    				'ui-monospace',
-    				'SFMono-Regular',
-    				'Menlo',
-    				'Monaco',
-    				'Consolas',
-    				'Liberation Mono',
-    				'Courier New',
-    				'monospace'
-    			]
+    			sans: ['DM Sans', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+    			serif: ['Lora', 'ui-serif', 'Georgia', 'serif'],
+    			editorial: ['Playfair Display', 'Georgia', 'serif'],
+    			body: ['DM Sans', 'Inter', 'Helvetica Neue', 'sans-serif'],
+    			headline: ['Playfair Display', 'Georgia', 'serif'],
+    			caption: ['DM Sans', 'Inter', 'Helvetica Neue', 'sans-serif'],
+    			mono: ['Space Mono', 'ui-monospace', 'SFMono-Regular', 'monospace']
     		},
     		colors: {
     			bone: 'hsl(var(--color-bone))',
@@ -147,18 +99,19 @@ export default {
     		},
     		backgroundImage: {
     			'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-    			editorial: 'linear-gradient(135deg, hsl(30, 25%, 96%) 0%, hsl(30, 15%, 91%) 100%)',
-    			surface: 'linear-gradient(180deg, hsl(30, 30%, 97%) 0%, hsl(30, 15%, 91%) 100%)',
+    			editorial: 'linear-gradient(135deg, hsl(220, 20%, 8%) 0%, hsl(220, 18%, 12%) 100%)',
+    			surface: 'linear-gradient(180deg, hsl(220, 18%, 14%) 0%, hsl(220, 18%, 12%) 100%)',
     			'subtle-accent': 'linear-gradient(135deg, hsl(15, 50%, 65%, 0.1) 0%, hsl(35, 55%, 52%, 0.05) 100%)',
-    			magazine: 'linear-gradient(45deg, hsl(30, 25%, 96%), hsl(30, 30%, 97%), hsl(30, 15%, 91%))',
-    			'cta-warm': 'linear-gradient(135deg, hsl(20, 18%, 35%), hsl(12, 40%, 50%))'
+    			magazine: 'linear-gradient(45deg, hsl(220, 20%, 8%), hsl(220, 18%, 12%), hsl(220, 20%, 10%))',
+    			'cta-warm': 'linear-gradient(135deg, hsl(12, 40%, 50%), hsl(15, 50%, 60%))'
     		},
     		boxShadow: {
-    			editorial: '0 2px 16px rgba(0, 0, 0, 0.08)',
-    			gentle: '0 1px 8px rgba(0, 0, 0, 0.04)',
-    			elevated: '0 4px 24px rgba(0, 0, 0, 0.12)',
-    			magazine: '0 8px 40px rgba(0, 0, 0, 0.06)',
-    			soft: '0 2px 12px rgba(0, 0, 0, 0.06)',
+    			editorial: '0 2px 16px rgba(0, 0, 0, 0.3)',
+    			gentle: '0 1px 8px rgba(0, 0, 0, 0.2)',
+    			elevated: '0 4px 24px rgba(0, 0, 0, 0.4)',
+    			magazine: '0 8px 40px rgba(0, 0, 0, 0.3)',
+    			soft: '0 2px 12px rgba(0, 0, 0, 0.2)',
+    			'warm-glow': '0 0 30px rgba(200, 140, 100, 0.15)',
     			'2xs': 'var(--shadow-2xs)',
     			xs: 'var(--shadow-xs)',
     			sm: 'var(--shadow-sm)',

@@ -19,7 +19,6 @@ interface SidebarNavigationProps {
 }
 
 export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab, onTabChange, onArkNavigation }) => {
-  // MVP: Weekly Options is the main view - no discovery/swiping
   const tabs = [
     { id: 'weekly', icon: Calendar, label: 'Your 3 Options' },
     { id: 'matches', icon: MessageCircle, label: 'Connections' },
@@ -29,8 +28,8 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
   ];
 
   return (
-    <Sidebar className="border-r border-gray-800">
-      <SidebarHeader className="border-b border-gray-800 p-6">
+    <Sidebar className="border-r border-border">
+      <SidebarHeader className="border-b border-border p-6">
         <div className="flex items-center justify-center">
           <MonArkLogo 
             clickable={true}
@@ -55,10 +54,10 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
                     <SidebarMenuButton
                       onClick={() => onTabChange(tab.id)}
                       isActive={isActive}
-                      className={`w-full justify-start transition-colors ${
+                      className={`w-full justify-start transition-all duration-200 rounded-xl ${
                         isActive 
-                          ? 'text-goldenrod bg-goldenrod/10' 
-                          : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
+                          ? 'text-primary bg-primary/10' 
+                          : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
                       }`}
                     >
                       <Icon className="h-5 w-5" />

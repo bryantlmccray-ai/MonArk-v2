@@ -32,13 +32,13 @@ export const MatchProfileCard = ({ match, onAccept, onPass, isProcessing }: Matc
   const mainPhoto = profile.photos?.[0] || '/placeholder.svg';
   
   return (
-    <Card className="overflow-hidden border-border/50 bg-card/80 backdrop-blur-sm group">
+    <Card className="overflow-hidden border-border bg-card backdrop-blur-sm group hover:shadow-elevated transition-all duration-500">
       {/* Photo */}
       <div className="relative aspect-[3/4] overflow-hidden">
         <img 
           src={mainPhoto} 
           alt="Profile"
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
         />
         
         {/* Gradient overlay */}
@@ -126,7 +126,7 @@ export const MatchProfileCard = ({ match, onAccept, onPass, isProcessing }: Matc
             variant="outline"
             onClick={onPass}
             disabled={isProcessing}
-            className="flex-1 group/btn"
+            className="flex-1 group/btn border-border hover:border-destructive/50 hover:bg-destructive/10"
           >
             <X className="w-5 h-5 mr-1 group-hover/btn:text-destructive transition-colors" />
             Pass
@@ -134,7 +134,7 @@ export const MatchProfileCard = ({ match, onAccept, onPass, isProcessing }: Matc
           <Button 
             onClick={onAccept}
             disabled={isProcessing}
-            className="flex-1 bg-primary hover:bg-primary/90"
+            className="flex-1 bg-primary hover:bg-primary/90 shadow-warm-glow hover:shadow-elevated transition-all"
           >
             <Heart className="w-5 h-5 mr-1" />
             Accept

@@ -302,7 +302,7 @@ export const SundayMatches = () => {
     <div className="min-h-screen bg-background">
       {/* Welcome Tip Banner */}
       {showWelcomeTip && (
-        <div className="bg-primary/10 border-b border-primary/20 px-4 py-3">
+        <div className="bg-primary/10 border-b border-primary/15 px-4 py-3">
           <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-sm">
               <Sparkles className="w-4 h-4 text-primary flex-shrink-0" />
@@ -324,32 +324,35 @@ export const SundayMatches = () => {
 
       {/* Demo Mode Banner */}
       {isUsingDemoData && (
-        <div className="bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 border-b border-primary/20 px-4 py-3">
+        <div className="bg-card border-b border-border px-4 py-3">
           <div className="max-w-2xl mx-auto text-center">
-            <p className="text-sm text-foreground">
-              ✨ <span className="font-medium">Preview Mode</span> — These are example matches to show you what to expect
+            <p className="text-sm text-muted-foreground">
+              ✨ <span className="font-medium text-foreground">Preview Mode</span> — These are example matches to show you what to expect
             </p>
           </div>
         </div>
       )}
 
-      {/* Hero Header - User Centered Design */}
-      <div className="bg-gradient-to-b from-primary/5 to-background border-b border-border">
-        <div className="px-4 py-8 max-w-2xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-            <Sun className="w-4 h-4" />
+      {/* Hero Header */}
+      <div className="relative overflow-hidden border-b border-border">
+        {/* Warm ambient glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full pointer-events-none" style={{ background: "radial-gradient(ellipse, hsl(var(--primary) / 0.08) 0%, transparent 70%)" }} />
+        
+        <div className="relative px-4 py-10 max-w-2xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-wider uppercase mb-5">
+            <Sun className="w-3.5 h-3.5" />
             Your Weekly Matches
           </div>
           
-          <h1 className="text-3xl font-serif text-foreground mb-2">
+          <h1 className="text-4xl font-serif text-foreground mb-3 tracking-tight">
             Curated Just For You
           </h1>
           
-          <p className="text-muted-foreground max-w-md mx-auto mb-4">
-            {displayCurated.length} hand-picked matches based on your values and what matters most to you
+          <p className="text-muted-foreground max-w-sm mx-auto mb-5 text-[15px] leading-relaxed">
+            {displayCurated.length} hand-picked matches based on your values and what matters most
           </p>
           
-          <Badge variant="outline" className="flex items-center gap-1 mx-auto w-fit">
+          <Badge variant="outline" className="flex items-center gap-1.5 mx-auto w-fit border-border text-muted-foreground px-3 py-1">
             <Calendar className="w-3 h-3" />
             Refreshes {formatDistanceToNow(nextRefresh, { addSuffix: true })}
           </Badge>
@@ -360,18 +363,18 @@ export const SundayMatches = () => {
       <div className="max-w-2xl mx-auto px-4 py-6">
         {/* This section removed - we always show demo data now */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3 h-12">
-              <TabsTrigger value="curated" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsList className="grid w-full grid-cols-3 h-12 bg-secondary">
+              <TabsTrigger value="curated" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">
                 <Sparkles className="w-4 h-4" />
                 <span className="hidden sm:inline">Your 3</span>
                 <span className="sm:hidden">Matches</span>
               </TabsTrigger>
-              <TabsTrigger value="plans" className="flex items-center gap-2">
+              <TabsTrigger value="plans" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">
                 <Moon className="w-4 h-4" />
                 <span className="hidden sm:inline">Date Plans</span>
                 <span className="sm:hidden">Plans</span>
               </TabsTrigger>
-              <TabsTrigger value="pool" className="flex items-center gap-2">
+              <TabsTrigger value="pool" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">
                 <Users className="w-4 h-4" />
                 <span className="hidden sm:inline">Explore</span>
                 <span className="sm:hidden">Pool</span>
@@ -383,43 +386,41 @@ export const SundayMatches = () => {
               {/* Featured Match - First one gets spotlight */}
               {displayCurated[0] && (
                 <div className="relative">
-                  <div className="absolute -inset-2 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-3xl blur-xl opacity-60" />
+                  <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-2xl blur-lg opacity-50" />
                   <Card 
-                    className="relative overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 border-primary/30 bg-card"
+                    className="relative overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-500 border-primary/20 bg-card group"
                     onClick={() => setSelectedMatch(displayCurated[0])}
                   >
                     <div className="aspect-[4/5] relative">
                       <img
                         src={displayCurated[0].photos?.[0] || '/placeholder.svg'}
                         alt={displayCurated[0].name || 'Match'}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                       
-                      {/* Top badge */}
                       <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
-                        <Badge className="bg-primary text-primary-foreground px-3 py-1">
+                        <Badge className="bg-primary text-primary-foreground px-3 py-1 shadow-lg">
                           <Sparkles className="w-3 h-3 mr-1" />
                           Top Match
                         </Badge>
                         {displayCurated[0].compatibility_score && (
-                          <Badge className="bg-black/60 text-white border-none">
+                          <Badge className="bg-black/50 text-white border-none backdrop-blur-sm">
                             {Math.round(displayCurated[0].compatibility_score * 100)}% Match
                           </Badge>
                         )}
                       </div>
                       
-                      {/* Bottom info */}
                       <div className="absolute bottom-0 left-0 right-0 p-6">
-                        <h3 className="text-2xl font-serif text-white mb-1">
+                        <h3 className="text-3xl font-serif text-white mb-1">
                           {displayCurated[0].name}, {displayCurated[0].age}
                         </h3>
-                        <p className="text-white/80 flex items-center gap-1 mb-2">
+                        <p className="text-white/80 flex items-center gap-1 mb-3">
                           <MapPin className="w-4 h-4" />
                           {displayCurated[0].location}
                         </p>
                         {displayCurated[0].match_reason && (
-                          <p className="text-primary-foreground/90 text-sm bg-primary/80 backdrop-blur px-3 py-2 rounded-lg inline-block">
+                          <p className="text-white/90 text-sm bg-primary/70 backdrop-blur-sm px-4 py-2 rounded-xl inline-block">
                             {displayCurated[0].match_reason}
                           </p>
                         )}
@@ -434,28 +435,28 @@ export const SundayMatches = () => {
                 {displayCurated.slice(1).map((match) => (
                   <Card 
                     key={match.id}
-                    className="overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-300 border-border/50"
+                    className="overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-500 border-border/50 group"
                     onClick={() => setSelectedMatch(match)}
                   >
                     <div className="aspect-[3/4] relative">
                       <img
                         src={match.photos?.[0] || '/placeholder.svg'}
                         alt={match.name || 'Match'}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
                       
                       {match.compatibility_score && (
-                        <Badge className="absolute top-2 right-2 bg-primary/90 text-primary-foreground border-none text-xs">
+                        <Badge className="absolute top-2.5 right-2.5 bg-primary/90 text-primary-foreground border-none text-xs shadow-lg">
                           {Math.round(match.compatibility_score * 100)}%
                         </Badge>
                       )}
                       
-                      <div className="absolute bottom-0 left-0 right-0 p-3">
-                        <p className="font-semibold text-white">
+                      <div className="absolute bottom-0 left-0 right-0 p-3.5">
+                        <p className="font-semibold text-white text-lg">
                           {match.name}, {match.age}
                         </p>
-                        <p className="text-white/70 text-xs flex items-center gap-1">
+                        <p className="text-white/70 text-xs flex items-center gap-1 mt-0.5">
                           <MapPin className="w-3 h-3" />
                           {match.location}
                         </p>
@@ -519,20 +520,18 @@ export const SundayMatches = () => {
 const MatchCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => void }) => {
   return (
     <Card 
-      className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow border-primary/20"
+      className="overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-500 border-primary/15 group"
       onClick={onClick}
     >
       <div className="flex">
-        {/* Photo */}
-        <div className="w-32 h-40 flex-shrink-0">
+        <div className="w-32 h-40 flex-shrink-0 overflow-hidden">
           <img
             src={match.photos?.[0] || '/placeholder.svg'}
             alt={match.name || 'Match'}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>
         
-        {/* Content */}
         <CardContent className="flex-1 p-4">
           <div className="flex items-start justify-between mb-2">
             <div>
@@ -547,14 +546,13 @@ const MatchCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => voi
               )}
             </div>
             {match.compatibility_score && (
-              <Badge className="bg-primary/10 text-primary border-none">
+              <Badge className="bg-primary/15 text-primary border-none">
                 <Target className="w-3 h-3 mr-1" />
                 {Math.round(match.compatibility_score * 100)}%
               </Badge>
             )}
           </div>
 
-          {/* Match reason */}
           {match.match_reason && (
             <p className="text-sm text-primary mb-2 line-clamp-1">
               <Sparkles className="w-3 h-3 inline mr-1" />
@@ -562,7 +560,6 @@ const MatchCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => voi
             </p>
           )}
 
-          {/* Interests preview */}
           <div className="flex flex-wrap gap-1 mb-3">
             {match.interests?.slice(0, 3).map((interest) => (
               <Badge key={interest} variant="secondary" className="text-xs">
@@ -571,7 +568,6 @@ const MatchCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => voi
             ))}
           </div>
 
-          {/* View profile CTA */}
           <div className="flex items-center text-sm text-primary font-medium">
             View Full Profile
             <ChevronRight className="w-4 h-4 ml-1" />
@@ -582,37 +578,32 @@ const MatchCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => voi
   );
 };
 
-// Pool match card - compact grid style
 const PoolCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => void }) => {
   return (
     <Card 
-      className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
+      className="overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-500 group"
       onClick={onClick}
     >
       <div className="relative aspect-[3/4]">
         <img
           src={match.photos?.[0] || '/placeholder.svg'}
           alt={match.name || 'Match'}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
         
-        {/* Compatibility badge */}
         {match.compatibility_score && (
-          <Badge 
-            className="absolute top-2 right-2 bg-black/60 text-white border-none text-xs"
-          >
+          <Badge className="absolute top-2.5 right-2.5 bg-black/50 text-white border-none text-xs backdrop-blur-sm">
             {Math.round(match.compatibility_score * 100)}%
           </Badge>
         )}
 
-        {/* Info overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-3">
+        <div className="absolute bottom-0 left-0 right-0 p-3.5">
           <p className="font-semibold text-white text-sm">
             {match.name}, {match.age}
           </p>
           {match.location && (
-            <p className="text-white/80 text-xs flex items-center gap-1">
+            <p className="text-white/80 text-xs flex items-center gap-1 mt-0.5">
               <MapPin className="w-3 h-3" />
               {match.location}
             </p>
