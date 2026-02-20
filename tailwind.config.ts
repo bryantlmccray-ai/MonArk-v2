@@ -97,21 +97,21 @@ export default {
     			lg: 'var(--spacing-lg)',
     			xl: 'var(--spacing-xl)'
     		},
-    		backgroundImage: {
-    			'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-    			editorial: 'linear-gradient(135deg, hsl(220, 20%, 8%) 0%, hsl(220, 18%, 12%) 100%)',
-    			surface: 'linear-gradient(180deg, hsl(220, 18%, 14%) 0%, hsl(220, 18%, 12%) 100%)',
-    			'subtle-accent': 'linear-gradient(135deg, hsl(15, 50%, 65%, 0.1) 0%, hsl(35, 55%, 52%, 0.05) 100%)',
-    			magazine: 'linear-gradient(45deg, hsl(220, 20%, 8%), hsl(220, 18%, 12%), hsl(220, 20%, 10%))',
-    			'cta-warm': 'linear-gradient(135deg, hsl(12, 40%, 50%), hsl(15, 50%, 60%))'
-    		},
-    		boxShadow: {
-    			editorial: '0 2px 16px rgba(0, 0, 0, 0.3)',
-    			gentle: '0 1px 8px rgba(0, 0, 0, 0.2)',
-    			elevated: '0 4px 24px rgba(0, 0, 0, 0.4)',
-    			magazine: '0 8px 40px rgba(0, 0, 0, 0.3)',
-    			soft: '0 2px 12px rgba(0, 0, 0, 0.2)',
-    			'warm-glow': '0 0 30px rgba(200, 140, 100, 0.15)',
+     		backgroundImage: {
+     			'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+     			editorial: 'linear-gradient(135deg, hsl(30, 25%, 96%) 0%, hsl(30, 30%, 97%) 100%)',
+     			surface: 'linear-gradient(180deg, hsl(30, 20%, 94%) 0%, hsl(30, 30%, 97%) 100%)',
+     			'subtle-accent': 'linear-gradient(135deg, hsl(45, 12%, 58%, 0.1) 0%, hsl(20, 18%, 35%, 0.05) 100%)',
+     			magazine: 'linear-gradient(45deg, hsl(30, 25%, 96%), hsl(30, 30%, 97%), hsl(30, 15%, 91%))',
+     			'cta-warm': 'linear-gradient(135deg, hsl(20, 18%, 35%), hsl(45, 12%, 40%))'
+     		},
+     		boxShadow: {
+     			editorial: '0 2px 16px rgba(120, 100, 80, 0.08)',
+     			gentle: '0 1px 8px rgba(120, 100, 80, 0.06)',
+     			elevated: '0 4px 24px rgba(120, 100, 80, 0.1)',
+     			magazine: '0 8px 40px rgba(120, 100, 80, 0.1)',
+     			soft: '0 2px 12px rgba(120, 100, 80, 0.08)',
+     			'warm-glow': '0 0 30px rgba(160, 140, 100, 0.1)',
     			'2xs': 'var(--shadow-2xs)',
     			xs: 'var(--shadow-xs)',
     			sm: 'var(--shadow-sm)',
