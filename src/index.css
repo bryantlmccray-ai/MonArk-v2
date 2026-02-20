@@ -29,7 +29,7 @@
 
     /* PRIMARY LIGHT WARM EARTH-TONE THEME */
     --background: 38 20% 82%;
-    --foreground: 20 18% 20%;
+    --foreground: 20 25% 12%;
 
     --card: 30 30% 97%;
     --card-foreground: 20 18% 20%;
@@ -45,7 +45,7 @@
     --secondary-foreground: 20 18% 30%;
 
     --muted: 30 15% 88%;
-    --muted-foreground: 220 10% 45%;
+    --muted-foreground: 220 10% 35%;
 
     --accent: 45 12% 52%;
     --accent-foreground: 20 18% 20%;
