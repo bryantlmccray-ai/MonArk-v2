@@ -285,7 +285,7 @@ export const DatingStyleQuiz: React.FC<DatingStyleQuizProps> = ({ onComplete, on
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    {option.emoji && <span className="text-xl">{option.emoji}</span>}
+                    {false && option.emoji && <span className="text-xl">{option.emoji}</span>}
                     <span className="text-foreground font-medium">{option.label}</span>
                   </div>
                   {isSelected && (
