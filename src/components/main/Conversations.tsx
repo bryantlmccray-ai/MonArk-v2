@@ -112,75 +112,75 @@ export const Conversations: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="bg-background">
       <div className="max-w-2xl mx-auto space-y-6">
-        <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-2xl font-serif text-foreground">Conversations</h1>
-            <p className="text-muted-foreground text-sm mt-1">Meaningful connections await</p>
-          </div>
+        {/* Header */}
+        <div>
+          <h1 className="text-2xl font-serif font-bold text-foreground tracking-tight">Conversations</h1>
+          <p className="text-muted-foreground text-sm mt-0.5">Meaningful connections await</p>
         </div>
 
         {/* Date Proposals Section */}
         {(relevantProposals.length > 0 || dismissedProposals.length > 0) && (
-          <div className="space-y-4">
-            <h2 className="text-lg font-medium text-foreground">Date Proposals</h2>
+          <div className="space-y-3">
+            <h2 className="text-base font-semibold text-foreground">Date Proposals</h2>
             
             <Tabs defaultValue="active" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-secondary">
+              <TabsList className="grid w-full grid-cols-2 bg-secondary/60 h-10">
                 <TabsTrigger 
                   value="active" 
-                  className="data-[state=active]:bg-primary/15 data-[state=active]:text-primary"
+                  className="data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-sm text-sm"
                 >
                   Active ({relevantProposals.length})
                 </TabsTrigger>
                 <TabsTrigger 
                   value="dismissed"
-                  className="data-[state=active]:bg-primary/15 data-[state=active]:text-primary"
+                  className="data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-sm text-sm"
                 >
-                  <Archive className="h-4 w-4 mr-1" />
+                  <Archive className="h-3.5 w-3.5 mr-1" />
                   Dismissed ({dismissedProposals.length})
                 </TabsTrigger>
               </TabsList>
               
-              <TabsContent value="active" className="mt-4">
+              <TabsContent value="active" className="mt-3">
                 {relevantProposals.length > 0 ? (
-                  <div className="grid gap-4">
+                  <div className="grid gap-3">
                     {relevantProposals.slice(0, 2).map((proposal) => (
                       <DateProposalCard key={proposal.id} proposal={proposal} onDismiss={dismissProposal} />
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Calendar className="h-12 w-12 mx-auto mb-4 opacity-40" />
-                    <p>No active date proposals</p>
+                  <div className="text-center py-10 bg-card rounded-2xl border border-border/60">
+                    <Calendar className="h-10 w-10 mx-auto mb-3 text-muted-foreground/40" />
+                    <p className="text-sm text-muted-foreground">No active date proposals</p>
                   </div>
                 )}
               </TabsContent>
               
-              <TabsContent value="dismissed" className="mt-4">
+              <TabsContent value="dismissed" className="mt-3">
                 {dismissedProposals.length > 0 ? (
-                  <div className="grid gap-4">
+                  <div className="grid gap-3">
                     {dismissedProposals.map((proposal) => (
                       <div key={proposal.id} className="relative">
                         <DateProposalCard proposal={proposal} />
-                        <div className="absolute top-4 right-4">
+                        <div className="absolute top-3 right-3">
                           <Button
                             onClick={() => restoreProposal(proposal.id)}
                             size="sm"
-                            className="bg-green-500/15 hover:bg-green-500/25 text-green-400 border border-green-500/25"
+                            variant="outline"
+                            className="h-8 border-primary/20 text-primary hover:bg-primary/10"
                             title="Restore proposal"
                           >
-                            <RotateCcw className="h-4 w-4" />
+                            <RotateCcw className="h-3.5 w-3.5" />
                           </Button>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Archive className="h-12 w-12 mx-auto mb-4 opacity-40" />
-                    <p>No dismissed proposals</p>
+                  <div className="text-center py-10 bg-card rounded-2xl border border-border/60">
+                    <Archive className="h-10 w-10 mx-auto mb-3 text-muted-foreground/40" />
+                    <p className="text-sm text-muted-foreground">No dismissed proposals</p>
                   </div>
                 )}
               </TabsContent>
@@ -189,50 +189,50 @@ export const Conversations: React.FC = () => {
         )}
 
         {/* Conversations List */}
-        <div className="space-y-3">
-          <h2 className="text-lg font-medium text-foreground">Messages</h2>
+        <div className="space-y-2.5">
+          <h2 className="text-base font-semibold text-foreground">Messages</h2>
           
           {conversations.map((conversation) => (
             <div
               key={conversation.id}
               onClick={() => handleConversationClick(conversation)}
-              className="bg-card rounded-xl p-4 border border-border hover:border-primary/25 transition-all duration-300 cursor-pointer group hover:shadow-warm-glow"
+              className="bg-card rounded-2xl p-4 border border-border/60 hover:border-primary/20 transition-all duration-200 cursor-pointer group shadow-[0_1px_3px_rgba(100,80,60,0.04)] hover:shadow-[0_2px_8px_rgba(100,80,60,0.08)] active:scale-[0.99]"
             >
-              <div className="flex items-center space-x-4">
-                <div className="relative">
+              <div className="flex items-center gap-3.5">
+                <div className="relative flex-shrink-0">
                   <img
                     src={conversation.image}
                     alt={conversation.name}
-                    className="w-12 h-12 rounded-full ring-2 ring-border group-hover:ring-primary/30 transition-all"
+                    className="w-12 h-12 rounded-full ring-2 ring-border/80 group-hover:ring-primary/25 transition-all object-cover"
                   />
                   {conversation.mutualEngagement > 0.7 && conversation.messageCount > 15 && (
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-card flex items-center justify-center">
-                      <Calendar className="h-2 w-2 text-white" />
+                    <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-primary rounded-full border-2 border-card flex items-center justify-center">
+                      <Calendar className="h-2 w-2 text-primary-foreground" />
                     </div>
                   )}
                 </div>
                 
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center space-x-2">
-                    <h3 className="text-foreground font-semibold">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-foreground font-semibold text-[15px]">
                       {conversation.name}
                     </h3>
                     {conversation.hadDate && (
-                      <span className="px-2 py-0.5 bg-primary/15 text-primary text-xs rounded-full">
+                      <span className="px-2 py-0.5 bg-primary/10 text-primary text-[11px] font-medium rounded-full">
                         Date completed
                       </span>
                     )}
                     {conversation.mutualEngagement > 0.7 && conversation.messageCount > 15 && !conversation.hadDate && (
                       <Badge 
                         variant="secondary" 
-                        className="px-2 py-0.5 bg-primary/15 text-primary text-xs rounded-full border-none flex items-center space-x-1 animate-pulse"
+                        className="px-2 py-0.5 bg-primary/10 text-primary text-[11px] rounded-full border-none flex items-center gap-1 animate-pulse"
                       >
                         <Zap className="h-3 w-3" />
                         <span>Ready for date!</span>
                       </Badge>
                     )}
                   </div>
-                  <p className={`text-sm truncate ${
+                  <p className={`text-sm truncate mt-0.5 ${
                     conversation.isNewMatch 
                       ? 'text-primary font-medium' 
                       : 'text-muted-foreground'
@@ -241,16 +241,17 @@ export const Conversations: React.FC = () => {
                   </p>
                 </div>
                 
-                <div className="flex items-center space-x-2 flex-shrink-0">
+                <div className="flex items-center gap-1.5 flex-shrink-0">
                   <Button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleConversationClick(conversation);
                     }}
                     size="sm"
-                    className="bg-primary/15 hover:bg-primary/25 text-primary border border-primary/25 rounded-lg"
+                    variant="outline"
+                    className="h-8 px-3 text-xs border-primary/20 text-primary hover:bg-primary/10 rounded-lg"
                   >
-                    <MessageCircle className="h-4 w-4 mr-1" />
+                    <MessageCircle className="h-3.5 w-3.5 mr-1" />
                     Chat
                   </Button>
                   
@@ -265,17 +266,18 @@ export const Conversations: React.FC = () => {
                         });
                       }}
                       size="sm"
-                      className="bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 rounded-lg"
+                      variant="ghost"
+                      className="h-8 w-8 p-0 text-primary hover:bg-primary/10 rounded-lg"
                       title="Rate Date"
                     >
-                      <Heart className="h-4 w-4" />
+                      <Heart className="h-3.5 w-3.5" />
                     </Button>
                   )}
                   
                   {conversation.isNewMatch && (
-                    <Sparkles className="h-5 w-5 text-primary" />
+                    <Sparkles className="h-4 w-4 text-primary" />
                   )}
-                  <span className="text-muted-foreground text-xs">
+                  <span className="text-muted-foreground text-xs ml-1">
                     {conversation.time}
                   </span>
                 </div>

@@ -16,8 +16,8 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, o
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-xl border-t border-border/40 safe-area-pb z-50" style={{ boxShadow: '0 -1px 8px rgba(100, 80, 60, 0.06)' }}>
-      <div className="flex justify-around items-center py-2 px-3">
+    <div className="fixed bottom-0 left-0 right-0 bg-card/98 backdrop-blur-2xl border-t border-border/50 safe-area-pb z-50" style={{ boxShadow: '0 -2px 12px rgba(100, 80, 60, 0.05)' }}>
+      <div className="flex justify-around items-center py-1.5 px-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -26,19 +26,19 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, o
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={`flex flex-col items-center justify-center py-1.5 px-3 min-w-0 rounded-xl transition-all duration-200 ease-out active:scale-95 ${
+              className={`flex flex-col items-center justify-center py-2 px-3 min-w-[56px] rounded-xl transition-all duration-200 ease-out active:scale-[0.92] ${
                 isActive 
                   ? 'text-primary' 
-                  : 'text-muted-foreground/70 hover:text-muted-foreground'
+                  : 'text-muted-foreground/60 hover:text-muted-foreground'
               }`}
             >
-              <div className="relative mb-0.5">
+              <div className="relative mb-1">
                 {isActive && (
-                  <div className="absolute -inset-2 bg-primary/8 rounded-full" />
+                  <div className="absolute -inset-1.5 bg-primary/10 rounded-lg" />
                 )}
-                <Icon className={`h-[22px] w-[22px] relative transition-all duration-200 ${isActive ? 'stroke-[2.2px]' : 'stroke-[1.6px]'}`} />
+                <Icon className={`h-5 w-5 relative transition-all duration-200 ${isActive ? 'stroke-[2.4px]' : 'stroke-[1.5px]'}`} />
               </div>
-              <span className={`text-[10px] leading-none tracking-wide ${isActive ? 'font-semibold' : 'font-medium'}`}>{tab.label}</span>
+              <span className={`text-[10px] leading-none tracking-wide ${isActive ? 'font-semibold' : 'font-medium opacity-80'}`}>{tab.label}</span>
             </button>
           );
         })}

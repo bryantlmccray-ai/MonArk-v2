@@ -36,42 +36,42 @@ export const MonArkCircle: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="space-y-6">
+    <div className="bg-background">
+      <div className="space-y-5">
         <div>
-          <h1 className="text-2xl font-serif text-foreground">MonArk Circle</h1>
-          <p className="text-muted-foreground text-sm mt-1">Curated community experiences</p>
+          <h1 className="text-2xl font-serif font-bold text-foreground tracking-tight">MonArk Circle</h1>
+          <p className="text-muted-foreground text-sm mt-0.5">Curated community experiences</p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           {events.map((event) => (
             <div
               key={event.id}
-              className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/30 transition-all duration-300 hover:shadow-warm-glow group"
+              className="bg-card rounded-2xl overflow-hidden border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-[0_1px_3px_rgba(100,80,60,0.04)] hover:shadow-[0_2px_8px_rgba(100,80,60,0.08)] group active:scale-[0.99]"
             >
               <div className="relative overflow-hidden">
                 <img
                   src={event.image}
                   alt={event.title}
-                  className="w-full h-36 object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-32 object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-card/60 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-card/50 to-transparent" />
               </div>
-              <div className="p-5 space-y-3">
+              <div className="p-4 space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="bg-primary/15 text-primary px-3 py-1 rounded-full text-xs font-medium tracking-wide">
+                  <span className="bg-primary/10 text-primary px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase">
                     {event.category}
                   </span>
-                  <span className="text-primary font-semibold text-sm">
+                  <span className="text-primary font-bold text-sm">
                     {event.price}
                   </span>
                 </div>
                 
-                <h3 className="text-foreground font-medium text-lg leading-snug">
+                <h3 className="text-foreground font-semibold text-base leading-snug">
                   {event.title}
                 </h3>
                 
-                <div className="flex justify-between text-muted-foreground text-sm">
+                <div className="flex justify-between text-muted-foreground text-xs">
                   <span>{event.date} • {event.time}</span>
                   <span>{event.location}</span>
                 </div>
