@@ -71,13 +71,13 @@
 
     --radius: 0.75rem;
 
-    /* Spacing */
-    --spacing-xs: 8px;
-    --spacing-sm: 16px;
-    --spacing-md: 32px;
-    --spacing-lg: 48px;
-    --spacing-xl: 64px;
-    --spacing-xxl: 96px;
+    /* Spacing rhythm — 8px base */
+    --spacing-xs: 6px;
+    --spacing-sm: 12px;
+    --spacing-md: 24px;
+    --spacing-lg: 40px;
+    --spacing-xl: 56px;
+    --spacing-xxl: 80px;
 
     /* Warm gradients */
     --gradient-editorial: linear-gradient(135deg, hsl(var(--background)), hsl(var(--card)));
@@ -86,14 +86,14 @@
     --gradient-cta: linear-gradient(135deg, hsl(var(--color-taupe)), hsl(var(--primary)));
     --gradient-warm: linear-gradient(135deg, hsl(var(--color-dusty-rose) / 0.1), hsl(var(--color-goldenrod) / 0.08));
 
-    /* Warm brown-tinted subtle shadows */
-    --shadow-editorial: 0 2px 16px rgba(120, 100, 80, 0.08);
-    --shadow-gentle: 0 1px 8px rgba(120, 100, 80, 0.06);
-    --shadow-elevated: 0 6px 24px rgba(110, 90, 70, 0.1);
-    --shadow-magazine: 0 10px 40px rgba(110, 90, 70, 0.1);
-    --shadow-glow: 0 0 30px rgba(150, 130, 100, 0.08);
-    --shadow-luxury: 0 20px 40px -10px rgba(110, 90, 70, 0.12), 0 0 50px rgba(150, 130, 100, 0.04);
-    --shadow-warm-glow: 0 4px 24px rgba(150, 130, 100, 0.08);
+    /* Warm brown-tinted subtle shadows — layered for depth */
+    --shadow-editorial: 0 1px 3px rgba(100, 80, 60, 0.06), 0 4px 16px rgba(100, 80, 60, 0.06);
+    --shadow-gentle: 0 1px 4px rgba(100, 80, 60, 0.05);
+    --shadow-elevated: 0 2px 8px rgba(100, 80, 60, 0.06), 0 8px 28px rgba(100, 80, 60, 0.08);
+    --shadow-magazine: 0 4px 12px rgba(100, 80, 60, 0.06), 0 16px 48px rgba(100, 80, 60, 0.08);
+    --shadow-glow: 0 0 24px rgba(140, 120, 90, 0.1);
+    --shadow-luxury: 0 8px 32px -8px rgba(100, 80, 60, 0.14), 0 2px 8px rgba(100, 80, 60, 0.06);
+    --shadow-warm-glow: 0 2px 12px rgba(140, 120, 90, 0.1);
 
     --chart-1: 45 14% 42%;
     --chart-2: 350 30% 62%;
@@ -125,8 +125,8 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'DM Sans', 'Inter', 'Helvetica Neue', sans-serif;
-    font-size: 16px;
-    line-height: 1.7;
+    font-size: 15px;
+    line-height: 1.6;
     letter-spacing: 0.01em;
     font-weight: 400;
     -webkit-font-smoothing: antialiased;

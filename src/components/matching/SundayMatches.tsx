@@ -334,25 +334,22 @@ export const SundayMatches = () => {
       )}
 
       {/* Hero Header */}
-      <div className="relative overflow-hidden border-b border-border">
-        {/* Warm ambient glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full pointer-events-none" style={{ background: "radial-gradient(ellipse, hsl(var(--primary) / 0.08) 0%, transparent 70%)" }} />
-        
-        <div className="relative px-4 py-10 max-w-2xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-wider uppercase mb-5">
-            <Sun className="w-3.5 h-3.5" />
+      <div className="relative overflow-hidden border-b border-border/40">
+        <div className="relative px-5 py-8 max-w-2xl mx-auto text-center">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/8 text-primary text-[11px] font-semibold tracking-widest uppercase mb-4">
+            <Sun className="w-3 h-3" />
             Your Weekly Matches
           </div>
           
-          <h1 className="text-4xl font-serif text-foreground mb-3 tracking-tight">
+          <h1 className="text-3xl font-serif text-foreground mb-2.5 tracking-tight">
             Curated Just For You
           </h1>
           
-          <p className="text-muted-foreground max-w-sm mx-auto mb-5 text-[15px] leading-relaxed">
+          <p className="text-muted-foreground max-w-xs mx-auto mb-4 text-sm leading-relaxed">
             {displayCurated.length} hand-picked matches based on your values and what matters most
           </p>
           
-          <Badge variant="outline" className="flex items-center gap-1.5 mx-auto w-fit border-border text-muted-foreground px-3 py-1">
+          <Badge variant="outline" className="flex items-center gap-1.5 mx-auto w-fit px-3 py-1">
             <Calendar className="w-3 h-3" />
             Refreshes {formatDistanceToNow(nextRefresh, { addSuffix: true })}
           </Badge>
@@ -360,42 +357,41 @@ export const SundayMatches = () => {
       </div>
 
       {/* Content */}
-      <div className="max-w-2xl mx-auto px-4 py-6">
+      <div className="max-w-2xl mx-auto px-4 py-5">
         {/* This section removed - we always show demo data now */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3 h-12 bg-secondary">
-              <TabsTrigger value="curated" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">
-                <Sparkles className="w-4 h-4" />
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-5">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="curated" className="flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Your 3</span>
                 <span className="sm:hidden">Matches</span>
               </TabsTrigger>
-              <TabsTrigger value="plans" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">
-                <Moon className="w-4 h-4" />
+              <TabsTrigger value="plans" className="flex items-center gap-1.5">
+                <Moon className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Date Plans</span>
                 <span className="sm:hidden">Plans</span>
               </TabsTrigger>
-              <TabsTrigger value="pool" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">
-                <Users className="w-4 h-4" />
+              <TabsTrigger value="pool" className="flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Explore</span>
                 <span className="sm:hidden">Pool</span>
               </TabsTrigger>
             </TabsList>
 
             {/* Curated Matches Tab */}
-            <TabsContent value="curated" className="space-y-6">
+            <TabsContent value="curated" className="space-y-5">
               {/* Featured Match - First one gets spotlight */}
               {displayCurated[0] && (
                 <div className="relative">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-2xl blur-lg opacity-50" />
                   <Card 
-                    className="relative overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-500 border-primary/20 bg-card group"
+                    className="relative overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-300 border-primary/15 bg-card group"
                     onClick={() => setSelectedMatch(displayCurated[0])}
                   >
                     <div className="aspect-[4/5] relative">
                       <img
                         src={displayCurated[0].photos?.[0] || '/placeholder.svg'}
                         alt={displayCurated[0].name || 'Match'}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                       
@@ -431,11 +427,11 @@ export const SundayMatches = () => {
               )}
               
               {/* Other curated matches */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 {displayCurated.slice(1).map((match) => (
                   <Card 
                     key={match.id}
-                    className="overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-500 border-border/50 group"
+                    className="overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-300 group"
                     onClick={() => setSelectedMatch(match)}
                   >
                     <div className="aspect-[3/4] relative">
