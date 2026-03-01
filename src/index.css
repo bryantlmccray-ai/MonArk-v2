@@ -9,63 +9,65 @@
 
 @layer base {
   :root {
-    /* MonArk Warm Luxury Color System — High Contrast */
-    --color-bone: 34 30% 93%;
-    --color-sand: 30 22% 86%;
-    --color-parchment: 35 34% 95%;
-    --color-charcoal: 20 30% 8%;
-    --color-charcoal-soft: 20 20% 22%;
-    --color-charcoal-muted: 20 14% 38%;
-    --color-taupe: 16 26% 28%;
-    --color-olive: 36 20% 46%;
-    --color-dusty-rose: 348 48% 52%;
+    /* MonArk Quiet Luxury — Light Warm Earth-Tone */
+    --color-bone: 36 30% 94%;
+    --color-sand: 34 20% 87%;
+    --color-parchment: 38 35% 96%;
+    --color-charcoal: 30 18% 18%;
+    --color-charcoal-soft: 28 14% 32%;
+    --color-charcoal-muted: 28 10% 48%;
+    --color-taupe: 30 16% 30%;
+    --color-olive: 45 14% 42%;
+    --color-dusty-rose: 350 30% 62%;
 
-    /* Accent system — saturated copper/rosegold */
-    --color-goldenrod: 30 62% 44%;
-    --color-gold-dark: 26 48% 32%;
-    --color-rosegold: 10 56% 56%;
-    --color-rosegold-deep: 8 48% 42%;
-    --color-warm-glow: 20 78% 62%;
+    /* Accent — understated warmth */
+    --color-goldenrod: 38 40% 50%;
+    --color-gold-dark: 34 30% 38%;
+    --color-rosegold: 16 36% 62%;
+    --color-rosegold-deep: 14 30% 48%;
+    --color-warm-glow: 28 50% 70%;
 
-    /* WARM EARTH-TONE THEME — Punchy & Warm */
-    --background: 33 24% 88%;
-    --foreground: 20 32% 8%;
+    /* Background: warm khaki-beige — darker than bone for readability */
+    --background: 36 22% 84%;
+    /* Foreground: deep taupe — WCAG AAA on khaki bg */
+    --foreground: 30 20% 16%;
 
-    --card: 34 34% 96%;
-    --card-foreground: 20 28% 12%;
+    /* Cards: parchment/cream */
+    --card: 38 34% 96%;
+    --card-foreground: 30 18% 18%;
 
-    --popover: 34 34% 96%;
-    --popover-foreground: 20 28% 12%;
+    --popover: 38 34% 96%;
+    --popover-foreground: 30 18% 18%;
 
-    /* Primary = deep warm umber — strong CTA presence */
-    --primary: 18 28% 28%;
-    --primary-foreground: 34 30% 96%;
+    /* Primary: olive — muted, premium */
+    --primary: 45 14% 38%;
+    --primary-foreground: 38 34% 96%;
 
-    --secondary: 32 22% 90%;
-    --secondary-foreground: 20 24% 20%;
+    --secondary: 36 18% 90%;
+    --secondary-foreground: 30 16% 26%;
 
-    --muted: 32 18% 84%;
-    --muted-foreground: 20 12% 42%;
+    --muted: 36 14% 86%;
+    --muted-foreground: 28 10% 42%;
 
-    --accent: 28 24% 42%;
-    --accent-foreground: 20 28% 12%;
+    --accent: 45 14% 48%;
+    --accent-foreground: 30 18% 18%;
 
-    --destructive: 0 65% 45%;
+    --destructive: 0 55% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 30 16% 76%;
-    --input: 32 22% 91%;
-    --ring: 18 28% 34%;
+    --border: 34 14% 80%;
+    --input: 36 20% 91%;
+    --ring: 45 14% 42%;
 
-    /* Sidebar — deep espresso */
-    --sidebar-background: 20 22% 14%;
-    --sidebar-foreground: 34 30% 93%;
-    --sidebar-primary: 34 30% 93%;
-    --sidebar-primary-foreground: 20 22% 14%;
-    --sidebar-accent: 20 20% 22%;
-    --sidebar-accent-foreground: 34 30% 93%;
-    --sidebar-border: 20 16% 20%;
-    --sidebar-ring: 34 30% 93%;
+    /* Sidebar — deep olive, grounded */
+    --sidebar-background: 44 12% 32%;
+    --sidebar-foreground: 38 30% 94%;
+    --sidebar-primary: 38 30% 94%;
+    --sidebar-primary-foreground: 44 12% 32%;
+    --sidebar-accent: 44 12% 40%;
+    --sidebar-accent-foreground: 38 30% 94%;
+    --sidebar-border: 44 10% 28%;
+    --sidebar-ring: 38 30% 94%;
 
     --radius: 0.75rem;
 
@@ -77,41 +79,41 @@
     --spacing-xl: 64px;
     --spacing-xxl: 96px;
 
-    /* Warm earth-tone gradients — vivid */
+    /* Warm gradients */
     --gradient-editorial: linear-gradient(135deg, hsl(var(--background)), hsl(var(--card)));
-    --gradient-surface: linear-gradient(180deg, hsl(32 24% 92%), hsl(var(--card)));
-    --gradient-subtle-accent: linear-gradient(135deg, hsl(var(--color-olive) / 0.12), hsl(var(--color-taupe) / 0.08));
-    --gradient-cta: linear-gradient(135deg, hsl(var(--color-taupe)), hsl(var(--color-rosegold-deep)));
-    --gradient-warm: linear-gradient(135deg, hsl(var(--color-dusty-rose) / 0.14), hsl(var(--color-goldenrod) / 0.12));
+    --gradient-surface: linear-gradient(180deg, hsl(36 22% 90%), hsl(var(--card)));
+    --gradient-subtle-accent: linear-gradient(135deg, hsl(var(--color-olive) / 0.08), hsl(var(--color-taupe) / 0.05));
+    --gradient-cta: linear-gradient(135deg, hsl(var(--color-taupe)), hsl(var(--primary)));
+    --gradient-warm: linear-gradient(135deg, hsl(var(--color-dusty-rose) / 0.1), hsl(var(--color-goldenrod) / 0.08));
 
-    /* Shadows — warm, tactile depth */
-    --shadow-editorial: 0 2px 20px rgba(80, 60, 40, 0.12);
-    --shadow-gentle: 0 1px 10px rgba(80, 60, 40, 0.1);
-    --shadow-elevated: 0 8px 32px rgba(70, 50, 30, 0.16);
-    --shadow-magazine: 0 12px 48px rgba(70, 50, 30, 0.16);
-    --shadow-glow: 0 0 40px rgba(140, 110, 70, 0.14);
-    --shadow-luxury: 0 25px 50px -12px rgba(70, 50, 30, 0.22), 0 0 60px rgba(140, 110, 70, 0.08);
-    --shadow-warm-glow: 0 4px 30px rgba(140, 110, 70, 0.14);
+    /* Warm brown-tinted subtle shadows */
+    --shadow-editorial: 0 2px 16px rgba(120, 100, 80, 0.08);
+    --shadow-gentle: 0 1px 8px rgba(120, 100, 80, 0.06);
+    --shadow-elevated: 0 6px 24px rgba(110, 90, 70, 0.1);
+    --shadow-magazine: 0 10px 40px rgba(110, 90, 70, 0.1);
+    --shadow-glow: 0 0 30px rgba(150, 130, 100, 0.08);
+    --shadow-luxury: 0 20px 40px -10px rgba(110, 90, 70, 0.12), 0 0 50px rgba(150, 130, 100, 0.04);
+    --shadow-warm-glow: 0 4px 24px rgba(150, 130, 100, 0.08);
 
-    --chart-1: 18 28% 34%;
-    --chart-2: 348 48% 52%;
-    --chart-3: 30 62% 44%;
-    --chart-4: 16 26% 28%;
-    --chart-5: 20 14% 46%;
+    --chart-1: 45 14% 42%;
+    --chart-2: 350 30% 62%;
+    --chart-3: 38 40% 50%;
+    --chart-4: 30 16% 30%;
+    --chart-5: 28 10% 52%;
 
-    --sidebar: 20 22% 14%;
+    --sidebar: 44 12% 32%;
     --font-sans: 'DM Sans', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
     --font-serif: 'Playfair Display', 'Georgia', ui-serif, serif;
     --font-mono: 'Space Mono', ui-monospace, SFMono-Regular, monospace;
 
-    --shadow-2xs: 0 1px 3px 0px hsl(26 20% 40% / 0.12);
-    --shadow-xs: 0 1px 4px 0px hsl(26 20% 40% / 0.12);
-    --shadow-sm: 0 2px 8px 0px hsl(26 20% 40% / 0.14);
-    --shadow: 0 2px 10px 0px hsl(26 20% 40% / 0.14);
-    --shadow-md: 0 4px 16px -2px hsl(26 20% 40% / 0.15);
-    --shadow-lg: 0 8px 28px -4px hsl(26 20% 40% / 0.18);
-    --shadow-xl: 0 16px 44px -6px hsl(26 20% 40% / 0.22);
-    --shadow-2xl: 0 24px 56px -8px hsl(26 20% 40% / 0.25);
+    --shadow-2xs: 0 1px 2px 0px hsl(34 16% 50% / 0.06);
+    --shadow-xs: 0 1px 3px 0px hsl(34 16% 50% / 0.07);
+    --shadow-sm: 0 2px 6px 0px hsl(34 16% 50% / 0.08);
+    --shadow: 0 2px 8px 0px hsl(34 16% 50% / 0.08);
+    --shadow-md: 0 4px 12px -2px hsl(34 16% 50% / 0.1);
+    --shadow-lg: 0 8px 24px -4px hsl(34 16% 50% / 0.12);
+    --shadow-xl: 0 16px 40px -6px hsl(34 16% 50% / 0.14);
+    --shadow-2xl: 0 24px 48px -8px hsl(34 16% 50% / 0.16);
     --tracking-normal: 0em;
     --spacing: 0.25rem;
   }
@@ -161,28 +163,26 @@
     font-size: 0.68rem;
   }
 
-  /* Headlines — high contrast, clear hierarchy */
+  /* Headlines — warm earth-tone hierarchy */
   h1 {
     font-family: 'Playfair Display', 'Georgia', serif;
     font-weight: 700;
-    letter-spacing: -0.01em;
-    line-height: 1.0;
-    color: hsl(20 32% 8%);
+    letter-spacing: 0em;
+    line-height: 1.05;
   }
 
   h2 {
     font-family: 'Playfair Display', 'Georgia', serif;
-    font-weight: 700;
-    letter-spacing: 0em;
-    line-height: 1.08;
-    color: hsl(20 28% 12%);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1.12;
   }
 
   h3, h4, h5, h6 {
     font-family: 'Playfair Display', 'Georgia', serif;
     font-weight: 600;
-    letter-spacing: 0.01em;
-    line-height: 1.15;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
   }
 
   /* Editorial Design System Utilities */
