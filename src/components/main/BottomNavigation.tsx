@@ -16,8 +16,8 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, o
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-xl border-t border-border safe-area-pb z-50">
-      <div className="flex justify-around items-center py-3 px-2">
+    <div className="fixed bottom-0 left-0 right-0 bg-card/98 backdrop-blur-2xl border-t border-border/60 safe-area-pb z-50" style={{ boxShadow: '0 -4px 24px rgba(90, 70, 50, 0.08)' }}>
+      <div className="flex justify-around items-center py-2.5 px-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -26,19 +26,19 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, o
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={`flex flex-col items-center justify-center p-2 min-w-0 transition-all duration-200 rounded-xl ${
+              className={`flex flex-col items-center justify-center p-2 min-w-0 transition-all duration-300 rounded-xl ${
                 isActive 
-                  ? 'text-primary' 
+                  ? 'text-primary scale-105' 
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              <div className={`relative ${isActive ? '' : ''}`}>
+              <div className="relative">
                 {isActive && (
-                  <div className="absolute -inset-2 bg-primary/10 rounded-full" />
+                  <div className="absolute -inset-2.5 bg-primary/12 rounded-full" style={{ boxShadow: '0 0 12px hsl(var(--primary) / 0.15)' }} />
                 )}
-                <Icon className={`h-6 w-6 mb-1.5 relative ${isActive ? 'drop-shadow-[0_0_6px_hsl(var(--primary)/0.4)]' : ''}`} />
+                <Icon className={`h-5 w-5 mb-1 relative transition-all duration-300 ${isActive ? 'stroke-[2.5px]' : 'stroke-[1.5px]'}`} />
               </div>
-              <span className={`text-[11px] font-medium leading-tight text-center ${isActive ? 'font-semibold' : ''}`}>{tab.label}</span>
+              <span className={`text-[10px] leading-tight text-center tracking-wide ${isActive ? 'font-bold' : 'font-medium'}`}>{tab.label}</span>
             </button>
           );
         })}
