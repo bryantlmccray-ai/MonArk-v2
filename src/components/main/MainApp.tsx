@@ -155,9 +155,9 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   if (isMobile) {
     return (
       <div className="min-h-screen bg-background relative">
-        <div className="pb-28 px-4 pt-2 space-y-4">
-          {/* RIF Beta Insights Card */}
-          {activeTab === 'profile' && <RifInsightsCard />}
+        <div className="pb-24 px-5 pt-3 space-y-5">
+           {/* RIF Beta Insights Card */}
+           {activeTab === 'profile' && <RifInsightsCard />}
           
           {renderActiveScreen()}
         </div>

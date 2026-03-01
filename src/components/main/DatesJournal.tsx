@@ -15,37 +15,35 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
   ];
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-2xl mx-auto space-y-8">
+    <div className="bg-background">
+      <div className="max-w-2xl mx-auto space-y-6">
         {/* Header */}
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-medium tracking-wider uppercase">
-            <BookOpen className="w-3.5 h-3.5" />
+        <div className="text-center space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wider uppercase">
+            <BookOpen className="w-3 h-3" />
             Your Journey
           </div>
-          <h1 className="text-3xl font-serif text-foreground">Date Journal</h1>
-          <p className="text-muted-foreground font-body text-base">Reflect on the moments that matter</p>
+          <h1 className="text-2xl font-serif font-bold text-foreground tracking-tight">Date Journal</h1>
+          <p className="text-muted-foreground font-body text-sm">Reflect on the moments that matter</p>
         </div>
 
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-foreground font-medium text-lg">Completed Dates</h3>
-          </div>
+        <div className="space-y-3">
+          <h3 className="text-base font-semibold text-foreground">Completed Dates</h3>
 
           {completedDates.length > 0 ? (
             completedDates.map((date) => (
               <div
                 key={date.id}
-                className="bg-card rounded-xl p-5 border border-border hover:border-primary/20 transition-all duration-300 group"
+                className="bg-card rounded-2xl p-4 border border-border/60 hover:border-primary/20 transition-all duration-200 group shadow-[0_1px_3px_rgba(100,80,60,0.04)] hover:shadow-[0_2px_8px_rgba(100,80,60,0.08)]"
               >
                 <div className="flex justify-between items-start">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 transition-colors">
                       <Calendar className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-foreground font-semibold text-lg">{date.name}</h3>
-                      <p className="text-muted-foreground text-sm mt-0.5">
+                      <h3 className="text-foreground font-semibold text-[15px]">{date.name}</h3>
+                      <p className="text-muted-foreground text-xs mt-0.5">
                         {new Date(date.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} • {date.venue}
                       </p>
                     </div>
@@ -54,10 +52,10 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={star}
-                        className={`w-4 h-4 ${
+                        className={`w-3.5 h-3.5 ${
                           star <= date.rating 
                             ? 'text-primary fill-primary' 
-                            : 'text-muted-foreground/30'
+                            : 'text-muted-foreground/25'
                         }`}
                       />
                     ))}
@@ -68,21 +66,21 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                     variant="outline"
                     size="sm"
                     onClick={() => onDateCompleted(date.name)}
-                    className="mt-4 w-full border-primary/30 text-primary hover:bg-primary/10 hover:border-primary/50 transition-all"
+                    className="mt-3 w-full border-primary/20 text-primary hover:bg-primary/10 hover:border-primary/30 transition-all h-9 text-xs"
                   >
-                    <Sparkles className="w-4 h-4 mr-2" />
+                    <Sparkles className="w-3.5 h-3.5 mr-1.5" />
                     Add Reflection
                   </Button>
                 )}
               </div>
             ))
           ) : (
-            <div className="text-center py-16 bg-card/50 rounded-xl border border-border">
-              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <Calendar className="w-8 h-8 text-primary/60" />
+            <div className="text-center py-14 bg-card rounded-2xl border border-border/60">
+              <div className="w-14 h-14 rounded-2xl bg-primary/8 flex items-center justify-center mx-auto mb-3">
+                <Calendar className="w-7 h-7 text-primary/50" />
               </div>
-              <p className="text-foreground font-medium mb-1">No completed dates yet</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-foreground font-medium text-sm mb-1">No completed dates yet</p>
+              <p className="text-xs text-muted-foreground">
                 Accept a weekly option to plan your first date!
               </p>
             </div>

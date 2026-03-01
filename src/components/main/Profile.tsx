@@ -79,20 +79,20 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
   const hasCompleteProfile = profile?.is_profile_complete;
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-2xl mx-auto space-y-6">
+    <div className="bg-background">
+      <div className="max-w-2xl mx-auto space-y-5">
         {/* Header */}
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="text-2xl font-serif text-foreground">Profile</h1>
+            <h1 className="text-2xl font-serif font-bold text-foreground tracking-tight">Profile</h1>
             {user?.email && (
-              <p className="text-muted-foreground text-sm mt-0.5">{user.email}</p>
+              <p className="text-muted-foreground text-xs mt-0.5">{user.email}</p>
             )}
           </div>
-          <div className="flex space-x-1">
+          <div className="flex gap-1">
             <button
               onClick={onOpenSettings}
-              className="p-2.5 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-xl transition-all"
+              className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-xl transition-all active:scale-95"
               disabled={isSigningOut}
             >
               <Settings className="h-5 w-5" />
@@ -100,7 +100,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
             <button
               onClick={handleSignOut}
               disabled={isSigningOut}
-              className="p-2.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl transition-all disabled:opacity-50"
+              className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl transition-all disabled:opacity-50 active:scale-95"
               title="Sign Out"
             >
               {isSigningOut ? (
@@ -113,17 +113,17 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
         </div>
 
         {!hasCompleteProfile ? (
-          <div className="text-center space-y-6 pt-12">
-            <div className="w-32 h-32 rounded-full bg-secondary border-2 border-dashed border-border mx-auto flex items-center justify-center">
-              <Edit className="h-12 w-12 text-muted-foreground" />
+          <div className="text-center space-y-5 pt-10">
+            <div className="w-28 h-28 rounded-full bg-secondary border-2 border-dashed border-border mx-auto flex items-center justify-center">
+              <Edit className="h-10 w-10 text-muted-foreground" />
             </div>
-            <div className="space-y-2">
-              <h2 className="text-2xl font-serif text-foreground">Create Your Profile</h2>
-              <p className="text-muted-foreground">Tell your story and set your dating preferences</p>
+            <div className="space-y-1.5">
+              <h2 className="text-xl font-serif font-bold text-foreground">Create Your Profile</h2>
+              <p className="text-muted-foreground text-sm">Tell your story and set your dating preferences</p>
             </div>
             <button
               onClick={() => setShowProfileCreation(true)}
-              className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 hover:shadow-warm-glow"
+              className="w-full py-3.5 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-200 hover:bg-primary/90 active:scale-[0.98] shadow-[0_1px_3px_hsl(var(--primary)/0.15)]"
               disabled={isSigningOut}
             >
               Start Profile Creation
@@ -163,11 +163,11 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
             </div>
 
             {/* Location Section */}
-            <div className="bg-card rounded-xl p-6 border border-border">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-2">
-                  <MapPin className="h-5 w-5 text-primary" />
-                  <h3 className="text-foreground font-medium text-lg">Location</h3>
+            <div className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-primary" />
+                  <h3 className="text-foreground font-semibold text-[15px]">Location</h3>
                 </div>
                 {profile?.location_consent && (
                   <button onClick={handleClearLocation} className="text-xs text-muted-foreground hover:text-foreground transition-colors" disabled={isSigningOut}>Clear</button>
@@ -175,19 +175,19 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               </div>
               
               {profile?.location_consent && locationDisplay ? (
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-secondary-foreground">{locationDisplay.text}</span>
-                    <span className="text-xs text-muted-foreground">{locationDisplay.isManual ? 'Manual' : 'Approximate'}</span>
+                    <span className="text-secondary-foreground text-sm">{locationDisplay.text}</span>
+                    <span className="text-[11px] text-muted-foreground">{locationDisplay.isManual ? 'Manual' : 'Approximate'}</span>
                   </div>
-                  <button onClick={() => setShowLocationModal(true)} className="w-full py-2.5 text-sm bg-secondary text-secondary-foreground rounded-xl hover:bg-secondary/80 transition-colors" disabled={isSigningOut}>
+                  <button onClick={() => setShowLocationModal(true)} className="w-full py-2 text-sm bg-secondary text-secondary-foreground rounded-xl hover:bg-secondary/80 transition-colors" disabled={isSigningOut}>
                     Update Location
                   </button>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   <p className="text-muted-foreground text-sm">Share your approximate location to connect with people nearby</p>
-                  <button onClick={() => setShowLocationModal(true)} className="w-full py-3 bg-primary text-primary-foreground font-medium rounded-xl transition-all duration-300 hover:bg-primary/90 hover:shadow-warm-glow" disabled={isSigningOut}>
+                  <button onClick={() => setShowLocationModal(true)} className="w-full py-2.5 bg-primary text-primary-foreground font-medium rounded-xl transition-all duration-200 hover:bg-primary/90 active:scale-[0.98]" disabled={isSigningOut}>
                     Add Location
                   </button>
                 </div>
@@ -195,7 +195,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
             </div>
 
             {/* Profile Overview */}
-            <div className="bg-card rounded-xl p-6 border border-border">
+            <div className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]">
               <div className="space-y-6">
                 {profile?.bio && (
                   <div className="space-y-3">
@@ -297,7 +297,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
             </div>
 
             {/* MonArk Moments */}
-            <div className="bg-card rounded-xl p-6 border border-border">
+            <div className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]">
               <div className="flex items-center space-x-2 mb-2">
                 <TrendingUp className="h-5 w-5 text-primary" />
                 <h3 className="text-foreground font-medium text-lg">MonArk Moments</h3>
@@ -327,7 +327,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
             </div>
 
             {/* Trust Score */}
-            <div className="bg-card rounded-xl p-6 border border-border">
+            <div className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]">
               <h3 className="text-foreground font-medium text-lg mb-2">MonArk Trust Score</h3>
               <p className="text-muted-foreground text-sm mb-4">Build trust through verification and authentic connections</p>
               <button onClick={onOpenTrustScore} className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 hover:shadow-warm-glow" disabled={isSigningOut}>

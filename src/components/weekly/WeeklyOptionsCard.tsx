@@ -18,26 +18,26 @@ export const WeeklyOptionsCard = ({ option, onAccept, onPass, isProcessing }: We
   const duration = Math.round((endTime.getTime() - startTime.getTime()) / (1000 * 60));
 
   return (
-    <Card className="overflow-hidden">
-      <CardContent className="p-6 space-y-4">
+    <Card className="overflow-hidden hover:shadow-[0_4px_16px_rgba(100,80,60,0.08)] transition-all duration-200">
+      <CardContent className="p-5 space-y-3.5">
         {/* Header */}
         <div>
-          <h3 className="text-xl font-semibold text-foreground mb-1">
+          <h3 className="text-lg font-semibold text-foreground leading-snug mb-0.5">
             {option.title}
           </h3>
-          <p className="text-sm text-muted-foreground italic">
+          <p className="text-sm text-muted-foreground italic leading-relaxed">
             {option.vibe_line}
           </p>
         </div>
 
-        {/* Venue - The Key Info */}
+        {/* Venue */}
         {option.venue_data && (
-          <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
-            <div className="flex items-start gap-3">
-              <MapPin className="w-5 h-5 text-primary mt-0.5" />
+          <div className="p-3.5 rounded-xl bg-primary/5 border border-primary/15">
+            <div className="flex items-start gap-2.5">
+              <MapPin className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
               <div>
-                <div className="font-medium text-foreground">{option.venue_data.name}</div>
-                <div className="text-sm text-muted-foreground">{option.venue_data.address}</div>
+                <div className="font-medium text-foreground text-sm">{option.venue_data.name}</div>
+                <div className="text-xs text-muted-foreground mt-0.5">{option.venue_data.address}</div>
               </div>
             </div>
           </div>
@@ -45,53 +45,53 @@ export const WeeklyOptionsCard = ({ option, onAccept, onPass, isProcessing }: We
 
         {/* Time */}
         <div className="flex items-center gap-2 text-muted-foreground">
-          <Calendar className="w-4 h-4" />
-          <span className="text-sm">
+          <Calendar className="w-3.5 h-3.5" />
+          <span className="text-xs">
             {format(startTime, 'EEE, MMM d')} · {format(startTime, 'h:mm a')} ({duration}min)
           </span>
         </div>
 
         {/* EQ Fit Chips */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {option.eq_fit_chips.slice(0, 3).map((chip, idx) => (
             <Badge 
               key={idx} 
               variant="outline"
-              className="text-xs bg-primary/5 border-primary/20"
+              className="text-[11px] bg-primary/5 border-primary/15 py-0.5"
             >
               {chip}
             </Badge>
           ))}
         </div>
 
-        {/* Care Index - Simple */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Heart className="w-4 h-4 text-primary" />
+        {/* Care Index */}
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <Heart className="w-3.5 h-3.5 text-primary" />
           <span>Quality Score: {(option.care_index_score * 100).toFixed(0)}%</span>
         </div>
 
-        {/* Why This For You */}
-        <p className="text-sm text-muted-foreground">
+        {/* Why This */}
+        <p className="text-xs text-muted-foreground leading-relaxed">
           <span className="font-medium text-foreground">Why this:</span> {option.why_this_for_you}
         </p>
 
-        {/* Accept / Pass Buttons */}
-        <div className="flex gap-2.5 pt-3">
+        {/* Buttons */}
+        <div className="flex gap-2 pt-1">
           <Button 
             variant="outline"
             onClick={onPass}
             disabled={isProcessing}
-            className="flex-1 h-11"
+            className="flex-1 h-10"
           >
-            <X className="w-4 h-4 mr-1.5" />
+            <X className="w-4 h-4 mr-1" />
             Pass
           </Button>
           <Button 
             onClick={onAccept}
             disabled={isProcessing}
-            className="flex-1 h-11"
+            className="flex-1 h-10"
           >
-            <Check className="w-4 h-4 mr-1.5" />
+            <Check className="w-4 h-4 mr-1" />
             Accept
           </Button>
         </div>

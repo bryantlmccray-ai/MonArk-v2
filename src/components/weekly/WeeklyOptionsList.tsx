@@ -71,12 +71,12 @@ export const WeeklyOptionsList = () => {
   const activeOptions = options.filter(o => !o.is_expired && !o.tapped_at);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Your Weekly Options</h2>
-          <p className="text-sm text-muted-foreground mt-1">
+          <h2 className="text-2xl font-serif font-bold text-foreground tracking-tight">Your Weekly Options</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">
             3 curated experiences, pick one to plan your date
           </p>
         </div>
@@ -85,30 +85,31 @@ export const WeeklyOptionsList = () => {
           size="sm"
           onClick={refetch}
           disabled={generating}
+          className="h-9"
         >
-          <RefreshCw className={`w-4 h-4 mr-2 ${generating ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${generating ? 'animate-spin' : ''}`} />
           Refresh
         </Button>
       </div>
 
       {/* Options Grid */}
       {activeOptions.length === 0 ? (
-        <div className="text-center py-12 bg-card/50 rounded-xl border border-border/50">
-          <Calendar className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-          <p className="text-muted-foreground mb-2">
+        <div className="text-center py-14 bg-card rounded-2xl border border-border/60">
+          <Calendar className="w-10 h-10 mx-auto text-muted-foreground/40 mb-3" />
+          <p className="text-muted-foreground text-sm mb-1">
             {generating ? 'Generating your options...' : 'No options available this week'}
           </p>
-          <p className="text-sm text-muted-foreground mb-4">
+          <p className="text-xs text-muted-foreground mb-4">
             New options arrive every Sunday
           </p>
           {!generating && (
-            <Button onClick={refetch}>
+            <Button onClick={refetch} size="sm">
               Generate Options
             </Button>
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {activeOptions.map((option) => (
             <WeeklyOptionsCard
               key={option.id}
