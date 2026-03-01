@@ -13,38 +13,40 @@ export const DebriefOverlay: React.FC<DebriefOverlayProps> = ({ onClose }) => {
   const [learned, setLearned] = useState('');
 
   const handleSubmit = () => {
-    // Save debrief data
     console.log('Debrief submitted:', { vibe, seeAgain, boundaries, learned });
     onClose();
   };
 
+  const toggleBtnClass = (isActive: boolean) =>
+    `px-6 py-2 rounded-lg transition-colors ${
+      isActive
+        ? 'bg-primary text-primary-foreground'
+        : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+    }`;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-jet-black/80 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-foreground/60 backdrop-blur-sm" onClick={onClose} />
       
-      <div className="relative bg-charcoal-gray rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border border-gray-700 animate-slide-up">
+      <div className="relative bg-card rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border border-border animate-slide-up shadow-lg">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-medium text-white">Date Debrief</h2>
-          <button
-            onClick={onClose}
-            className="p-2 text-gray-400 hover:text-white transition-colors"
-          >
+          <h2 className="text-xl font-medium text-foreground">Date Debrief</h2>
+          <button onClick={onClose} className="p-2 text-muted-foreground hover:text-foreground transition-colors">
             <X className="h-5 w-5" />
           </button>
         </div>
 
         <div className="space-y-6">
-          {/* Vibe Rating */}
           <div>
-            <h3 className="text-white font-medium mb-3">How was the overall vibe?</h3>
+            <h3 className="text-foreground font-medium mb-3">How was the overall vibe?</h3>
             <div className="flex space-x-2">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
                   onClick={() => setVibe(star)}
                   className={`text-2xl ${
-                    star <= vibe ? 'text-goldenrod' : 'text-gray-600'
-                  } hover:text-goldenrod transition-colors`}
+                    star <= vibe ? 'text-primary' : 'text-muted'
+                  } hover:text-primary transition-colors`}
                 >
                   ⭐
                 </button>
@@ -52,74 +54,35 @@ export const DebriefOverlay: React.FC<DebriefOverlayProps> = ({ onClose }) => {
             </div>
           </div>
 
-          {/* See Again */}
           <div>
-            <h3 className="text-white font-medium mb-3">Would you want to see them again?</h3>
+            <h3 className="text-foreground font-medium mb-3">Would you want to see them again?</h3>
             <div className="flex space-x-4">
-              <button
-                onClick={() => setSeeAgain(true)}
-                className={`px-6 py-2 rounded-lg transition-colors ${
-                  seeAgain === true
-                    ? 'bg-goldenrod text-jet-black'
-                    : 'bg-gray-700 text-white hover:bg-gray-600'
-                }`}
-              >
-                Yes
-              </button>
-              <button
-                onClick={() => setSeeAgain(false)}
-                className={`px-6 py-2 rounded-lg transition-colors ${
-                  seeAgain === false
-                    ? 'bg-goldenrod text-jet-black'
-                    : 'bg-gray-700 text-white hover:bg-gray-600'
-                }`}
-              >
-                No
-              </button>
+              <button onClick={() => setSeeAgain(true)} className={toggleBtnClass(seeAgain === true)}>Yes</button>
+              <button onClick={() => setSeeAgain(false)} className={toggleBtnClass(seeAgain === false)}>No</button>
             </div>
           </div>
 
-          {/* Boundaries */}
           <div>
-            <h3 className="text-white font-medium mb-3">Did your date respect your boundaries?</h3>
+            <h3 className="text-foreground font-medium mb-3">Did your date respect your boundaries?</h3>
             <div className="flex space-x-4">
-              <button
-                onClick={() => setBoundaries(true)}
-                className={`px-6 py-2 rounded-lg transition-colors ${
-                  boundaries === true
-                    ? 'bg-goldenrod text-jet-black'
-                    : 'bg-gray-700 text-white hover:bg-gray-600'
-                }`}
-              >
-                Yes
-              </button>
-              <button
-                onClick={() => setBoundaries(false)}
-                className={`px-6 py-2 rounded-lg transition-colors ${
-                  boundaries === false
-                    ? 'bg-goldenrod text-jet-black'
-                    : 'bg-gray-700 text-white hover:bg-gray-600'
-                }`}
-              >
-                No
-              </button>
+              <button onClick={() => setBoundaries(true)} className={toggleBtnClass(boundaries === true)}>Yes</button>
+              <button onClick={() => setBoundaries(false)} className={toggleBtnClass(boundaries === false)}>No</button>
             </div>
           </div>
 
-          {/* Learning */}
           <div>
-            <h3 className="text-white font-medium mb-3">What did you learn about what you're looking for?</h3>
+            <h3 className="text-foreground font-medium mb-3">What did you learn about what you're looking for?</h3>
             <textarea
               value={learned}
               onChange={(e) => setLearned(e.target.value)}
               placeholder="Reflect on what you discovered about yourself and your preferences..."
-              className="w-full p-3 bg-gray-800 text-white rounded-lg border border-gray-600 focus:border-goldenrod focus:outline-none resize-none h-20"
+              className="w-full p-3 bg-input text-foreground rounded-lg border border-border focus:border-ring focus:outline-none resize-none h-20 placeholder:text-muted-foreground"
             />
           </div>
 
           <button
             onClick={handleSubmit}
-            className="w-full py-3 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow"
+            className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90"
           >
             Save Reflection
           </button>

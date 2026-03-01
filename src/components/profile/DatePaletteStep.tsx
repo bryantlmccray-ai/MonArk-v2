@@ -44,27 +44,26 @@ export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, u
     onNext();
   };
 
+  const selectedClass = 'bg-primary text-primary-foreground';
+  const unselectedClass = 'bg-card text-foreground border border-border hover:border-primary/50';
+
   return (
-    <div className="min-h-screen bg-jet-black p-6 flex flex-col">
+    <div className="min-h-screen bg-background p-6 flex flex-col">
       <div className="flex-1 max-w-2xl mx-auto w-full space-y-8">
-        {/* Header */}
         <div className="text-center space-y-2 pt-8">
-          <h1 className="text-3xl font-light text-white">Design Your Perfect Date</h1>
-          <p className="text-gray-400">Set your Date Palette. The AI Concierge uses this to craft bespoke recommendations for you and your matches.</p>
+          <h1 className="text-3xl font-light text-foreground">Design Your Perfect Date</h1>
+          <p className="text-muted-foreground">Set your Date Palette. The AI Concierge uses this to craft bespoke recommendations for you and your matches.</p>
         </div>
 
-        {/* Vibe Section */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-white">Vibe</h3>
+          <h3 className="text-lg font-medium text-foreground">Vibe</h3>
           <div className="flex flex-wrap gap-2">
             {vibeOptions.map((option) => (
               <button
                 key={option}
                 onClick={() => toggleMultiSelect(option, vibe, setVibe)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                  vibe.includes(option)
-                    ? 'bg-goldenrod-gradient text-jet-black'
-                    : 'bg-charcoal-gray text-white border border-gray-600 hover:border-goldenrod/50'
+                  vibe.includes(option) ? selectedClass : unselectedClass
                 }`}
               >
                 {option}
@@ -73,18 +72,15 @@ export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, u
           </div>
         </div>
 
-        {/* Budget Section */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-white">Budget</h3>
+          <h3 className="text-lg font-medium text-foreground">Budget</h3>
           <div className="flex gap-2">
             {budgetOptions.map((option) => (
               <button
                 key={option}
                 onClick={() => setBudget(option)}
                 className={`px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 ${
-                  budget === option
-                    ? 'bg-goldenrod-gradient text-jet-black'
-                    : 'bg-charcoal-gray text-white border border-gray-600 hover:border-goldenrod/50'
+                  budget === option ? selectedClass : unselectedClass
                 }`}
               >
                 {option}
@@ -93,18 +89,15 @@ export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, u
           </div>
         </div>
 
-        {/* Time of Day Section */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-white">Time of Day</h3>
+          <h3 className="text-lg font-medium text-foreground">Time of Day</h3>
           <div className="flex gap-3">
             {timeOptions.map(({ value, icon: Icon, label }) => (
               <button
                 key={value}
                 onClick={() => toggleMultiSelect(value, timeOfDay, setTimeOfDay)}
                 className={`flex-1 flex flex-col items-center gap-2 p-4 rounded-lg transition-all duration-200 ${
-                  timeOfDay.includes(value)
-                    ? 'bg-goldenrod-gradient text-jet-black'
-                    : 'bg-charcoal-gray text-white border border-gray-600 hover:border-goldenrod/50'
+                  timeOfDay.includes(value) ? selectedClass : unselectedClass
                 }`}
               >
                 <Icon className="h-6 w-6" />
@@ -114,18 +107,15 @@ export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, u
           </div>
         </div>
 
-        {/* Activity Type Section */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-white">Activity Type</h3>
+          <h3 className="text-lg font-medium text-foreground">Activity Type</h3>
           <div className="flex gap-3">
             {activityOptions.map(({ value, icon: Icon, label }) => (
               <button
                 key={value}
                 onClick={() => toggleMultiSelect(value, activityType, setActivityType)}
                 className={`flex-1 flex flex-col items-center gap-2 p-4 rounded-lg transition-all duration-200 ${
-                  activityType.includes(value)
-                    ? 'bg-goldenrod-gradient text-jet-black'
-                    : 'bg-charcoal-gray text-white border border-gray-600 hover:border-goldenrod/50'
+                  activityType.includes(value) ? selectedClass : unselectedClass
                 }`}
               >
                 <Icon className="h-6 w-6" />
@@ -136,11 +126,10 @@ export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, u
         </div>
       </div>
 
-      {/* Action Buttons */}
       <div className="pt-6 space-y-3">
         <button
           onClick={handleNext}
-          className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow"
+          className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90"
         >
           Continue
         </button>
@@ -148,7 +137,7 @@ export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, u
         {stepRequirement !== 'critical' && (
           <button
             onClick={onSkip}
-            className="w-full py-3 text-gray-400 hover:text-white transition-colors border border-gray-600 hover:border-gray-500 rounded-xl"
+            className="w-full py-3 text-muted-foreground hover:text-foreground transition-colors border border-border hover:border-primary/50 rounded-xl"
           >
             Skip for now
           </button>

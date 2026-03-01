@@ -84,18 +84,13 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
     const current = identityData[field];
     
     if (current.includes(preference)) {
-      updateIdentityData({
-        [field]: current.filter(p => p !== preference)
-      });
+      updateIdentityData({ [field]: current.filter(p => p !== preference) });
     } else {
-      updateIdentityData({
-        [field]: [...current, preference]
-      });
+      updateIdentityData({ [field]: [...current, preference] });
     }
   };
 
   const handleNext = () => {
-    // Update the main profile data with identity preferences
     updateData({
       ...profileData,
       identityPreferences: identityData,
@@ -108,13 +103,13 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
   const renderStep0 = () => (
     <div className="space-y-8">
       <div className="text-center space-y-4">
-        <h2 className="text-2xl font-light text-white">About You</h2>
-        <p className="text-gray-400">Help us understand your identity so we can create meaningful connections</p>
+        <h2 className="text-2xl font-light text-foreground">About You</h2>
+        <p className="text-muted-foreground">Help us understand your identity so we can create meaningful connections</p>
       </div>
 
       <div className="space-y-6">
         <div>
-          <h3 className="text-white font-medium mb-4">How do you identify?</h3>
+          <h3 className="text-foreground font-medium mb-4">How do you identify?</h3>
           <div className="grid grid-cols-2 gap-3">
             {GENDER_IDENTITIES.map((gender) => (
               <button
@@ -122,13 +117,13 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
                 onClick={() => handleGenderSelect(gender)}
                 className={`p-4 rounded-xl border-2 transition-all duration-300 ${
                   identityData.genderIdentity === gender
-                    ? 'border-goldenrod bg-goldenrod/10 shadow-golden-glow'
-                    : 'border-gray-700 bg-charcoal-gray/50 hover:border-goldenrod/50'
+                    ? 'border-primary bg-primary/10 shadow-sm'
+                    : 'border-border bg-card hover:border-primary/50'
                 }`}
               >
-                <span className="text-white font-medium">{gender}</span>
+                <span className="text-foreground font-medium">{gender}</span>
                 {identityData.genderIdentity === gender && (
-                  <Check className="h-4 w-4 text-goldenrod ml-2 inline-block" />
+                  <Check className="h-4 w-4 text-primary ml-2 inline-block" />
                 )}
               </button>
             ))}
@@ -144,14 +139,14 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
                   genderIdentity: 'Custom',
                   genderIdentityCustom: e.target.value 
                 })}
-                className="w-full p-4 bg-charcoal-gray border border-gray-700 rounded-xl text-white placeholder:text-gray-500 focus:border-goldenrod focus:outline-none"
+                className="w-full p-4 bg-card border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
               />
             </div>
           )}
         </div>
 
         <div>
-          <h3 className="text-white font-medium mb-4">Your orientation</h3>
+          <h3 className="text-foreground font-medium mb-4">Your orientation</h3>
           <div className="grid grid-cols-2 gap-3">
             {SEXUAL_ORIENTATIONS.map((orientation) => (
               <button
@@ -159,13 +154,13 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
                 onClick={() => handleOrientationSelect(orientation)}
                 className={`p-4 rounded-xl border-2 transition-all duration-300 ${
                   identityData.sexualOrientation === orientation
-                    ? 'border-goldenrod bg-goldenrod/10 shadow-golden-glow'
-                    : 'border-gray-700 bg-charcoal-gray/50 hover:border-goldenrod/50'
+                    ? 'border-primary bg-primary/10 shadow-sm'
+                    : 'border-border bg-card hover:border-primary/50'
                 }`}
               >
-                <span className="text-white font-medium">{orientation}</span>
+                <span className="text-foreground font-medium">{orientation}</span>
                 {identityData.sexualOrientation === orientation && (
-                  <Check className="h-4 w-4 text-goldenrod ml-2 inline-block" />
+                  <Check className="h-4 w-4 text-primary ml-2 inline-block" />
                 )}
               </button>
             ))}
@@ -181,7 +176,7 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
                   sexualOrientation: 'Custom',
                   sexualOrientationCustom: e.target.value 
                 })}
-                className="w-full p-4 bg-charcoal-gray border border-gray-700 rounded-xl text-white placeholder:text-gray-500 focus:border-goldenrod focus:outline-none"
+                className="w-full p-4 bg-card border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
               />
             </div>
           )}
@@ -191,7 +186,7 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
       <button
         onClick={() => setCurrentStep(1)}
         disabled={!identityData.genderIdentity || !identityData.sexualOrientation}
-        className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Continue
       </button>
@@ -201,13 +196,13 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
   const renderStep1 = () => (
     <div className="space-y-8">
       <div className="text-center space-y-4">
-        <h2 className="text-2xl font-light text-white">Connection Preferences</h2>
-        <p className="text-gray-400">Who are you most open to connecting with emotionally or romantically?</p>
+        <h2 className="text-2xl font-light text-foreground">Connection Preferences</h2>
+        <p className="text-muted-foreground">Who are you most open to connecting with emotionally or romantically?</p>
       </div>
 
       <div className="space-y-6">
         <div>
-          <h3 className="text-white font-medium mb-4">I'm open to connecting with</h3>
+          <h3 className="text-foreground font-medium mb-4">I'm open to connecting with</h3>
           <div className="grid grid-cols-1 gap-3">
             {DISCOVERY_PREFERENCES.map((preference) => (
               <button
@@ -215,14 +210,14 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
                 onClick={() => togglePreference(preference, 'see')}
                 className={`p-4 rounded-xl border-2 transition-all duration-300 text-left ${
                   identityData.preferenceToSee.includes(preference)
-                    ? 'border-goldenrod bg-goldenrod/10 shadow-golden-glow'
-                    : 'border-gray-700 bg-charcoal-gray/50 hover:border-goldenrod/50'
+                    ? 'border-primary bg-primary/10 shadow-sm'
+                    : 'border-border bg-card hover:border-primary/50'
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-white font-medium">{preference}</span>
+                  <span className="text-foreground font-medium">{preference}</span>
                   {identityData.preferenceToSee.includes(preference) && (
-                    <Check className="h-5 w-5 text-goldenrod" />
+                    <Check className="h-5 w-5 text-primary" />
                   )}
                 </div>
               </button>
@@ -230,21 +225,21 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
           </div>
         </div>
 
-        <div className="bg-charcoal-gray/30 p-4 rounded-xl border border-gray-700">
-          <h4 className="text-white font-medium mb-2">Privacy Options</h4>
+        <div className="bg-card p-4 rounded-xl border border-border">
+          <h4 className="text-foreground font-medium mb-2">Privacy Options</h4>
           <div className="space-y-3">
             <label className="flex items-center space-x-3">
               <input
                 type="checkbox"
                 checked={identityData.identityVisibility}
                 onChange={(e) => updateIdentityData({ identityVisibility: e.target.checked })}
-                className="w-4 h-4 text-goldenrod bg-transparent border-gray-600 rounded focus:ring-goldenrod"
+                className="w-4 h-4 text-primary bg-transparent border-border rounded focus:ring-primary"
               />
-              <span className="text-gray-300">Show my identity on my profile</span>
+              <span className="text-secondary-foreground">Show my identity on my profile</span>
             </label>
             
             <div className="space-y-2">
-              <span className="text-gray-300 text-sm">Discovery visibility:</span>
+              <span className="text-secondary-foreground text-sm">Discovery visibility:</span>
               <div className="flex space-x-2">
                 {['open', 'limited', 'private'].map((mode) => (
                   <button
@@ -252,8 +247,8 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
                     onClick={() => updateIdentityData({ discoveryPrivacyMode: mode })}
                     className={`px-3 py-2 rounded-lg text-sm transition-colors ${
                       identityData.discoveryPrivacyMode === mode
-                        ? 'bg-goldenrod text-jet-black'
-                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
                     }`}
                   >
                     {mode.charAt(0).toUpperCase() + mode.slice(1)}
@@ -268,14 +263,14 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
       <div className="flex space-x-4">
         <button
           onClick={() => setCurrentStep(0)}
-          className="flex-1 py-4 bg-gray-700 text-white rounded-xl hover:bg-gray-600 transition-colors"
+          className="flex-1 py-4 bg-secondary text-secondary-foreground rounded-xl hover:bg-secondary/80 transition-colors"
         >
           Back
         </button>
         <button
           onClick={handleNext}
           disabled={!canProceed}
-          className="flex-1 py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Complete Setup
         </button>
@@ -284,7 +279,7 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
   );
 
   return (
-    <div className="min-h-screen bg-jet-black p-6 flex items-center justify-center">
+    <div className="min-h-screen bg-background p-6 flex items-center justify-center">
       <div className="w-full max-w-2xl">
         {currentStep === 0 ? renderStep0() : renderStep1()}
       </div>

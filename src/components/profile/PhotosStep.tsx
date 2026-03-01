@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Plus, X, Upload } from 'lucide-react';
 import { ProfileData } from './ProfileCreation';
@@ -39,23 +38,13 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
     if (!file.type.startsWith('image/')) {
-      toast({
-        title: "Invalid file type",
-        description: "Please select an image file.",
-        variant: "destructive",
-      });
+      toast({ title: "Invalid file type", description: "Please select an image file.", variant: "destructive" });
       return;
     }
 
-    // Validate file size (5MB)
     if (file.size > 5 * 1024 * 1024) {
-      toast({
-        title: "File too large",
-        description: "Please select an image smaller than 5MB.",
-        variant: "destructive",
-      });
+      toast({ title: "File too large", description: "Please select an image smaller than 5MB.", variant: "destructive" });
       return;
     }
 
@@ -66,28 +55,15 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
         newPhotos[currentSlot] = photoUrl;
         setPhotos(newPhotos);
         updateData({ photos: newPhotos });
-        
-        toast({
-          title: "Photo uploaded successfully!",
-          description: "Your photo has been added to your profile.",
-        });
+        toast({ title: "Photo uploaded successfully!", description: "Your photo has been added to your profile." });
       } else {
-        toast({
-          title: "Upload failed",
-          description: "There was an error uploading your photo. Please try again.",
-          variant: "destructive",
-        });
+        toast({ title: "Upload failed", description: "There was an error uploading your photo. Please try again.", variant: "destructive" });
       }
     } catch (error) {
       console.error('Upload error:', error);
-      toast({
-        title: "Upload failed",
-        description: "There was an error uploading your photo. Please try again.",
-        variant: "destructive",
-      });
+      toast({ title: "Upload failed", description: "There was an error uploading your photo. Please try again.", variant: "destructive" });
     }
 
-    // Reset file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -104,19 +80,11 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
         newPhotos[slotIndex] = '';
         setPhotos(newPhotos);
         updateData({ photos: newPhotos.filter(photo => photo) });
-        
-        toast({
-          title: "Photo removed",
-          description: "Your photo has been removed from your profile.",
-        });
+        toast({ title: "Photo removed", description: "Your photo has been removed from your profile." });
       }
     } catch (error) {
       console.error('Delete error:', error);
-      toast({
-        title: "Delete failed",
-        description: "There was an error removing your photo. Please try again.",
-        variant: "destructive",
-      });
+      toast({ title: "Delete failed", description: "There was an error removing your photo. Please try again.", variant: "destructive" });
     }
   };
 
@@ -125,20 +93,18 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
   };
 
   return (
-    <div className="min-h-screen bg-jet-black p-6 flex flex-col">
+    <div className="min-h-screen bg-background p-6 flex flex-col">
       <div className="flex-1 max-w-2xl mx-auto w-full space-y-6">
-        {/* Header */}
         <div className="text-center space-y-2 pt-8">
-          <h1 className="text-3xl font-light text-white">Curate Your Photos</h1>
-          <p className="text-gray-400">Add up to 6 photos. We recommend a variety of shots to best tell your story.</p>
+          <h1 className="text-3xl font-light text-foreground">Curate Your Photos</h1>
+          <p className="text-muted-foreground">Add up to 6 photos. We recommend a variety of shots to best tell your story.</p>
         </div>
 
-        {/* Photo Grid */}
         <div className="grid grid-cols-2 gap-4">
           {photoSlots.map((slot) => (
             <div
               key={slot.id}
-              className={`relative aspect-square rounded-xl border-2 border-dashed border-gray-600 overflow-hidden ${
+              className={`relative aspect-square rounded-xl border-2 border-dashed border-border overflow-hidden ${
                 slot.isMain ? 'col-span-2 aspect-[3/2]' : ''
               }`}
             >
@@ -152,7 +118,7 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
                   <button
                     onClick={() => handlePhotoRemove(slot.id)}
                     disabled={uploading}
-                    className="absolute top-2 right-2 p-1 bg-jet-black/80 rounded-full text-white hover:bg-red-500 transition-colors disabled:opacity-50"
+                    className="absolute top-2 right-2 p-1 bg-background/80 rounded-full text-foreground hover:bg-destructive hover:text-destructive-foreground transition-colors disabled:opacity-50"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -161,7 +127,7 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
                 <button
                   onClick={() => handlePhotoUpload(slot.id)}
                   disabled={uploading}
-                  className="w-full h-full flex flex-col items-center justify-center text-gray-400 hover:text-goldenrod hover:border-goldenrod/50 transition-colors disabled:opacity-50"
+                  className="w-full h-full flex flex-col items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50"
                 >
                   {uploading && currentSlot === slot.id ? (
                     <Upload className="h-8 w-8 mb-2 animate-pulse" />
@@ -171,7 +137,7 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
                   <div className="text-center px-2">
                     <p className="text-sm font-medium">{slot.label}</p>
                     {slot.subtitle && (
-                      <p className="text-xs text-gray-500 mt-1">{slot.subtitle}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{slot.subtitle}</p>
                     )}
                   </div>
                 </button>
@@ -180,7 +146,6 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
           ))}
         </div>
 
-        {/* Hidden file input */}
         <input
           ref={fileInputRef}
           type="file"
@@ -190,21 +155,20 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
         />
       </div>
 
-      {/* Action Buttons */}
       <div className="pt-6 space-y-3">
         {onBack && (
           <div className="flex space-x-3">
             <button
               onClick={onBack}
               disabled={uploading}
-              className="flex-1 py-3 text-gray-400 hover:text-white transition-colors border border-gray-600 hover:border-gray-500 rounded-xl disabled:opacity-50"
+              className="flex-1 py-3 text-muted-foreground hover:text-foreground transition-colors border border-border hover:border-primary/50 rounded-xl disabled:opacity-50"
             >
               Back
             </button>
             <button
               onClick={handleNext}
-              disabled={!photos[0] || uploading} // Require at least main photo
-              className="flex-1 py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={!photos[0] || uploading}
+              className="flex-1 py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {uploading ? 'Uploading...' : 'Continue'}
             </button>
@@ -214,8 +178,8 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
         {!onBack && (
           <button
             onClick={handleNext}
-            disabled={!photos[0] || uploading} // Require at least main photo
-            className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={!photos[0] || uploading}
+            className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {uploading ? 'Uploading...' : 'Continue'}
           </button>
@@ -225,7 +189,7 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
           <button
             onClick={onSkip}
             disabled={uploading}
-            className="w-full py-3 text-gray-400 hover:text-white transition-colors border border-gray-600 hover:border-gray-500 rounded-xl disabled:opacity-50"
+            className="w-full py-3 text-muted-foreground hover:text-foreground transition-colors border border-border hover:border-primary/50 rounded-xl disabled:opacity-50"
           >
             Skip for now
           </button>
