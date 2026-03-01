@@ -18,7 +18,7 @@ export const WeeklyOptionsCard = ({ option, onAccept, onPass, isProcessing }: We
   const duration = Math.round((endTime.getTime() - startTime.getTime()) / (1000 * 60));
 
   return (
-    <Card className="overflow-hidden border-border/50 bg-card/80 backdrop-blur-sm">
+    <Card className="overflow-hidden">
       <CardContent className="p-6 space-y-4">
         {/* Header */}
         <div>
@@ -76,22 +76,22 @@ export const WeeklyOptionsCard = ({ option, onAccept, onPass, isProcessing }: We
         </p>
 
         {/* Accept / Pass Buttons */}
-        <div className="flex gap-3 pt-2">
+        <div className="flex gap-2.5 pt-3">
           <Button 
             variant="outline"
             onClick={onPass}
             disabled={isProcessing}
-            className="flex-1"
+            className="flex-1 h-11"
           >
-            <X className="w-4 h-4 mr-2" />
+            <X className="w-4 h-4 mr-1.5" />
             Pass
           </Button>
           <Button 
             onClick={onAccept}
             disabled={isProcessing}
-            className="flex-1"
+            className="flex-1 h-11"
           >
-            <Check className="w-4 h-4 mr-2" />
+            <Check className="w-4 h-4 mr-1.5" />
             Accept
           </Button>
         </div>

@@ -32,7 +32,7 @@ export const MatchProfileCard = ({ match, onAccept, onPass, isProcessing }: Matc
   const mainPhoto = profile.photos?.[0] || '/placeholder.svg';
   
   return (
-    <Card className="overflow-hidden border-border bg-card backdrop-blur-sm group hover:shadow-elevated transition-all duration-500">
+    <Card className="overflow-hidden border-border/40 bg-card group hover:shadow-elevated transition-all duration-300 ease-out">
       {/* Photo */}
       <div className="relative aspect-[3/4] overflow-hidden">
         <img 
@@ -121,22 +121,22 @@ export const MatchProfileCard = ({ match, onAccept, onPass, isProcessing }: Matc
         )}
         
         {/* Action buttons */}
-        <div className="flex gap-3 pt-2">
+        <div className="flex gap-2.5 pt-3">
           <Button 
             variant="outline"
             onClick={onPass}
             disabled={isProcessing}
-            className="flex-1 group/btn border-border hover:border-destructive/50 hover:bg-destructive/10"
+            className="flex-1 h-11"
           >
-            <X className="w-5 h-5 mr-1 group-hover/btn:text-destructive transition-colors" />
+            <X className="w-4 h-4 mr-1.5" />
             Pass
           </Button>
           <Button 
             onClick={onAccept}
             disabled={isProcessing}
-            className="flex-1 bg-primary hover:bg-primary/90 shadow-warm-glow hover:shadow-elevated transition-all"
+            className="flex-1 h-11"
           >
-            <Heart className="w-5 h-5 mr-1" />
+            <Heart className="w-4 h-4 mr-1.5" />
             Accept
           </Button>
         </div>
