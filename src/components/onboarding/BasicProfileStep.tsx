@@ -46,16 +46,16 @@ export const BasicProfileStep: React.FC<BasicProfileStepProps> = ({ onNext }) =>
   };
 
   return (
-    <div className="min-h-screen bg-jet-black p-6 flex flex-col items-center justify-center">
+    <div className="min-h-screen bg-background p-6 flex flex-col items-center justify-center">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-4">
-          <h1 className="text-3xl font-light text-white">Complete Your Profile</h1>
-          <p className="text-gray-400">Let's finalize your basic information</p>
+          <h1 className="text-3xl font-light text-foreground">Complete Your Profile</h1>
+          <p className="text-muted-foreground">Let's finalize your basic information</p>
         </div>
 
         <div className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-white text-sm font-medium">
+            <Label htmlFor="name" className="text-foreground text-sm font-medium">
               Your Name
             </Label>
             <Input
@@ -64,16 +64,15 @@ export const BasicProfileStep: React.FC<BasicProfileStepProps> = ({ onNext }) =>
               value={name}
               onChange={(e) => { setName(e.target.value); clearFieldError('name'); }}
               placeholder="Enter your first name"
-              className="bg-charcoal-gray border-gray-700 text-white placeholder:text-gray-500 focus:border-goldenrod"
               maxLength={100}
             />
             {fieldErrors.name && (
-              <p className="text-red-400 text-sm">{fieldErrors.name}</p>
+              <p className="text-destructive text-sm">{fieldErrors.name}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-white text-sm font-medium">
+            <Label htmlFor="email" className="text-foreground text-sm font-medium">
               Email Address
             </Label>
             <Input
@@ -82,19 +81,18 @@ export const BasicProfileStep: React.FC<BasicProfileStepProps> = ({ onNext }) =>
               value={email}
               onChange={(e) => { setEmail(e.target.value); clearFieldError('email'); }}
               placeholder="Enter your email"
-              className="bg-charcoal-gray border-gray-700 text-white placeholder:text-gray-500 focus:border-goldenrod"
               disabled={!!user?.email}
               maxLength={255}
             />
             {fieldErrors.email && (
-              <p className="text-red-400 text-sm">{fieldErrors.email}</p>
+              <p className="text-destructive text-sm">{fieldErrors.email}</p>
             )}
           </div>
         </div>
 
         <button
           onClick={handleSubmit}
-          className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow"
+          className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90"
         >
           Continue
         </button>

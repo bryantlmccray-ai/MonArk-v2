@@ -36,13 +36,12 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
   };
 
   return (
-    <div className="relative min-h-screen bg-jet-black p-6 flex flex-col">
-      {/* Cancel Button */}
+    <div className="relative min-h-screen bg-background p-6 flex flex-col">
       {onCancel && (
         <div className="absolute top-6 right-6 z-10">
           <button
             onClick={onCancel}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-charcoal-gray/80 hover:bg-charcoal-gray text-gray-400 hover:text-white transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-muted hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
             aria-label="Cancel profile creation"
           >
             <X size={20} />
@@ -51,13 +50,11 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
       )}
       
       <div className="flex-1 max-w-2xl mx-auto w-full space-y-6">
-        {/* Header */}
         <div className="text-center space-y-2 pt-8">
-          <h1 className="text-3xl font-light text-white">A Glimpse Into Your World</h1>
-          <p className="text-gray-400">Craft a short bio that captures your essence. To get started, try one of our prompts.</p>
+          <h1 className="text-3xl font-light text-foreground">A Glimpse Into Your World</h1>
+          <p className="text-muted-foreground">Craft a short bio that captures your essence. To get started, try one of our prompts.</p>
         </div>
 
-        {/* Bio Text Area */}
         <div className="space-y-4">
           <Textarea
             value={bio}
@@ -66,22 +63,21 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
               updateData({ bio: e.target.value });
             }}
             placeholder="I get most excited talking about..."
-            className="min-h-32 bg-charcoal-gray border-gray-700 text-white placeholder:text-gray-500 resize-none"
+            className="min-h-32 bg-card border-border text-foreground placeholder:text-muted-foreground resize-none"
           />
-          <div className="text-right text-sm text-gray-500">
+          <div className="text-right text-sm text-muted-foreground">
             {bio.length}/300
           </div>
         </div>
 
-        {/* Prompt Buttons */}
         <div className="space-y-3">
-          <p className="text-sm text-gray-400">Need inspiration? Try these prompts:</p>
+          <p className="text-sm text-muted-foreground">Need inspiration? Try these prompts:</p>
           <div className="grid gap-3">
             {prompts.map((prompt, index) => (
               <button
                 key={index}
                 onClick={() => handlePromptClick(prompt)}
-                className="text-left p-4 bg-charcoal-gray/50 border border-gray-700 rounded-lg text-gray-300 hover:border-goldenrod/50 transition-colors"
+                className="text-left p-4 bg-card border border-border rounded-lg text-secondary-foreground hover:border-primary/50 transition-colors"
               >
                 {prompt}
               </button>
@@ -90,20 +86,19 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
         </div>
       </div>
 
-      {/* Action Buttons */}
       <div className="pt-6 space-y-3">
         {onBack && (
           <div className="flex space-x-3">
             <button
               onClick={onBack}
-              className="flex-1 py-3 text-gray-400 hover:text-white transition-colors border border-gray-600 hover:border-gray-500 rounded-xl"
+              className="flex-1 py-3 text-muted-foreground hover:text-foreground transition-colors border border-border hover:border-primary/50 rounded-xl"
             >
               Back
             </button>
             <button
               onClick={handleNext}
               disabled={bio.trim().length === 0}
-              className="flex-1 py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Continue
             </button>
@@ -114,7 +109,7 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
           <button
             onClick={handleNext}
             disabled={bio.trim().length === 0}
-            className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Continue
           </button>
@@ -123,7 +118,7 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
         {stepRequirement !== 'critical' && (
           <button
             onClick={onSkip}
-            className="w-full py-3 text-gray-400 hover:text-white transition-colors border border-gray-600 hover:border-gray-500 rounded-xl"
+            className="w-full py-3 text-muted-foreground hover:text-foreground transition-colors border border-border hover:border-primary/50 rounded-xl"
           >
             Skip for now
           </button>

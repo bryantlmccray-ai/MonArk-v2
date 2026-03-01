@@ -22,33 +22,18 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
   const handleSignOut = async () => {
     try {
       setIsSigningOut(true);
-      
       await signOut();
-      
       localStorage.removeItem('hasCompletedOnboarding');
       localStorage.removeItem('profileData');
-      
       document.cookie = 'authToken=; Max-Age=0; path=/;';
       document.cookie = 'refreshToken=; Max-Age=0; path=/;';
-      
-      toast({
-        title: "Signed out successfully",
-        description: "You've been signed out of your account.",
-      });
-      
+      toast({ title: "Signed out successfully", description: "You've been signed out of your account." });
       onClose();
     } catch (error) {
       console.error('Sign out error:', error);
-      
       localStorage.removeItem('hasCompletedOnboarding');
       localStorage.removeItem('profileData');
-      
-      toast({
-        title: "Signed out locally",
-        description: "You've been signed out locally. Please refresh if needed.",
-        variant: "destructive",
-      });
-      
+      toast({ title: "Signed out locally", description: "You've been signed out locally. Please refresh if needed.", variant: "destructive" });
       onClose();
     } finally {
       setIsSigningOut(false);
@@ -57,57 +42,28 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
 
   const handleDeleteProfile = async () => {
     if (!user) return;
-
     try {
       setIsDeleting(true);
-
-      const { error } = await supabase
-        .from('user_profiles')
-        .select('id')
-        .eq('user_id', user.id)
-        .limit(1);
-
+      const { error } = await supabase.from('user_profiles').select('id').eq('user_id', user.id).limit(1);
       if (error) {
         console.error('Error checking profile:', error);
-        toast({
-          title: "Deletion failed",
-          description: "There was an error accessing your profile. Please try again.",
-          variant: "destructive",
-        });
+        toast({ title: "Deletion failed", description: "There was an error accessing your profile. Please try again.", variant: "destructive" });
         return;
       }
-
-      const { error: deleteError } = await supabase.rpc('delete_user_completely' as any, {
-        user_id_input: user.id
-      });
-
+      const { error: deleteError } = await supabase.rpc('delete_user_completely' as any, { user_id_input: user.id });
       if (deleteError) {
         console.error('Error deleting profile:', deleteError);
-        toast({
-          title: "Deletion failed",
-          description: "There was an error deleting your profile. Please try again.",
-          variant: "destructive",
-        });
+        toast({ title: "Deletion failed", description: "There was an error deleting your profile. Please try again.", variant: "destructive" });
         return;
       }
-
       localStorage.removeItem('hasCompletedOnboarding');
       localStorage.removeItem('profileData');
-
-      toast({
-        title: "Profile deleted",
-        description: "Your profile and all associated data have been permanently deleted.",
-      });
-
+      toast({ title: "Profile deleted", description: "Your profile and all associated data have been permanently deleted." });
       await signOut();
       onClose();
     } catch (error) {
       console.error('Delete profile error:', error);
-      toast({
-        title: "Deletion failed",
-        description: "There was an error deleting your profile. Please try again.",
-        variant: "destructive",
-      });
+      toast({ title: "Deletion failed", description: "There was an error deleting your profile. Please try again.", variant: "destructive" });
     } finally {
       setIsDeleting(false);
       setShowDeleteConfirm(false);
@@ -121,10 +77,7 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
 
   const handleEditProfileComplete = () => {
     setShowEditProfile(false);
-    toast({
-      title: "Profile updated",
-      description: "Your profile has been successfully updated.",
-    });
+    toast({ title: "Profile updated", description: "Your profile has been successfully updated." });
   };
 
   if (showSafetyCenter) {
@@ -134,26 +87,19 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
   if (showEditProfile) {
     return (
       <div className="fixed inset-0 z-50">
-        <ProfileCreation 
-          onComplete={handleEditProfileComplete} 
-          onCancel={() => setShowEditProfile(false)}
-        />
+        <ProfileCreation onComplete={handleEditProfileComplete} onCancel={() => setShowEditProfile(false)} />
       </div>
     );
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-jet-black/80 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-foreground/60 backdrop-blur-sm" onClick={onClose} />
       
-      <div className="relative bg-charcoal-gray rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border border-gray-700 animate-slide-up">
+      <div className="relative bg-card rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border border-border animate-slide-up shadow-lg">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-medium text-white">Settings</h2>
-          <button
-            onClick={onClose}
-            className="p-2 text-gray-400 hover:text-white transition-colors"
-            disabled={isSigningOut || isDeleting}
-          >
+          <h2 className="text-xl font-medium text-foreground">Settings</h2>
+          <button onClick={onClose} className="p-2 text-muted-foreground hover:text-foreground transition-colors" disabled={isSigningOut || isDeleting}>
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -163,34 +109,33 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
             <button
               key={index}
               onClick={item.action}
-              className="w-full flex items-center space-x-3 p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
+              className="w-full flex items-center space-x-3 p-4 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
               disabled={isSigningOut || isDeleting}
             >
-              <item.icon className="h-5 w-5 text-gray-400" />
-              <span className="text-white font-medium">{item.label}</span>
+              <item.icon className="h-5 w-5 text-muted-foreground" />
+              <span className="text-foreground font-medium">{item.label}</span>
             </button>
           ))}
 
-          {/* Email Notifications Info */}
-          <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+          <div className="p-4 bg-secondary/50 rounded-lg border border-border">
             <div className="flex items-center space-x-3 mb-2">
-              <Mail className="h-5 w-5 text-goldenrod" />
-              <span className="text-white font-medium">Email Notifications</span>
+              <Mail className="h-5 w-5 text-primary" />
+              <span className="text-foreground font-medium">Email Notifications</span>
             </div>
-            <p className="text-gray-400 text-sm">
+            <p className="text-muted-foreground text-sm">
               You'll receive emails for new matches, messages, and date reminders at your registered email address.
             </p>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-gray-700 space-y-3">
+          <div className="mt-8 pt-6 border-t border-border space-y-3">
             <button 
               onClick={handleSignOut}
               disabled={isSigningOut || isDeleting}
-              className="w-full flex items-center justify-center space-x-2 p-4 bg-transparent border border-gray-600 text-gray-400 rounded-lg hover:border-red-500 hover:text-red-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center space-x-2 p-4 bg-transparent border border-border text-muted-foreground rounded-lg hover:border-destructive hover:text-destructive transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSigningOut ? (
                 <>
-                  <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-400 border-t-transparent"></div>
+                  <div className="h-5 w-5 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent"></div>
                   <span>Signing out...</span>
                 </>
               ) : (
@@ -204,7 +149,7 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
             <button 
               onClick={() => setShowDeleteConfirm(true)}
               disabled={isSigningOut || isDeleting}
-              className="w-full flex items-center justify-center space-x-2 p-4 bg-transparent border border-red-600 text-red-400 rounded-lg hover:bg-red-600/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center space-x-2 p-4 bg-transparent border border-destructive text-destructive rounded-lg hover:bg-destructive/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Trash2 className="h-5 w-5" />
               <span>Delete Profile</span>
@@ -213,26 +158,25 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-jet-black/90 flex items-center justify-center p-4 z-60">
-          <div className="bg-charcoal-gray rounded-xl p-6 max-w-sm w-full space-y-4 border border-red-600/30">
-            <div className="flex items-center space-x-3 text-red-400">
+        <div className="fixed inset-0 bg-foreground/80 flex items-center justify-center p-4 z-60">
+          <div className="bg-card rounded-xl p-6 max-w-sm w-full space-y-4 border border-destructive/30 shadow-lg">
+            <div className="flex items-center space-x-3 text-destructive">
               <AlertTriangle className="h-6 w-6" />
               <h3 className="text-lg font-semibold">Delete Profile</h3>
             </div>
             
             <div className="space-y-3">
-              <p className="text-gray-300 text-sm">
+              <p className="text-secondary-foreground text-sm">
                 This will permanently delete your entire profile and all associated data, including:
               </p>
-              <ul className="text-gray-400 text-xs space-y-1 ml-4">
+              <ul className="text-muted-foreground text-xs space-y-1 ml-4">
                 <li>• Your profile information and photos</li>
                 <li>• All conversations and matches</li>
                 <li>• Date journal entries</li>
                 <li>• All app preferences and settings</li>
               </ul>
-              <p className="text-red-400 text-sm font-medium">
+              <p className="text-destructive text-sm font-medium">
                 This action cannot be undone.
               </p>
             </div>
@@ -241,18 +185,18 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
               <button
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={isDeleting}
-                className="flex-1 p-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors disabled:opacity-50"
+                className="flex-1 p-3 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteProfile}
                 disabled={isDeleting}
-                className="flex-1 p-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                className="flex-1 p-3 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
               >
                 {isDeleting ? (
                   <>
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-destructive-foreground border-t-transparent"></div>
                     <span>Deleting...</span>
                   </>
                 ) : (

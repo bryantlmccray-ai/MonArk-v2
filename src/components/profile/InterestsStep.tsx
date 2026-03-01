@@ -29,7 +29,7 @@ export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updat
     } else if (selectedInterests.length < 5) {
       newInterests = [...selectedInterests, interest];
     } else {
-      return; // Don't add if already at limit
+      return;
     }
     
     setSelectedInterests(newInterests);
@@ -41,22 +41,20 @@ export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updat
   };
 
   return (
-    <div className="min-h-screen bg-jet-black p-6 flex flex-col">
+    <div className="min-h-screen bg-background p-6 flex flex-col">
       <div className="flex-1 max-w-2xl mx-auto w-full space-y-6">
-        {/* Header */}
         <div className="text-center space-y-2 pt-8">
-          <h1 className="text-3xl font-light text-white">What are your passions?</h1>
-          <p className="text-gray-400">Choose up to 5 interests that best represent you.</p>
-          <div className="text-goldenrod font-medium">
+          <h1 className="text-3xl font-light text-foreground">What are your passions?</h1>
+          <p className="text-muted-foreground">Choose up to 5 interests that best represent you.</p>
+          <div className="text-primary font-medium">
             {selectedInterests.length}/5 selected
           </div>
         </div>
 
-        {/* Interest Categories */}
         <div className="space-y-6">
           {Object.entries(interestCategories).map(([category, interests]) => (
             <div key={category} className="space-y-3">
-              <h3 className="text-lg font-medium text-white">{category}</h3>
+              <h3 className="text-lg font-medium text-foreground">{category}</h3>
               <div className="flex flex-wrap gap-2">
                 {interests.map((interest) => {
                   const isSelected = selectedInterests.includes(interest);
@@ -69,10 +67,10 @@ export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updat
                       disabled={isDisabled}
                       className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                         isSelected
-                          ? 'bg-goldenrod-gradient text-jet-black'
+                          ? 'bg-primary text-primary-foreground'
                           : isDisabled
-                          ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                          : 'bg-charcoal-gray text-white border border-gray-600 hover:border-goldenrod/50'
+                          ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                          : 'bg-card text-foreground border border-border hover:border-primary/50'
                       }`}
                     >
                       {interest}
@@ -85,20 +83,19 @@ export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updat
         </div>
       </div>
 
-      {/* Action Buttons */}
       <div className="pt-6 space-y-3">
         {onBack && (
           <div className="flex space-x-3">
             <button
               onClick={onBack}
-              className="flex-1 py-3 text-gray-400 hover:text-white transition-colors border border-gray-600 hover:border-gray-500 rounded-xl"
+              className="flex-1 py-3 text-muted-foreground hover:text-foreground transition-colors border border-border hover:border-primary/50 rounded-xl"
             >
               Back
             </button>
             <button
               onClick={handleNext}
               disabled={selectedInterests.length === 0}
-              className="flex-1 py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Continue
             </button>
@@ -109,7 +106,7 @@ export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updat
           <button
             onClick={handleNext}
             disabled={selectedInterests.length === 0}
-            className="w-full py-4 bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Continue
           </button>
@@ -118,7 +115,7 @@ export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updat
         {stepRequirement !== 'critical' && (
           <button
             onClick={onSkip}
-            className="w-full py-3 text-gray-400 hover:text-white transition-colors border border-gray-600 hover:border-gray-500 rounded-xl"
+            className="w-full py-3 text-muted-foreground hover:text-foreground transition-colors border border-border hover:border-primary/50 rounded-xl"
           >
             Skip for now
           </button>
