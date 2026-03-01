@@ -155,7 +155,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   if (isMobile) {
     return (
       <div className="min-h-screen bg-background relative">
-        <div className="pb-32 px-4 space-y-4">
+        <div className="pb-28 px-4 pt-2 space-y-4">
           {/* RIF Beta Insights Card */}
           {activeTab === 'profile' && <RifInsightsCard />}
           
@@ -200,13 +200,13 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
-        <header className="fixed top-0 left-0 right-0 h-10 flex items-center justify-between bg-card/95 backdrop-blur-xl border-b border-border z-40">
-          <SidebarTrigger className="ml-4 text-muted-foreground hover:text-primary" />
+        <header className="fixed top-0 left-0 right-0 h-12 flex items-center justify-between bg-card/98 backdrop-blur-2xl border-b border-border/50 z-40" style={{ boxShadow: '0 1px 12px rgba(90, 70, 50, 0.06)' }}>
+          <SidebarTrigger className="ml-4 text-muted-foreground hover:text-primary transition-colors" />
         </header>
 
         <SidebarNavigation activeTab={activeTab} onTabChange={handleTabChange} onArkNavigation={handleJournalNavigation} />
 
-        <main className="flex-1 pt-10">
+        <main className="flex-1 pt-12">
           {/* RIF Beta Insights Card for desktop */}
           {activeTab === 'profile' && (
             <div className="px-6 mb-4">

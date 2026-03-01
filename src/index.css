@@ -9,65 +9,65 @@
 
 @layer base {
   :root {
-    /* MonArk Dark Luxury Color System */
-    --color-bone: 30 25% 96%;
-    --color-sand: 30 15% 91%;
-    --color-parchment: 30 30% 97%;
-    --color-charcoal: 220 20% 16%;
-    --color-charcoal-soft: 220 15% 30%;
-    --color-charcoal-muted: 220 10% 45%;
-    --color-taupe: 20 18% 35%;
-    --color-olive: 45 12% 58%;
-    --color-dusty-rose: 350 45% 60%;
+    /* MonArk Warm Luxury Color System — Enriched */
+    --color-bone: 32 28% 94%;
+    --color-sand: 28 18% 88%;
+    --color-parchment: 33 32% 96%;
+    --color-charcoal: 220 22% 13%;
+    --color-charcoal-soft: 218 16% 28%;
+    --color-charcoal-muted: 218 12% 42%;
+    --color-taupe: 18 22% 32%;
+    --color-olive: 40 16% 52%;
+    --color-dusty-rose: 348 42% 56%;
 
-    /* Accent system — warm copper/rosegold */
-    --color-goldenrod: 35 55% 52%;
-    --color-gold-dark: 30 40% 40%;
-    --color-rosegold: 15 50% 65%;
-    --color-rosegold-deep: 12 40% 50%;
-    --color-warm-glow: 25 80% 75%;
+    /* Accent system — deeper copper/rosegold */
+    --color-goldenrod: 32 58% 48%;
+    --color-gold-dark: 28 44% 36%;
+    --color-rosegold: 12 52% 60%;
+    --color-rosegold-deep: 10 44% 46%;
+    --color-warm-glow: 22 75% 68%;
 
-    /* PRIMARY LIGHT WARM EARTH-TONE THEME */
-    --background: 38 20% 82%;
-    --foreground: 20 25% 12%;
+    /* PRIMARY WARM EARTH-TONE THEME — Richer */
+    --background: 34 22% 86%;
+    --foreground: 18 28% 10%;
 
-    --card: 30 30% 97%;
-    --card-foreground: 20 18% 20%;
+    --card: 32 30% 95%;
+    --card-foreground: 18 22% 16%;
 
-    --popover: 30 30% 97%;
-    --popover-foreground: 20 18% 20%;
+    --popover: 32 30% 95%;
+    --popover-foreground: 18 22% 16%;
 
-    /* Accent color = olive/taupe — grounded warmth */
-    --primary: 45 12% 40%;
-    --primary-foreground: 30 25% 96%;
+    /* Primary = warmer olive-umber with more depth */
+    --primary: 28 20% 34%;
+    --primary-foreground: 32 28% 96%;
 
-    --secondary: 30 15% 91%;
-    --secondary-foreground: 20 18% 30%;
+    --secondary: 30 18% 89%;
+    --secondary-foreground: 18 20% 26%;
 
-    --muted: 30 15% 88%;
-    --muted-foreground: 220 10% 35%;
+    --muted: 30 16% 85%;
+    --muted-foreground: 218 10% 38%;
 
-    --accent: 45 12% 52%;
-    --accent-foreground: 20 18% 20%;
+    --accent: 32 18% 48%;
+    --accent-foreground: 18 22% 16%;
 
-    --destructive: 0 60% 50%;
+    --destructive: 0 62% 48%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 30 12% 82%;
-    --input: 30 15% 91%;
-    --ring: 45 12% 45%;
+    --border: 28 14% 78%;
+    --input: 30 18% 90%;
+    --ring: 28 20% 40%;
 
-    /* Sidebar — olive-tinted */
-    --sidebar-background: 45 12% 38%;
-    --sidebar-foreground: 30 25% 96%;
-    --sidebar-primary: 30 25% 96%;
-    --sidebar-primary-foreground: 45 12% 38%;
-    --sidebar-accent: 45 12% 45%;
-    --sidebar-accent-foreground: 30 25% 96%;
-    --sidebar-border: 45 10% 32%;
-    --sidebar-ring: 30 25% 96%;
+    /* Sidebar — deep warm umber */
+    --sidebar-background: 22 18% 18%;
+    --sidebar-foreground: 32 28% 94%;
+    --sidebar-primary: 32 28% 94%;
+    --sidebar-primary-foreground: 22 18% 18%;
+    --sidebar-accent: 28 20% 28%;
+    --sidebar-accent-foreground: 32 28% 94%;
+    --sidebar-border: 22 14% 24%;
+    --sidebar-ring: 32 28% 94%;
 
-    --radius: 0.625rem;
+    --radius: 0.75rem;
 
     /* Spacing */
     --spacing-xs: 8px;
@@ -77,41 +77,41 @@
     --spacing-xl: 64px;
     --spacing-xxl: 96px;
 
-    /* Warm earth-tone gradients */
+    /* Warm earth-tone gradients — richer */
     --gradient-editorial: linear-gradient(135deg, hsl(var(--background)), hsl(var(--card)));
-    --gradient-surface: linear-gradient(180deg, hsl(30 20% 94%), hsl(var(--card)));
-    --gradient-subtle-accent: linear-gradient(135deg, hsl(var(--color-olive) / 0.08), hsl(var(--color-taupe) / 0.05));
-    --gradient-cta: linear-gradient(135deg, hsl(var(--color-taupe)), hsl(var(--primary)));
-    --gradient-warm: linear-gradient(135deg, hsl(var(--color-dusty-rose) / 0.1), hsl(var(--color-goldenrod) / 0.08));
+    --gradient-surface: linear-gradient(180deg, hsl(30 22% 92%), hsl(var(--card)));
+    --gradient-subtle-accent: linear-gradient(135deg, hsl(var(--color-olive) / 0.1), hsl(var(--color-taupe) / 0.06));
+    --gradient-cta: linear-gradient(135deg, hsl(var(--color-taupe)), hsl(var(--color-rosegold-deep)));
+    --gradient-warm: linear-gradient(135deg, hsl(var(--color-dusty-rose) / 0.12), hsl(var(--color-goldenrod) / 0.1));
 
-    /* Soft warm shadows */
-    --shadow-editorial: 0 2px 20px rgba(120, 100, 80, 0.08);
-    --shadow-gentle: 0 1px 10px rgba(120, 100, 80, 0.06);
-    --shadow-elevated: 0 8px 32px rgba(120, 100, 80, 0.1);
-    --shadow-magazine: 0 12px 48px rgba(120, 100, 80, 0.1);
-    --shadow-glow: 0 0 40px rgba(160, 140, 100, 0.1);
-    --shadow-luxury: 0 25px 50px -12px rgba(120, 100, 80, 0.12), 0 0 60px rgba(160, 140, 100, 0.05);
-    --shadow-warm-glow: 0 4px 30px rgba(160, 140, 100, 0.08);
+    /* Warm shadows — deeper, richer */
+    --shadow-editorial: 0 2px 20px rgba(100, 80, 60, 0.1);
+    --shadow-gentle: 0 1px 10px rgba(100, 80, 60, 0.08);
+    --shadow-elevated: 0 8px 32px rgba(90, 70, 50, 0.14);
+    --shadow-magazine: 0 12px 48px rgba(90, 70, 50, 0.14);
+    --shadow-glow: 0 0 40px rgba(160, 130, 90, 0.12);
+    --shadow-luxury: 0 25px 50px -12px rgba(90, 70, 50, 0.18), 0 0 60px rgba(160, 130, 90, 0.06);
+    --shadow-warm-glow: 0 4px 30px rgba(160, 130, 90, 0.12);
 
-    --chart-1: 45 12% 45%;
-    --chart-2: 350 45% 60%;
-    --chart-3: 35 55% 52%;
-    --chart-4: 20 18% 35%;
-    --chart-5: 220 10% 55%;
+    --chart-1: 28 20% 40%;
+    --chart-2: 348 42% 56%;
+    --chart-3: 32 58% 48%;
+    --chart-4: 18 22% 32%;
+    --chart-5: 218 12% 50%;
 
-    --sidebar: 45 12% 38%;
+    --sidebar: 22 18% 18%;
     --font-sans: 'DM Sans', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
     --font-serif: 'Playfair Display', 'Georgia', ui-serif, serif;
     --font-mono: 'Space Mono', ui-monospace, SFMono-Regular, monospace;
 
-    --shadow-2xs: 0 1px 3px 0px hsl(30 15% 50% / 0.08);
-    --shadow-xs: 0 1px 3px 0px hsl(30 15% 50% / 0.08);
-    --shadow-sm: 0 2px 6px 0px hsl(30 15% 50% / 0.1);
-    --shadow: 0 2px 8px 0px hsl(30 15% 50% / 0.1);
-    --shadow-md: 0 4px 12px 0px hsl(30 15% 50% / 0.1);
-    --shadow-lg: 0 8px 24px 0px hsl(30 15% 50% / 0.12);
-    --shadow-xl: 0 16px 40px 0px hsl(30 15% 50% / 0.14);
-    --shadow-2xl: 0 24px 48px 0px hsl(30 15% 50% / 0.16);
+    --shadow-2xs: 0 1px 3px 0px hsl(28 18% 45% / 0.1);
+    --shadow-xs: 0 1px 3px 0px hsl(28 18% 45% / 0.1);
+    --shadow-sm: 0 2px 8px 0px hsl(28 18% 45% / 0.12);
+    --shadow: 0 2px 10px 0px hsl(28 18% 45% / 0.12);
+    --shadow-md: 0 4px 16px 0px hsl(28 18% 45% / 0.12);
+    --shadow-lg: 0 8px 28px 0px hsl(28 18% 45% / 0.15);
+    --shadow-xl: 0 16px 44px 0px hsl(28 18% 45% / 0.18);
+    --shadow-2xl: 0 24px 56px 0px hsl(28 18% 45% / 0.2);
     --tracking-normal: 0em;
     --spacing: 0.25rem;
   }
@@ -131,42 +131,42 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Editorial Typography System */
+  /* Editorial Typography System — Stronger Hierarchy */
   .font-editorial {
     font-family: 'Playfair Display', 'Georgia', serif;
     font-weight: 500;
-    letter-spacing: 0.06em;
-    line-height: 1.25;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
   }
 
   .font-editorial-headline {
     font-family: 'Playfair Display', 'Georgia', serif;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.05;
   }
 
   .font-body {
     font-family: 'DM Sans', 'Inter', 'Helvetica Neue', sans-serif;
     font-weight: 400;
-    letter-spacing: 0.01em;
-    line-height: 1.7;
+    letter-spacing: 0.015em;
+    line-height: 1.65;
   }
 
   .font-caption {
     font-family: 'DM Sans', 'Inter', 'Helvetica Neue', sans-serif;
-    font-weight: 600;
-    letter-spacing: 0.12em;
+    font-weight: 700;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
   }
 
-  /* Headlines */
+  /* Headlines — stronger contrast */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', 'Georgia', serif;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 1.1;
   }
 
   /* Editorial Design System Utilities */

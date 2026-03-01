@@ -28,8 +28,8 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
   ];
 
   return (
-    <Sidebar className="border-r border-border">
-      <SidebarHeader className="border-b border-border p-6">
+    <Sidebar className="border-r border-sidebar-border">
+      <SidebarHeader className="border-b border-sidebar-border p-6">
         <div className="flex items-center justify-center">
           <MonArkLogo 
             clickable={true}
@@ -54,14 +54,14 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
                     <SidebarMenuButton
                       onClick={() => onTabChange(tab.id)}
                       isActive={isActive}
-                      className={`w-full justify-start transition-all duration-200 rounded-xl ${
+                      className={`w-full justify-start transition-all duration-300 rounded-xl ${
                         isActive 
-                          ? 'text-primary bg-primary/10' 
-                          : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                          ? 'text-sidebar-primary bg-sidebar-accent font-semibold' 
+                          : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'
                       }`}
                     >
-                      <Icon className="h-5 w-5" />
-                      <span>{tab.label}</span>
+                      <Icon className={`h-5 w-5 transition-all duration-300 ${isActive ? 'stroke-[2.5px]' : 'stroke-[1.5px]'}`} />
+                      <span className="tracking-wide">{tab.label}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );
