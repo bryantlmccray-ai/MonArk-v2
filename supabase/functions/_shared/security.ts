@@ -180,3 +180,31 @@ export async function logSecurityEvent(
     console.error('Failed to log security event:', error)
   }
 }
+
+/**
+ * Sanitize AI-generated output to prevent XSS / injection when stored or displayed.
+ * Strips HTML tags, script patterns, and enforces max length.
+ */
+export function sanitizeAIOutput(text: string, maxLength = 5000): string {
+  if (!text || typeof text !== 'string') return ''
+
+  let sanitized = text
+    // Remove HTML tags
+    .replace(/<[^>]*>/g, '')
+    // Remove javascript: protocol links
+    .replace(/javascript\s*:/gi, '')
+    // Remove on* event handlers that might survive
+    .replace(/on\w+\s*=/gi, '')
+    // Remove data: URIs (potential XSS vector)
+    .replace(/data\s*:\s*[^,]*,/gi, '')
+    // Normalize whitespace
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  // Enforce max length
+  if (sanitized.length > maxLength) {
+    sanitized = sanitized.substring(0, maxLength) + '...'
+  }
+
+  return sanitized
+}
