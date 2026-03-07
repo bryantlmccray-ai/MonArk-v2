@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { toast } from '@/hooks/use-toast';
@@ -40,41 +40,60 @@ export interface SafetyMetrics {
 export const useAdmin = () => {
   const { user } = useAuth();
   const [userRole, setUserRole] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [safetyMetrics, setSafetyMetrics] = useState<SafetyMetrics | null>(null);
 
-  // Check user role
-  const checkUserRole = async () => {
-    if (!user) return;
+  // Check user role using the security-definer has_role function
+  // This avoids trusting a client-side column read and uses server-side verification
+  const checkUserRole = useCallback(async () => {
+    if (!user) {
+      setUserRole(null);
+      setLoading(false);
+      return;
+    }
 
     try {
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id)
-        .single();
+      // Use the server-side has_role() security definer function
+      // This bypasses RLS and provides authoritative role checks
+      const [adminCheck, modCheck] = await Promise.all([
+        supabase.rpc('has_role', { _user_id: user.id, _role: 'admin' }),
+        supabase.rpc('has_role', { _user_id: user.id, _role: 'moderator' }),
+      ]);
 
-      if (error && error.code !== 'PGRST116') throw error;
-      setUserRole(data?.role || 'user');
+      if (adminCheck.error) throw adminCheck.error;
+      if (modCheck.error) throw modCheck.error;
+
+      if (adminCheck.data === true) {
+        setUserRole('admin');
+      } else if (modCheck.data === true) {
+        setUserRole('moderator');
+      } else {
+        setUserRole('user');
+      }
     } catch (error) {
       console.error('Error checking user role:', error);
+      // Default to unprivileged on any error — fail closed
       setUserRole('user');
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [user]);
+
+  // Check if user is admin or moderator
+  const isAdmin = useCallback(() => userRole === 'admin', [userRole]);
+  const isModerator = useCallback(() => userRole === 'moderator' || userRole === 'admin', [userRole]);
 
   // Fetch safety metrics
   const fetchSafetyMetrics = async () => {
-    if (!isAdmin()) return;
+    if (!isModerator()) return;
 
     try {
       setLoading(true);
       
-      // Get reports metrics
       const { data: reports } = await supabase
         .from('user_reports')
         .select('status, created_at');
 
-      // Get user actions metrics
       const { data: actions } = await supabase
         .from('user_actions')
         .select('action_type, is_active, expires_at');
@@ -101,10 +120,6 @@ export const useAdmin = () => {
       setLoading(false);
     }
   };
-
-  // Check if user is admin or moderator
-  const isAdmin = () => userRole === 'admin';
-  const isModerator = () => userRole === 'moderator' || userRole === 'admin';
 
   // Fetch all reports
   const fetchAllReports = async () => {
@@ -265,10 +280,8 @@ export const useAdmin = () => {
   };
 
   useEffect(() => {
-    if (user) {
-      checkUserRole();
-    }
-  }, [user]);
+    checkUserRole();
+  }, [checkUserRole]);
 
   useEffect(() => {
     if (isModerator()) {
