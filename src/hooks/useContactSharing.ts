@@ -55,8 +55,9 @@ export const useContactSharing = (conversationId: string, matchUserId: string) =
 
         setTheyHaveShared(!!theirShare);
 
-        // If they shared, get their phone number
-        if (theirShare) {
+        // BILATERAL CONSENT: Only show match's phone number if BOTH parties have shared
+        const bothConsented = !!myShare && !!theirShare;
+        if (bothConsented) {
           const { data: matchProfile } = await supabase
             .from('user_profiles')
             .select('phone_number')
