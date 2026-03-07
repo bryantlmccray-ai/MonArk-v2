@@ -8,12 +8,12 @@ interface RelationshipGoalsStepProps {
 }
 
 const GOAL_OPTIONS = [
-  { value: 'serious', label: 'Serious relationship', emoji: '💑' },
-  { value: 'casual', label: 'Casual dating', emoji: '🌟' },
-  { value: 'marriage', label: 'Marriage', emoji: '💍' },
-  { value: 'friends', label: 'New friends', emoji: '🤝' },
-  { value: 'unsure', label: 'Not sure yet', emoji: '🤔' },
-  { value: 'open', label: 'Open to anything', emoji: '✨' },
+  { value: 'serious', label: 'Serious relationship' },
+  { value: 'casual', label: 'Casual dating' },
+  { value: 'marriage', label: 'Marriage' },
+  { value: 'friends', label: 'New friends' },
+  { value: 'unsure', label: 'Not sure yet' },
+  { value: 'open', label: 'Open to anything' },
 ];
 
 export const RelationshipGoalsStep: React.FC<RelationshipGoalsStepProps> = ({ onNext, onBack, onSkip }) => {
@@ -62,10 +62,7 @@ export const RelationshipGoalsStep: React.FC<RelationshipGoalsStepProps> = ({ on
               }`}
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <span className="text-2xl">{option.emoji}</span>
-                  <span className="text-foreground font-medium">{option.label}</span>
-                </div>
+                <span className="text-foreground font-medium">{option.label}</span>
                 {selectedGoals.includes(option.value) && (
                   <Check className="h-5 w-5 text-primary" />
                 )}
