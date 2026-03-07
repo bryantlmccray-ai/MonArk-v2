@@ -88,17 +88,26 @@ export const useContactSharing = (conversationId: string, matchUserId: string) =
           const newShare = payload.new as ContactShare;
           if (newShare.sharer_user_id === matchUserId) {
             setTheyHaveShared(true);
-            // Only reveal phone number if we have also shared (bilateral consent)
-            if (iHaveShared) {
-              supabase
-                .from('user_profiles')
-                .select('phone_number')
-                .eq('user_id', matchUserId)
-                .maybeSingle()
-                .then(({ data }) => {
-                  setMatchPhoneNumber(data?.phone_number || null);
-                });
-            }
+            // Check bilateral consent: query if current user has also shared
+            supabase
+              .from('contact_shares')
+              .select('id')
+              .eq('sharer_user_id', user!.id)
+              .eq('recipient_user_id', matchUserId)
+              .maybeSingle()
+              .then(({ data: myShare }) => {
+                if (myShare) {
+                  // Both have shared — reveal phone number
+                  supabase
+                    .from('user_profiles')
+                    .select('phone_number')
+                    .eq('user_id', matchUserId)
+                    .maybeSingle()
+                    .then(({ data }) => {
+                      setMatchPhoneNumber(data?.phone_number || null);
+                    });
+                }
+              });
           }
         }
       )
