@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { corsHeaders, verifyAuth, errorResponse, validationErrorResponse, validateUUID, validateLength } from '../_shared/security.ts'
 
 const handler = async (req: Request): Promise<Response> => {
@@ -39,7 +40,32 @@ const handler = async (req: Request): Promise<Response> => {
       return validationErrorResponse(errors)
     }
 
+    // Prevent sharing with yourself
+    if (user.id === recipientUserId) {
+      return validationErrorResponse(['Cannot share contact with yourself'])
+    }
+
     console.log(`User ${user.id} sharing contact with ${recipientUserId} in conversation ${conversationId}`);
+
+    // --- MUTUAL MATCH VERIFICATION ---
+    // Ensure both users are in a mutual match before allowing contact sharing
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+      { auth: { persistSession: false } }
+    )
+
+    const { data: hasMutual } = await supabaseAdmin.rpc('has_mutual_match', {
+      user_a: user.id,
+      user_b: recipientUserId as string,
+    })
+
+    if (!hasMutual) {
+      return new Response(
+        JSON.stringify({ error: "You can only share contact info with mutual matches" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     // Get the sharer's phone number
     const { data: sharerProfile, error: sharerError } = await supabase
@@ -61,7 +87,7 @@ const handler = async (req: Request): Promise<Response> => {
       .select("id")
       .eq("sharer_user_id", user.id)
       .eq("recipient_user_id", recipientUserId)
-      .single();
+      .maybeSingle();
 
     if (existingShare) {
       return new Response(
@@ -95,7 +121,7 @@ const handler = async (req: Request): Promise<Response> => {
       .eq("id", user.id)
       .single();
 
-    const systemMessage = `📱 ${sharerName?.name || "Your match"} shared their phone number with you!`;
+    const systemMessage = `${sharerName?.name || "Your match"} shared their phone number with you!`;
     
     await supabase
       .from("messages")
@@ -107,11 +133,13 @@ const handler = async (req: Request): Promise<Response> => {
         message_type: "system",
       });
 
+    // NOTE: Phone number is NOT returned in the response.
+    // The recipient can only see it via the contact_shares table
+    // which is protected by RLS requiring mutual sharing (both_consented logic).
     return new Response(
       JSON.stringify({ 
         success: true, 
         message: "Contact shared successfully",
-        phoneNumber: sharerProfile.phone_number
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );

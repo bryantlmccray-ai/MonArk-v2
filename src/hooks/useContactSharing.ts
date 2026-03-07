@@ -55,8 +55,9 @@ export const useContactSharing = (conversationId: string, matchUserId: string) =
 
         setTheyHaveShared(!!theirShare);
 
-        // If they shared, get their phone number
-        if (theirShare) {
+        // BILATERAL CONSENT: Only show match's phone number if BOTH parties have shared
+        const bothConsented = !!myShare && !!theirShare;
+        if (bothConsented) {
           const { data: matchProfile } = await supabase
             .from('user_profiles')
             .select('phone_number')
@@ -87,15 +88,17 @@ export const useContactSharing = (conversationId: string, matchUserId: string) =
           const newShare = payload.new as ContactShare;
           if (newShare.sharer_user_id === matchUserId) {
             setTheyHaveShared(true);
-            // Fetch their phone number
-            supabase
-              .from('user_profiles')
-              .select('phone_number')
-              .eq('user_id', matchUserId)
-              .maybeSingle()
-              .then(({ data }) => {
-                setMatchPhoneNumber(data?.phone_number || null);
-              });
+            // Only reveal phone number if we have also shared (bilateral consent)
+            if (iHaveShared) {
+              supabase
+                .from('user_profiles')
+                .select('phone_number')
+                .eq('user_id', matchUserId)
+                .maybeSingle()
+                .then(({ data }) => {
+                  setMatchPhoneNumber(data?.phone_number || null);
+                });
+            }
           }
         }
       )
