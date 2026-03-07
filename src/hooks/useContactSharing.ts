@@ -88,15 +88,17 @@ export const useContactSharing = (conversationId: string, matchUserId: string) =
           const newShare = payload.new as ContactShare;
           if (newShare.sharer_user_id === matchUserId) {
             setTheyHaveShared(true);
-            // Fetch their phone number
-            supabase
-              .from('user_profiles')
-              .select('phone_number')
-              .eq('user_id', matchUserId)
-              .maybeSingle()
-              .then(({ data }) => {
-                setMatchPhoneNumber(data?.phone_number || null);
-              });
+            // Only reveal phone number if we have also shared (bilateral consent)
+            if (iHaveShared) {
+              supabase
+                .from('user_profiles')
+                .select('phone_number')
+                .eq('user_id', matchUserId)
+                .maybeSingle()
+                .then(({ data }) => {
+                  setMatchPhoneNumber(data?.phone_number || null);
+                });
+            }
           }
         }
       )
