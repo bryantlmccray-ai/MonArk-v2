@@ -86,14 +86,13 @@ export const DataDeletionManager: React.FC = () => {
 
     setIsDeleting(true);
     try {
-      // Call the complete deletion function
-      const { error } = await supabase.rpc('delete_user_completely', {
-        user_id_input: user.id
-      });
+      // Call the GDPR-compliant server-side deletion edge function
+      // This handles: storage cleanup, DB purge, auth user deletion
+      const { error } = await supabase.functions.invoke('account-deletion');
 
       if (error) throw error;
 
-      // Sign out the user
+      // Sign out the user (session is already invalidated server-side)
       await signOut();
 
       toast({

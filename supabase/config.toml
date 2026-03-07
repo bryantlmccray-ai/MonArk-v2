@@ -47,3 +47,21 @@ verify_jwt = true
 
 [functions.security-middleware]
 verify_jwt = true
+
+[functions.account-deletion]
+verify_jwt = true
+
+[functions.abuse-detection]
+verify_jwt = true
+
+[functions.session-invalidation]
+verify_jwt = true
+
+[functions.validate-upload]
+verify_jwt = true
+
+[functions.audit-log-rotation]
+verify_jwt = true
+
+[functions.token-refresh-monitor]
+verify_jwt = true
