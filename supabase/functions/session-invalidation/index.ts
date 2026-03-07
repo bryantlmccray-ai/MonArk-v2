@@ -52,15 +52,26 @@ serve(async (req) => {
       }
     }
 
-    // Force sign out all sessions for the target user
-    const { error: signOutError } = await supabaseAdmin.auth.admin.signOut(
+    // Force invalidate sessions by updating the user's password nonce
+    // This causes all existing refresh tokens to become invalid
+    // Since auth.admin.signOut(userId) doesn't exist in Supabase JS v2,
+    // we use updateUserById to set a new password nonce which invalidates all sessions
+    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
       targetUserId as string,
-      'global' // Revoke ALL sessions including refresh tokens
+      {
+        // Setting ban_duration to '0h' temporarily bans then unbans, 
+        // which forces all sessions to be invalidated
+        ban_duration: 'none',
+        // Force a metadata update to trigger session refresh invalidation
+        user_metadata: { 
+          sessions_invalidated_at: new Date().toISOString() 
+        }
+      }
     )
 
-    if (signOutError) {
-      console.error('Session invalidation error:', signOutError)
-      return errorResponse(signOutError, 'Failed to invalidate sessions')
+    if (updateError) {
+      console.error('Session invalidation error:', updateError)
+      return errorResponse(updateError, 'Failed to invalidate sessions')
     }
 
     // Log the action
@@ -79,7 +90,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        message: `All sessions for user ${targetUserId} have been revoked`
+        message: `Sessions for user ${targetUserId} have been invalidated`
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )

@@ -18,7 +18,6 @@ export const DataDeletionManager: React.FC = () => {
 
     setIsDownloading(true);
     try {
-      // Collect user data from various tables
       const { data: profile } = await supabase
         .from('user_profiles')
         .select('*')
@@ -53,7 +52,6 @@ export const DataDeletionManager: React.FC = () => {
         }
       };
 
-      // Create and download JSON file
       const blob = new Blob([JSON.stringify(userData, null, 2)], {
         type: 'application/json'
       });
@@ -86,13 +84,10 @@ export const DataDeletionManager: React.FC = () => {
 
     setIsDeleting(true);
     try {
-      // Call the GDPR-compliant server-side deletion edge function
-      // This handles: storage cleanup, DB purge, auth user deletion
       const { error } = await supabase.functions.invoke('account-deletion');
 
       if (error) throw error;
 
-      // Sign out the user (session is already invalidated server-side)
       await signOut();
 
       toast({
@@ -112,9 +107,9 @@ export const DataDeletionManager: React.FC = () => {
 
   if (!user) {
     return (
-      <Card className="bg-charcoal-gray border-goldenrod/20">
+      <Card className="bg-card border-border/40">
         <CardContent className="pt-6">
-          <div className="text-center text-gray-400">
+          <div className="text-center text-muted-foreground">
             <Shield className="h-12 w-12 mx-auto mb-4" />
             <p>Please sign in to access data management features</p>
           </div>
@@ -124,28 +119,28 @@ export const DataDeletionManager: React.FC = () => {
   }
 
   return (
-    <Card className="bg-charcoal-gray border-goldenrod/20">
+    <Card className="bg-card border-border/40">
       <CardHeader>
-        <CardTitle className="text-white flex items-center gap-3">
-          <Shield className="h-6 w-6 text-goldenrod" />
+        <CardTitle className="text-card-foreground flex items-center gap-3">
+          <Shield className="h-6 w-6 text-primary" />
           Data Management
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Data Portability */}
-        <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+        <div className="bg-accent/10 border border-accent/30 rounded-lg p-4">
           <div className="flex items-start gap-4">
-            <Download className="h-6 w-6 text-blue-400 flex-shrink-0 mt-1" />
+            <Download className="h-6 w-6 text-accent flex-shrink-0 mt-1" />
             <div className="flex-1">
-              <h3 className="text-white font-medium mb-2">Export Your Data</h3>
-              <p className="text-blue-200 text-sm mb-4">
+              <h3 className="text-card-foreground font-medium mb-2">Export Your Data</h3>
+              <p className="text-muted-foreground text-sm mb-4">
                 Download a complete copy of all your personal data stored in MonArk. 
                 This includes your profile, preferences, journal entries, and interaction history.
               </p>
               <Button
                 onClick={handleDownloadData}
                 disabled={isDownloading}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                variant="default"
               >
                 <Download className="h-4 w-4 mr-2" />
                 {isDownloading ? 'Preparing Export...' : 'Download My Data'}
@@ -155,19 +150,19 @@ export const DataDeletionManager: React.FC = () => {
         </div>
 
         {/* Account Deletion */}
-        <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4">
+        <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4">
           <div className="flex items-start gap-4">
-            <AlertTriangle className="h-6 w-6 text-red-400 flex-shrink-0 mt-1" />
+            <AlertTriangle className="h-6 w-6 text-destructive flex-shrink-0 mt-1" />
             <div className="flex-1">
-              <h3 className="text-white font-medium mb-2">Delete Your Account</h3>
-              <p className="text-red-200 text-sm mb-4">
+              <h3 className="text-card-foreground font-medium mb-2">Delete Your Account</h3>
+              <p className="text-muted-foreground text-sm mb-4">
                 Permanently delete your MonArk account and all associated data. 
                 This action cannot be undone.
               </p>
               
-              <div className="bg-red-950/50 rounded-lg p-3 mb-4">
-                <h4 className="text-red-300 font-medium mb-2">What will be deleted:</h4>
-                <ul className="text-red-200 text-sm space-y-1">
+              <div className="bg-destructive/5 rounded-lg p-3 mb-4">
+                <h4 className="text-destructive font-medium mb-2">What will be deleted:</h4>
+                <ul className="text-muted-foreground text-sm space-y-1">
                   <li>• Your profile and personal information</li>
                   <li>• All photos and media files</li>
                   <li>• Journal entries and reflections</li>
@@ -182,30 +177,29 @@ export const DataDeletionManager: React.FC = () => {
                   <Button
                     variant="destructive"
                     disabled={isDeleting}
-                    className="bg-red-600 hover:bg-red-700"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete My Account
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent className="bg-charcoal-gray border-red-500/30">
+                <AlertDialogContent className="bg-card border-destructive/30">
                   <AlertDialogHeader>
-                    <AlertDialogTitle className="text-white flex items-center gap-2">
-                      <AlertTriangle className="h-5 w-5 text-red-400" />
+                    <AlertDialogTitle className="text-card-foreground flex items-center gap-2">
+                      <AlertTriangle className="h-5 w-5 text-destructive" />
                       Confirm Account Deletion
                     </AlertDialogTitle>
-                    <AlertDialogDescription className="text-gray-300">
+                    <AlertDialogDescription className="text-muted-foreground">
                       This will permanently delete your account and all data associated with it. 
                       This action cannot be undone. Are you absolutely sure you want to proceed?
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel className="border-gray-600 text-gray-300">
+                    <AlertDialogCancel className="border-border text-muted-foreground">
                       Cancel
                     </AlertDialogCancel>
                     <AlertDialogAction
                       onClick={handleDeleteAccount}
-                      className="bg-red-600 hover:bg-red-700 text-white"
+                      className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
                     >
                       {isDeleting ? 'Deleting...' : 'Yes, Delete Forever'}
                     </AlertDialogAction>
@@ -217,15 +211,15 @@ export const DataDeletionManager: React.FC = () => {
         </div>
 
         {/* Privacy Rights Information */}
-        <div className="bg-gray-800/50 rounded-lg p-4">
+        <div className="bg-secondary/50 rounded-lg p-4">
           <div className="flex items-start gap-4">
-            <CheckCircle className="h-6 w-6 text-green-400 flex-shrink-0 mt-1" />
+            <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
             <div>
-              <h3 className="text-white font-medium mb-2">Your Privacy Rights</h3>
-              <p className="text-gray-300 text-sm mb-3">
+              <h3 className="text-card-foreground font-medium mb-2">Your Privacy Rights</h3>
+              <p className="text-muted-foreground text-sm mb-3">
                 Under privacy laws like GDPR and CCPA, you have the right to:
               </p>
-              <ul className="text-gray-400 text-sm space-y-1">
+              <ul className="text-muted-foreground text-sm space-y-1">
                 <li>• Access your personal data</li>
                 <li>• Correct inaccurate information</li>
                 <li>• Delete your personal data</li>
@@ -233,9 +227,9 @@ export const DataDeletionManager: React.FC = () => {
                 <li>• Data portability</li>
                 <li>• Object to processing</li>
               </ul>
-              <p className="text-gray-400 text-xs mt-3">
+              <p className="text-muted-foreground text-xs mt-3">
                 For questions about your rights, contact{' '}
-                <a href="mailto:privacy@monark.com" className="text-goldenrod hover:underline">
+                <a href="mailto:privacy@monark.com" className="text-primary hover:underline">
                   privacy@monark.com
                 </a>
               </p>

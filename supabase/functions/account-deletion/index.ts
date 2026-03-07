@@ -24,12 +24,14 @@ serve(async (req) => {
       { auth: { persistSession: false } }
     )
 
-    // 1. Log the deletion request in security audit
-    await supabaseAdmin.rpc('log_security_event', {
-      p_event_type: 'account_deletion_request',
-      p_action: 'gdpr_hard_delete',
-      p_success: true,
-      p_metadata: { user_id: user.id, requested_at: new Date().toISOString() }
+    // 1. Log the deletion request in security audit (direct insert since RPC uses auth.uid() which is null for admin client)
+    await supabaseAdmin.from('security_audit_log').insert({
+      event_type: 'account_deletion_request',
+      action: 'gdpr_hard_delete',
+      user_id: user.id,
+      target_user_id: user.id,
+      success: true,
+      metadata: { requested_at: new Date().toISOString() }
     })
 
     // 2. Delete all user photos from storage
