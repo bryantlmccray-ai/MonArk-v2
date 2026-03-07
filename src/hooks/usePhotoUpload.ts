@@ -67,6 +67,7 @@ export const usePhotoUpload = () => {
         .upload(filePath, file);
 
       if (uploadError) {
+        toast({ title: 'Upload failed', description: 'Could not upload photo. Please try again.', variant: 'destructive' });
         return null;
       }
 
@@ -74,7 +75,32 @@ export const usePhotoUpload = () => {
         .from('profile-photos')
         .getPublicUrl(filePath);
 
-      return data.publicUrl;
+      const publicUrl = data.publicUrl;
+
+      // ---- Post-upload content moderation ----
+      try {
+        const { data: modResult, error: modError } = await supabase.functions.invoke('photo-moderation', {
+          body: { photoUrl: publicUrl, filePath }
+        });
+
+        if (modError) {
+          console.error('Moderation check failed:', modError);
+          // Allow photo if moderation service is unavailable (fail open for UX)
+        } else if (modResult && !modResult.approved) {
+          // Photo was rejected and already deleted server-side
+          toast({
+            title: 'Photo not accepted',
+            description: modResult.reason || 'This photo doesn\'t meet our content guidelines. Please try a different one.',
+            variant: 'destructive',
+          });
+          return null;
+        }
+      } catch (modErr) {
+        console.error('Moderation error:', modErr);
+        // Fail open — don't block upload if moderation service is down
+      }
+
+      return publicUrl;
     } catch (error) {
       return null;
     } finally {
