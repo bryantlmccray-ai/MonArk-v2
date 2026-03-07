@@ -116,14 +116,18 @@ async function generateRecommendations(supabaseClient: any, userId: string, data
   // Generate personalized recommendations
   const recommendations = generatePersonalizedRecommendations(rifProfile, data.type)
 
-  // Store recommendations
+  // Store recommendations (sanitize text fields before persisting)
   await supabaseClient
     .from('rif_recommendations')
     .insert(
       recommendations.map(rec => ({
         user_id: userId,
-        recommendation_type: data.type,
-        content: rec,
+        recommendation_type: sanitizeAIOutput(data.type || '', 100),
+        content: typeof rec === 'object' ? {
+          ...rec,
+          title: rec.title ? sanitizeAIOutput(rec.title, 200) : undefined,
+          description: rec.description ? sanitizeAIOutput(rec.description, 2000) : undefined,
+        } : rec,
         delivered: false
       }))
     )
