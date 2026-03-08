@@ -2475,6 +2475,14 @@ export type Database = {
       }
     }
     Functions: {
+      atomic_share_contact: {
+        Args: {
+          p_conversation_id: string
+          p_recipient_id: string
+          p_sharer_id: string
+        }
+        Returns: Json
+      }
       calculate_age: { Args: { birth_date: string }; Returns: number }
       can_view_profile: {
         Args: { target_id: string; viewer_id: string }
