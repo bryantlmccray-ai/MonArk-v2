@@ -1,13 +1,19 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { corsHeaders, verifyAuth, errorResponse } from '../_shared/security.ts'
+import { corsHeaders, errorResponse } from '../_shared/security.ts'
 
 // Anomaly thresholds
 const THRESHOLDS = {
-  max_refreshes_per_hour: 20,      // Normal users refresh ~1-2 times/hour
-  max_refreshes_per_day: 100,      // Even active users shouldn't hit this
-  max_distinct_ips_per_day: 10,    // Multiple IPs could indicate token theft
+  max_refreshes_per_hour: 20,
+  max_refreshes_per_day: 100,
+  max_distinct_ips_per_day: 10,
   window_hours: 24,
+}
+
+function verifyCronSecret(req: Request): boolean {
+  const secret = req.headers.get('x-cron-secret')
+  const expected = Deno.env.get('CRON_SECRET')
+  return !!secret && !!expected && secret === expected
 }
 
 serve(async (req) => {
@@ -16,12 +22,35 @@ serve(async (req) => {
   }
 
   try {
-    const authResult = await verifyAuth(req)
-    if (authResult.error || !authResult.user) {
-      return new Response(
-        JSON.stringify({ error: 'Authentication required' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    const isCron = verifyCronSecret(req)
+
+    if (!isCron) {
+      const { verifyAuth } = await import('../_shared/security.ts')
+      const authResult = await verifyAuth(req)
+      if (authResult.error || !authResult.user) {
+        return new Response(
+          JSON.stringify({ error: 'Authentication required' }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+
+      const supabaseAdmin = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+        { auth: { persistSession: false } }
       )
+
+      const { data: isAdmin } = await supabaseAdmin.rpc('has_role', {
+        _user_id: authResult.user.id,
+        _role: 'admin'
+      })
+
+      if (!isAdmin) {
+        return new Response(
+          JSON.stringify({ error: 'Admin access required' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
     }
 
     const supabaseAdmin = createClient(
@@ -30,23 +59,9 @@ serve(async (req) => {
       { auth: { persistSession: false } }
     )
 
-    // Admin only
-    const { data: isAdmin } = await supabaseAdmin.rpc('has_role', {
-      _user_id: authResult.user.id,
-      _role: 'admin'
-    })
-
-    if (!isAdmin) {
-      return new Response(
-        JSON.stringify({ error: 'Admin access required' }),
-        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    }
-
     const windowStart = new Date()
     windowStart.setHours(windowStart.getHours() - THRESHOLDS.window_hours)
 
-    // Query security audit log for auth-related events
     const { data: authEvents } = await supabaseAdmin
       .from('security_audit_log')
       .select('user_id, ip_address, created_at, event_type, metadata')
@@ -76,8 +91,7 @@ serve(async (req) => {
       const ua = userActivity[event.user_id]
       ua.event_count++
       if (event.ip_address) ua.distinct_ips.add(event.ip_address)
-
-      const hour = event.created_at.substring(0, 13) // YYYY-MM-DDTHH
+      const hour = event.created_at.substring(0, 13)
       ua.events_by_hour[hour] = (ua.events_by_hour[hour] || 0) + 1
     })
 
