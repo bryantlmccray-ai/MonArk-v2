@@ -61,7 +61,7 @@ verify_jwt = true
 verify_jwt = true
 
 [functions.audit-log-rotation]
-verify_jwt = true
+verify_jwt = false
 
 [functions.token-refresh-monitor]
-verify_jwt = true
+verify_jwt = false
