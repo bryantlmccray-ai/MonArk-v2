@@ -197,11 +197,27 @@ export const WeeklyOptionsList = () => {
                 </div>
               </div>
 
-              <Button onClick={() => setCreatedItinerary(null)} className="w-full">
-                Done
-              </Button>
+              <div className="flex gap-2">
+                <Button onClick={() => setShowVendorBrowser(true)} variant="outline" className="flex-1">
+                  <Store className="w-4 h-4 mr-2" />
+                  Browse Vendors
+                </Button>
+                <Button onClick={() => setCreatedItinerary(null)} className="flex-1">
+                  Done
+                </Button>
+              </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Vendor Browser Modal */}
+      <Dialog open={showVendorBrowser} onOpenChange={setShowVendorBrowser}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <VendorBrowser
+            itineraryId={createdItinerary?.itinerary?.id}
+            onClose={() => setShowVendorBrowser(false)}
+          />
         </DialogContent>
       </Dialog>
     </div>
