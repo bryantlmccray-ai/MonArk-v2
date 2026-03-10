@@ -16,6 +16,7 @@ export const WeeklyOptionsList = () => {
   const [createdItinerary, setCreatedItinerary] = useState<any>(null);
   const [copied, setCopied] = useState(false);
   const [shareContact, setShareContact] = useState('');
+  const [showVendorBrowser, setShowVendorBrowser] = useState(false);
 
   const handleAccept = async (optionId: string) => {
     setProcessingId(optionId);
