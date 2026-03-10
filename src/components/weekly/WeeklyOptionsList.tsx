@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useWeeklyOptions } from '@/hooks/useWeeklyOptions';
 import { WeeklyOptionsCard } from './WeeklyOptionsCard';
+import { VendorBrowser } from './VendorBrowser';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { RefreshCw, Calendar, MessageSquare, Copy, Check, Phone } from 'lucide-react';
+import { RefreshCw, Calendar, MessageSquare, Copy, Check, Phone, Store } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
@@ -15,6 +16,7 @@ export const WeeklyOptionsList = () => {
   const [createdItinerary, setCreatedItinerary] = useState<any>(null);
   const [copied, setCopied] = useState(false);
   const [shareContact, setShareContact] = useState('');
+  const [showVendorBrowser, setShowVendorBrowser] = useState(false);
 
   const handleAccept = async (optionId: string) => {
     setProcessingId(optionId);
@@ -195,11 +197,27 @@ export const WeeklyOptionsList = () => {
                 </div>
               </div>
 
-              <Button onClick={() => setCreatedItinerary(null)} className="w-full">
-                Done
-              </Button>
+              <div className="flex gap-2">
+                <Button onClick={() => setShowVendorBrowser(true)} variant="outline" className="flex-1">
+                  <Store className="w-4 h-4 mr-2" />
+                  Browse Vendors
+                </Button>
+                <Button onClick={() => setCreatedItinerary(null)} className="flex-1">
+                  Done
+                </Button>
+              </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Vendor Browser Modal */}
+      <Dialog open={showVendorBrowser} onOpenChange={setShowVendorBrowser}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <VendorBrowser
+            itineraryId={createdItinerary?.itinerary?.id}
+            onClose={() => setShowVendorBrowser(false)}
+          />
         </DialogContent>
       </Dialog>
     </div>
