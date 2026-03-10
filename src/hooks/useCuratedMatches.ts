@@ -131,7 +131,7 @@ export const useCuratedMatches = () => {
       const matchedUserIds = curatedData.map((m: any) => m.matched_user_id);
       
       const { data: userProfiles, error: profileError } = await supabase
-        .from('user_profiles')
+        .from('public_user_profiles')
         .select('user_id, photos, bio, age, location, interests, occupation, education_level')
         .in('user_id', matchedUserIds);
 
