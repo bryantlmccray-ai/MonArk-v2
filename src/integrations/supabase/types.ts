@@ -772,6 +772,58 @@ export type Database = {
           },
         ]
       }
+      itinerary_vendors: {
+        Row: {
+          created_at: string
+          id: string
+          itinerary_id: string
+          notes: string | null
+          role: string | null
+          vendor_profile_id: string | null
+          venue_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          itinerary_id: string
+          notes?: string | null
+          role?: string | null
+          vendor_profile_id?: string | null
+          venue_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          itinerary_id?: string
+          notes?: string | null
+          role?: string | null
+          vendor_profile_id?: string | null
+          venue_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itinerary_vendors_itinerary_id_fkey"
+            columns: ["itinerary_id"]
+            isOneToOne: false
+            referencedRelation: "itineraries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "itinerary_vendors_vendor_profile_id_fkey"
+            columns: ["vendor_profile_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "itinerary_vendors_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       kpi_snapshots: {
         Row: {
           active_users_daily: number | null
@@ -1985,6 +2037,60 @@ export type Database = {
         }
         Relationships: []
       }
+      vendor_profiles: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          email: string | null
+          id: string
+          is_active: boolean | null
+          is_lgbtq_friendly: boolean | null
+          name: string
+          phone: string | null
+          photos: string[] | null
+          price_level: number | null
+          service_area_km: number | null
+          updated_at: string
+          vibe_tags: string[] | null
+          website_url: string | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_lgbtq_friendly?: boolean | null
+          name: string
+          phone?: string | null
+          photos?: string[] | null
+          price_level?: number | null
+          service_area_km?: number | null
+          updated_at?: string
+          vibe_tags?: string[] | null
+          website_url?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_lgbtq_friendly?: boolean | null
+          name?: string
+          phone?: string | null
+          photos?: string[] | null
+          price_level?: number | null
+          service_area_km?: number | null
+          updated_at?: string
+          vibe_tags?: string[] | null
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       venue_care_scores: {
         Row: {
           accessibility_score: number
@@ -2056,48 +2162,69 @@ export type Database = {
       venues: {
         Row: {
           address: string | null
+          category: string | null
           created_at: string
+          description: string | null
           id: string
+          is_active: boolean | null
           is_lgbtq_friendly: boolean | null
           lat: number
           lng: number
           name: string
           neighborhood_id: string | null
           operating_hours: Json | null
+          phone: string | null
+          photos: string[] | null
           price_level: number | null
           rating: number | null
           updated_at: string
           venue_type_id: string | null
+          vibe_tags: string[] | null
+          website_url: string | null
         }
         Insert: {
           address?: string | null
+          category?: string | null
           created_at?: string
+          description?: string | null
           id?: string
+          is_active?: boolean | null
           is_lgbtq_friendly?: boolean | null
           lat: number
           lng: number
           name: string
           neighborhood_id?: string | null
           operating_hours?: Json | null
+          phone?: string | null
+          photos?: string[] | null
           price_level?: number | null
           rating?: number | null
           updated_at?: string
           venue_type_id?: string | null
+          vibe_tags?: string[] | null
+          website_url?: string | null
         }
         Update: {
           address?: string | null
+          category?: string | null
           created_at?: string
+          description?: string | null
           id?: string
+          is_active?: boolean | null
           is_lgbtq_friendly?: boolean | null
           lat?: number
           lng?: number
           name?: string
           neighborhood_id?: string | null
           operating_hours?: Json | null
+          phone?: string | null
+          photos?: string[] | null
           price_level?: number | null
           rating?: number | null
           updated_at?: string
           venue_type_id?: string | null
+          vibe_tags?: string[] | null
+          website_url?: string | null
         }
         Relationships: [
           {
