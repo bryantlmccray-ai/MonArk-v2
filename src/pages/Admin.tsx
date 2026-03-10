@@ -6,22 +6,6 @@ import { Shield, Users, ArrowRight, BarChart3 } from 'lucide-react';
 import { useAdmin } from '@/hooks/useAdmin';
 
 export const Admin: React.FC = () => {
-  const { isModerator, loading } = useAdmin();
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <Shield className="h-8 w-8 animate-spin mx-auto mb-4 text-goldenrod" />
-          <p className="text-muted-foreground">Checking permissions...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isModerator) {
-    return <Navigate to="/" replace />;
-  }
 
   return (
     <div className="min-h-screen bg-background">
