@@ -160,7 +160,7 @@ export const useDatingPool = () => {
       const poolUserIds = poolData.map((p: any) => p.pool_user_id);
       
       const { data: userProfiles, error: profileError } = await supabase
-        .from('user_profiles')
+        .from('public_user_profiles')
         .select('user_id, photos, bio, age, location, interests, occupation, education_level')
         .in('user_id', poolUserIds);
 

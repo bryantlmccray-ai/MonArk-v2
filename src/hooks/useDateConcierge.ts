@@ -149,7 +149,7 @@ export const useDateConcierge = () => {
         .single();
 
       const { data: matchProfile } = await supabase
-        .from('user_profiles')
+        .from('public_user_profiles')
         .select('bio')
         .eq('user_id', matchUserId)
         .single();
