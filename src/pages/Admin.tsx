@@ -1,9 +1,8 @@
 import React from 'react';
-import { Navigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Shield, Users, ArrowRight, BarChart3 } from 'lucide-react';
-import { useAdmin } from '@/hooks/useAdmin';
 
 export const Admin: React.FC = () => {
 
