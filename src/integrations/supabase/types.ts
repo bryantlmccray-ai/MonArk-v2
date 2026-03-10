@@ -2639,6 +2639,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_match_or_pool_member: {
+        Args: { target_id: string; viewer_id: string }
+        Returns: boolean
+      }
       log_admin_action: {
         Args: {
           action_type: string
