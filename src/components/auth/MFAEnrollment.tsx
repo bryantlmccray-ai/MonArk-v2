@@ -95,7 +95,7 @@ export const MFAEnrollment: React.FC<MFAEnrollmentProps> = ({ onComplete, onCanc
           <div className="flex items-center gap-2 bg-secondary rounded-lg p-3">
             <code className="text-xs text-foreground flex-1 break-all font-mono">{secret}</code>
             <button onClick={copySecret} className="p-1 hover:bg-secondary/80 rounded">
-              {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
+              {copied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
             </button>
           </div>
         </div>
