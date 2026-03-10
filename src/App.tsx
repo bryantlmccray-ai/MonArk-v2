@@ -8,6 +8,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { DemoProvider } from "@/contexts/DemoContext";
 import { CookieConsent } from "@/components/legal/CookieConsent";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
+import { AdminMFAGate } from "@/components/auth/AdminMFAGate";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Privacy from "./pages/Privacy";
@@ -37,10 +38,10 @@ const App = () => (
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/cookie-policy" element={<CookiePolicy />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/admin/waitlist" element={<AdminWaitlist />} />
-                <Route path="/admin/analytics" element={<AdminAnalytics />} />
-                <Route path="/admin/curation" element={<AdminMatchCuration />} />
+                <Route path="/admin" element={<AdminMFAGate><Admin /></AdminMFAGate>} />
+                <Route path="/admin/waitlist" element={<AdminMFAGate><AdminWaitlist /></AdminMFAGate>} />
+                <Route path="/admin/analytics" element={<AdminMFAGate><AdminAnalytics /></AdminMFAGate>} />
+                <Route path="/admin/curation" element={<AdminMFAGate><AdminMatchCuration /></AdminMFAGate>} />
                 <Route path="/milestone-cards" element={<MilestoneCardShowcase />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
