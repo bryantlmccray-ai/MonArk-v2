@@ -49,6 +49,7 @@ export const MatchDetailModal = ({
   isCurated
 }: MatchDetailModalProps) => {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [showReportBlock, setShowReportBlock] = useState(false);
 
   if (!match) return null;
 
