@@ -153,8 +153,8 @@ const Index = () => {
   if (profile && !profile.is_profile_complete) {
     return <ProfileCreation 
       onComplete={async () => {
-        await refetchProfile();
         setShowProfileComplete(true);
+        refetchProfile();
       }} 
       onCancel={async () => {
         await signOut();
