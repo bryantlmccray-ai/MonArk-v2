@@ -348,15 +348,17 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               <p className="text-base text-muted-foreground font-body leading-relaxed">
                 That's why MonArk matches on communication style, not just demographics.
               </p>
-              <p className="text-sm text-muted-foreground font-body tracking-wide italic pt-2">
-                — Bryant McCray, CEO & Founder
-              </p>
-              <p 
-                className="text-muted-foreground pt-1" 
-                style={{ fontFamily: "'Great Vibes', cursive", fontSize: '1.75rem', letterSpacing: '0.02em', lineHeight: 1.2 }}
-              >
-                Bryant McCray
-              </p>
+              <div className="pt-3">
+                <p 
+                  className="text-muted-foreground" 
+                  style={{ fontFamily: "'Pinyon Script', cursive", fontSize: '1.6rem', letterSpacing: '0.01em', lineHeight: 1.3 }}
+                >
+                  — Bryant McCray
+                </p>
+                <p className="text-xs text-muted-foreground font-body tracking-[0.15em] uppercase mt-0.5">
+                  CEO & Founder
+                </p>
+              </div>
             </motion.div>
           </div>
         </div>
