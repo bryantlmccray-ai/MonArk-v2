@@ -28,18 +28,14 @@ export const AuthPage: React.FC = () => {
   const { updateProfile } = useProfile();
   const { toast } = useToast();
 
+  // Show welcome toast when user authenticates (driven by React context, not window events)
   React.useEffect(() => {
-    const handleAuthChange = () => {
-      if (user) {
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully signed in to MonArk.",
-        });
-      }
-    };
-
-    window.addEventListener('auth-change', handleAuthChange);
-    return () => window.removeEventListener('auth-change', handleAuthChange);
+    if (user) {
+      toast({
+        title: "Welcome back!",
+        description: "You have successfully signed in to MonArk.",
+      });
+    }
   }, [user, toast]);
 
   const handlePasswordReset = async () => {
