@@ -171,12 +171,56 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
     }
   }, [profile, loading, hasInitialized]);
 
+  // Auto-save profile data to DB on each step transition
+  const saveProgressToDb = async (data: Partial<ProfileData>) => {
+    try {
+      const updateData: any = {};
+      if (data.bio !== undefined) updateData.bio = data.bio;
+      if (data.interests !== undefined) updateData.interests = data.interests;
+      if (data.photos !== undefined) updateData.photos = data.photos;
+      if (data.occupation !== undefined) updateData.occupation = data.occupation;
+      if (data.education_level !== undefined) updateData.education_level = data.education_level;
+      if (data.relationship_goals !== undefined) updateData.relationship_goals = data.relationship_goals;
+      if (data.exercise_habits !== undefined) updateData.exercise_habits = data.exercise_habits;
+      if (data.smoking_status !== undefined) updateData.smoking_status = data.smoking_status;
+      if (data.drinking_status !== undefined) updateData.drinking_status = data.drinking_status;
+      if (data.height_cm !== undefined) updateData.height_cm = data.height_cm;
+      if (data.vibe !== undefined || data.budget !== undefined || data.timeOfDay !== undefined || data.activityType !== undefined) {
+        updateData.date_preferences = {
+          vibe: data.vibe ?? profileData.vibe,
+          budget: data.budget ?? profileData.budget,
+          timeOfDay: data.timeOfDay ?? profileData.timeOfDay,
+          activityType: data.activityType ?? profileData.activityType,
+        };
+      }
+      if (data.identityPreferences) {
+        updateData.gender_identity = data.identityPreferences.genderIdentity;
+        updateData.gender_identity_custom = data.identityPreferences.genderIdentityCustom;
+        updateData.sexual_orientation = data.identityPreferences.sexualOrientation;
+        updateData.sexual_orientation_custom = data.identityPreferences.sexualOrientationCustom;
+        updateData.preference_to_see = data.identityPreferences.preferenceToSee;
+        updateData.preference_to_be_seen_by = data.identityPreferences.preferenceToBeSeenBy;
+        updateData.discovery_privacy_mode = data.identityPreferences.discoveryPrivacyMode;
+        updateData.identity_visibility = data.identityPreferences.identityVisibility;
+      }
+
+      if (Object.keys(updateData).length > 0) {
+        await updateProfile(updateData);
+        console.log('[ProfileCreation] Auto-saved step data');
+      }
+    } catch (e) {
+      console.warn('[ProfileCreation] Auto-save failed (non-blocking):', e);
+    }
+  };
+
   const updateProfileData = (data: Partial<ProfileData>) => {
     setProfileData(prev => ({ ...prev, ...data }));
   };
   
   const markStepCompleted = (stepKey: keyof StepCompletionStatus) => {
     setStepCompletion(prev => ({ ...prev, [stepKey]: true }));
+    // Auto-save current profileData when a step is completed
+    saveProgressToDb(profileData);
   };
   
   const markStepSkipped = (stepKey: keyof StepCompletionStatus) => {
