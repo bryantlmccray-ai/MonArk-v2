@@ -258,7 +258,7 @@ export const CloseTheLoopCard: React.FC<CloseTheLoopCardProps> = ({
                   animate={{ scale: 1 }}
                   transition={{ type: 'spring', stiffness: 200, damping: 10 }}
                 >
-                  <CheckCircle2 className="h-12 w-12 text-green-400 mx-auto" />
+                  <CheckCircle2 className="h-12 w-12 text-primary mx-auto" />
                 </motion.div>
                 <div>
                   <h4 className="text-foreground font-semibold">Loop closed!</h4>
