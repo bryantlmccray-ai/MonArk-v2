@@ -54,14 +54,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setSession(session);
           setUser(session?.user ?? null);
           setLoading(false);
-          
-          // Force a state update to ensure UI refreshes
-          if (event === 'SIGNED_IN' && session) {
-            // Small delay to ensure all state is updated
-            setTimeout(() => {
-              window.dispatchEvent(new Event('auth-change'));
-            }, 100);
-          }
         } catch (error) {
           console.error('Error in auth state change handler:', error);
           if (mounted) {
