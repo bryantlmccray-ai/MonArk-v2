@@ -5,6 +5,7 @@ import { useAuth } from './useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useConversationReadiness } from './useConversationReadiness';
 import { Tables } from '@/integrations/supabase/types';
+import { sanitizeConciergePayload } from '@/lib/aiSanitizer';
 
 type Message = Tables<'messages'>;
 
