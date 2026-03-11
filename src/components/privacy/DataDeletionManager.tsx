@@ -161,8 +161,8 @@ export const DataDeletionManager: React.FC = () => {
               </p>
               
               <div className="bg-destructive/5 rounded-lg p-3 mb-4">
-                <h4 className="text-destructive font-medium mb-2">What will be deleted:</h4>
-                <ul className="text-muted-foreground text-sm space-y-1">
+                <h4 className="text-destructive font-semibold mb-2">What will be deleted:</h4>
+                <ul className="text-foreground/70 text-sm space-y-1 font-medium">
                   <li>• Your profile and personal information</li>
                   <li>• All photos and media files</li>
                   <li>• Journal entries and reflections</li>
