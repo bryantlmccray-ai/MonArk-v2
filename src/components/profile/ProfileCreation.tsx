@@ -304,6 +304,13 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
       }
 
       console.log('[ProfileCreation] Profile saved successfully');
+      
+      // Invalidate the react-query cache so profile view shows updated data
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      if (currentUser) {
+        await queryClient.invalidateQueries({ queryKey: queryKeys.profile.byUser(currentUser.id) });
+      }
+      
       toast({
         title: "Profile completed!",
         description: "Your profile has been saved successfully.",
