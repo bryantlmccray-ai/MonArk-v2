@@ -47,6 +47,7 @@ const App = () => (
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/cookie-policy" element={<CookiePolicy />} />
+                <Route path="/data-processing" element={<DataProcessing />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/admin" element={<AdminMFAGate><Admin /></AdminMFAGate>} />
                 <Route path="/admin/waitlist" element={<AdminMFAGate><AdminWaitlist /></AdminMFAGate>} />
