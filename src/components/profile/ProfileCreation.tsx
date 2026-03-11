@@ -391,6 +391,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
             profileData={profileData} 
             updateData={updateProfileData} 
             onNext={() => { markStepCompleted('identityPreferences'); nextStep(); }}
+            onSkip={() => { markStepSkipped('identityPreferences'); nextStep(); }}
             stepRequirement={stepRequirements.identityPreferences}
           />
         );
