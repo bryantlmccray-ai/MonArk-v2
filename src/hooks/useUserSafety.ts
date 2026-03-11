@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { toast } from '@/hooks/use-toast';
+import { queryKeys } from '@/lib/queryKeys';
 import { Json } from '@/integrations/supabase/types';
 
 export interface BlockedUser {
@@ -41,76 +43,57 @@ export interface SafetySettings {
 
 export const useUserSafety = () => {
   const { user } = useAuth();
-  const [blockedUsers, setBlockedUsers] = useState<BlockedUser[]>([]);
-  const [userReports, setUserReports] = useState<UserReport[]>([]);
-  const [safetySettings, setSafetySettings] = useState<SafetySettings | null>(null);
-  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
 
-  // Fetch blocked users
-  const fetchBlockedUsers = async () => {
-    if (!user) return;
-
-    try {
+  // ── Blocked Users ────────────────────────────────────
+  const { data: blockedUsers = [], isLoading: blockedLoading } = useQuery({
+    queryKey: queryKeys.safety.blockedUsers(user?.id ?? ''),
+    queryFn: async () => {
       const { data, error } = await supabase
         .from('blocked_users')
         .select('*')
-        .eq('blocker_user_id', user.id)
+        .eq('blocker_user_id', user!.id)
         .order('created_at', { ascending: false });
-
       if (error) throw error;
-      setBlockedUsers(data || []);
-    } catch (error) {
-      console.error('Error fetching blocked users:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load blocked users",
-        variant: "destructive",
-      });
-    }
-  };
+      return (data || []) as BlockedUser[];
+    },
+    enabled: !!user,
+    staleTime: 30_000,
+  });
 
-  // Fetch user reports
-  const fetchUserReports = async () => {
-    if (!user) return;
-
-    try {
+  // ── User Reports ─────────────────────────────────────
+  const { data: userReports = [], isLoading: reportsLoading } = useQuery({
+    queryKey: queryKeys.safety.reports(user?.id ?? ''),
+    queryFn: async () => {
       const { data, error } = await supabase
         .from('user_reports')
         .select('*')
-        .eq('reporter_user_id', user.id)
+        .eq('reporter_user_id', user!.id)
         .order('created_at', { ascending: false });
-
       if (error) throw error;
-      setUserReports(data || []);
-    } catch (error) {
-      console.error('Error fetching user reports:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load reports",
-        variant: "destructive",
-      });
-    }
-  };
+      return (data || []) as UserReport[];
+    },
+    enabled: !!user,
+    staleTime: 60_000,
+  });
 
-  // Fetch safety settings
-  const fetchSafetySettings = async () => {
-    if (!user) return;
-
-    try {
+  // ── Safety Settings ──────────────────────────────────
+  const { data: safetySettings = null, isLoading: settingsLoading } = useQuery({
+    queryKey: queryKeys.safety.settings(user?.id ?? ''),
+    queryFn: async (): Promise<SafetySettings | null> => {
       const { data, error } = await supabase
         .from('user_safety_settings')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', user!.id)
         .single();
 
       if (error && error.code !== 'PGRST116') throw error;
-      
+
       if (!data) {
-        // Create default settings if none exist
         const { data: newSettings, error: createError } = await supabase
           .from('user_safety_settings')
           .insert({
-            user_id: user.id,
+            user_id: user!.id,
             location_sharing_enabled: true,
             show_online_status: true,
             allow_messages_from_strangers: true,
@@ -120,184 +103,149 @@ export const useUserSafety = () => {
           })
           .select()
           .single();
-
         if (createError) throw createError;
-        setSafetySettings(newSettings);
-      } else {
-        setSafetySettings(data);
+        return newSettings;
       }
-    } catch (error) {
-      console.error('Error fetching safety settings:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load safety settings",
-        variant: "destructive",
-      });
-    }
-  };
+      return data;
+    },
+    enabled: !!user,
+    staleTime: 60_000,
+  });
 
-  // Block user
-  const blockUser = async (userIdToBlock: string, reason?: string) => {
-    if (!user) return false;
+  // ── Mutations ────────────────────────────────────────
 
-    try {
-      setLoading(true);
+  const blockMutation = useMutation({
+    mutationFn: async ({ userIdToBlock, reason }: { userIdToBlock: string; reason?: string }) => {
       const { error } = await supabase
         .from('blocked_users')
-        .insert({
-          blocker_user_id: user.id,
-          blocked_user_id: userIdToBlock,
-          reason
-        });
-
+        .insert({ blocker_user_id: user!.id, blocked_user_id: userIdToBlock, reason });
       if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: 'Success', description: 'User has been blocked' });
+      if (user) {
+        // Invalidate everything that depends on blocked status
+        queryClient.invalidateQueries({ queryKey: queryKeys.safety.blockedUsers(user.id) });
+        queryClient.invalidateQueries({ queryKey: queryKeys.curatedMatches.all });
+        queryClient.invalidateQueries({ queryKey: queryKeys.datingPool.all });
+        queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
+        queryClient.invalidateQueries({ queryKey: queryKeys.messages.all });
+      }
+    },
+    onError: () => {
+      toast({ title: 'Error', description: 'Failed to block user', variant: 'destructive' });
+    },
+  });
 
-      toast({
-        title: "Success",
-        description: "User has been blocked",
-      });
-
-      await fetchBlockedUsers();
-      return true;
-    } catch (error) {
-      console.error('Error blocking user:', error);
-      toast({
-        title: "Error",
-        description: "Failed to block user",
-        variant: "destructive",
-      });
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Unblock user
-  const unblockUser = async (userIdToUnblock: string) => {
-    if (!user) return false;
-
-    try {
-      setLoading(true);
+  const unblockMutation = useMutation({
+    mutationFn: async (userIdToUnblock: string) => {
       const { error } = await supabase
         .from('blocked_users')
         .delete()
-        .eq('blocker_user_id', user.id)
+        .eq('blocker_user_id', user!.id)
         .eq('blocked_user_id', userIdToUnblock);
-
       if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: 'Success', description: 'User has been unblocked' });
+      if (user) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.safety.blockedUsers(user.id) });
+        queryClient.invalidateQueries({ queryKey: queryKeys.curatedMatches.all });
+        queryClient.invalidateQueries({ queryKey: queryKeys.datingPool.all });
+        queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
+      }
+    },
+    onError: () => {
+      toast({ title: 'Error', description: 'Failed to unblock user', variant: 'destructive' });
+    },
+  });
 
-      toast({
-        title: "Success",
-        description: "User has been unblocked",
-      });
-
-      await fetchBlockedUsers();
-      return true;
-    } catch (error) {
-      console.error('Error unblocking user:', error);
-      toast({
-        title: "Error",
-        description: "Failed to unblock user",
-        variant: "destructive",
-      });
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Check if user is blocked
-  const isUserBlocked = (userId: string): boolean => {
-    return blockedUsers.some(blocked => blocked.blocked_user_id === userId);
-  };
-
-  // Report user
-  const reportUser = async (
-    userIdToReport: string,
-    reportType: string,
-    reason: string,
-    description?: string,
-    conversationId?: string
-  ) => {
-    if (!user) return false;
-
-    try {
-      setLoading(true);
+  const reportMutation = useMutation({
+    mutationFn: async (params: { userIdToReport: string; reportType: string; reason: string; description?: string; conversationId?: string }) => {
       const { error } = await supabase
         .from('user_reports')
         .insert({
-          reporter_user_id: user.id,
-          reported_user_id: userIdToReport,
-          report_type: reportType,
-          reason,
-          description,
-          conversation_id: conversationId
+          reporter_user_id: user!.id,
+          reported_user_id: params.userIdToReport,
+          report_type: params.reportType,
+          reason: params.reason,
+          description: params.description,
+          conversation_id: params.conversationId
         });
-
       if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: 'Success', description: 'Report submitted successfully' });
+      if (user) queryClient.invalidateQueries({ queryKey: queryKeys.safety.reports(user.id) });
+    },
+    onError: () => {
+      toast({ title: 'Error', description: 'Failed to submit report', variant: 'destructive' });
+    },
+  });
 
-      toast({
-        title: "Success",
-        description: "Report submitted successfully",
-      });
-
-      await fetchUserReports();
-      return true;
-    } catch (error) {
-      console.error('Error reporting user:', error);
-      toast({
-        title: "Error",
-        description: "Failed to submit report",
-        variant: "destructive",
-      });
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Update safety settings
-  const updateSafetySettings = async (updates: Partial<SafetySettings>) => {
-    if (!user || !safetySettings) return false;
-
-    try {
-      setLoading(true);
+  const updateSettingsMutation = useMutation({
+    mutationFn: async (updates: Partial<SafetySettings>) => {
       const { data, error } = await supabase
         .from('user_safety_settings')
         .update(updates)
-        .eq('user_id', user.id)
+        .eq('user_id', user!.id)
         .select()
         .single();
-
       if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      toast({ title: 'Success', description: 'Safety settings updated' });
+      if (user) {
+        queryClient.setQueryData(queryKeys.safety.settings(user.id), data);
+      }
+    },
+    onError: () => {
+      toast({ title: 'Error', description: 'Failed to update safety settings', variant: 'destructive' });
+    },
+  });
 
-      setSafetySettings(data);
-      toast({
-        title: "Success",
-        description: "Safety settings updated",
-      });
+  // ── Public API (preserving existing return shape) ────
 
-      return true;
-    } catch (error) {
-      console.error('Error updating safety settings:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update safety settings",
-        variant: "destructive",
-      });
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  };
+  const blockUser = useCallback(
+    async (userIdToBlock: string, reason?: string) => {
+      if (!user) return false;
+      try { await blockMutation.mutateAsync({ userIdToBlock, reason }); return true; } catch { return false; }
+    },
+    [user, blockMutation]
+  );
 
-  useEffect(() => {
-    if (user) {
-      fetchBlockedUsers();
-      fetchUserReports();
-      fetchSafetySettings();
-    }
-  }, [user]);
+  const unblockUser = useCallback(
+    async (userIdToUnblock: string) => {
+      if (!user) return false;
+      try { await unblockMutation.mutateAsync(userIdToUnblock); return true; } catch { return false; }
+    },
+    [user, unblockMutation]
+  );
+
+  const isUserBlocked = useCallback(
+    (userId: string): boolean => blockedUsers.some(b => b.blocked_user_id === userId),
+    [blockedUsers]
+  );
+
+  const reportUser = useCallback(
+    async (userIdToReport: string, reportType: string, reason: string, description?: string, conversationId?: string) => {
+      if (!user) return false;
+      try { await reportMutation.mutateAsync({ userIdToReport, reportType, reason, description, conversationId }); return true; } catch { return false; }
+    },
+    [user, reportMutation]
+  );
+
+  const updateSafetySettings = useCallback(
+    async (updates: Partial<SafetySettings>) => {
+      if (!user || !safetySettings) return false;
+      try { await updateSettingsMutation.mutateAsync(updates); return true; } catch { return false; }
+    },
+    [user, safetySettings, updateSettingsMutation]
+  );
+
+  const loading = blockedLoading || reportsLoading || settingsLoading ||
+    blockMutation.isPending || unblockMutation.isPending || reportMutation.isPending || updateSettingsMutation.isPending;
 
   return {
     blockedUsers,
@@ -310,9 +258,9 @@ export const useUserSafety = () => {
     reportUser,
     updateSafetySettings,
     refetch: {
-      blockedUsers: fetchBlockedUsers,
-      userReports: fetchUserReports,
-      safetySettings: fetchSafetySettings
+      blockedUsers: () => user && queryClient.invalidateQueries({ queryKey: queryKeys.safety.blockedUsers(user.id) }),
+      userReports: () => user && queryClient.invalidateQueries({ queryKey: queryKeys.safety.reports(user.id) }),
+      safetySettings: () => user && queryClient.invalidateQueries({ queryKey: queryKeys.safety.settings(user.id) }),
     }
   };
 };
