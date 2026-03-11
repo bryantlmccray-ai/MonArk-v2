@@ -22,6 +22,7 @@ export const AuthPage: React.FC = () => {
   const [signupData, setSignupData] = useState<{email: string; password: string; name: string} | null>(null);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(() => localStorage.getItem('monark-remember-me') === 'true');
   const [resetEmail, setResetEmail] = useState('');
   const [resetSent, setResetSent] = useState(false);
   const { user, signIn, signUp, enterDemoMode } = useAuth();
