@@ -150,10 +150,10 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
               />
               
-              {/* Inner ring with sienna accent */}
+              {/* Inner ring with sandy gold */}
               <motion.div
                 className="absolute inset-4 rounded-full"
-                style={{ border: "1px solid hsla(22, 38%, 36%, 0.4)" }}
+                style={{ border: "1px solid hsla(36, 25%, 52%, 0.4)" }}
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 1, ease: "easeOut", delay: 0.4 }}
