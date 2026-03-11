@@ -14,6 +14,7 @@ import NotFound from "./pages/NotFound";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import CookiePolicy from "./pages/CookiePolicy";
+import DataProcessing from "./pages/DataProcessing";
 import ResetPassword from "./pages/ResetPassword";
 import { Admin } from "./pages/Admin";
 import AdminWaitlist from "./pages/AdminWaitlist";
@@ -46,6 +47,7 @@ const App = () => (
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/cookie-policy" element={<CookiePolicy />} />
+                <Route path="/data-processing" element={<DataProcessing />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/admin" element={<AdminMFAGate><Admin /></AdminMFAGate>} />
                 <Route path="/admin/waitlist" element={<AdminMFAGate><AdminWaitlist /></AdminMFAGate>} />
