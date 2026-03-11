@@ -26,10 +26,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isDemoMode, setIsDemoMode] = useState(false);
 
   useEffect(() => {
-    // Don't auto-restore demo mode from localStorage - require explicit entry
-    // This ensures users always start from the landing page
-    localStorage.removeItem('monark-demo-mode');
-
     let mounted = true;
     let retryCount = 0;
     const maxRetries = 3;
