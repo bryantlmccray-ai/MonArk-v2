@@ -168,12 +168,12 @@ export const PrivacyDataPortal: React.FC = () => {
         </div>
 
         {/* Delete My Account */}
-        <div className="bg-destructive/5 border border-destructive/20 rounded-xl p-6 space-y-4">
+        <div className="bg-destructive/5 border-2 border-destructive/30 rounded-xl p-6 space-y-4 shadow-[0_8px_40px_-4px_hsl(var(--foreground)/0.1)]">
           <div className="flex items-start space-x-3">
             <Trash2 className="h-5 w-5 text-destructive mt-1" />
             <div className="flex-1">
-              <h3 className="text-destructive font-semibold">Delete My Account & Data</h3>
-              <p className="text-foreground/70 text-sm mt-1 font-medium">
+              <h3 className="text-destructive font-semibold text-base">Delete My Account & Data</h3>
+              <p className="text-foreground/80 text-sm mt-1 font-medium">
                 Permanently delete your account and all associated personal data. This action cannot be undone.
               </p>
               <div className="bg-destructive/5 rounded-lg p-3 mt-3">
