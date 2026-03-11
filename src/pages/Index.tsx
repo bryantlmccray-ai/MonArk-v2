@@ -102,7 +102,7 @@ const Index = () => {
           setSkippedProfile(false);
           setHasEnteredApp(true);
           // Set the initial tab based on user's choice
-          setInitialTab(destination === 'matches' ? 'weekly' : 'profile');
+          setInitialTab(destination === 'discovery' ? 'profile' : 'weekly');
         }}
         userName={profile?.bio?.split(' ')[0]}
         isProfileIncomplete={skippedProfile}
