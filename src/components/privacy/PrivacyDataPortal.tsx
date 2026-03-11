@@ -110,7 +110,7 @@ export const PrivacyDataPortal: React.FC = () => {
 
       <div className="space-y-4">
         {/* Access My Data */}
-        <div className="bg-card rounded-xl p-6 space-y-4 border border-border">
+        <div className="bg-card rounded-xl p-6 space-y-4 border-2 border-border shadow-[0_8px_40px_-4px_hsl(var(--foreground)/0.1)]">
           <div className="flex items-start space-x-3">
             <Download className="h-5 w-5 text-primary mt-1" />
             <div className="flex-1">
