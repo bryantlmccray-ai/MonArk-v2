@@ -16,38 +16,49 @@ export default function ResetPassword() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Listen for the PASSWORD_RECOVERY event that fires when Supabase
-    // processes the recovery token from the URL hash
+    let resolved = false;
+    const markValid = () => {
+      if (!resolved) {
+        resolved = true;
+        console.log('[ResetPassword] Session validated — showing form');
+        setIsValidSession(true);
+      }
+    };
+
+    // 1. Check URL hash for recovery type (most reliable signal)
+    const hash = window.location.hash;
+    console.log('[ResetPassword] URL hash:', hash);
+    const isRecoveryUrl = hash.includes('type=recovery') || hash.includes('type=signup');
+
+    // 2. Listen for auth events
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'PASSWORD_RECOVERY' && session) {
-        setIsValidSession(true);
-      } else if (event === 'SIGNED_IN' && session) {
-        // Also accept SIGNED_IN — some flows fire this instead of PASSWORD_RECOVERY
-        setIsValidSession(true);
+      console.log('[ResetPassword] Auth event:', event, !!session);
+      if ((event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') && session) {
+        markValid();
       }
     });
 
-    // Also check if there's already a valid session (e.g. page refresh)
+    // 3. Check existing session (covers case where AuthProvider already processed the token)
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('[ResetPassword] getSession result:', !!session);
       if (session) {
-        setIsValidSession(true);
+        markValid();
       }
     });
 
-    // Set a timeout so we don't hang forever on an invalid link
+    // 4. If URL looks like a recovery link, wait longer before giving up
+    const timeoutMs = isRecoveryUrl ? 10000 : 5000;
     const timeout = setTimeout(() => {
-      setIsValidSession((current) => {
-        if (!current) {
-          toast({
-            title: "Invalid reset link",
-            description: "This password reset link is invalid or has expired.",
-            variant: "destructive"
-          });
-          navigate('/');
-        }
-        return current;
-      });
-    }, 5000);
+      if (!resolved) {
+        console.warn('[ResetPassword] Timed out waiting for session');
+        toast({
+          title: "Invalid reset link",
+          description: "This password reset link is invalid or has expired. Please request a new one.",
+          variant: "destructive"
+        });
+        navigate('/');
+      }
+    }, timeoutMs);
 
     return () => {
       subscription.unsubscribe();
