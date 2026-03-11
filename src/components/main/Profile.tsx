@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Settings, ShieldCheck, Edit, LogOut, MapPin, TrendingUp, Calendar } from 'lucide-react';
+import { Settings, ShieldCheck, Edit, LogOut, MapPin, TrendingUp, Calendar, Heart, Briefcase, GraduationCap, Ruler, Dumbbell, Cigarette, Wine, Sparkles, Camera, Palette, Clock, DollarSign, Eye } from 'lucide-react';
 import { ProfileCreation } from '../profile/ProfileCreation';
 import { LocationConsentModal } from '../location/LocationConsentModal';
 import { AnalyticsConsentModal } from '../analytics/AnalyticsConsentModal';
@@ -10,6 +10,8 @@ import { useProfile } from '@/hooks/useProfile';
 import { useLocation } from '@/hooks/useLocation';
 import { useMonthlyAnalytics } from '@/hooks/useMonthlyAnalytics';
 import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
 
 interface ProfileProps {
   onOpenTrustScore: () => void;
@@ -77,11 +79,35 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
   }
 
   const hasCompleteProfile = profile?.is_profile_complete;
+  const userName = user?.user_metadata?.name || 'User';
+  const firstName = userName.split(' ')[0];
+
+  // Height conversion helper
+  const formatHeight = (cm: number) => {
+    const feet = Math.floor(cm / 30.48);
+    const inches = Math.round((cm / 2.54) % 12);
+    return `${feet}'${inches}"`;
+  };
+
+  // Date preference labels
+  const vibeLabels: Record<string, string> = {
+    'adventurous': 'Adventurous',
+    'chill': 'Laid-back',
+    'romantic': 'Romantic',
+    'intellectual': 'Intellectual',
+    'creative': 'Creative',
+    'active': 'Active',
+  };
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: 16 },
+    visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.08, duration: 0.4 } }),
+  };
 
   return (
     <div className="bg-background">
-      <div className="max-w-2xl mx-auto space-y-5">
-        {/* Header */}
+      <div className="max-w-2xl mx-auto space-y-6">
+        {/* Header Bar */}
         <div className="flex justify-between items-start">
           <div>
             <h1 className="text-2xl font-serif font-bold text-foreground tracking-tight">Profile</h1>
@@ -131,39 +157,297 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
           </div>
         ) : (
           <>
-            {/* Profile Header */}
-            <div className="text-center space-y-4">
+            {/* Hero Profile Card — Editorial Magazine Style */}
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              custom={0}
+              variants={fadeUp}
+              className="relative rounded-2xl overflow-hidden bg-card border border-border/60 shadow-[0_4px_24px_rgba(100,80,60,0.08)]"
+            >
+              {/* Cover Photo Area */}
               {profile?.photos?.[0] ? (
-                <img
-                  src={profile.photos[0]}
-                  alt="Profile"
-                  className="w-32 h-32 rounded-full mx-auto ring-4 ring-primary/20 object-cover"
-                />
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  <img
+                    src={profile.photos[0]}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
+                  
+                  {/* Name overlay on photo */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6 pb-8">
+                    <div className="flex items-end gap-3">
+                      <div>
+                        <h2 className="text-3xl font-serif text-foreground tracking-tight drop-shadow-sm">
+                          {userName}{profile?.age ? `, ${profile.age}` : ''}
+                        </h2>
+                        {locationDisplay && profile?.show_location_on_profile && (
+                          <p className="text-muted-foreground text-sm flex items-center gap-1 mt-1">
+                            <MapPin className="h-3.5 w-3.5" />
+                            {locationDisplay.isManual ? 'Based in' : 'Near'} {locationDisplay.text}
+                          </p>
+                        )}
+                      </div>
+                      <ShieldCheck className="h-6 w-6 text-primary ml-auto flex-shrink-0" />
+                    </div>
+                  </div>
+                </div>
               ) : (
-                <div className="w-32 h-32 rounded-full mx-auto ring-4 ring-primary/20 bg-secondary flex items-center justify-center">
-                  <Edit className="h-12 w-12 text-muted-foreground" />
+                <div className="p-8 pb-6 text-center">
+                  <div className="w-28 h-28 rounded-full mx-auto bg-secondary flex items-center justify-center mb-4">
+                    <Camera className="h-10 w-10 text-muted-foreground" />
+                  </div>
+                  <h2 className="text-2xl font-serif text-foreground">
+                    {userName}{profile?.age ? `, ${profile.age}` : ''}
+                  </h2>
+                  {locationDisplay && profile?.show_location_on_profile && (
+                    <p className="text-muted-foreground text-sm flex items-center justify-center gap-1 mt-1">
+                      <MapPin className="h-3.5 w-3.5" />
+                      {locationDisplay.text}
+                    </p>
+                  )}
                 </div>
               )}
-              
-              <div className="flex items-center justify-center space-x-2">
-                <h2 className="text-2xl font-serif text-foreground">
-                  {user?.user_metadata?.name || 'User'}{profile?.age ? `, ${profile.age}` : ''}
-                </h2>
-                <ShieldCheck className="h-6 w-6 text-primary" />
-              </div>
 
-              {locationDisplay && profile?.show_location_on_profile && (
-                <div className="flex items-center justify-center space-x-1 text-muted-foreground">
-                  <MapPin className="h-4 w-4" />
-                  <span className="text-sm">
-                    {locationDisplay.isManual ? 'Based in' : 'Near'} {locationDisplay.text}
-                  </span>
+              {/* Photo Strip */}
+              {profile?.photos && profile.photos.length > 1 && (
+                <div className="px-5 pb-5 -mt-2">
+                  <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+                    {profile.photos.slice(1).map((photo, i) => (
+                      <img
+                        key={i}
+                        src={photo}
+                        alt={`Photo ${i + 2}`}
+                        className="w-20 h-20 rounded-xl object-cover border-2 border-card flex-shrink-0 shadow-sm"
+                      />
+                    ))}
+                  </div>
                 </div>
               )}
-            </div>
+            </motion.div>
 
-            {/* Location Section */}
-            <div className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]">
+            {/* Bio — Pull Quote Style */}
+            {profile?.bio && (
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                custom={1}
+                variants={fadeUp}
+                className="relative bg-card rounded-2xl p-6 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+              >
+                <div className="absolute top-4 left-5 text-5xl font-serif text-primary/20 leading-none select-none">"</div>
+                <p className="text-foreground/90 text-[15px] leading-relaxed font-body pl-6 pr-2 pt-4 italic">
+                  {profile.bio}
+                </p>
+                <div className="mt-3 pl-6">
+                  <div className="w-10 h-0.5 bg-primary/30 rounded-full" />
+                </div>
+              </motion.div>
+            )}
+
+            {/* Passions & Interests */}
+            {profile?.interests && profile.interests.length > 0 && (
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                custom={2}
+                variants={fadeUp}
+                className="bg-card rounded-2xl p-6 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+              >
+                <div className="flex items-center gap-2.5 mb-4">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Sparkles className="h-4 w-4 text-primary" />
+                  </div>
+                  <h3 className="text-foreground font-serif text-lg">Passions</h3>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {profile.interests.map((interest, index) => (
+                    <Badge
+                      key={index}
+                      variant="outline"
+                      className="px-3.5 py-1.5 text-sm font-body rounded-full bg-primary/5 text-foreground border-primary/15 hover:bg-primary/10 transition-colors"
+                    >
+                      {interest}
+                    </Badge>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Relationship Goals */}
+            {profile?.relationship_goals && profile.relationship_goals.length > 0 && (
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                custom={3}
+                variants={fadeUp}
+                className="bg-card rounded-2xl p-6 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+              >
+                <div className="flex items-center gap-2.5 mb-4">
+                  <div className="w-8 h-8 rounded-lg bg-rosegold/10 flex items-center justify-center">
+                    <Heart className="h-4 w-4 text-rosegold" />
+                  </div>
+                  <h3 className="text-foreground font-serif text-lg">Looking For</h3>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {profile.relationship_goals.map((goal, index) => (
+                    <Badge
+                      key={index}
+                      variant="outline"
+                      className="px-3.5 py-1.5 text-sm font-body rounded-full bg-rosegold/5 text-foreground border-rosegold/15"
+                    >
+                      {goal}
+                    </Badge>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Life Details — Two-Column Grid */}
+            {(profile?.occupation || profile?.education_level || profile?.height_cm || profile?.exercise_habits || profile?.smoking_status || profile?.drinking_status) && (
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                custom={4}
+                variants={fadeUp}
+                className="bg-card rounded-2xl p-6 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+              >
+                <div className="flex items-center gap-2.5 mb-5">
+                  <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
+                    <Eye className="h-4 w-4 text-accent" />
+                  </div>
+                  <h3 className="text-foreground font-serif text-lg">At a Glance</h3>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {profile?.occupation && (
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
+                      <Briefcase className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      <div>
+                        <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Work</p>
+                        <p className="text-foreground text-sm font-medium">{profile.occupation}</p>
+                      </div>
+                    </div>
+                  )}
+                  {profile?.education_level && (
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
+                      <GraduationCap className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      <div>
+                        <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Education</p>
+                        <p className="text-foreground text-sm font-medium">{profile.education_level}</p>
+                      </div>
+                    </div>
+                  )}
+                  {profile?.height_cm && (
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
+                      <Ruler className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      <div>
+                        <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Height</p>
+                        <p className="text-foreground text-sm font-medium">{formatHeight(profile.height_cm)}</p>
+                      </div>
+                    </div>
+                  )}
+                  {profile?.exercise_habits && (
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
+                      <Dumbbell className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      <div>
+                        <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Exercise</p>
+                        <p className="text-foreground text-sm font-medium">{profile.exercise_habits}</p>
+                      </div>
+                    </div>
+                  )}
+                  {profile?.smoking_status && (
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
+                      <Cigarette className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      <div>
+                        <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Smoking</p>
+                        <p className="text-foreground text-sm font-medium">{profile.smoking_status}</p>
+                      </div>
+                    </div>
+                  )}
+                  {profile?.drinking_status && (
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
+                      <Wine className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      <div>
+                        <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Drinking</p>
+                        <p className="text-foreground text-sm font-medium">{profile.drinking_status}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Date Palette */}
+            {profile?.date_preferences && (profile.date_preferences.vibe?.length > 0 || profile.date_preferences.activityType?.length > 0 || profile.date_preferences.timeOfDay?.length > 0) && (
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                custom={5}
+                variants={fadeUp}
+                className="bg-card rounded-2xl p-6 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+              >
+                <div className="flex items-center gap-2.5 mb-5">
+                  <div className="w-8 h-8 rounded-lg bg-goldenrod/10 flex items-center justify-center">
+                    <Palette className="h-4 w-4 text-goldenrod" />
+                  </div>
+                  <h3 className="text-foreground font-serif text-lg">Date Palette</h3>
+                </div>
+                <div className="space-y-4">
+                  {profile.date_preferences.vibe?.length > 0 && (
+                    <div>
+                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-2">Vibe</p>
+                      <div className="flex flex-wrap gap-2">
+                        {profile.date_preferences.vibe.map((v: string, i: number) => (
+                          <Badge key={i} variant="outline" className="px-3 py-1 text-xs rounded-full bg-goldenrod/5 border-goldenrod/15 text-foreground">
+                            {vibeLabels[v] || v}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {profile.date_preferences.activityType?.length > 0 && (
+                    <div>
+                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-2">Activities</p>
+                      <div className="flex flex-wrap gap-2">
+                        {profile.date_preferences.activityType.map((a: string, i: number) => (
+                          <Badge key={i} variant="outline" className="px-3 py-1 text-xs rounded-full bg-primary/5 border-primary/15 text-foreground">
+                            {a}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex gap-4">
+                    {profile.date_preferences.timeOfDay?.length > 0 && (
+                      <div>
+                        <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                          <Clock className="h-3 w-3" /> Time
+                        </p>
+                        <p className="text-foreground text-sm font-medium">{profile.date_preferences.timeOfDay.join(', ')}</p>
+                      </div>
+                    )}
+                    {profile.date_preferences.budget && (
+                      <div>
+                        <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                          <DollarSign className="h-3 w-3" /> Budget
+                        </p>
+                        <p className="text-foreground text-sm font-medium">{profile.date_preferences.budget}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Location Card */}
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              custom={6}
+              variants={fadeUp}
+              className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+            >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-primary" />
@@ -192,112 +476,16 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                   </button>
                 </div>
               )}
-            </div>
-
-            {/* Profile Overview */}
-            <div className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]">
-              <div className="space-y-6">
-                {profile?.bio && (
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-1 h-6 bg-gradient-to-b from-primary to-primary/40 rounded-full"></div>
-                      <h3 className="text-foreground font-medium text-lg">About</h3>
-                    </div>
-                    <p className="text-secondary-foreground text-sm leading-relaxed pl-5 italic">"{profile.bio}"</p>
-                  </div>
-                )}
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  {profile?.interests && profile.interests.length > 0 && (
-                    <div className="space-y-3">
-                      <h4 className="text-foreground font-medium text-sm uppercase tracking-wider opacity-80">Passions</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {profile.interests.map((interest, index) => (
-                          <span key={index} className="px-3 py-1.5 bg-primary/10 text-primary text-xs rounded-full border border-primary/15 hover:border-primary/30 transition-all duration-200">
-                            {interest}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {(profile as any)?.relationship_goals && (profile as any).relationship_goals.length > 0 && (
-                    <div className="space-y-3">
-                      <h4 className="text-foreground font-medium text-sm uppercase tracking-wider opacity-80">Looking For</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {(profile as any).relationship_goals.map((goal: string, index: number) => (
-                          <span key={index} className="px-3 py-1.5 bg-rosegold/10 text-rosegold text-xs rounded-full border border-rosegold/15 hover:border-rosegold/30 transition-all duration-200">
-                            {goal}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {((profile as any)?.occupation || (profile as any)?.education_level || (profile as any)?.height_cm || (profile as any)?.exercise_habits || (profile as any)?.smoking_status || (profile as any)?.drinking_status) && (
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-8 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
-                      <h4 className="text-foreground font-medium text-sm uppercase tracking-wider opacity-80 px-2">Details</h4>
-                      <div className="flex-1 h-px bg-gradient-to-r from-primary/30 via-transparent to-transparent"></div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {((profile as any)?.occupation || (profile as any)?.education_level || (profile as any)?.height_cm) && (
-                        <div className="space-y-3">
-                          {(profile as any)?.occupation && (
-                            <div className="flex items-center justify-between py-2 border-b border-border/50">
-                              <span className="text-muted-foreground text-sm flex items-center space-x-2"><div className="w-1.5 h-1.5 bg-primary rounded-full"></div><span>Work</span></span>
-                              <span className="text-foreground text-sm font-medium">{(profile as any).occupation}</span>
-                            </div>
-                          )}
-                          {(profile as any)?.education_level && (
-                            <div className="flex items-center justify-between py-2 border-b border-border/50">
-                              <span className="text-muted-foreground text-sm flex items-center space-x-2"><div className="w-1.5 h-1.5 bg-primary/70 rounded-full"></div><span>Education</span></span>
-                              <span className="text-foreground text-sm font-medium">{(profile as any).education_level}</span>
-                            </div>
-                          )}
-                          {(profile as any)?.height_cm && (
-                            <div className="flex items-center justify-between py-2">
-                              <span className="text-muted-foreground text-sm flex items-center space-x-2"><div className="w-1.5 h-1.5 bg-primary/50 rounded-full"></div><span>Height</span></span>
-                              <span className="text-foreground text-sm font-medium">
-                                {Math.floor((profile as any).height_cm / 30.48)}'{Math.round(((profile as any).height_cm / 2.54) % 12)}"
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                      {((profile as any)?.exercise_habits || (profile as any)?.smoking_status || (profile as any)?.drinking_status) && (
-                        <div className="space-y-3">
-                          {(profile as any)?.exercise_habits && (
-                            <div className="flex items-center justify-between py-2 border-b border-border/50">
-                              <span className="text-muted-foreground text-sm flex items-center space-x-2"><div className="w-1.5 h-1.5 bg-primary rounded-full"></div><span>Exercise</span></span>
-                              <span className="text-foreground text-sm font-medium">{(profile as any).exercise_habits}</span>
-                            </div>
-                          )}
-                          {(profile as any)?.smoking_status && (
-                            <div className="flex items-center justify-between py-2 border-b border-border/50">
-                              <span className="text-muted-foreground text-sm flex items-center space-x-2"><div className="w-1.5 h-1.5 bg-destructive/60 rounded-full"></div><span>Smoking</span></span>
-                              <span className="text-foreground text-sm font-medium">{(profile as any).smoking_status}</span>
-                            </div>
-                          )}
-                          {(profile as any)?.drinking_status && (
-                            <div className="flex items-center justify-between py-2">
-                              <span className="text-muted-foreground text-sm flex items-center space-x-2"><div className="w-1.5 h-1.5 bg-goldenrod/60 rounded-full"></div><span>Drinking</span></span>
-                              <span className="text-foreground text-sm font-medium">{(profile as any).drinking_status}</span>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+            </motion.div>
 
             {/* MonArk Moments */}
-            <div className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]">
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              custom={7}
+              variants={fadeUp}
+              className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+            >
               <div className="flex items-center space-x-2 mb-2">
                 <TrendingUp className="h-5 w-5 text-primary" />
                 <h3 className="text-foreground font-medium text-lg">MonArk Moments</h3>
@@ -324,19 +512,25 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                   </button>
                 )}
               </div>
-            </div>
+            </motion.div>
 
             {/* Trust Score */}
-            <div className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]">
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              custom={8}
+              variants={fadeUp}
+              className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+            >
               <h3 className="text-foreground font-medium text-lg mb-2">MonArk Trust Score</h3>
               <p className="text-muted-foreground text-sm mb-4">Build trust through verification and authentic connections</p>
               <button onClick={onOpenTrustScore} className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 hover:shadow-warm-glow" disabled={isSigningOut}>
                 Get Verified & Build Trust
               </button>
-            </div>
+            </motion.div>
 
             <button
-              onClick={() => { console.log('Edit Profile button clicked'); setShowProfileCreation(true); }}
+              onClick={() => { setShowProfileCreation(true); }}
               className="w-full py-3 bg-secondary border border-border text-foreground rounded-xl transition-all hover:border-primary/30 hover:bg-secondary/80"
               disabled={isSigningOut}
             >
