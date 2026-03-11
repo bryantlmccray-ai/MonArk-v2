@@ -197,11 +197,13 @@ serve(async (req) => {
 
     console.log('Date proposal request for conversation:', requestData.conversationId);
 
-    // ── ASYNC PATH ──────────────────────────────────────────────
-    // When async=true, create a job row and return immediately.
-    // The job is processed in-band here (MVP), but this pattern
-    // allows swapping to a queue worker when AI calls get heavy.
-    if (requestData.async) {
+    // ── Circuit Breaker Check ───────────────────────────────
+    if (!checkCircuitBreaker()) {
+      console.log('Circuit breaker OPEN: returning resting fallback');
+      return new Response(JSON.stringify(RESTING_FALLBACK), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
       const serviceClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
       // Create the job
