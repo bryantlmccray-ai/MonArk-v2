@@ -196,4 +196,5 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
         )}
       </div>
     </div>
+  );
 };
