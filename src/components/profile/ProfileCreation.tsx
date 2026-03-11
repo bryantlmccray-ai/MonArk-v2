@@ -54,12 +54,12 @@ export interface StepCompletionStatus {
 }
 
 export interface StepRequirements {
-  bio: 'optional';
-  interests: 'important';
-  photos: 'important'; 
-  lifestyle: 'optional';
-  datePalette: 'optional';
-  identityPreferences: 'critical';
+  bio: 'optional' | 'important';
+  interests: 'optional' | 'important';
+  photos: 'optional' | 'important'; 
+  lifestyle: 'optional' | 'important';
+  datePalette: 'optional' | 'important';
+  identityPreferences: 'optional' | 'important';
 }
 
 export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, onCancel }) => {
