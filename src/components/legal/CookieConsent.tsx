@@ -48,8 +48,8 @@ export const CookieConsent: React.FC = () => {
             <Cookie className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
             
             <div className="flex-1">
-              <h3 className="text-foreground font-medium mb-2">Cookie Preferences</h3>
-              <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
+              <h3 className="text-foreground font-semibold text-base mb-2">Cookie Preferences</h3>
+              <p className="text-foreground/80 text-sm mb-4 leading-relaxed font-medium">
                 We use cookies to enhance your experience, analyze site usage, and assist with marketing. 
                 By continuing, you agree to our use of cookies. You can manage your preferences anytime.
               </p>
