@@ -639,7 +639,7 @@ const PlanCard = ({ plan, onSelect }: { plan: DatePlan; onSelect: () => void }) 
             <div className="flex flex-wrap gap-2">
               {plan.careFeatures.map((feature, idx) => (
                 <Badge key={idx} variant="outline" className="bg-background/50 text-xs">
-                  <Shield className="w-3 h-3 mr-1 text-emerald-400" />
+                  <Shield className="w-3 h-3 mr-1 text-primary" />
                   {feature}
                 </Badge>
               ))}
