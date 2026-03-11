@@ -132,7 +132,10 @@ serve(async (req) => {
     }
 
     const requestData = await req.json()
-    const { type, userContext }: CompanionRequest = requestData
+    const { type, userContext: rawContext }: CompanionRequest = requestData
+
+    // ── LLM Firewall: Strip PII before any AI processing ────
+    const userContext = sanitizeCompanionContext(rawContext || {}) as CompanionRequest['userContext'];
 
     // ── Circuit Breaker Check ───────────────────────────────
     if (!checkCircuitBreaker()) {

@@ -190,7 +190,10 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const requestData: DateProposalRequest = await req.json();
+    const rawRequest = await req.json();
+
+    // ── LLM Firewall: Strip PII before any AI processing ────
+    const requestData = sanitizeConciergeContext(rawRequest) as DateProposalRequest;
 
     if (requestData.currentUserId && requestData.currentUserId !== user.id) {
       throw new Error('Cannot create proposals for other users');

@@ -109,7 +109,7 @@ export const useAICompanion = () => {
     }
 
     try {
-      const userContext = {
+      const rawContext = {
         totalDates: journalEntries.length,
         averageRating: journalEntries.length > 0 
           ? journalEntries.reduce((sum, entry) => sum + (entry.rating || 0), 0) / journalEntries.length
@@ -121,7 +121,7 @@ export const useAICompanion = () => {
       const { data, error } = await supabase.functions.invoke('ai-companion-chat', {
         body: {
           type: 'celebration',
-          userContext
+          userContext: sanitizeCompanionPayload(rawContext)
         }
       });
 
