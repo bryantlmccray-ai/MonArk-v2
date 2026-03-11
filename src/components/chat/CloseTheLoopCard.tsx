@@ -28,22 +28,22 @@ const FEELING_OPTIONS = [
     id: 'great' as const, 
     label: 'Great energy', 
     icon: Heart, 
-    color: 'text-green-400',
-    bgColor: 'bg-green-500/10 hover:bg-green-500/20 border-green-500/30'
+    color: 'text-primary',
+    bgColor: 'bg-primary/10 hover:bg-primary/15 border-primary/30'
   },
   { 
     id: 'neutral' as const, 
     label: 'Neutral', 
     icon: Meh, 
-    color: 'text-amber-400',
-    bgColor: 'bg-amber-500/10 hover:bg-amber-500/20 border-amber-500/30'
+    color: 'text-goldenrod',
+    bgColor: 'bg-goldenrod/10 hover:bg-goldenrod/15 border-goldenrod/30'
   },
   { 
     id: 'not-a-fit' as const, 
     label: 'Not a fit', 
     icon: X, 
-    color: 'text-rose-400',
-    bgColor: 'bg-rose-500/10 hover:bg-rose-500/20 border-rose-500/30'
+    color: 'text-dusty-rose',
+    bgColor: 'bg-dusty-rose/10 hover:bg-dusty-rose/15 border-dusty-rose/30'
   }
 ];
 
@@ -217,10 +217,10 @@ export const CloseTheLoopCard: React.FC<CloseTheLoopCardProps> = ({
                       whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.99 }}
                       onClick={handleGracefulClose}
-                      className="w-full flex items-center gap-3 p-4 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 transition-all text-left"
+                      className="w-full flex items-center gap-3 p-4 rounded-lg bg-dusty-rose/10 hover:bg-dusty-rose/15 border border-dusty-rose/20 transition-all text-left"
                     >
-                      <div className="p-2 rounded-full bg-rose-500/20">
-                        <MessageCircle className="h-4 w-4 text-rose-400" />
+                      <div className="p-2 rounded-full bg-dusty-rose/20">
+                        <MessageCircle className="h-4 w-4 text-dusty-rose" />
                       </div>
                       <div>
                         <span className="text-foreground font-medium block">
@@ -258,7 +258,7 @@ export const CloseTheLoopCard: React.FC<CloseTheLoopCardProps> = ({
                   animate={{ scale: 1 }}
                   transition={{ type: 'spring', stiffness: 200, damping: 10 }}
                 >
-                  <CheckCircle2 className="h-12 w-12 text-green-400 mx-auto" />
+                  <CheckCircle2 className="h-12 w-12 text-primary mx-auto" />
                 </motion.div>
                 <div>
                   <h4 className="text-foreground font-semibold">Loop closed!</h4>
