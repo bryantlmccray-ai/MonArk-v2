@@ -238,27 +238,47 @@ export const MatchDetailModal = ({
         </ScrollArea>
 
         {/* Action buttons - sticky footer */}
-        <div className="p-4 border-t border-border bg-card flex gap-3">
+        <div className="p-4 border-t border-border bg-card space-y-2">
+          <div className="flex gap-3">
+            <Button
+              variant="outline"
+              size="lg"
+              className="flex-1 h-14"
+              onClick={onPass}
+              disabled={isProcessing}
+            >
+              <X className="w-6 h-6 mr-2" />
+              Pass
+            </Button>
+            <Button
+              size="lg"
+              className="flex-1 h-14 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600"
+              onClick={onLike}
+              disabled={isProcessing}
+            >
+              <Heart className="w-6 h-6 mr-2" />
+              Like
+            </Button>
+          </div>
           <Button
-            variant="outline"
-            size="lg"
-            className="flex-1 h-14"
-            onClick={onPass}
-            disabled={isProcessing}
+            variant="ghost"
+            size="sm"
+            className="w-full text-muted-foreground hover:text-destructive"
+            onClick={() => setShowReportBlock(true)}
           >
-            <X className="w-6 h-6 mr-2" />
-            Pass
-          </Button>
-          <Button
-            size="lg"
-            className="flex-1 h-14 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600"
-            onClick={onLike}
-            disabled={isProcessing}
-          >
-            <Heart className="w-6 h-6 mr-2" />
-            Like
+            <Flag className="w-4 h-4 mr-2" />
+            Report or Block
           </Button>
         </div>
+
+        {match && (
+          <ReportBlockModal
+            isOpen={showReportBlock}
+            onClose={() => setShowReportBlock(false)}
+            targetUserId={match.id}
+            targetUserName={match.name || 'This user'}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );
