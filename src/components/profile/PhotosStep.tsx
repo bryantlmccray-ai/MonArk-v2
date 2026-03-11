@@ -93,8 +93,8 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
   };
 
   return (
-    <div className="min-h-screen bg-background p-6 flex flex-col overflow-y-auto pb-32">
-      <div className="flex-1 max-w-2xl mx-auto w-full space-y-6">
+    <div className="bg-background p-6 pb-16">
+      <div className="max-w-2xl mx-auto w-full space-y-6">
         <div className="text-center space-y-2 pt-8">
           <h1 className="text-3xl font-light text-foreground">Curate Your Photos</h1>
           <p className="text-muted-foreground">Add up to 6 photos. We recommend a variety of shots to best tell your story.</p>
