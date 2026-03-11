@@ -2705,6 +2705,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_blocked: { Args: { user_a: string; user_b: string }; Returns: boolean }
       is_match_or_pool_member: {
         Args: { target_id: string; viewer_id: string }
         Returns: boolean

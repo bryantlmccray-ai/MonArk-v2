@@ -348,7 +348,17 @@ async function generateDatingPool(supabase: any, userId: string) {
     .eq('user_id', userId)
     .eq('week_start', weekStart);
 
-  const excludeIds = [userId, ...(curatedMatches?.map((m: any) => m.matched_user_id) || [])];
+  // Also exclude blocked users from candidate pool
+  const { data: blockedRows } = await supabase
+    .from('blocked_users')
+    .select('blocker_user_id, blocked_user_id')
+    .or(`blocker_user_id.eq.${userId},blocked_user_id.eq.${userId}`);
+
+  const blockedIds = (blockedRows || []).map((b: any) =>
+    b.blocker_user_id === userId ? b.blocked_user_id : b.blocker_user_id
+  );
+
+  const excludeIds = [userId, ...(curatedMatches?.map((m: any) => m.matched_user_id) || []), ...blockedIds];
 
   let { data: candidates, error } = await supabase
     .from('user_profiles')
@@ -507,7 +517,17 @@ async function getPotentialMatches(supabase: any, userId: string) {
     .eq('user_id', userId)
     .eq('week_start', weekStart);
 
-  const excludeIds = [userId, ...(existingMatches?.map((m: any) => m.matched_user_id) || [])];
+  // Exclude blocked users
+  const { data: blockedRows } = await supabase
+    .from('blocked_users')
+    .select('blocker_user_id, blocked_user_id')
+    .or(`blocker_user_id.eq.${userId},blocked_user_id.eq.${userId}`);
+
+  const blockedIds = (blockedRows || []).map((b: any) =>
+    b.blocker_user_id === userId ? b.blocked_user_id : b.blocker_user_id
+  );
+
+  const excludeIds = [userId, ...(existingMatches?.map((m: any) => m.matched_user_id) || []), ...blockedIds];
 
   const { data: candidates, error } = await supabase
     .from('user_profiles')
