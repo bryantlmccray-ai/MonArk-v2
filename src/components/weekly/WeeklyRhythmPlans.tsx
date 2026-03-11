@@ -396,22 +396,22 @@ export const WeeklyRhythmPlans = () => {
                   </div>
 
                   {/* Care Features */}
-                  <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                  <div className="p-4 rounded-xl bg-secondary border-2 border-border">
                     <div className="flex items-center gap-2 mb-3">
-                      <Shield className="w-5 h-5 text-emerald-400" />
-                      <span className="font-medium text-foreground">Wrapped in care</span>
+                      <Shield className="w-5 h-5 text-foreground" />
+                      <span className="font-semibold text-foreground">Wrapped in care</span>
                     </div>
                     <ul className="space-y-2">
-                      <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Check className="w-4 h-4 text-emerald-400" />
+                      <li className="flex items-center gap-2 text-sm text-foreground/70 font-medium">
+                        <Check className="w-4 h-4 text-primary" />
                         Shared itinerary with your safety contact
                       </li>
-                      <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Check className="w-4 h-4 text-emerald-400" />
+                      <li className="flex items-center gap-2 text-sm text-foreground/70 font-medium">
+                        <Check className="w-4 h-4 text-primary" />
                         Visible SOS throughout the date
                       </li>
-                      <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Check className="w-4 h-4 text-emerald-400" />
+                      <li className="flex items-center gap-2 text-sm text-foreground/70 font-medium">
+                        <Check className="w-4 h-4 text-primary" />
                         Clear {selectedPlan.timeWindow.duration} window ({selectedPlan.timeWindow.start} - {selectedPlan.timeWindow.end})
                       </li>
                     </ul>
