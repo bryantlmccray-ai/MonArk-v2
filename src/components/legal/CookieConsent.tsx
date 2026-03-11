@@ -42,7 +42,7 @@ export const CookieConsent: React.FC = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 p-4">
-      <Card className="bg-card border border-border shadow-[0_-4px_30px_-4px_hsl(var(--foreground)/0.15)]">
+      <Card className="bg-card border-2 border-foreground/20 shadow-[0_-8px_40px_-4px_hsl(var(--foreground)/0.25)]">
         <div className="p-6">
           <div className="flex items-start gap-4">
             <Cookie className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
