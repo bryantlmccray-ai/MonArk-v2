@@ -11,12 +11,12 @@ export const TermsContent: React.FC = () => {
         <Button 
           variant="ghost" 
           onClick={() => window.history.back()}
-          className="text-goldenrod hover:bg-goldenrod/10"
+          className="text-primary hover:bg-primary/10"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
-        <a href="/" className="text-goldenrod hover:underline flex items-center gap-2">
+        <a href="/" className="text-primary hover:underline flex items-center gap-2">
           <Home className="h-4 w-4" />
           Home
         </a>
@@ -25,13 +25,13 @@ export const TermsContent: React.FC = () => {
       {/* Header */}
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-3">
-          <FileText className="h-12 w-12 text-goldenrod" />
-          <h1 className="text-4xl font-light text-white">Terms of Service</h1>
+          <FileText className="h-12 w-12 text-primary" />
+          <h1 className="text-4xl font-light text-foreground">Terms of Service</h1>
         </div>
-        <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
           These Terms of Service govern your use of the MonArk platform and services
         </p>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted-foreground">
           Last updated: {new Date().toLocaleDateString()}
         </p>
       </div>
@@ -39,14 +39,14 @@ export const TermsContent: React.FC = () => {
       {/* Terms Sections */}
       <div className="grid gap-6">
         {/* Account Responsibilities */}
-        <Card className="bg-charcoal-gray border-goldenrod/20">
+        <Card className="border-border">
           <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-white">
-              <Users className="h-6 w-6 text-goldenrod" />
+            <CardTitle className="flex items-center gap-3 text-foreground">
+              <Users className="h-6 w-6 text-primary" />
               Account Responsibilities
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
+          <CardContent className="text-muted-foreground space-y-4">
             <p>
               You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You must:
             </p>
@@ -60,16 +60,16 @@ export const TermsContent: React.FC = () => {
         </Card>
 
         {/* Community Guidelines */}
-        <Card className="bg-charcoal-gray border-goldenrod/20">
+        <Card className="border-border">
           <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-white">
-              <Shield className="h-6 w-6 text-goldenrod" />
+            <CardTitle className="flex items-center gap-3 text-foreground">
+              <Shield className="h-6 w-6 text-primary" />
               Community Guidelines
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
+          <CardContent className="text-muted-foreground space-y-4">
              <p>
-               MonArk is committed to being an emotionally safe space. We maintain a <strong className="text-white">zero tolerance policy for objectionable content or abusive users.</strong> The following behaviors are strictly prohibited:
+               MonArk is committed to being an emotionally safe space. We maintain a <strong className="text-foreground">zero tolerance policy for objectionable content or abusive users.</strong> The following behaviors are strictly prohibited:
              </p>
              <ul className="list-disc list-inside space-y-2 ml-4">
                <li>Harassment, abuse, or threatening behavior toward other users</li>
@@ -79,22 +79,22 @@ export const TermsContent: React.FC = () => {
                <li>Posting hateful, discriminatory, or objectionable material of any kind</li>
                <li>Attempting to circumvent our safety features or policies</li>
              </ul>
-             <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4 mt-4">
+             <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 mt-4">
                <div className="flex items-center gap-2 mb-2">
-                 <AlertTriangle className="h-5 w-5 text-red-400" />
-                 <span className="text-red-400 font-medium">Zero Tolerance Policy</span>
+                 <AlertTriangle className="h-5 w-5 text-destructive" />
+                 <span className="text-destructive font-medium">Zero Tolerance Policy</span>
                </div>
-               <p className="text-red-200 text-sm">
+               <p className="text-destructive/80 text-sm">
                  MonArk has zero tolerance for objectionable content or abusive users. Violations of our community guidelines will result in immediate account suspension or permanent banning from the platform. We reserve the right to remove any content and terminate any account at our sole discretion without prior notice.
                </p>
              </div>
 
-             <div className="bg-charcoal-gray border border-goldenrod/30 rounded-lg p-4 mt-4">
+             <div className="bg-card border border-primary/30 rounded-lg p-4 mt-4">
                <div className="flex items-center gap-2 mb-2">
-                 <Shield className="h-5 w-5 text-goldenrod" />
-                 <span className="text-goldenrod font-medium">Reporting &amp; Human Moderation</span>
+                 <Shield className="h-5 w-5 text-primary" />
+                 <span className="text-primary font-medium">Reporting &amp; Human Moderation</span>
                </div>
-               <p className="text-gray-300 text-sm">
+               <p className="text-muted-foreground text-sm">
                  Every user can block or report any other user directly from match profiles, conversations, and profile views. All reports are reviewed by our human moderation team within 24 hours. Reported users may be immediately restricted while under review. Users who are found to have violated these guidelines will be permanently removed from the platform.
                </p>
              </div>
@@ -102,14 +102,14 @@ export const TermsContent: React.FC = () => {
         </Card>
 
         {/* Service Availability */}
-        <Card className="bg-charcoal-gray border-goldenrod/20">
+        <Card className="border-border">
           <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-white">
-              <FileText className="h-6 w-6 text-goldenrod" />
+            <CardTitle className="flex items-center gap-3 text-foreground">
+              <FileText className="h-6 w-6 text-primary" />
               Service Availability
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
+          <CardContent className="text-muted-foreground space-y-4">
             <p>
               We strive to maintain high service availability but cannot guarantee uninterrupted access to our platform. We reserve the right to:
             </p>
@@ -123,14 +123,14 @@ export const TermsContent: React.FC = () => {
         </Card>
 
         {/* Data and Privacy */}
-        <Card className="bg-charcoal-gray border-goldenrod/20">
+        <Card className="border-border">
           <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-white">
-              <Shield className="h-6 w-6 text-goldenrod" />
+            <CardTitle className="flex items-center gap-3 text-foreground">
+              <Shield className="h-6 w-6 text-primary" />
               Data and Privacy
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
+          <CardContent className="text-muted-foreground space-y-4">
             <p>
               Your privacy is fundamental to our service. By using MonArk, you agree that:
             </p>
@@ -144,14 +144,14 @@ export const TermsContent: React.FC = () => {
         </Card>
 
         {/* Dispute Resolution */}
-        <Card className="bg-charcoal-gray border-goldenrod/20">
+        <Card className="border-border">
           <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-white">
-              <Scale className="h-6 w-6 text-goldenrod" />
+            <CardTitle className="flex items-center gap-3 text-foreground">
+              <Scale className="h-6 w-6 text-primary" />
               Dispute Resolution
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
+          <CardContent className="text-muted-foreground space-y-4">
             <p>
               Any disputes arising from your use of MonArk will be resolved through:
             </p>
@@ -160,21 +160,21 @@ export const TermsContent: React.FC = () => {
               <li>Binding arbitration in accordance with the American Arbitration Association rules</li>
               <li>Jurisdiction in the state where MonArk is headquartered</li>
             </ul>
-            <p className="text-sm text-gray-400 mt-4">
+            <p className="text-sm text-muted-foreground mt-4">
               By using our service, you waive your right to participate in class-action lawsuits against MonArk.
             </p>
           </CardContent>
         </Card>
 
         {/* Limitation of Liability */}
-        <Card className="bg-charcoal-gray border-goldenrod/20">
+        <Card className="border-border">
           <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-white">
-              <AlertTriangle className="h-6 w-6 text-goldenrod" />
+            <CardTitle className="flex items-center gap-3 text-foreground">
+              <AlertTriangle className="h-6 w-6 text-primary" />
               Limitation of Liability
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
+          <CardContent className="text-muted-foreground space-y-4">
             <p>
               MonArk provides dating and emotional wellness services "as is" without warranties. We are not liable for:
             </p>
@@ -184,8 +184,8 @@ export const TermsContent: React.FC = () => {
               <li>Technical issues, data loss, or service interruptions</li>
               <li>Third-party content or services integrated with our platform</li>
             </ul>
-            <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-4 mt-4">
-              <p className="text-yellow-200 text-sm">
+            <div className="bg-accent/10 border border-accent/30 rounded-lg p-4 mt-4">
+              <p className="text-foreground text-sm">
                 <strong>Important:</strong> Our liability is limited to the amount you have paid for our services in the 12 months prior to any claim.
               </p>
             </div>
@@ -194,13 +194,13 @@ export const TermsContent: React.FC = () => {
       </div>
 
       {/* Contact Information */}
-      <Card className="bg-blue-900/20 border-blue-500/30">
+      <Card className="bg-primary/5 border-primary/20">
         <CardContent className="pt-6">
           <div className="text-center space-y-3">
-            <h3 className="text-white font-medium">Questions About These Terms?</h3>
-            <p className="text-blue-200 text-sm">
+            <h3 className="text-foreground font-medium">Questions About These Terms?</h3>
+            <p className="text-muted-foreground text-sm">
               If you have questions about these Terms of Service, please contact our legal team at{' '}
-              <a href="mailto:legal@monark.com" className="text-goldenrod hover:underline">
+              <a href="mailto:legal@monark.com" className="text-primary hover:underline">
                 legal@monark.com
               </a>
             </p>
@@ -209,16 +209,16 @@ export const TermsContent: React.FC = () => {
       </Card>
 
       {/* Related Links */}
-      <Card className="bg-charcoal-gray border-goldenrod/20">
+      <Card className="border-border">
         <CardContent className="pt-6">
           <div className="text-center space-y-4">
-            <h3 className="text-white font-medium">Related Documents</h3>
+            <h3 className="text-foreground font-medium">Related Documents</h3>
             <div className="flex items-center justify-center space-x-6">
-              <a href="/privacy" className="text-goldenrod hover:underline flex items-center gap-2">
+              <a href="/privacy" className="text-primary hover:underline flex items-center gap-2">
                 <Shield className="h-4 w-4" />
                 Privacy Policy
               </a>
-              <a href="/" className="text-goldenrod hover:underline flex items-center gap-2">
+              <a href="/" className="text-primary hover:underline flex items-center gap-2">
                 <Home className="h-4 w-4" />
                 Back to MonArk
               </a>

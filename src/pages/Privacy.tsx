@@ -9,18 +9,18 @@ export default function Privacy() {
   const [activeTab, setActiveTab] = useState<'policy' | 'data'>('policy');
 
   return (
-    <div className="min-h-screen bg-jet-black">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         {/* Tab Navigation */}
         <div className="flex justify-center mb-8">
-          <div className="bg-charcoal-gray rounded-lg p-1 border border-goldenrod/20">
+          <div className="bg-card rounded-lg p-1 border border-border">
             <Button
               variant={activeTab === 'policy' ? 'default' : 'ghost'}
               onClick={() => setActiveTab('policy')}
               className={`${
                 activeTab === 'policy'
-                  ? 'bg-goldenrod-gradient text-jet-black'
-                  : 'text-gray-300 hover:text-white'
+                  ? ''
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               <FileText className="h-4 w-4 mr-2" />
@@ -31,8 +31,8 @@ export default function Privacy() {
               onClick={() => setActiveTab('data')}
               className={`${
                 activeTab === 'data'
-                  ? 'bg-goldenrod-gradient text-jet-black'
-                  : 'text-gray-300 hover:text-white'
+                  ? ''
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               <Settings className="h-4 w-4 mr-2" />
