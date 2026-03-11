@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Plus, X, Upload } from 'lucide-react';
+import { Plus, X, Upload, Save } from 'lucide-react';
 import { ProfileData } from './ProfileCreation';
 import { usePhotoUpload } from '@/hooks/usePhotoUpload';
 import { useToast } from '@/hooks/use-toast';
@@ -11,9 +11,10 @@ interface PhotosStepProps {
   onSkip: () => void;
   onBack?: () => void;
   stepRequirement: 'critical' | 'important' | 'optional';
+  onSaveAndReturn?: () => void;
 }
 
-export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, stepRequirement }) => {
+export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, stepRequirement, onSaveAndReturn }) => {
   const [photos, setPhotos] = useState<string[]>(profileData.photos);
   const { uploadPhoto, deletePhoto, uploading } = usePhotoUpload();
   const { toast } = useToast();
@@ -54,19 +55,15 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
         const newPhotos = [...photos];
         newPhotos[currentSlot] = photoUrl;
         setPhotos(newPhotos);
-        updateData({ photos: newPhotos });
-        toast({ title: "Photo uploaded successfully!", description: "Your photo has been added to your profile." });
-      } else {
-        toast({ title: "Upload failed", description: "There was an error uploading your photo. Please try again.", variant: "destructive" });
+        updateData({ photos: newPhotos.filter(p => p) });
+        toast({ title: "Photo uploaded successfully!" });
       }
     } catch (error) {
       console.error('Upload error:', error);
-      toast({ title: "Upload failed", description: "There was an error uploading your photo. Please try again.", variant: "destructive" });
+      toast({ title: "Upload failed", description: "Please try again.", variant: "destructive" });
     }
 
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handlePhotoRemove = async (slotIndex: number) => {
@@ -79,21 +76,17 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
         const newPhotos = [...photos];
         newPhotos[slotIndex] = '';
         setPhotos(newPhotos);
-        updateData({ photos: newPhotos.filter(photo => photo) });
-        toast({ title: "Photo removed", description: "Your photo has been removed from your profile." });
+        updateData({ photos: newPhotos.filter(p => p) });
+        toast({ title: "Photo removed" });
       }
     } catch (error) {
       console.error('Delete error:', error);
-      toast({ title: "Delete failed", description: "There was an error removing your photo. Please try again.", variant: "destructive" });
+      toast({ title: "Delete failed", variant: "destructive" });
     }
   };
 
-  const handleNext = () => {
-    onNext();
-  };
-
   return (
-    <div className="bg-background p-6 pb-16">
+    <div className="bg-background p-6 pb-32">
       <div className="max-w-2xl mx-auto w-full space-y-6">
         <div className="text-center space-y-2 pt-8">
           <h1 className="text-3xl font-light text-foreground">Curate Your Photos</h1>
@@ -110,11 +103,7 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
             >
               {photos[slot.id] ? (
                 <>
-                  <img
-                    src={photos[slot.id]}
-                    alt={`Photo ${slot.id + 1}`}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={photos[slot.id]} alt={`Photo ${slot.id + 1}`} className="w-full h-full object-cover" />
                   <button
                     onClick={() => handlePhotoRemove(slot.id)}
                     disabled={uploading}
@@ -127,7 +116,7 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
                 <button
                   onClick={() => handlePhotoUpload(slot.id)}
                   disabled={uploading}
-                  className="w-full h-full flex flex-col items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50"
+                  className="w-full h-full flex flex-col items-center justify-center text-muted-foreground hover:text-primary transition-colors disabled:opacity-50"
                 >
                   {uploading && currentSlot === slot.id ? (
                     <Upload className="h-8 w-8 mb-2 animate-pulse" />
@@ -136,9 +125,7 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
                   )}
                   <div className="text-center px-2">
                     <p className="text-sm font-medium">{slot.label}</p>
-                    {slot.subtitle && (
-                      <p className="text-xs text-muted-foreground mt-1">{slot.subtitle}</p>
-                    )}
+                    {slot.subtitle && <p className="text-xs text-muted-foreground mt-1">{slot.subtitle}</p>}
                   </div>
                 </button>
               )}
@@ -146,53 +133,46 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
           ))}
         </div>
 
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="hidden"
-        />
+        <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
       </div>
 
       <div className="max-w-2xl mx-auto w-full pt-6 space-y-3">
-        {onBack && (
-          <div className="flex space-x-3">
-            <button
-              onClick={onBack}
-              disabled={uploading}
-              className="flex-1 py-3 text-muted-foreground hover:text-foreground transition-colors border border-border hover:border-primary/50 rounded-xl disabled:opacity-50"
-            >
-              Back
-            </button>
-            <button
-              onClick={handleNext}
-              disabled={!photos[0] || uploading}
-              className="flex-1 py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {uploading ? 'Uploading...' : 'Continue'}
-            </button>
-          </div>
-        )}
-        
-        {!onBack && (
+        {onSaveAndReturn && (
           <button
-            onClick={handleNext}
-            disabled={!photos[0] || uploading}
-            className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {uploading ? 'Uploading...' : 'Continue'}
-          </button>
-        )}
-        
-        {stepRequirement !== 'critical' && (
-          <button
-            onClick={onSkip}
+            onClick={onSaveAndReturn}
             disabled={uploading}
-            className="w-full py-3 text-muted-foreground hover:text-foreground transition-colors border border-border hover:border-primary/50 rounded-xl disabled:opacity-50"
+            className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            Skip for now
+            <Save size={18} />
+            Save & Return to Profile
           </button>
+        )}
+
+        {!onSaveAndReturn && (
+          <>
+            {onBack && (
+              <div className="flex space-x-3">
+                <button onClick={onBack} disabled={uploading} className="flex-1 py-3 text-muted-foreground hover:text-foreground transition-colors border border-border hover:border-primary/50 rounded-xl disabled:opacity-50">
+                  Back
+                </button>
+                <button onClick={onNext} disabled={!photos[0] || uploading} className="flex-1 py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed">
+                  {uploading ? 'Uploading...' : 'Continue'}
+                </button>
+              </div>
+            )}
+
+            {!onBack && (
+              <button onClick={onNext} disabled={!photos[0] || uploading} className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed">
+                {uploading ? 'Uploading...' : 'Continue'}
+              </button>
+            )}
+
+            {stepRequirement !== 'critical' && (
+              <button onClick={onSkip} disabled={uploading} className="w-full py-3 text-muted-foreground hover:text-foreground transition-colors border border-border hover:border-primary/50 rounded-xl disabled:opacity-50">
+                Skip for now
+              </button>
+            )}
+          </>
         )}
       </div>
     </div>
