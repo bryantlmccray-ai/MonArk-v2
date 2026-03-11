@@ -69,7 +69,7 @@ export const useAICompanion = () => {
     if (!user) return "I'd love to help, but it seems you're not logged in!";
 
     try {
-      const userContext = {
+      const rawContext = {
         recentDates: journalEntries.slice(0, 3),
         rifProfile,
         interests: profile?.interests || [],
@@ -79,7 +79,7 @@ export const useAICompanion = () => {
       const { data, error } = await supabase.functions.invoke('ai-companion-chat', {
         body: {
           type: 'chat_response',
-          userContext
+          userContext: sanitizeCompanionPayload(rawContext)
         }
       });
 
