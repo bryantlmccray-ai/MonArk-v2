@@ -2513,6 +2513,8 @@ export type Database = {
           drinking_status: string | null
           education_level: string | null
           exercise_habits: string | null
+          fuzzed_lat: number | null
+          fuzzed_lng: number | null
           gender_identity: Database["public"]["Enums"]["gender_identity"] | null
           gender_identity_custom: string | null
           height_cm: number | null
@@ -2539,6 +2541,8 @@ export type Database = {
           drinking_status?: string | null
           education_level?: string | null
           exercise_habits?: string | null
+          fuzzed_lat?: never
+          fuzzed_lng?: never
           gender_identity?: never
           gender_identity_custom?: never
           height_cm?: number | null
@@ -2563,6 +2567,8 @@ export type Database = {
           drinking_status?: string | null
           education_level?: string | null
           exercise_habits?: string | null
+          fuzzed_lat?: never
+          fuzzed_lng?: never
           gender_identity?: never
           gender_identity_custom?: never
           height_cm?: number | null
@@ -2626,6 +2632,13 @@ export type Database = {
           state: string
           transit_score: number
           walkability_score: number
+        }[]
+      }
+      fuzz_coordinates: {
+        Args: { precise_lat: number; precise_lng: number }
+        Returns: {
+          fuzzed_lat: number
+          fuzzed_lng: number
         }[]
       }
       get_reports_against_me: {
