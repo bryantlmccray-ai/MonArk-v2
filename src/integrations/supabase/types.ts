@@ -2628,6 +2628,16 @@ export type Database = {
           walkability_score: number
         }[]
       }
+      get_reports_against_me: {
+        Args: never
+        Returns: {
+          created_at: string
+          id: string
+          report_type: string
+          status: string
+          updated_at: string
+        }[]
+      }
       has_mutual_match: {
         Args: { user_a: string; user_b: string }
         Returns: boolean
