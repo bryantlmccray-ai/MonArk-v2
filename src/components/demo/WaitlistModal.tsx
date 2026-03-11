@@ -399,9 +399,9 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   checked={formData.willingToBeta}
                   onCheckedChange={(checked) => handleInputChange('willingToBeta', checked as boolean)}
                   disabled={isSubmitting}
-                  className="border-gray-600 data-[state=checked]:bg-goldenrod data-[state=checked]:border-goldenrod"
+                  className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
-                <Label htmlFor="willingToBeta" className="text-white text-sm cursor-pointer">
+                <Label htmlFor="willingToBeta" className="text-foreground/80 text-sm cursor-pointer font-medium">
                   I'm interested in beta testing new features
                 </Label>
               </div>
