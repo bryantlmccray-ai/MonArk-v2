@@ -68,25 +68,36 @@ export const TermsContent: React.FC = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="text-gray-300 space-y-4">
-            <p>
-              MonArk is committed to being an emotionally safe space. The following behaviors are strictly prohibited:
-            </p>
-            <ul className="list-disc list-inside space-y-2 ml-4">
-              <li>Harassment, abuse, or threatening behavior toward other users</li>
-              <li>Sharing inappropriate, offensive, or harmful content</li>
-              <li>Impersonating others or creating fake profiles</li>
-              <li>Soliciting money, services, or personal information from other users</li>
-              <li>Attempting to circumvent our safety features or policies</li>
-            </ul>
-            <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4 mt-4">
-              <div className="flex items-center gap-2 mb-2">
-                <AlertTriangle className="h-5 w-5 text-red-400" />
-                <span className="text-red-400 font-medium">Zero Tolerance Policy</span>
-              </div>
-              <p className="text-red-200 text-sm">
-                Violations of our community guidelines may result in immediate account suspension or permanent banning from the platform.
-              </p>
-            </div>
+             <p>
+               MonArk is committed to being an emotionally safe space. We maintain a <strong className="text-white">zero tolerance policy for objectionable content or abusive users.</strong> The following behaviors are strictly prohibited:
+             </p>
+             <ul className="list-disc list-inside space-y-2 ml-4">
+               <li>Harassment, abuse, or threatening behavior toward other users</li>
+               <li>Sharing inappropriate, offensive, sexually explicit, or harmful content</li>
+               <li>Impersonating others or creating fake profiles</li>
+               <li>Soliciting money, services, or personal information from other users</li>
+               <li>Posting hateful, discriminatory, or objectionable material of any kind</li>
+               <li>Attempting to circumvent our safety features or policies</li>
+             </ul>
+             <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4 mt-4">
+               <div className="flex items-center gap-2 mb-2">
+                 <AlertTriangle className="h-5 w-5 text-red-400" />
+                 <span className="text-red-400 font-medium">Zero Tolerance Policy</span>
+               </div>
+               <p className="text-red-200 text-sm">
+                 MonArk has zero tolerance for objectionable content or abusive users. Violations of our community guidelines will result in immediate account suspension or permanent banning from the platform. We reserve the right to remove any content and terminate any account at our sole discretion without prior notice.
+               </p>
+             </div>
+
+             <div className="bg-charcoal-gray border border-goldenrod/30 rounded-lg p-4 mt-4">
+               <div className="flex items-center gap-2 mb-2">
+                 <Shield className="h-5 w-5 text-goldenrod" />
+                 <span className="text-goldenrod font-medium">Reporting &amp; Human Moderation</span>
+               </div>
+               <p className="text-gray-300 text-sm">
+                 Every user can block or report any other user directly from match profiles, conversations, and profile views. All reports are reviewed by our human moderation team within 24 hours. Reported users may be immediately restricted while under review. Users who are found to have violated these guidelines will be permanently removed from the platform.
+               </p>
+             </div>
           </CardContent>
         </Card>
 
