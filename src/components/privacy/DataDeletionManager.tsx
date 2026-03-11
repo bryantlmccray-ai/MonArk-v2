@@ -182,13 +182,13 @@ export const DataDeletionManager: React.FC = () => {
                     Delete My Account
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent className="bg-card border-destructive/30">
+                 <AlertDialogContent className="bg-card border-2 border-border shadow-[0_8px_40px_-4px_hsl(var(--foreground)/0.15)]">
                   <AlertDialogHeader>
-                    <AlertDialogTitle className="text-card-foreground flex items-center gap-2">
+                    <AlertDialogTitle className="text-foreground font-semibold flex items-center gap-2">
                       <AlertTriangle className="h-5 w-5 text-destructive" />
                       Confirm Account Deletion
                     </AlertDialogTitle>
-                    <AlertDialogDescription className="text-muted-foreground">
+                    <AlertDialogDescription className="text-foreground/80 font-medium">
                       This will permanently delete your account and all data associated with it. 
                       This action cannot be undone. Are you absolutely sure you want to proceed?
                     </AlertDialogDescription>
