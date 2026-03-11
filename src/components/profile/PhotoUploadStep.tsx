@@ -111,7 +111,7 @@ export const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-y-auto pb-24">
       {/* Header */}
       <div className="text-center space-y-2">
         <Camera className="h-12 w-12 text-goldenrod mx-auto" />
