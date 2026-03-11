@@ -283,6 +283,20 @@ export const AuthPage: React.FC = () => {
               )}
             </div>
 
+            {isLogin && (
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  id="remember-me"
+                  checked={rememberMe}
+                  onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                  className="border-primary/40 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                />
+                <Label htmlFor="remember-me" className="text-sm text-muted-foreground cursor-pointer">
+                  Remember me
+                </Label>
+              </div>
+            )}
+
             {!isLogin && (
               <div className="flex items-start gap-3 pt-1">
                 <Checkbox
