@@ -59,6 +59,48 @@ export type Database = {
         }
         Relationships: []
       }
+      async_jobs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          expires_at: string | null
+          id: string
+          input_data: Json | null
+          job_type: string
+          result_data: Json | null
+          started_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          expires_at?: string | null
+          id?: string
+          input_data?: Json | null
+          job_type: string
+          result_data?: Json | null
+          started_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          expires_at?: string | null
+          id?: string
+          input_data?: Json | null
+          job_type?: string
+          result_data?: Json | null
+          started_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       behavior_analytics: {
         Row: {
           created_at: string
@@ -2614,6 +2656,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      cleanup_expired_async_jobs: { Args: never; Returns: undefined }
       cleanup_old_rate_limits: { Args: never; Returns: undefined }
       delete_user_completely: {
         Args: { user_id_input: string }

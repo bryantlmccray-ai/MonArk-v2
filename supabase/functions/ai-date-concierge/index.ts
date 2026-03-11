@@ -16,6 +16,7 @@ interface DateProposalRequest {
   userProfile?: { bio?: string };
   matchProfile?: { bio?: string };
   recentMessages?: any[];
+  async?: boolean; // If true, return job_id and process in background
 }
 
 // Pre-built date suggestions for MVP - no external AI required
@@ -86,22 +87,59 @@ const DATE_SUGGESTIONS = [
   }
 ];
 
+function generateProposal(requestData: DateProposalRequest) {
+  const commonInterests = requestData.userInterests.filter(interest => 
+    requestData.matchInterests.includes(interest)
+  );
+
+  let selectedSuggestion = DATE_SUGGESTIONS[Math.floor(Math.random() * DATE_SUGGESTIONS.length)];
+  
+  const interestString = commonInterests.join(' ').toLowerCase();
+  if (interestString.includes('art') || interestString.includes('creative') || interestString.includes('music')) {
+    const creative = DATE_SUGGESTIONS.filter(s => s.vibe === 'Creative' || s.vibe === 'Cultural');
+    if (creative.length) selectedSuggestion = creative[Math.floor(Math.random() * creative.length)];
+  } else if (interestString.includes('outdoor') || interestString.includes('hiking') || interestString.includes('nature')) {
+    const outdoor = DATE_SUGGESTIONS.filter(s => s.location_type === 'Outdoor');
+    if (outdoor.length) selectedSuggestion = outdoor[Math.floor(Math.random() * outdoor.length)];
+  } else if (interestString.includes('food') || interestString.includes('cooking') || interestString.includes('cuisine')) {
+    const food = DATE_SUGGESTIONS.filter(s => s.activity.toLowerCase().includes('cook') || s.activity.toLowerCase().includes('food'));
+    if (food.length) selectedSuggestion = food[Math.floor(Math.random() * food.length)];
+  }
+
+  return {
+    ...selectedSuggestion,
+    ai_analysis: {
+      common_interests: commonInterests,
+      conversation_themes: [],
+      relationship_stage: 'early',
+      rif_compatibility: null,
+      location_considered: !!requestData.userLocation,
+      communication_style: 'friendly'
+    },
+    generation_metadata: {
+      model: 'rule-based-mvp',
+      timestamp: new Date().toISOString(),
+      context_quality: 'medium'
+    }
+  };
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    // Authenticate user
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       throw new Error('Missing authorization header');
     }
 
-    const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
-    const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY');
-    const authClient = createClient(SUPABASE_URL!, SUPABASE_ANON_KEY!);
+    const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
+    const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     
+    const authClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const { data: { user }, error: authError } = await authClient.auth.getUser(
       authHeader.replace('Bearer ', '')
     );
@@ -112,51 +150,68 @@ serve(async (req) => {
 
     const requestData: DateProposalRequest = await req.json();
 
-    // Ensure user can only create proposals for themselves
     if (requestData.currentUserId && requestData.currentUserId !== user.id) {
       throw new Error('Cannot create proposals for other users');
     }
 
-    console.log('Generating date proposal for conversation:', requestData.conversationId);
+    console.log('Date proposal request for conversation:', requestData.conversationId);
 
-    // Find common interests
-    const commonInterests = requestData.userInterests.filter(interest => 
-      requestData.matchInterests.includes(interest)
-    );
+    // ── ASYNC PATH ──────────────────────────────────────────────
+    // When async=true, create a job row and return immediately.
+    // The job is processed in-band here (MVP), but this pattern
+    // allows swapping to a queue worker when AI calls get heavy.
+    if (requestData.async) {
+      const serviceClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-    // Select suggestion based on common interests or randomly
-    let selectedSuggestion = DATE_SUGGESTIONS[Math.floor(Math.random() * DATE_SUGGESTIONS.length)];
-    
-    // Try to match vibe to interests
-    const interestString = commonInterests.join(' ').toLowerCase();
-    if (interestString.includes('art') || interestString.includes('creative') || interestString.includes('music')) {
-      const creative = DATE_SUGGESTIONS.filter(s => s.vibe === 'Creative' || s.vibe === 'Cultural');
-      if (creative.length) selectedSuggestion = creative[Math.floor(Math.random() * creative.length)];
-    } else if (interestString.includes('outdoor') || interestString.includes('hiking') || interestString.includes('nature')) {
-      const outdoor = DATE_SUGGESTIONS.filter(s => s.location_type === 'Outdoor');
-      if (outdoor.length) selectedSuggestion = outdoor[Math.floor(Math.random() * outdoor.length)];
-    } else if (interestString.includes('food') || interestString.includes('cooking') || interestString.includes('cuisine')) {
-      const food = DATE_SUGGESTIONS.filter(s => s.activity.toLowerCase().includes('cook') || s.activity.toLowerCase().includes('food'));
-      if (food.length) selectedSuggestion = food[Math.floor(Math.random() * food.length)];
+      // Create the job
+      const { data: job, error: jobError } = await serviceClient
+        .from('async_jobs')
+        .insert({
+          user_id: user.id,
+          job_type: 'date_proposal',
+          status: 'processing',
+          started_at: new Date().toISOString(),
+          input_data: {
+            conversationId: requestData.conversationId,
+            matchUserId: requestData.matchUserId,
+          },
+        })
+        .select('id')
+        .single();
+
+      if (jobError) throw jobError;
+
+      // Process immediately (swap this for a queue dispatch when needed)
+      try {
+        const proposal = generateProposal(requestData);
+        
+        await serviceClient
+          .from('async_jobs')
+          .update({
+            status: 'completed',
+            result_data: proposal,
+            completed_at: new Date().toISOString(),
+          })
+          .eq('id', job.id);
+      } catch (processError) {
+        await serviceClient
+          .from('async_jobs')
+          .update({
+            status: 'failed',
+            error_message: processError instanceof Error ? processError.message : 'Unknown error',
+            completed_at: new Date().toISOString(),
+          })
+          .eq('id', job.id);
+      }
+
+      // Return job_id immediately — client subscribes via Realtime
+      return new Response(JSON.stringify({ job_id: job.id, status: 'processing' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
-    const proposal = {
-      ...selectedSuggestion,
-      ai_analysis: {
-        common_interests: commonInterests,
-        conversation_themes: [],
-        relationship_stage: 'early',
-        rif_compatibility: null,
-        location_considered: !!requestData.userLocation,
-        communication_style: 'friendly'
-      },
-      generation_metadata: {
-        model: 'rule-based-mvp',
-        timestamp: new Date().toISOString(),
-        context_quality: 'medium'
-      }
-    };
-
+    // ── SYNC PATH (default, fast rule-based) ────────────────────
+    const proposal = generateProposal(requestData);
     console.log('Returning proposal:', proposal.title);
 
     return new Response(JSON.stringify(proposal), {
@@ -166,7 +221,6 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in ai-date-concierge function:', error);
     
-    // Return fallback
     const fallback = {
       title: "Coffee & Conversation",
       activity: "Meet at a cozy local coffee shop for great conversation and getting to know each other better.",
@@ -178,9 +232,9 @@ serve(async (req) => {
     
     return new Response(JSON.stringify({ 
       ...fallback,
-      error: error.message
+      error: error instanceof Error ? error.message : 'Unknown error'
     }), {
-      status: 200, // Return 200 with fallback
+      status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
