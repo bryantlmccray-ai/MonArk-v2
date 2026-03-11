@@ -85,14 +85,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   const renderActiveScreen = () => {
     switch (activeTab) {
        case 'weekly':
-         return (
-           <ProfileGate 
-             featureName="weekly matches"
-             onNavigateToProfile={() => handleTabChange('profile')}
-           >
-             <SundayMatches />
-           </ProfileGate>
-         );
+          return <SundayMatches />;
       case 'circle':
          return (
            <ProfileGate 
