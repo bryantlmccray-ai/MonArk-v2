@@ -81,11 +81,11 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
   // Define step requirements (critical, important, optional)
   const stepRequirements: StepRequirements = {
     bio: 'optional',
-    interests: 'important',
+    interests: 'optional',
     photos: 'important',
     lifestyle: 'optional', 
     datePalette: 'optional',
-    identityPreferences: 'critical',
+    identityPreferences: 'optional',
   };
   
   const [profileData, setProfileData] = useState<ProfileData>({
