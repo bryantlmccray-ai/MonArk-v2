@@ -155,7 +155,7 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
         />
       </div>
 
-      <div className="pt-6 space-y-3">
+      <div className="max-w-2xl mx-auto w-full pt-6 space-y-3">
         {onBack && (
           <div className="flex space-x-3">
             <button
