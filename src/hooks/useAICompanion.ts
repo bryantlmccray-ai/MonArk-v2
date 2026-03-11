@@ -4,6 +4,7 @@ import { useAuth } from './useAuth';
 import { useProfile } from './useProfile';
 import { useDateConcierge } from './useDateConcierge';
 import { useRIF } from './useRIF';
+import { sanitizeCompanionPayload } from '@/lib/aiSanitizer';
 
 export interface AIMessage {
   id: string;
