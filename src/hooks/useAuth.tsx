@@ -17,15 +17,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Demo user for testing
-const DEMO_USER: User = {
-  id: 'demo-user-' + Date.now(),
-  email: 'demo@monark.test',
-  app_metadata: {},
-  user_metadata: { name: 'Demo User' },
-  aud: 'authenticated',
-  created_at: new Date().toISOString(),
-} as User;
+// No fake User object — demo mode uses DemoContext mock data only
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
