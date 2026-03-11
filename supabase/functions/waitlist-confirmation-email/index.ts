@@ -1,15 +1,61 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { corsHeaders, validateEmail, validateLength, validationErrorResponse, errorResponse } from '../_shared/security.ts'
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+
+// Simple in-memory rate limiter for confirmation emails (per email address)
+const rateLimitMap = new Map<string, { count: number; windowStart: number }>();
+const RATE_LIMIT_MAX = 3; // max 3 confirmation emails
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // per hour
+
+function isRateLimited(email: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(email);
+  
+  if (!entry || (now - entry.windowStart) > RATE_LIMIT_WINDOW_MS) {
+    rateLimitMap.set(email, { count: 1, windowStart: now });
+    return false;
+  }
+  
+  if (entry.count >= RATE_LIMIT_MAX) {
+    return true;
+  }
+  
+  entry.count++;
+  return false;
+}
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Only allow POST
+  if (req.method !== "POST") {
+    return new Response(JSON.stringify({ error: "Method not allowed" }), {
+      status: 405, headers: { ...corsHeaders, "Content-Type": "application/json" }
+    });
+  }
+
   try {
+    // Validate Origin header to ensure request comes from our frontend
+    const origin = req.headers.get('origin') || req.headers.get('referer') || '';
+    const allowedOrigins = [
+      'https://monark-prototype-website.lovable.app',
+      'https://joinmonarkapp.com',
+      'https://www.joinmonarkapp.com',
+      'http://localhost:',
+    ];
+    const isAllowedOrigin = allowedOrigins.some(allowed => origin.startsWith(allowed));
+    if (!isAllowedOrigin && origin !== '') {
+      console.error('Security: Blocked request from unauthorized origin:', origin);
+      return new Response(JSON.stringify({ error: 'Forbidden' }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    }
+
     let body: Record<string, unknown>
     try {
       body = await req.json()
@@ -30,12 +76,44 @@ const handler = async (req: Request): Promise<Response> => {
       return validationErrorResponse(errors)
     }
 
+    const normalizedEmail = (email as string).trim().toLowerCase();
+
+    // Rate limit by email address
+    if (isRateLimited(normalizedEmail)) {
+      console.error('Security: Rate limit exceeded for email:', normalizedEmail);
+      return new Response(
+        JSON.stringify({ error: 'Too many requests. Please try again later.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Verify the email actually exists in waitlist_submissions before sending
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+
+    const { data: submission } = await supabaseAdmin
+      .from('waitlist_submissions')
+      .select('id')
+      .eq('email', normalizedEmail)
+      .single();
+
+    if (!submission) {
+      // Don't reveal whether the email exists — return success silently
+      console.error('Security: Confirmation email requested for non-existent submission:', normalizedEmail);
+      return new Response(JSON.stringify({ success: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+
     // Sanitize firstName for use in HTML (prevent XSS in emails)
     const safeName = (firstName as string).replace(/[<>"'&]/g, '')
 
     const emailResponse = await resend.emails.send({
       from: "MonArk <onboarding@resend.dev>",
-      to: [email as string],
+      to: [normalizedEmail],
       subject: "You're on the MonArk waitlist!",
       html: `
         <!DOCTYPE html>

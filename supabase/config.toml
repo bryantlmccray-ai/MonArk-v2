@@ -31,10 +31,10 @@ verify_jwt = true
 verify_jwt = false
 
 [functions.waitlist-approval-email]
-verify_jwt = false
+verify_jwt = true
 
 [functions.waitlist-rejection-email]
-verify_jwt = false
+verify_jwt = true
 
 [functions.match-delivery]
 verify_jwt = true
