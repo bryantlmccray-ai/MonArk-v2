@@ -157,22 +157,14 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.4 }}
             >
-              <Button
-                onClick={startFullDemo}
-                variant="outline"
-                className="px-8 py-3 text-sm tracking-[0.08em] font-body"
-              >
-                EXPERIENCE THE APP
-              </Button>
-
               {onExitToApp && (
                 <div>
                   <Button
                     onClick={onExitToApp}
-                    variant="ghost"
-                    className="px-6 py-2 text-xs tracking-[0.08em] font-body text-muted-foreground"
+                    variant="outline"
+                    className="px-8 py-3 text-sm tracking-[0.08em] font-body"
                   >
-                    RETURN HOME
+                    FIND YOUR ARK, SIGN UP HERE
                   </Button>
                 </div>
               )}
