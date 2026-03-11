@@ -245,9 +245,9 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="ageRange" className="text-white text-sm">Age Range *</Label>
+              <Label htmlFor="ageRange" className="text-foreground text-sm font-semibold">Age Range *</Label>
               <Select value={formData.ageRange} onValueChange={(val) => handleInputChange('ageRange', val)} disabled={isSubmitting}>
-                <SelectTrigger className={`bg-white border-gray-700 text-black ${fieldErrors.ageRange ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}>
+                <SelectTrigger className={`bg-background border-border text-foreground ${fieldErrors.ageRange ? 'border-destructive ring-2 ring-destructive/50' : ''}`}>
                   <SelectValue placeholder="Select age range" />
                 </SelectTrigger>
                 <SelectContent>
