@@ -155,9 +155,9 @@ export const useDateConcierge = () => {
         .eq('user_id', matchUserId)
         .single();
 
-      // Call AI date concierge edge function with enhanced context
+      // ── LLM Firewall: Sanitize before sending to edge function ──
       const { data: aiResponse, error: aiError } = await supabase.functions.invoke('ai-date-concierge', {
-        body: {
+        body: sanitizeConciergePayload({
           matchUserId,
           conversationId,
           userInterests,
@@ -166,8 +166,8 @@ export const useDateConcierge = () => {
           userLocation: userProfile?.location,
           userProfile,
           matchProfile,
-          currentUserId: user.id // Added for journal analysis
-        }
+          currentUserId: user.id
+        })
       });
 
       if (aiError) {
