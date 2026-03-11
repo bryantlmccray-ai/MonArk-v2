@@ -154,8 +154,8 @@ export const DataDeletionManager: React.FC = () => {
           <div className="flex items-start gap-4">
             <AlertTriangle className="h-6 w-6 text-destructive flex-shrink-0 mt-1" />
             <div className="flex-1">
-              <h3 className="text-card-foreground font-medium mb-2">Delete Your Account</h3>
-              <p className="text-muted-foreground text-sm mb-4">
+              <h3 className="text-foreground font-semibold mb-2">Delete Your Account</h3>
+              <p className="text-foreground/80 text-sm mb-4 font-medium">
                 Permanently delete your MonArk account and all associated data. 
                 This action cannot be undone.
               </p>
