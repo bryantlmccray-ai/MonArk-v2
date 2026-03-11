@@ -188,7 +188,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                     type="text"
                     value={formData.firstName}
                     onChange={(e) => handleInputChange('firstName', e.target.value)}
-                    className={`bg-white border-gray-700 text-black pl-10 ${fieldErrors.firstName ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
+                    className={`bg-background border-border text-foreground pl-10 ${fieldErrors.firstName ? 'border-destructive ring-2 ring-destructive/50' : ''}`}
                     placeholder="First name"
                     disabled={isSubmitting}
                     maxLength={100}
