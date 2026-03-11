@@ -435,7 +435,9 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
 
   return (
     <div className="fixed inset-0 z-50 bg-background overflow-y-auto">
-      {renderStep()}
+      <div className="min-h-full">
+        {renderStep()}
+      </div>
     </div>
   );
 };
