@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
-import { corsHeaders, validateEmail, validateLength, validationErrorResponse, errorResponse } from '../_shared/security.ts'
+import { corsHeaders, verifyAuth, unauthorizedResponse, forbiddenResponse, validateEmail, validateLength, validationErrorResponse, errorResponse } from '../_shared/security.ts'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -9,7 +10,33 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Only allow POST
+  if (req.method !== "POST") {
+    return new Response(JSON.stringify({ error: "Method not allowed" }), {
+      status: 405, headers: { ...corsHeaders, "Content-Type": "application/json" }
+    });
+  }
+
   try {
+    // Require authenticated user
+    const authResult = await verifyAuth(req);
+    if (!authResult.user || !authResult.supabaseClient) {
+      return unauthorizedResponse();
+    }
+
+    // Require admin role
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+    const { data: isAdmin } = await supabaseAdmin.rpc('has_role', {
+      _user_id: authResult.user.id,
+      _role: 'admin'
+    });
+    if (!isAdmin) {
+      return forbiddenResponse('Admin access required');
+    }
+
     let body: Record<string, unknown>;
     try {
       body = await req.json();
@@ -25,7 +52,6 @@ const handler = async (req: Request): Promise<Response> => {
     if (emailError) errors.push(emailError);
     const nameError = validateLength(firstName, 'firstName', 1, 100);
     if (nameError) errors.push(nameError);
-    // city is optional, but validate length if provided
     if (city) {
       const cityError = validateLength(city, 'city', 0, 200);
       if (cityError) errors.push(cityError);
@@ -33,6 +59,17 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (errors.length > 0) {
       return validationErrorResponse(errors);
+    }
+
+    // Verify email exists in waitlist_submissions
+    const { data: submission } = await supabaseAdmin
+      .from('waitlist_submissions')
+      .select('id')
+      .eq('email', (email as string).toLowerCase())
+      .single();
+
+    if (!submission) {
+      return validationErrorResponse(['Email not found in waitlist submissions']);
     }
 
     // Sanitize inputs for use in HTML
