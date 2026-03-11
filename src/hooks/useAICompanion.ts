@@ -35,7 +35,8 @@ export const useAICompanion = () => {
 
     setIsGenerating(true);
     try {
-      const userContext = {
+      // Build raw context, then sanitize via LLM firewall before sending
+      const rawContext = {
         recentDates: journalEntries.slice(0, 5),
         rifProfile,
         interests: profile.interests || [],
@@ -48,7 +49,7 @@ export const useAICompanion = () => {
       const { data, error } = await supabase.functions.invoke('ai-companion-chat', {
         body: {
           type: 'generate_insights',
-          userContext
+          userContext: sanitizeCompanionPayload(rawContext)
         }
       });
 
