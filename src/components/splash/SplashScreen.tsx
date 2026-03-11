@@ -25,12 +25,15 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     setTimeout(onComplete, 800);
   };
 
-  /* Palette anchors (HSL from Coolors):
-     Deep Forest  #414833 → hsl(80, 18%, 24%)
-     Sage         #656D4A → hsl(80, 20%, 36%)
-     Sienna       #7F5539 → hsl(22, 38%, 36%)
-     Sandy Gold   #A68A64 → hsl(36, 25%, 52%)
-     Linen        #EDE0D4 → hsl(28, 38%, 91%)
+  /* Palette mapped to site tokens (index.css):
+     Background  --background   28 30% 87%  (warm linen)
+     Card        --card         28 38% 94%  (parchment)
+     Foreground  --foreground   80 18% 24%  (deep forest)
+     Primary     --primary      80 20% 36%  (sage olive)
+     Accent      --accent       22 38% 36%  (sienna/taupe)
+     Muted       --muted-fg     36 18% 42%  (dusty taupe)
+     Goldenrod   --color-goldenrod 36 25% 52%
+     Rosegold    --color-rosegold  22 34% 50%
   */
 
   return (
@@ -42,7 +45,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
           onClick={isReady ? handleEnter : undefined}
-          style={{ background: "linear-gradient(160deg, hsl(80, 18%, 16%) 0%, hsl(80, 16%, 22%) 40%, hsl(22, 28%, 22%) 100%)" }}
+          style={{ background: "linear-gradient(160deg, hsl(28, 30%, 87%) 0%, hsl(28, 38%, 91%) 40%, hsl(28, 28%, 84%) 100%)" }}
         >
           {/* Warm ambient light */}
           <motion.div
@@ -54,7 +57,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
             {/* Sienna warm orb — top center */}
             <motion.div
               className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full"
-              style={{ background: "radial-gradient(circle, hsla(22, 38%, 36%, 0.25) 0%, transparent 70%)" }}
+              style={{ background: "radial-gradient(circle, hsla(22, 38%, 36%, 0.18) 0%, transparent 70%)" }}
               animate={{
                 scale: [1, 1.15, 1],
                 opacity: [0.6, 0.9, 0.6],
@@ -64,7 +67,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
             {/* Sandy gold accent — bottom */}
             <motion.div
               className="absolute bottom-1/3 right-1/3 w-[400px] h-[400px] rounded-full"
-              style={{ background: "radial-gradient(circle, hsla(36, 25%, 52%, 0.15) 0%, transparent 70%)" }}
+              style={{ background: "radial-gradient(circle, hsla(36, 25%, 52%, 0.12) 0%, transparent 70%)" }}
               animate={{
                 x: [0, -30, 0],
                 y: [0, -20, 0],
@@ -72,11 +75,21 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               }}
               transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             />
+            {/* Olive primary accent — top right, subtle */}
+            <motion.div
+              className="absolute top-1/3 right-1/4 w-[350px] h-[350px] rounded-full"
+              style={{ background: "radial-gradient(circle, hsla(80, 20%, 36%, 0.08) 0%, transparent 70%)" }}
+              animate={{
+                scale: [1, 1.08, 1],
+                opacity: [0.4, 0.7, 0.4],
+              }}
+              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+            />
           </motion.div>
 
-          {/* Cinematic letterbox bars */}
-          <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-black/40 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/40 to-transparent" />
+          {/* Soft vignette bars (warm, not black) */}
+          <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-[hsl(28,22%,78%)]/30 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[hsl(28,22%,78%)]/30 to-transparent" />
 
           {/* Floating warm particles */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -87,9 +100,11 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 style={{
                   left: `${15 + i * 10}%`,
                   top: `${25 + (i % 4) * 15}%`,
-                  background: i % 2 === 0 
-                    ? "hsla(22, 38%, 36%, 0.5)" 
-                    : "hsla(36, 25%, 52%, 0.4)",
+                  background: i % 3 === 0 
+                    ? "hsla(80, 20%, 36%, 0.45)"   /* olive */
+                    : i % 3 === 1
+                    ? "hsla(22, 38%, 36%, 0.4)"     /* sienna */
+                    : "hsla(36, 25%, 52%, 0.35)",   /* goldenrod */
                 }}
                 animate={{
                   y: [-15, 25, -15],
@@ -118,7 +133,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               {/* Warm glow behind logo */}
               <motion.div
                 className="absolute -inset-8 rounded-full"
-                style={{ background: "radial-gradient(circle, hsla(22, 38%, 36%, 0.18) 0%, transparent 70%)" }}
+                style={{ background: "radial-gradient(circle, hsla(22, 38%, 36%, 0.12) 0%, transparent 70%)" }}
                 animate={{
                   scale: [1, 1.2, 1],
                   opacity: [0.5, 0.8, 0.5],
@@ -126,31 +141,31 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               />
 
-              {/* Outer ring — sandy gold */}
+              {/* Outer ring — olive sage */}
               <motion.div
                 className="w-36 h-36 md:w-44 md:h-44 rounded-full"
-                style={{ border: "1px solid hsla(36, 25%, 52%, 0.35)" }}
+                style={{ border: "1.5px solid hsla(80, 20%, 36%, 0.4)" }}
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
               />
               
-              {/* Inner ring with sienna glow */}
+              {/* Inner ring with sienna accent */}
               <motion.div
                 className="absolute inset-4 rounded-full"
-                style={{ border: "1px solid hsla(22, 38%, 36%, 0.5)" }}
+                style={{ border: "1px solid hsla(22, 38%, 36%, 0.4)" }}
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 1, ease: "easeOut", delay: 0.4 }}
               >
                 <motion.div
                   className="absolute inset-0 rounded-full"
-                  style={{ background: "hsla(22, 38%, 36%, 0.06)" }}
+                  style={{ background: "hsla(22, 38%, 36%, 0.04)" }}
                   animate={{ 
                     boxShadow: [
-                      "0 0 25px hsla(22, 38%, 36%, 0.12)",
-                      "0 0 50px hsla(22, 38%, 36%, 0.28)",
-                      "0 0 25px hsla(22, 38%, 36%, 0.12)",
+                      "0 0 25px hsla(22, 38%, 36%, 0.08)",
+                      "0 0 50px hsla(22, 38%, 36%, 0.18)",
+                      "0 0 25px hsla(22, 38%, 36%, 0.08)",
                     ]
                   }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -164,7 +179,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
               >
-                <span className="font-serif text-5xl md:text-6xl tracking-widest" style={{ color: "hsl(28, 38%, 91%)" }}>
+                <span className="font-serif text-5xl md:text-6xl tracking-widest" style={{ color: "hsl(80, 18%, 24%)" }}>
                   M
                 </span>
               </motion.div>
@@ -182,7 +197,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                   <motion.span
                     key={index}
                     className="font-serif text-sm md:text-base tracking-[0.3em] italic"
-                    style={{ color: "hsla(36, 25%, 52%, 0.85)" }}
+                    style={{ color: "hsla(36, 18%, 42%, 0.85)" }}
                     initial={{ opacity: 0, y: 20, rotateX: 90 }}
                     animate={{ opacity: 1, y: 0, rotateX: 0 }}
                     transition={{
@@ -206,19 +221,19 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
             >
               <motion.h1
                 className="font-serif text-4xl md:text-5xl tracking-[0.25em] uppercase"
-                style={{ color: "hsl(28, 38%, 91%)" }}
+                style={{ color: "hsl(80, 18%, 24%)" }}
                 initial={{ y: 40 }}
                 animate={{ y: 0 }}
                 transition={{ duration: 0.8, delay: 1.3, ease: [0.22, 1, 0.36, 1] }}
               >
-                Mon<span style={{ color: "hsl(22, 38%, 50%)" }}>A</span>rk
+                Mon<span style={{ color: "hsl(22, 38%, 36%)" }}>A</span>rk
               </motion.h1>
             </motion.div>
 
             {/* Tagline */}
             <motion.p
               className="mt-8 font-body text-base md:text-lg tracking-[0.2em] uppercase"
-              style={{ color: "hsla(36, 25%, 52%, 0.75)" }}
+              style={{ color: "hsla(36, 18%, 42%, 0.75)" }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 1.6, ease: "easeOut" }}
@@ -226,10 +241,10 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               The Art of Intentional Dating
             </motion.p>
 
-            {/* Gradient line — sienna to sandy gold */}
+            {/* Gradient line — olive to sienna */}
             <motion.div
               className="mt-10 h-px"
-              style={{ background: "linear-gradient(to right, transparent, hsla(22, 38%, 36%, 0.5), hsla(36, 25%, 52%, 0.3), transparent)" }}
+              style={{ background: "linear-gradient(to right, transparent, hsla(80, 20%, 36%, 0.4), hsla(22, 38%, 36%, 0.3), transparent)" }}
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: 160, opacity: 1 }}
               transition={{ duration: 1.2, delay: 1.8, ease: "easeOut" }}
@@ -246,35 +261,35 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
               >
-                {/* Sienna glass CTA button */}
+                {/* Olive glass CTA button */}
                 <motion.button
                   onClick={handleEnter}
                   className="group flex items-center gap-3 px-10 py-4 rounded-full transition-all duration-500"
                   style={{
-                    background: "hsla(22, 38%, 36%, 0.12)",
-                    border: "1px solid hsla(22, 38%, 36%, 0.35)",
+                    background: "hsla(80, 20%, 36%, 0.1)",
+                    border: "1px solid hsla(80, 20%, 36%, 0.35)",
                     backdropFilter: "blur(12px)",
                   }}
                   whileHover={{ 
                     scale: 1.03,
-                    boxShadow: "0 0 30px hsla(22, 38%, 36%, 0.2)",
+                    boxShadow: "0 0 30px hsla(80, 20%, 36%, 0.15)",
                   }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <span className="font-body text-sm tracking-[0.2em] uppercase" style={{ color: "hsl(28, 38%, 91%)" }}>
+                  <span className="font-body text-sm tracking-[0.2em] uppercase" style={{ color: "hsl(80, 18%, 24%)" }}>
                     Enter
                   </span>
                   <motion.div
                     animate={{ x: [0, 5, 0] }}
                     transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                   >
-                    <ArrowRight className="w-4 h-4" style={{ color: "hsl(22, 38%, 50%)" }} />
+                    <ArrowRight className="w-4 h-4" style={{ color: "hsl(22, 38%, 36%)" }} />
                   </motion.div>
                 </motion.button>
 
                 <motion.p
                   className="font-body text-xs tracking-[0.15em] uppercase"
-                  style={{ color: "hsla(36, 25%, 52%, 0.55)" }}
+                  style={{ color: "hsla(36, 18%, 42%, 0.55)" }}
                   animate={{ opacity: [0.4, 0.8, 0.4] }}
                   transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                 >
