@@ -107,9 +107,9 @@ export const DataDeletionManager: React.FC = () => {
 
   if (!user) {
     return (
-      <Card className="bg-card border-border/40">
+      <Card className="bg-card border-2 border-border shadow-[0_8px_40px_-4px_hsl(var(--foreground)/0.15)]">
         <CardContent className="pt-6">
-          <div className="text-center text-muted-foreground">
+          <div className="text-center text-foreground/80">
             <Shield className="h-12 w-12 mx-auto mb-4" />
             <p>Please sign in to access data management features</p>
           </div>
