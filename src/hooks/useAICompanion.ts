@@ -83,10 +83,15 @@ export const useAICompanion = () => {
 
       if (error) throw error;
 
+      // If circuit breaker is open, the backend returns a warm resting message
+      if (data.circuit_breaker === 'open') {
+        return data.message || "I'm taking a quick rest — back soon with fresh insights! 💫";
+      }
+
       return data.message || "I'm here to help you with your dating journey! What's on your mind?";
     } catch (error) {
       console.error('Error generating AI response:', error);
-      return "I'm having trouble thinking right now, but I'm here for you! Try asking again in a moment.";
+      return "I'm recharging my thoughts right now 🌙 Check back in a moment — I'll be ready to help!";
     }
   };
 

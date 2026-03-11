@@ -6,6 +6,47 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+// ── Circuit Breaker ─────────────────────────────────────────
+const circuitBreaker = {
+  failures: 0,
+  lastFailure: 0,
+  state: 'closed' as 'closed' | 'open' | 'half-open',
+  FAILURE_THRESHOLD: 3,
+  RECOVERY_TIMEOUT: 60_000,
+};
+
+function checkCircuitBreaker(): boolean {
+  if (circuitBreaker.state === 'closed') return true;
+  if (circuitBreaker.state === 'open') {
+    if (Date.now() - circuitBreaker.lastFailure > circuitBreaker.RECOVERY_TIMEOUT) {
+      circuitBreaker.state = 'half-open';
+      return true;
+    }
+    return false;
+  }
+  return true;
+}
+
+function recordSuccess() { circuitBreaker.failures = 0; circuitBreaker.state = 'closed'; }
+function recordFailure() {
+  circuitBreaker.failures++;
+  circuitBreaker.lastFailure = Date.now();
+  if (circuitBreaker.failures >= circuitBreaker.FAILURE_THRESHOLD) {
+    circuitBreaker.state = 'open';
+    console.log(`Circuit breaker OPEN after ${circuitBreaker.failures} failures`);
+  }
+}
+
+const RESTING_FALLBACK = {
+  title: "Your Date Concierge is Recharging ☁️",
+  activity: "While I'm resting up, here's a classic: grab coffee at a cozy local spot and let the conversation flow naturally.",
+  location_type: "Indoor",
+  vibe: "Relaxed",
+  time_suggestion: "Whenever feels right",
+  rationale: "I'll be back shortly with personalized suggestions! In the meantime, the best dates start with genuine curiosity about each other.",
+  circuit_breaker: 'open',
+};
+
 interface DateProposalRequest {
   conversationId: string;
   matchUserId: string;
@@ -16,7 +57,7 @@ interface DateProposalRequest {
   userProfile?: { bio?: string };
   matchProfile?: { bio?: string };
   recentMessages?: any[];
-  async?: boolean; // If true, return job_id and process in background
+  async?: boolean;
 }
 
 // Pre-built date suggestions for MVP - no external AI required
@@ -156,14 +197,18 @@ serve(async (req) => {
 
     console.log('Date proposal request for conversation:', requestData.conversationId);
 
+    // ── Circuit Breaker Check ───────────────────────────────
+    if (!checkCircuitBreaker()) {
+      console.log('Circuit breaker OPEN: returning resting fallback');
+      return new Response(JSON.stringify(RESTING_FALLBACK), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     // ── ASYNC PATH ──────────────────────────────────────────────
-    // When async=true, create a job row and return immediately.
-    // The job is processed in-band here (MVP), but this pattern
-    // allows swapping to a queue worker when AI calls get heavy.
     if (requestData.async) {
       const serviceClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-      // Create the job
       const { data: job, error: jobError } = await serviceClient
         .from('async_jobs')
         .insert({
@@ -181,9 +226,9 @@ serve(async (req) => {
 
       if (jobError) throw jobError;
 
-      // Process immediately (swap this for a queue dispatch when needed)
       try {
         const proposal = generateProposal(requestData);
+        recordSuccess();
         
         await serviceClient
           .from('async_jobs')
@@ -194,6 +239,7 @@ serve(async (req) => {
           })
           .eq('id', job.id);
       } catch (processError) {
+        recordFailure();
         await serviceClient
           .from('async_jobs')
           .update({
@@ -204,34 +250,31 @@ serve(async (req) => {
           .eq('id', job.id);
       }
 
-      // Return job_id immediately — client subscribes via Realtime
       return new Response(JSON.stringify({ job_id: job.id, status: 'processing' }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     // ── SYNC PATH (default, fast rule-based) ────────────────────
-    const proposal = generateProposal(requestData);
-    console.log('Returning proposal:', proposal.title);
+    try {
+      const proposal = generateProposal(requestData);
+      recordSuccess();
+      console.log('Returning proposal:', proposal.title);
 
-    return new Response(JSON.stringify(proposal), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+      return new Response(JSON.stringify(proposal), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    } catch (genError) {
+      recordFailure();
+      throw genError;
+    }
 
   } catch (error) {
     console.error('Error in ai-date-concierge function:', error);
-    
-    const fallback = {
-      title: "Coffee & Conversation",
-      activity: "Meet at a cozy local coffee shop for great conversation and getting to know each other better.",
-      location_type: "Indoor",
-      vibe: "Relaxed",
-      time_suggestion: "Weekend afternoon",
-      rationale: "A classic first date that provides a comfortable setting for meaningful conversation."
-    };
+    recordFailure();
     
     return new Response(JSON.stringify({ 
-      ...fallback,
+      ...RESTING_FALLBACK,
       error: error instanceof Error ? error.message : 'Unknown error'
     }), {
       status: 200,
