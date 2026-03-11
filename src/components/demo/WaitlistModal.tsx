@@ -267,9 +267,9 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="city" className="text-white text-sm">City *</Label>
+              <Label htmlFor="city" className="text-foreground text-sm font-semibold">City *</Label>
               <div className="relative">
-                <MapPin className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${fieldErrors.city ? 'text-red-400' : 'text-gray-400'}`} />
+                <MapPin className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${fieldErrors.city ? 'text-destructive' : 'text-muted-foreground'}`} />
                 <Input
                   id="city"
                   value={formData.city}
