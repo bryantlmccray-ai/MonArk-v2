@@ -124,11 +124,17 @@ const Index = () => {
 
   // If user has a profile but it's not complete, show profile creation
   // Also handle edge case where onboarding_step reached 10 but is_profile_complete wasn't set
-  if (profile && !profile.is_profile_complete) {
-    // If onboarding completed (step 10) but flag wasn't set, auto-fix it
-    if (profile.onboarding_step != null && profile.onboarding_step >= 10) {
-      // Attempt to fix the flag in background
-      const autoFixProfile = async () => {
+  // Auto-fix: onboarding_step >= 10 but is_profile_complete not set
+  React.useEffect(() => {
+    if (
+      profile &&
+      !profile.is_profile_complete &&
+      profile.onboarding_step != null &&
+      profile.onboarding_step >= 10 &&
+      !autoFixAttempted
+    ) {
+      setAutoFixAttempted(true);
+      const fix = async () => {
         try {
           const success = await updateProfile({ is_profile_complete: true });
           if (success) {
@@ -140,9 +146,11 @@ const Index = () => {
           console.error('Auto-fix failed:', e);
         }
       };
-      autoFixProfile();
+      fix();
     }
+  }, [profile, autoFixAttempted, updateProfile, refetchProfile]);
 
+  if (profile && !profile.is_profile_complete) {
     return <ProfileCreation 
       onComplete={async () => {
         await refetchProfile();
