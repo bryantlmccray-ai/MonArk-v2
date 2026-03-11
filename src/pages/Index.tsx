@@ -7,6 +7,7 @@ import { ProfileCompleteScreen } from '../components/profile/ProfileCompleteScre
 import { EnhancedLandingPage } from '@/components/demo/EnhancedLandingPage';
 import { DemoMainApp } from '@/components/demo/DemoMainApp';
 import { SplashScreen } from '@/components/splash/SplashScreen';
+import { AuthGuard } from '@/components/common/AuthGuard';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useDemo } from '@/contexts/DemoContext';
@@ -118,13 +119,14 @@ const Index = () => {
   }
 
   // User has entered the app from profile complete screen - show MainApp regardless of profile status
+  // AuthGuard re-verifies server-side auth so DevTools manipulation of hasEnteredApp is harmless
   if (hasEnteredApp) {
-    return <MainApp initialTab={initialTab} />;
+    return <AuthGuard><MainApp initialTab={initialTab} /></AuthGuard>;
   }
 
   // If user (real or demo) has a complete profile, show main app
   if (profile?.is_profile_complete) {
-    return <MainApp initialTab={initialTab} />;
+    return <AuthGuard><MainApp initialTab={initialTab} /></AuthGuard>;
   }
 
   // If user has a profile but it's not complete, show profile creation
