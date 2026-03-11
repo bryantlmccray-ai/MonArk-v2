@@ -215,11 +215,11 @@ export const DataDeletionManager: React.FC = () => {
           <div className="flex items-start gap-4">
             <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
             <div>
-              <h3 className="text-card-foreground font-medium mb-2">Your Privacy Rights</h3>
-              <p className="text-muted-foreground text-sm mb-3">
+              <h3 className="text-foreground font-semibold mb-2">Your Privacy Rights</h3>
+              <p className="text-foreground/80 text-sm mb-3 font-medium">
                 Under privacy laws like GDPR and CCPA, you have the right to:
               </p>
-              <ul className="text-muted-foreground text-sm space-y-1">
+              <ul className="text-foreground/70 text-sm space-y-1 font-medium">
                 <li>• Access your personal data</li>
                 <li>• Correct inaccurate information</li>
                 <li>• Delete your personal data</li>
