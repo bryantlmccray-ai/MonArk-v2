@@ -445,14 +445,14 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
         {isSubmitted ? (
           <div className="space-y-6 py-4">
             <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-goldenrod/20 rounded-full flex items-center justify-center mx-auto">
-                <Heart className="h-8 w-8 text-goldenrod" />
+              <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+                <Heart className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-lg text-white font-medium">Welcome, {formData.firstName}!</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Thank you for your interest in MonArk. We're reviewing applications now and will let you know within <span className="text-goldenrod font-medium">1-2 days</span>.
+              <h3 className="text-lg text-foreground font-semibold">Welcome, {formData.firstName}!</h3>
+              <p className="text-foreground/80 text-sm leading-relaxed font-medium">
+                Thank you for your interest in MonArk. We're reviewing applications now and will let you know within <span className="text-primary font-semibold">1-2 days</span>.
               </p>
-              <p className="text-gray-500 text-xs">
+              <p className="text-muted-foreground text-xs font-medium">
                 Check your email for a confirmation from us.
               </p>
             </div>
