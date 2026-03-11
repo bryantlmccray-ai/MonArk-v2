@@ -18,7 +18,6 @@ export const PrivacyDataPortal: React.FC = () => {
     try {
       setIsExporting(true);
       
-      // Compile all user data
       const [
         profileData,
         rifProfile,
@@ -37,11 +36,7 @@ export const PrivacyDataPortal: React.FC = () => {
 
       const userData = {
         exportDate: new Date().toISOString(),
-        userInfo: {
-          id: user.id,
-          email: user.email,
-          createdAt: user.created_at
-        },
+        userInfo: { id: user.id, email: user.email, createdAt: user.created_at },
         profile: profileData.data,
         rifProfile: rifProfile.data,
         rifSettings: rifSettings.data,
@@ -51,10 +46,7 @@ export const PrivacyDataPortal: React.FC = () => {
         exportNote: "This export contains all personal data associated with your MonArk account as of the export date."
       };
 
-      // Create downloadable file
-      const blob = new Blob([JSON.stringify(userData, null, 2)], { 
-        type: 'application/json' 
-      });
+      const blob = new Blob([JSON.stringify(userData, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -64,17 +56,10 @@ export const PrivacyDataPortal: React.FC = () => {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
 
-      toast({
-        title: "Data exported successfully",
-        description: "Your personal data has been downloaded to your device.",
-      });
+      toast({ title: "Data exported successfully", description: "Your personal data has been downloaded to your device." });
     } catch (error) {
       console.error('Data export error:', error);
-      toast({
-        title: "Export failed",
-        description: "There was an error exporting your data. Please try again.",
-        variant: "destructive",
-      });
+      toast({ title: "Export failed", description: "There was an error exporting your data. Please try again.", variant: "destructive" });
     } finally {
       setIsExporting(false);
     }
@@ -85,36 +70,19 @@ export const PrivacyDataPortal: React.FC = () => {
 
     try {
       setIsDeleting(true);
-
-      // Execute complete profile deletion
-      const { error } = await supabase.rpc('delete_user_completely' as any, {
-        user_id_input: user.id
-      });
+      const { error } = await supabase.rpc('delete_user_completely' as any, { user_id_input: user.id });
 
       if (error) {
         console.error('Error deleting profile:', error);
-        toast({
-          title: "Deletion failed",
-          description: "There was an error deleting your account. Please try again.",
-          variant: "destructive",
-        });
+        toast({ title: "Deletion failed", description: "There was an error deleting your account. Please try again.", variant: "destructive" });
         return;
       }
 
-      toast({
-        title: "Account deleted",
-        description: "Your account and all associated data have been permanently deleted.",
-      });
-
-      // Sign out the user
+      toast({ title: "Account deleted", description: "Your account and all associated data have been permanently deleted." });
       await signOut();
     } catch (error) {
       console.error('Delete account error:', error);
-      toast({
-        title: "Deletion failed",
-        description: "There was an error deleting your account. Please try again.",
-        variant: "destructive",
-      });
+      toast({ title: "Deletion failed", description: "There was an error deleting your account. Please try again.", variant: "destructive" });
     } finally {
       setIsDeleting(false);
       setShowDeleteConfirm(false);
@@ -124,16 +92,16 @@ export const PrivacyDataPortal: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center space-x-3 mb-6">
-        <Shield className="h-6 w-6 text-goldenrod" />
-        <h2 className="text-xl font-semibold text-white">Privacy & Data Management</h2>
+        <Shield className="h-6 w-6 text-primary" />
+        <h2 className="text-xl font-semibold text-foreground">Privacy & Data Management</h2>
       </div>
 
-      <div className="bg-amber-900/20 border border-amber-500/30 rounded-lg p-4">
+      <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
         <div className="flex items-start space-x-3">
-          <CheckCircle className="h-5 w-5 text-amber-400 mt-0.5" />
+          <CheckCircle className="h-5 w-5 text-primary mt-0.5" />
           <div>
-            <h3 className="text-amber-400 font-medium">Your Privacy Rights</h3>
-            <p className="text-amber-200 text-sm mt-1">
+            <h3 className="text-primary font-semibold">Your Privacy Rights</h3>
+            <p className="text-foreground/70 text-sm mt-1 font-medium">
               MonArk is committed to protecting your privacy. You have complete control over your personal data.
             </p>
           </div>
@@ -142,15 +110,15 @@ export const PrivacyDataPortal: React.FC = () => {
 
       <div className="space-y-4">
         {/* Access My Data */}
-        <div className="bg-gray-800 rounded-lg p-6 space-y-4">
+        <div className="bg-card rounded-xl p-6 space-y-4 border border-border">
           <div className="flex items-start space-x-3">
-            <Download className="h-5 w-5 text-goldenrod mt-1" />
+            <Download className="h-5 w-5 text-primary mt-1" />
             <div className="flex-1">
-              <h3 className="text-white font-medium">Access My Data</h3>
-              <p className="text-gray-400 text-sm mt-1">
+              <h3 className="text-foreground font-semibold">Access My Data</h3>
+              <p className="text-muted-foreground text-sm mt-1 font-medium">
                 Download a complete copy of all personal data associated with your account in a machine-readable format.
               </p>
-              <ul className="text-gray-500 text-xs mt-2 space-y-1">
+              <ul className="text-muted-foreground text-xs mt-2 space-y-1">
                 <li>• Profile information and photos</li>
                 <li>• Dating preferences and style</li>
                 <li>• Journal entries and reflections</li>
@@ -162,11 +130,11 @@ export const PrivacyDataPortal: React.FC = () => {
           <Button
             onClick={handleDataExport}
             disabled={isExporting}
-            className="w-full bg-goldenrod-gradient text-jet-black font-medium"
+            className="w-full"
           >
             {isExporting ? (
               <>
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-jet-black border-t-transparent mr-2"></div>
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent mr-2"></div>
                 Preparing Export...
               </>
             ) : (
@@ -179,46 +147,38 @@ export const PrivacyDataPortal: React.FC = () => {
         </div>
 
         {/* Correct My Data */}
-        <div className="bg-gray-800 rounded-lg p-6 space-y-4">
+        <div className="bg-card rounded-xl p-6 space-y-4 border border-border">
           <div className="flex items-start space-x-3">
-            <Edit className="h-5 w-5 text-goldenrod mt-1" />
+            <Edit className="h-5 w-5 text-primary mt-1" />
             <div className="flex-1">
-              <h3 className="text-white font-medium">Correct My Data</h3>
-              <p className="text-gray-400 text-sm mt-1">
+              <h3 className="text-foreground font-semibold">Correct My Data</h3>
+              <p className="text-muted-foreground text-sm mt-1 font-medium">
                 Update your personal information, preferences, and privacy settings.
               </p>
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Button
-              variant="outline"
-              className="border-gray-600 text-gray-300 hover:border-goldenrod/50"
-              onClick={() => window.location.href = '/profile'}
-            >
+            <Button variant="outline" onClick={() => window.location.href = '/profile'}>
               Edit Profile
             </Button>
-            <Button
-              variant="outline"
-              className="border-gray-600 text-gray-300 hover:border-goldenrod/50"
-              onClick={() => window.location.href = '/settings'}
-            >
+            <Button variant="outline" onClick={() => window.location.href = '/settings'}>
               Privacy Settings
             </Button>
           </div>
         </div>
 
         {/* Delete My Account */}
-        <div className="bg-red-900/20 border border-red-600/30 rounded-lg p-6 space-y-4">
+        <div className="bg-destructive/5 border border-destructive/20 rounded-xl p-6 space-y-4">
           <div className="flex items-start space-x-3">
-            <Trash2 className="h-5 w-5 text-red-400 mt-1" />
+            <Trash2 className="h-5 w-5 text-destructive mt-1" />
             <div className="flex-1">
-              <h3 className="text-red-400 font-medium">Delete My Account & Data</h3>
-              <p className="text-red-200 text-sm mt-1">
+              <h3 className="text-destructive font-semibold">Delete My Account & Data</h3>
+              <p className="text-foreground/70 text-sm mt-1 font-medium">
                 Permanently delete your account and all associated personal data. This action cannot be undone.
               </p>
-              <div className="bg-red-900/30 rounded p-3 mt-3">
-                <p className="text-red-300 text-xs font-medium">What will be deleted:</p>
-                <ul className="text-red-400 text-xs mt-1 space-y-1">
+              <div className="bg-destructive/5 rounded-lg p-3 mt-3">
+                <p className="text-destructive text-xs font-semibold">What will be deleted:</p>
+                <ul className="text-muted-foreground text-xs mt-1 space-y-1">
                   <li>• Your profile and all photos</li>
                   <li>• All conversations and matches</li>
                   <li>• Date journal and reflections</li>
@@ -232,7 +192,7 @@ export const PrivacyDataPortal: React.FC = () => {
             onClick={() => setShowDeleteConfirm(true)}
             disabled={isDeleting}
             variant="destructive"
-            className="w-full bg-red-600 hover:bg-red-700"
+            className="w-full"
           >
             <Trash2 className="h-4 w-4 mr-2" />
             Delete My Account
@@ -241,51 +201,43 @@ export const PrivacyDataPortal: React.FC = () => {
       </div>
 
       {/* Legal Information */}
-      <div className="bg-gray-800/50 rounded-lg p-4 space-y-3">
+      <div className="bg-muted/50 rounded-xl p-4 space-y-3">
         <div className="flex items-center space-x-2">
-          <FileText className="h-4 w-4 text-gray-400" />
-          <span className="text-gray-300 text-sm font-medium">Legal Information</span>
+          <FileText className="h-4 w-4 text-muted-foreground" />
+          <span className="text-foreground text-sm font-semibold">Legal Information</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-          <a href="/privacy" className="text-goldenrod hover:underline">
-            Privacy Policy
-          </a>
-          <a href="/terms" className="text-goldenrod hover:underline">
-            Terms of Service
-          </a>
-          <a href="/data-processing" className="text-goldenrod hover:underline">
-            Data Processing Agreement
-          </a>
-          <a href="/cookie-policy" className="text-goldenrod hover:underline">
-            Cookie Policy
-          </a>
+          <a href="/privacy" className="text-primary hover:underline font-medium">Privacy Policy</a>
+          <a href="/terms" className="text-primary hover:underline font-medium">Terms of Service</a>
+          <a href="/data-processing" className="text-primary hover:underline font-medium">Data Processing Agreement</a>
+          <a href="/cookie-policy" className="text-primary hover:underline font-medium">Cookie Policy</a>
         </div>
-        <p className="text-gray-500 text-xs">
+        <p className="text-muted-foreground text-xs font-medium">
           MonArk complies with GDPR, CCPA, CPRA, and Washington's My Health My Data Act.
         </p>
       </div>
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-jet-black/90 flex items-center justify-center p-4 z-60">
-          <div className="bg-charcoal-gray rounded-xl p-6 max-w-sm w-full space-y-4 border border-red-600/30">
-            <div className="flex items-center space-x-3 text-red-400">
+        <div className="fixed inset-0 bg-foreground/40 backdrop-blur-sm flex items-center justify-center p-4 z-60">
+          <div className="bg-card rounded-2xl p-6 max-w-sm w-full space-y-4 border-2 border-destructive/30 shadow-[0_8px_40px_-4px_hsl(var(--foreground)/0.2)]">
+            <div className="flex items-center space-x-3 text-destructive">
               <AlertTriangle className="h-6 w-6" />
               <h3 className="text-lg font-semibold">Confirm Account Deletion</h3>
             </div>
             
             <div className="space-y-3">
-              <p className="text-gray-300 text-sm">
+              <p className="text-foreground/80 text-sm font-medium">
                 Are you absolutely sure you want to delete your account? This will permanently remove:
               </p>
-              <ul className="text-gray-400 text-xs space-y-1 ml-4">
+              <ul className="text-muted-foreground text-xs space-y-1 ml-4">
                 <li>• Your entire profile and all photos</li>
                 <li>• All conversations, matches, and connections</li>
                 <li>• Date journal entries and reflections</li>
                 <li>• Dating preferences and style data</li>
                 <li>• All app preferences and settings</li>
               </ul>
-              <p className="text-red-400 text-sm font-medium">
+              <p className="text-destructive text-sm font-semibold">
                 This action cannot be undone and you will not be able to recover your data.
               </p>
             </div>
@@ -295,7 +247,7 @@ export const PrivacyDataPortal: React.FC = () => {
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={isDeleting}
                 variant="outline"
-                className="flex-1 border-gray-600 text-gray-300"
+                className="flex-1"
               >
                 Cancel
               </Button>
@@ -303,11 +255,11 @@ export const PrivacyDataPortal: React.FC = () => {
                 onClick={handleDeleteAccount}
                 disabled={isDeleting}
                 variant="destructive"
-                className="flex-1 bg-red-600 hover:bg-red-700 flex items-center justify-center space-x-2"
+                className="flex-1 flex items-center justify-center space-x-2"
               >
                 {isDeleting ? (
                   <>
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-destructive-foreground border-t-transparent"></div>
                     <span>Deleting...</span>
                   </>
                 ) : (
