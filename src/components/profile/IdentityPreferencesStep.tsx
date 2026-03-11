@@ -269,6 +269,14 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
         >
           Back
         </button>
+        {onSkip && (
+          <button
+            onClick={onSkip}
+            className="px-6 py-4 text-muted-foreground hover:text-foreground transition-colors text-sm"
+          >
+            Skip
+          </button>
+        )}
         <button
           onClick={handleNext}
           disabled={!canProceed}
