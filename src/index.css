@@ -9,65 +9,66 @@
 
 @layer base {
   :root {
-    /* MonArk Quiet Luxury — Light Warm Earth-Tone */
-    --color-bone: 36 30% 94%;
-    --color-sand: 34 20% 87%;
-    --color-parchment: 38 35% 96%;
-    --color-charcoal: 30 18% 18%;
-    --color-charcoal-soft: 28 14% 32%;
-    --color-charcoal-muted: 28 10% 48%;
-    --color-taupe: 30 16% 30%;
-    --color-olive: 45 14% 42%;
+    /* MonArk Quiet Luxury — New Earth-Tone Palette */
+    /* Core palette: Sienna · Sandy Gold · Linen · Sage · Deep Forest */
+    --color-bone: 28 38% 91%;
+    --color-sand: 30 22% 82%;
+    --color-parchment: 28 40% 94%;
+    --color-charcoal: 80 18% 24%;
+    --color-charcoal-soft: 80 14% 34%;
+    --color-charcoal-muted: 36 18% 44%;
+    --color-taupe: 22 38% 36%;
+    --color-olive: 80 20% 36%;
     --color-dusty-rose: 350 30% 62%;
 
-    /* Accent — understated warmth */
-    --color-goldenrod: 38 40% 50%;
-    --color-gold-dark: 34 30% 38%;
-    --color-rosegold: 16 36% 62%;
-    --color-rosegold-deep: 14 30% 48%;
-    --color-warm-glow: 28 50% 70%;
+    /* Accent — warm sienna & sandy gold */
+    --color-goldenrod: 36 25% 52%;
+    --color-gold-dark: 22 38% 36%;
+    --color-rosegold: 22 34% 50%;
+    --color-rosegold-deep: 22 38% 36%;
+    --color-warm-glow: 36 30% 62%;
 
-    /* Background: warm khaki-beige — darker than bone for readability */
-    --background: 36 22% 84%;
-    /* Foreground: deep taupe — WCAG AAA on khaki bg */
-    --foreground: 30 20% 16%;
+    /* Background: warm linen */
+    --background: 28 30% 87%;
+    /* Foreground: deep forest — strong contrast on linen */
+    --foreground: 80 18% 24%;
 
-    /* Cards: parchment/cream */
-    --card: 38 34% 96%;
-    --card-foreground: 30 18% 18%;
+    /* Cards: lighter linen */
+    --card: 28 38% 94%;
+    --card-foreground: 80 18% 24%;
 
-    --popover: 38 34% 96%;
-    --popover-foreground: 30 18% 18%;
+    --popover: 28 38% 94%;
+    --popover-foreground: 80 18% 24%;
 
-    /* Primary: olive — muted, premium */
-    --primary: 45 14% 38%;
-    --primary-foreground: 38 34% 96%;
+    /* Primary: sage olive */
+    --primary: 80 20% 36%;
+    --primary-foreground: 28 38% 94%;
 
-    --secondary: 36 18% 90%;
-    --secondary-foreground: 30 16% 26%;
+    --secondary: 28 28% 89%;
+    --secondary-foreground: 80 18% 28%;
 
-    --muted: 36 14% 86%;
-    --muted-foreground: 28 10% 42%;
+    --muted: 28 22% 84%;
+    --muted-foreground: 36 18% 42%;
 
-    --accent: 45 14% 48%;
-    --accent-foreground: 30 18% 18%;
+    --accent: 22 38% 36%;
+    --accent-foreground: 28 38% 94%;
 
     --destructive: 0 55% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 34 14% 80%;
-    --input: 36 20% 91%;
-    --ring: 45 14% 42%;
+    --border: 30 18% 76%;
+    --input: 28 28% 90%;
+    --ring: 80 20% 36%;
 
-    /* Sidebar — deep olive, grounded */
-    --sidebar-background: 44 12% 32%;
-    --sidebar-foreground: 38 30% 94%;
-    --sidebar-primary: 38 30% 94%;
-    --sidebar-primary-foreground: 44 12% 32%;
-    --sidebar-accent: 44 12% 40%;
-    --sidebar-accent-foreground: 38 30% 94%;
-    --sidebar-border: 44 10% 28%;
-    --sidebar-ring: 38 30% 94%;
+    /* Sidebar — deep forest, grounded */
+    --sidebar-background: 80 18% 24%;
+    --sidebar-foreground: 28 38% 92%;
+    --sidebar-primary: 28 38% 92%;
+    --sidebar-primary-foreground: 80 18% 24%;
+    --sidebar-accent: 80 16% 32%;
+    --sidebar-accent-foreground: 28 38% 92%;
+    --sidebar-border: 80 14% 20%;
+    --sidebar-ring: 28 38% 92%;
 
     --radius: 0.75rem;
 
@@ -95,13 +96,13 @@
     --shadow-luxury: 0 8px 32px -8px rgba(100, 80, 60, 0.14), 0 2px 8px rgba(100, 80, 60, 0.06);
     --shadow-warm-glow: 0 2px 12px rgba(140, 120, 90, 0.1);
 
-    --chart-1: 45 14% 42%;
-    --chart-2: 350 30% 62%;
-    --chart-3: 38 40% 50%;
-    --chart-4: 30 16% 30%;
-    --chart-5: 28 10% 52%;
+    --chart-1: 80 20% 36%;
+    --chart-2: 22 38% 36%;
+    --chart-3: 36 25% 52%;
+    --chart-4: 80 18% 24%;
+    --chart-5: 36 18% 44%;
 
-    --sidebar: 44 12% 32%;
+    --sidebar: 80 18% 24%;
     --font-sans: 'DM Sans', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
     --font-serif: 'Playfair Display', 'Georgia', ui-serif, serif;
     --font-mono: 'Space Mono', ui-monospace, SFMono-Regular, monospace;
