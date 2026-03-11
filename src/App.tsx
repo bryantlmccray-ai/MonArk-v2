@@ -14,6 +14,7 @@ import NotFound from "./pages/NotFound";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import CookiePolicy from "./pages/CookiePolicy";
+import DataProcessing from "./pages/DataProcessing";
 import ResetPassword from "./pages/ResetPassword";
 import { Admin } from "./pages/Admin";
 import AdminWaitlist from "./pages/AdminWaitlist";
