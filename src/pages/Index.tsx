@@ -178,7 +178,8 @@ const Index = () => {
   // Show profile creation after onboarding
   return <ProfileCreation 
     onComplete={async () => {
-      setShowProfileComplete(true);
+      setInitialTab('profile');
+      setHasEnteredApp(true);
       refetchProfile();
     }}
     onCancel={async () => {
