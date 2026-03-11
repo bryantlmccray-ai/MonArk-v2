@@ -64,37 +64,24 @@ export const IdentityPreferencesSettings: React.FC = () => {
     const success = await updateProfile(updates);
 
     if (success) {
-      toast({
-        title: "Preferences updated",
-        description: "Your identity and discovery preferences have been saved.",
-      });
+      toast({ title: "Preferences updated", description: "Your identity and discovery preferences have been saved." });
     } else {
-      toast({
-        title: "Update failed",
-        description: "There was an error updating your preferences. Please try again.",
-        variant: "destructive",
-      });
+      toast({ title: "Update failed", description: "There was an error updating your preferences. Please try again.", variant: "destructive" });
     }
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto bg-jet-black border-none shadow-md rounded-lg">
+    <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-2xl font-bold text-white">Identity & Discovery Preferences</CardTitle>
+        <CardTitle className="text-2xl font-bold text-foreground">Identity & Discovery Preferences</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-
-        {/* Gender Identity */}
         <div className="grid gap-2">
           <Label htmlFor="gender">Gender Identity</Label>
           <Select value={genderIdentity} onValueChange={(value) => setGenderIdentity(value as GenderIdentity)}>
-            <SelectTrigger className="bg-charcoal-gray border-gray-700 text-white placeholder:text-gray-500 focus:border-goldenrod">
-              <SelectValue placeholder="Select a gender identity" />
-            </SelectTrigger>
-            <SelectContent className="bg-charcoal-gray border-gray-700 text-white">
-              {GENDER_OPTIONS.map((gender) => (
-                <SelectItem key={gender} value={gender}>{gender}</SelectItem>
-              ))}
+            <SelectTrigger><SelectValue placeholder="Select a gender identity" /></SelectTrigger>
+            <SelectContent>
+              {GENDER_OPTIONS.map((gender) => (<SelectItem key={gender} value={gender}>{gender}</SelectItem>))}
             </SelectContent>
           </Select>
         </div>
@@ -102,28 +89,16 @@ export const IdentityPreferencesSettings: React.FC = () => {
         {genderIdentity === 'Custom' && (
           <div className="grid gap-2">
             <Label htmlFor="gender-custom">Custom Gender Identity</Label>
-            <Input
-              id="gender-custom"
-              type="text"
-              value={genderIdentityCustom}
-              onChange={(e) => setGenderIdentityCustom(e.target.value)}
-              placeholder="Enter your gender identity"
-              className="bg-charcoal-gray border-gray-700 text-white placeholder:text-gray-500 focus:border-goldenrod"
-            />
+            <Input id="gender-custom" type="text" value={genderIdentityCustom} onChange={(e) => setGenderIdentityCustom(e.target.value)} placeholder="Enter your gender identity" />
           </div>
         )}
 
-        {/* Sexual Orientation */}
         <div className="grid gap-2">
           <Label htmlFor="orientation">Sexual Orientation</Label>
           <Select value={sexualOrientation} onValueChange={(value) => setSexualOrientation(value as SexualOrientation)}>
-            <SelectTrigger className="bg-charcoal-gray border-gray-700 text-white placeholder:text-gray-500 focus:border-goldenrod">
-              <SelectValue placeholder="Select a sexual orientation" />
-            </SelectTrigger>
-            <SelectContent className="bg-charcoal-gray border-gray-700 text-white">
-              {ORIENTATION_OPTIONS.map((orientation) => (
-                <SelectItem key={orientation} value={orientation}>{orientation}</SelectItem>
-              ))}
+            <SelectTrigger><SelectValue placeholder="Select a sexual orientation" /></SelectTrigger>
+            <SelectContent>
+              {ORIENTATION_OPTIONS.map((orientation) => (<SelectItem key={orientation} value={orientation}>{orientation}</SelectItem>))}
             </SelectContent>
           </Select>
         </div>
@@ -131,91 +106,55 @@ export const IdentityPreferencesSettings: React.FC = () => {
         {sexualOrientation === 'Custom' && (
           <div className="grid gap-2">
             <Label htmlFor="orientation-custom">Custom Sexual Orientation</Label>
-            <Input
-              id="orientation-custom"
-              type="text"
-              value={sexualOrientationCustom}
-              onChange={(e) => setSexualOrientationCustom(e.target.value)}
-              placeholder="Enter your sexual orientation"
-              className="bg-charcoal-gray border-gray-700 text-white placeholder:text-gray-500 focus:border-goldenrod"
-            />
+            <Input id="orientation-custom" type="text" value={sexualOrientationCustom} onChange={(e) => setSexualOrientationCustom(e.target.value)} placeholder="Enter your sexual orientation" />
           </div>
         )}
 
-        {/* Preference to See */}
         <div className="grid gap-2">
           <Label>Preference to See</Label>
           <div className="flex flex-wrap gap-2">
             {GENDER_OPTIONS.map((gender) => (
               <div key={gender} className="flex items-center space-x-2">
-                <Checkbox
-                  id={`see-${gender}`}
-                  checked={preferenceToSee.includes(gender)}
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      setPreferenceToSee([...preferenceToSee, gender]);
-                    } else {
-                      setPreferenceToSee(preferenceToSee.filter((item) => item !== gender));
-                    }
-                  }}
-                />
+                <Checkbox id={`see-${gender}`} checked={preferenceToSee.includes(gender)} onCheckedChange={(checked) => {
+                  if (checked) { setPreferenceToSee([...preferenceToSee, gender]); } else { setPreferenceToSee(preferenceToSee.filter((item) => item !== gender)); }
+                }} />
                 <Label htmlFor={`see-${gender}`} className="cursor-pointer">{gender}</Label>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Preference to Be Seen By */}
         <div className="grid gap-2">
           <Label>Preference to Be Seen By</Label>
           <div className="flex flex-wrap gap-2">
             {GENDER_OPTIONS.map((gender) => (
               <div key={gender} className="flex items-center space-x-2">
-                <Checkbox
-                  id={`seen-by-${gender}`}
-                  checked={preferenceToBeSeenBy.includes(gender)}
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      setPreferenceToBeSeenBy([...preferenceToBeSeenBy, gender]);
-                    } else {
-                      setPreferenceToBeSeenBy(preferenceToBeSeenBy.filter((item) => item !== gender));
-                    }
-                  }}
-                />
+                <Checkbox id={`seen-by-${gender}`} checked={preferenceToBeSeenBy.includes(gender)} onCheckedChange={(checked) => {
+                  if (checked) { setPreferenceToBeSeenBy([...preferenceToBeSeenBy, gender]); } else { setPreferenceToBeSeenBy(preferenceToBeSeenBy.filter((item) => item !== gender)); }
+                }} />
                 <Label htmlFor={`seen-by-${gender}`} className="cursor-pointer">{gender}</Label>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Discovery Privacy Mode */}
         <div className="grid gap-2">
           <Label htmlFor="privacy-mode">Discovery Privacy Mode</Label>
           <Select value={discoveryPrivacyMode} onValueChange={(value) => setDiscoveryPrivacyMode(value)}>
-            <SelectTrigger className="bg-charcoal-gray border-gray-700 text-white placeholder:text-gray-500 focus:border-goldenrod">
-              <SelectValue placeholder="Select privacy mode" />
-            </SelectTrigger>
-            <SelectContent className="bg-charcoal-gray border-gray-700 text-white">
+            <SelectTrigger><SelectValue placeholder="Select privacy mode" /></SelectTrigger>
+            <SelectContent>
               <SelectItem value="open">Open</SelectItem>
               <SelectItem value="private">Private</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        {/* Identity Visibility */}
         <div className="flex items-center space-x-2">
           <Label htmlFor="identity-visibility">Show Identity on Profile</Label>
-          <Switch
-            id="identity-visibility"
-            checked={identityVisibility}
-            onCheckedChange={(checked) => setIdentityVisibility(checked)}
-          />
+          <Switch id="identity-visibility" checked={identityVisibility} onCheckedChange={(checked) => setIdentityVisibility(checked)} />
         </div>
 
-        {/* Save Button */}
-        <Button onClick={handleSave} className="bg-goldenrod-gradient text-jet-black font-semibold rounded-xl transition-all duration-300 hover:shadow-golden-glow">
-          Save Preferences
-        </Button>
+        <Button onClick={handleSave} className="w-full">Save Preferences</Button>
       </CardContent>
     </Card>
   );
