@@ -345,7 +345,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 I wanted something intentional. A way to match on emotional compatibility, not just a hot profile pic.
                 A way to make first dates feel effortless, not awkward.
               </p>
-              <p className="text-base text-foreground font-body leading-relaxed font-medium">
+              <p className="text-base text-muted-foreground font-body leading-relaxed">
                 That's why MonArk matches on communication style, not just demographics.
               </p>
               <p className="text-sm text-primary font-body tracking-wide italic pt-2">
