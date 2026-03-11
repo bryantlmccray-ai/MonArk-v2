@@ -6,8 +6,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   Heart, X, MapPin, Briefcase, GraduationCap, 
   ChevronLeft, ChevronRight, Sparkles, Target,
-  MessageCircle
+  MessageCircle, Flag
 } from 'lucide-react';
+import { ReportBlockModal } from '@/components/safety/ReportBlockModal';
 
 interface MatchProfile {
   id: string;
