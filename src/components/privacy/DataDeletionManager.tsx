@@ -227,7 +227,7 @@ export const DataDeletionManager: React.FC = () => {
                 <li>• Data portability</li>
                 <li>• Object to processing</li>
               </ul>
-              <p className="text-muted-foreground text-xs mt-3">
+              <p className="text-foreground/70 text-xs mt-3 font-medium">
                 For questions about your rights, contact{' '}
                 <a href="mailto:privacy@monark.com" className="text-primary hover:underline">
                   privacy@monark.com
