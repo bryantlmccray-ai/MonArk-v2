@@ -194,7 +194,7 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
                 <p><span className="text-primary">Sexual Orientation:</span> {profileData.identityPreferences?.sexualOrientation || 'Not specified'}</p>
               </div>
             ) : (
-              <div className="text-destructive text-sm italic">Identity preferences required to continue</div>
+              <div className="text-muted-foreground text-sm italic">Identity preferences not completed yet</div>
             )}
           </div>
         </div>
