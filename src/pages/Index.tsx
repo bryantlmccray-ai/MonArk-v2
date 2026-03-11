@@ -49,6 +49,32 @@ const Index = () => {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, []);
 
+  // Auto-fix: onboarding_step >= 10 but is_profile_complete not set
+  React.useEffect(() => {
+    if (
+      profile &&
+      !profile.is_profile_complete &&
+      profile.onboarding_step != null &&
+      profile.onboarding_step >= 10 &&
+      !autoFixAttempted
+    ) {
+      setAutoFixAttempted(true);
+      const fix = async () => {
+        try {
+          const success = await updateProfile({ is_profile_complete: true });
+          if (success) {
+            console.log('Auto-fixed is_profile_complete flag');
+            refetchProfile();
+            setShowProfileComplete(true);
+          }
+        } catch (e) {
+          console.error('Auto-fix failed:', e);
+        }
+      };
+      fix();
+    }
+  }, [profile, autoFixAttempted, updateProfile, refetchProfile]);
+
   // Show splash screen on first visit
   if (showSplash) {
     return <SplashScreen onComplete={handleSplashComplete} />;
