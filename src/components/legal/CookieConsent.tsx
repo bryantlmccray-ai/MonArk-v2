@@ -42,14 +42,14 @@ export const CookieConsent: React.FC = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 p-4">
-      <Card className="bg-card border border-border shadow-[0_-4px_30px_-4px_hsl(var(--foreground)/0.15)]">
+      <Card className="bg-card border-2 border-foreground/20 shadow-[0_-8px_40px_-4px_hsl(var(--foreground)/0.25)]">
         <div className="p-6">
           <div className="flex items-start gap-4">
             <Cookie className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
             
             <div className="flex-1">
-              <h3 className="text-foreground font-medium mb-2">Cookie Preferences</h3>
-              <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
+              <h3 className="text-foreground font-semibold text-base mb-2">Cookie Preferences</h3>
+              <p className="text-foreground/80 text-sm mb-4 leading-relaxed font-medium">
                 We use cookies to enhance your experience, analyze site usage, and assist with marketing. 
                 By continuing, you agree to our use of cookies. You can manage your preferences anytime.
               </p>
@@ -58,15 +58,15 @@ export const CookieConsent: React.FC = () => {
                 <div className="mb-4 space-y-3 text-sm">
                   <div className="bg-muted rounded-lg p-3">
                     <h4 className="text-foreground font-medium mb-1">Essential Cookies</h4>
-                    <p className="text-muted-foreground">Required for basic site functionality and security. Cannot be disabled.</p>
+                    <p className="text-foreground/70">Required for basic site functionality and security. Cannot be disabled.</p>
                   </div>
                   <div className="bg-muted rounded-lg p-3">
                     <h4 className="text-foreground font-medium mb-1">Analytics Cookies</h4>
-                    <p className="text-muted-foreground">Help us understand how you use our site to improve user experience.</p>
+                    <p className="text-foreground/70">Help us understand how you use our site to improve user experience.</p>
                   </div>
                   <div className="bg-muted rounded-lg p-3">
                     <h4 className="text-foreground font-medium mb-1">Marketing Cookies</h4>
-                    <p className="text-muted-foreground">Used to deliver relevant ads and measure campaign effectiveness.</p>
+                    <p className="text-foreground/70">Used to deliver relevant ads and measure campaign effectiveness.</p>
                   </div>
                 </div>
               )}
