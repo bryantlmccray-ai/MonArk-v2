@@ -30,19 +30,11 @@ const Index = () => {
     setShowSplash(false);
   };
 
-  // Listen for auth state changes to update UI immediately
+  // React to auth state changes via useAuth context (driven by Supabase onAuthStateChange)
   React.useEffect(() => {
-    const handleAuthChange = () => {
-      // Force component re-render on auth change
-      
-      // Reset showAuth when user is authenticated or demo mode is active
-      if (user || isDemoMode) {
-        setShowAuth(false);
-      }
-    };
-
-    window.addEventListener('auth-change', handleAuthChange);
-    return () => window.removeEventListener('auth-change', handleAuthChange);
+    if (user || isDemoMode) {
+      setShowAuth(false);
+    }
   }, [user, isDemoMode]);
 
   // Add escape key listener to exit demo
