@@ -58,15 +58,15 @@ export const CookieConsent: React.FC = () => {
                 <div className="mb-4 space-y-3 text-sm">
                   <div className="bg-muted rounded-lg p-3">
                     <h4 className="text-foreground font-medium mb-1">Essential Cookies</h4>
-                    <p className="text-muted-foreground">Required for basic site functionality and security. Cannot be disabled.</p>
+                    <p className="text-foreground/70">Required for basic site functionality and security. Cannot be disabled.</p>
                   </div>
                   <div className="bg-muted rounded-lg p-3">
                     <h4 className="text-foreground font-medium mb-1">Analytics Cookies</h4>
-                    <p className="text-muted-foreground">Help us understand how you use our site to improve user experience.</p>
+                    <p className="text-foreground/70">Help us understand how you use our site to improve user experience.</p>
                   </div>
                   <div className="bg-muted rounded-lg p-3">
                     <h4 className="text-foreground font-medium mb-1">Marketing Cookies</h4>
-                    <p className="text-muted-foreground">Used to deliver relevant ads and measure campaign effectiveness.</p>
+                    <p className="text-foreground/70">Used to deliver relevant ads and measure campaign effectiveness.</p>
                   </div>
                 </div>
               )}
