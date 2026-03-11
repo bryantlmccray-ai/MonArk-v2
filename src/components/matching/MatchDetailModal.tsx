@@ -275,8 +275,8 @@ export const MatchDetailModal = ({
           <ReportBlockModal
             isOpen={showReportBlock}
             onClose={() => setShowReportBlock(false)}
-            targetUserId={match.id}
-            targetUserName={match.name || 'This user'}
+            userId={match.id}
+            userName={match.name || 'This user'}
           />
         )}
       </DialogContent>
