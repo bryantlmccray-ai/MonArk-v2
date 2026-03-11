@@ -370,12 +370,12 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 maxLength={2000}
               />
               {fieldErrors.whyMonark ? (
-                <p className="text-xs text-red-400 flex items-center gap-1">
+                <p className="text-xs text-destructive flex items-center gap-1 font-medium">
                   <AlertCircle className="h-3 w-3" />
                   {fieldErrors.whyMonark}
                 </p>
               ) : (
-                <p className="text-xs text-gray-400">This helps us understand if MonArk is a good fit for you</p>
+                <p className="text-xs text-muted-foreground font-medium">This helps us understand if MonArk is a good fit for you</p>
               )}
             </div>
 
