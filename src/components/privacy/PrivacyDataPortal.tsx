@@ -147,12 +147,12 @@ export const PrivacyDataPortal: React.FC = () => {
         </div>
 
         {/* Correct My Data */}
-        <div className="bg-card rounded-xl p-6 space-y-4 border border-border">
+        <div className="bg-card rounded-xl p-6 space-y-4 border-2 border-border shadow-[0_8px_40px_-4px_hsl(var(--foreground)/0.1)]">
           <div className="flex items-start space-x-3">
             <Edit className="h-5 w-5 text-primary mt-1" />
             <div className="flex-1">
               <h3 className="text-foreground font-semibold">Correct My Data</h3>
-              <p className="text-muted-foreground text-sm mt-1 font-medium">
+              <p className="text-foreground/80 text-sm mt-1 font-medium">
                 Update your personal information, preferences, and privacy settings.
               </p>
             </div>
