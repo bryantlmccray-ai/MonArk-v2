@@ -459,22 +459,22 @@ export const WeeklyRhythmPlans = () => {
         className="px-6 pb-12"
       >
         <div className="max-w-4xl mx-auto">
-          <Card className="overflow-hidden border-2 border-purple-500/30 bg-gradient-to-br from-purple-500/10 via-fuchsia-500/5 to-violet-500/10">
+          <Card className="overflow-hidden border-2 border-border bg-card shadow-elevated rounded-2xl">
             <CardContent className="p-6">
               {/* Header */}
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
-                  <Ghost className="w-6 h-6 text-purple-400" />
+                <div className="w-12 h-12 rounded-xl bg-secondary border-2 border-border flex items-center justify-center">
+                  <Ghost className="w-6 h-6 text-foreground" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <Badge className="bg-purple-500/20 text-purple-300 border-0">
-                      <X className="w-3 h-3 mr-1" />
+                    <span className="text-xs font-semibold text-foreground bg-secondary border border-border rounded-full px-3 py-1 flex items-center gap-1">
+                      <X className="w-3 h-3" />
                       Anti-Ghosting
-                    </Badge>
-                    <Badge variant="outline" className="border-purple-500/30 text-purple-300">
+                    </span>
+                    <span className="text-[10px] font-medium text-muted-foreground bg-card border border-border rounded-full px-2 py-0.5">
                       Built-in
-                    </Badge>
+                    </span>
                   </div>
                   <h3 className="text-xl font-semibold text-foreground mt-1">
                     Close the Loop
@@ -482,74 +482,74 @@ export const WeeklyRhythmPlans = () => {
                 </div>
               </div>
 
-              <p className="text-muted-foreground mb-6">
+              <p className="text-foreground/70 font-medium mb-6">
                 After every meet, we help both people move forward — no awkward drift, no wondering what happened.
               </p>
 
               {/* Demo Flow */}
               <div className="space-y-4">
                 {/* Step 1: How did it feel? */}
-                <div className="p-4 rounded-xl bg-background/60 border border-border/50">
-                  <div className="flex items-center gap-2 mb-3 text-sm font-medium text-muted-foreground">
-                    <span className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs">1</span>
+                <div className="p-4 rounded-xl bg-secondary border-2 border-border">
+                  <div className="flex items-center gap-2 mb-3 text-sm font-semibold text-foreground">
+                    <span className="w-5 h-5 rounded-full bg-card border border-border text-foreground flex items-center justify-center text-xs font-bold">1</span>
                     After-Action Check-in
                   </div>
-                  <p className="text-foreground font-medium mb-3">How did it feel?</p>
+                  <p className="text-foreground font-semibold mb-3">How did it feel?</p>
                   <div className="flex flex-wrap gap-2">
-                    <Badge className="bg-emerald-500/20 text-emerald-300 border-0 px-4 py-2 text-sm cursor-pointer hover:bg-emerald-500/30 transition-colors">
-                      <Zap className="w-4 h-4 mr-2" />
+                    <span className="bg-card border-2 border-border rounded-xl px-4 py-2 text-sm font-semibold text-foreground cursor-pointer hover:shadow-md transition-all flex items-center gap-2">
+                      <Zap className="w-4 h-4 text-rosegold-deep" />
                       Great energy
-                    </Badge>
-                    <Badge className="bg-amber-500/20 text-amber-300 border-0 px-4 py-2 text-sm cursor-pointer hover:bg-amber-500/30 transition-colors">
+                    </span>
+                    <span className="bg-card border-2 border-border rounded-xl px-4 py-2 text-sm font-semibold text-foreground cursor-pointer hover:shadow-md transition-all">
                       Neutral
-                    </Badge>
-                    <Badge className="bg-muted/50 text-muted-foreground border-0 px-4 py-2 text-sm cursor-pointer hover:bg-muted/70 transition-colors">
+                    </span>
+                    <span className="bg-card border-2 border-border rounded-xl px-4 py-2 text-sm font-semibold text-foreground/70 cursor-pointer hover:shadow-md transition-all">
                       Not a fit
-                    </Badge>
+                    </span>
                   </div>
                 </div>
 
                 {/* Step 2: Micro-prompts */}
                 <div className="grid sm:grid-cols-2 gap-4">
                   {/* Advance */}
-                  <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                    <div className="flex items-center gap-2 mb-2 text-sm font-medium text-emerald-400">
-                      <span className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs">2A</span>
+                  <div className="p-4 rounded-xl bg-secondary border-2 border-border">
+                    <div className="flex items-center gap-2 mb-2 text-sm font-semibold text-foreground">
+                      <span className="w-5 h-5 rounded-full bg-card border border-border flex items-center justify-center text-xs font-bold">2A</span>
                       If it clicked...
                     </div>
-                    <p className="text-foreground font-medium mb-2">Micro-prompt (Advance)</p>
-                    <div className="p-3 rounded-lg bg-background/60 border border-border/50">
+                    <p className="text-foreground font-semibold mb-2">Micro-prompt (Advance)</p>
+                    <div className="p-3 rounded-xl bg-card border-2 border-border">
                       <div className="flex items-center gap-2 text-sm text-foreground">
-                        <Coffee className="w-4 h-4 text-emerald-400" />
-                        <span className="font-medium">Next step:</span>
+                        <Coffee className="w-4 h-4 text-foreground" />
+                        <span className="font-semibold">Next step:</span>
                       </div>
-                      <p className="text-muted-foreground text-sm mt-1 italic">
+                      <p className="text-foreground/60 text-sm mt-1 italic font-medium">
                         "Coffee Sunday 11:00?"
                       </p>
                     </div>
-                    <Button size="sm" className="w-full mt-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-0">
+                    <Button size="sm" className="w-full mt-3 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold">
                       <ArrowRight className="w-4 h-4 mr-2" />
                       Keep it going
                     </Button>
                   </div>
 
                   {/* Graceful Close */}
-                  <div className="p-4 rounded-xl bg-muted/20 border border-border/50">
-                    <div className="flex items-center gap-2 mb-2 text-sm font-medium text-muted-foreground">
-                      <span className="w-5 h-5 rounded-full bg-muted/50 flex items-center justify-center text-xs">2B</span>
+                  <div className="p-4 rounded-xl bg-secondary border-2 border-border">
+                    <div className="flex items-center gap-2 mb-2 text-sm font-semibold text-foreground/70">
+                      <span className="w-5 h-5 rounded-full bg-card border border-border flex items-center justify-center text-xs font-bold text-foreground">2B</span>
                       If not a match...
                     </div>
-                    <p className="text-foreground font-medium mb-2">Micro-prompt (Close Kindly)</p>
-                    <div className="p-3 rounded-lg bg-background/60 border border-border/50">
+                    <p className="text-foreground font-semibold mb-2">Micro-prompt (Close Kindly)</p>
+                    <div className="p-3 rounded-xl bg-card border-2 border-border">
                       <div className="flex items-center gap-2 text-sm text-foreground">
-                        <Heart className="w-4 h-4 text-muted-foreground" />
-                        <span className="font-medium">Kind close:</span>
+                        <Heart className="w-4 h-4 text-foreground/60" />
+                        <span className="font-semibold">Kind close:</span>
                       </div>
-                      <p className="text-muted-foreground text-sm mt-1 italic">
+                      <p className="text-foreground/60 text-sm mt-1 italic font-medium">
                         "Thanks for meeting, not a match for me but wishing you well!"
                       </p>
                     </div>
-                    <Button size="sm" variant="outline" className="w-full mt-3 border-border/50">
+                    <Button size="sm" variant="outline" className="w-full mt-3 border-2 border-border font-semibold text-foreground hover:bg-secondary">
                       <Check className="w-4 h-4 mr-2" />
                       End gracefully
                     </Button>
@@ -557,11 +557,11 @@ export const WeeklyRhythmPlans = () => {
                 </div>
 
                 {/* Result */}
-                <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 text-center">
-                  <p className="text-sm text-purple-300 font-medium">
+                <div className="p-4 rounded-xl bg-secondary border-2 border-border text-center">
+                  <p className="text-sm text-foreground font-semibold">
                     Two taps. Everyone knows where they stand.
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-xs text-foreground/60 font-medium mt-1">
                     No limbo. No ghosting. Just clarity.
                   </p>
                 </div>
