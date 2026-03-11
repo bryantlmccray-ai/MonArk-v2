@@ -1,8 +1,10 @@
 
-import { useState, useEffect } from 'react';
+import { useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { withRetry } from '@/utils/retryUtils';
+import { queryKeys } from '@/lib/queryKeys';
 import type { Database } from '@/integrations/supabase/types';
 
 type GenderIdentity = Database['public']['Enums']['gender_identity'];
@@ -40,7 +42,6 @@ export interface UserProfile {
   smoking_status: string | null;
   drinking_status: string | null;
   height_cm: number | null;
-  // Onboarding progress tracking
   onboarding_step: number | null;
   rif_quiz_answers: any | null;
   created_at: string;
@@ -71,7 +72,7 @@ const createDemoProfile = (userId: string): UserProfile => ({
   identity_visibility: true,
   last_preference_update: new Date().toISOString(),
   date_of_birth: null,
-  age_verified: true, // Skip age verification in demo
+  age_verified: true,
   age_verification_timestamp: new Date().toISOString(),
   relationship_goals: null,
   occupation: null,
@@ -86,218 +87,157 @@ const createDemoProfile = (userId: string): UserProfile => ({
   updated_at: new Date().toISOString(),
 });
 
-export const useProfile = () => {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const { user, isDemoMode } = useAuth();
+async function fetchProfileFromDb(userId: string): Promise<UserProfile | null> {
+  const operation = async () => {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle();
 
-  const fetchProfile = async () => {
-    if (!user) {
-      setProfile(null);
-      setLoading(false);
-      return;
-    }
-
-    // In demo mode, don't auto-create a profile - let onboarding handle it
-    if (isDemoMode) {
-      console.log('Demo mode: no profile yet, will be created during onboarding');
-      // Only return existing demo profile if already set, otherwise null for onboarding
-      setLoading(false);
-      return;
-    }
-
-    try {
-      console.log('Fetching profile for user:', user.id);
-      
-      // Use retry logic for network requests
-      const operation = async () => {
-        const { data, error } = await supabase
-          .from('user_profiles')
-          .select('*')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        if (error) {
-          throw error;
-        }
-        
-        return data;
-      };
-
-      const data = await withRetry(operation, { maxRetries: 2, baseDelay: 1000 });
-
-      if (!data) {
-        console.log('No profile found for user:', user.id);
-        setProfile(null);
-      } else {
-        console.log('Profile fetched:', data?.id);
-        setProfile(data);
-      }
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-      // Don't crash the app, just set profile to null
-      setProfile(null);
-    } finally {
-      setLoading(false);
-    }
+    if (error) throw error;
+    return data;
   };
 
-  const updateProfile = async (updates: Partial<UserProfile>): Promise<boolean> => {
-    if (!user) {
-      console.error('No authenticated user');
-      return false;
-    }
+  return withRetry(operation, { maxRetries: 2, baseDelay: 1000 });
+}
 
-    // In demo mode, just update local state
-    if (isDemoMode) {
-      console.log('Demo mode: updating mock profile locally');
-      setProfile(prev => prev ? { ...prev, ...updates, updated_at: new Date().toISOString() } : createDemoProfile(user.id));
-      return true;
-    }
+export const useProfile = () => {
+  const { user, isDemoMode } = useAuth();
+  const queryClient = useQueryClient();
 
-    try {
-      console.log('Updating profile for user:', user.id);
-      
-      // Check if profile exists first
-      const { data: existingProfile, error: fetchError } = await supabase
+  const { data: profile = null, isLoading: loading } = useQuery({
+    queryKey: queryKeys.profile.byUser(user?.id ?? ''),
+    queryFn: () => {
+      if (isDemoMode) return null; // Let onboarding handle demo profiles
+      return fetchProfileFromDb(user!.id);
+    },
+    enabled: !!user && !isDemoMode,
+    staleTime: 30_000, // 30s — profile doesn't change often
+    retry: 2,
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async (updates: Partial<UserProfile>) => {
+      if (!user) throw new Error('No authenticated user');
+
+      if (isDemoMode) {
+        return updates; // handled optimistically below
+      }
+
+      const updateData: any = { ...updates };
+      delete updateData.id;
+      delete updateData.created_at;
+
+      // Check if profile exists
+      const { data: existing, error: fetchError } = await supabase
         .from('user_profiles')
         .select('id')
         .eq('user_id', user.id)
         .maybeSingle();
 
-      if (fetchError) {
-        console.error('Error checking existing profile:', fetchError);
-        return false;
-      }
+      if (fetchError) throw fetchError;
 
-      // Prepare the update data with proper typing
-      const updateData: any = {
-        ...updates,
-      };
-
-      // Remove fields that shouldn't be updated directly
-      delete updateData.id;
-      delete updateData.created_at;
-
-      if (!existingProfile) {
-        // Profile doesn't exist, create it
-        console.log('Creating new profile');
-        const { error: insertError } = await supabase
+      if (!existing) {
+        const { error } = await supabase
           .from('user_profiles')
-          .insert({
-            user_id: user.id,
-            ...updateData,
-          });
-
-        if (insertError) {
-          console.error('Error creating profile:', insertError);
-          return false;
-        }
+          .insert({ user_id: user.id, ...updateData });
+        if (error) throw error;
       } else {
-        // Profile exists, update it
-        console.log('Updating existing profile');
-        const { error: updateError } = await supabase
+        const { error } = await supabase
           .from('user_profiles')
-          .update({
-            ...updateData,
-            updated_at: new Date().toISOString(),
-          })
+          .update({ ...updateData, updated_at: new Date().toISOString() })
           .eq('user_id', user.id);
-
-        if (updateError) {
-          console.error('Error updating profile:', updateError);
-          return false;
-        }
+        if (error) throw error;
       }
 
-      // Refresh profile data
-      await fetchProfile();
-      return true;
-    } catch (error) {
-      console.error('Exception in updateProfile:', error);
-      return false;
-    }
-  };
+      return updates;
+    },
+    onMutate: async (updates) => {
+      // Optimistic update
+      if (isDemoMode && user) {
+        queryClient.setQueryData(
+          queryKeys.profile.byUser(user.id),
+          (old: UserProfile | null) =>
+            old
+              ? { ...old, ...updates, updated_at: new Date().toISOString() }
+              : createDemoProfile(user.id)
+        );
+      }
+    },
+    onSuccess: () => {
+      if (user) {
+        // Invalidate profile — all consumers auto-refresh
+        queryClient.invalidateQueries({ queryKey: queryKeys.profile.byUser(user.id) });
+        // Matches may need re-evaluation after profile changes
+        queryClient.invalidateQueries({ queryKey: queryKeys.curatedMatches.all });
+        queryClient.invalidateQueries({ queryKey: queryKeys.datingPool.all });
+      }
+    },
+  });
 
-  const createProfile = async (profileData: Partial<UserProfile>): Promise<boolean> => {
-    if (!user) {
-      console.error('No authenticated user for profile creation');
-      return false;
-    }
+  const createMutation = useMutation({
+    mutationFn: async (profileData: Partial<UserProfile>) => {
+      if (!user) throw new Error('No authenticated user');
 
-    // In demo mode, just update local state
-    if (isDemoMode) {
-      console.log('Demo mode: creating mock profile locally');
-      setProfile({ ...createDemoProfile(user.id), ...profileData });
-      return true;
-    }
+      if (isDemoMode) {
+        return { ...createDemoProfile(user.id), ...profileData };
+      }
 
-    try {
-      console.log('Creating profile for user:', user.id);
-      
-      // Prepare the profile data with proper typing
-      const createData: any = {
-        user_id: user.id,
-        ...profileData,
-      };
-
-      // Remove fields that shouldn't be set directly
+      const createData: any = { user_id: user.id, ...profileData };
       delete createData.id;
       delete createData.created_at;
       delete createData.updated_at;
 
-      const { error } = await supabase
-        .from('user_profiles')
-        .insert(createData);
+      const { error } = await supabase.from('user_profiles').insert(createData);
+      if (error) throw error;
 
-      if (error) {
+      return createData;
+    },
+    onSuccess: () => {
+      if (user) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.profile.byUser(user.id) });
+      }
+    },
+  });
+
+  const updateProfile = useCallback(
+    async (updates: Partial<UserProfile>): Promise<boolean> => {
+      try {
+        await updateMutation.mutateAsync(updates);
+        return true;
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        return false;
+      }
+    },
+    [updateMutation]
+  );
+
+  const createProfile = useCallback(
+    async (profileData: Partial<UserProfile>): Promise<boolean> => {
+      try {
+        await createMutation.mutateAsync(profileData);
+        return true;
+      } catch (error) {
         console.error('Error creating profile:', error);
         return false;
       }
+    },
+    [createMutation]
+  );
 
-      await fetchProfile();
-      return true;
-    } catch (error) {
-      console.error('Exception creating profile:', error);
-      return false;
+  const refetchProfile = useCallback(() => {
+    if (user) {
+      queryClient.invalidateQueries({ queryKey: queryKeys.profile.byUser(user.id) });
     }
-  };
-
-  useEffect(() => {
-    let mounted = true;
-    
-    const fetchProfileIfNeeded = async () => {
-      if (!user) {
-        if (mounted) {
-          setProfile(null);
-          setLoading(false);
-        }
-        return;
-      }
-
-      // Avoid refetching if we already have a profile for this user
-      if (profile && profile.user_id === user.id) {
-        if (mounted) {
-          setLoading(false);
-        }
-        return;
-      }
-
-      await fetchProfile();
-    };
-
-    fetchProfileIfNeeded();
-
-    return () => {
-      mounted = false;
-    };
-  }, [user?.id, isDemoMode]); // Re-run when user or demo mode changes
+  }, [user, queryClient]);
 
   return {
     profile,
     loading,
     updateProfile,
     createProfile,
-    refetchProfile: fetchProfile,
+    refetchProfile,
   };
 };

@@ -21,7 +21,16 @@ import AdminAnalytics from "./pages/AdminAnalytics";
 import AdminMatchCuration from "./pages/AdminMatchCuration";
 import { MilestoneCardShowcase } from "./components/social/MilestoneCardShowcase";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30_000,      // 30s before refetch
+      gcTime: 5 * 60_000,     // 5m garbage collection
+      retry: 1,               // Single retry on failure
+      refetchOnWindowFocus: true, // Sync when user returns to tab
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
