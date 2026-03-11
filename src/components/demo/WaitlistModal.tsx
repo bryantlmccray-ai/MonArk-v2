@@ -232,7 +232,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 />
               </div>
               {fieldErrors.email && (
-                <p className="text-xs text-red-400 flex items-center gap-1">
+                <p className="text-xs text-destructive flex items-center gap-1 font-medium">
                   <AlertCircle className="h-3 w-3" />
                   {fieldErrors.email}
                 </p>
