@@ -14,7 +14,7 @@ import { useDemo } from '@/contexts/DemoContext';
 
 const Index = () => {
   const { user, loading: authLoading, isDemoMode, exitDemoMode, signOut } = useAuth();
-  const { profile, loading: profileLoading, refetchProfile } = useProfile();
+  const { profile, loading: profileLoading, refetchProfile, updateProfile } = useProfile();
   const { demoData, setDemoMode } = useDemo();
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = React.useState(false);
   const [showDemo, setShowDemo] = React.useState(false);
