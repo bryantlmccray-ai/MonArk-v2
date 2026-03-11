@@ -14,7 +14,7 @@ import { motion } from 'framer-motion';
 
 export const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(() => localStorage.getItem('monark-saved-email') || '');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
@@ -22,6 +22,7 @@ export const AuthPage: React.FC = () => {
   const [signupData, setSignupData] = useState<{email: string; password: string; name: string} | null>(null);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(() => localStorage.getItem('monark-remember-me') === 'true');
   const [resetEmail, setResetEmail] = useState('');
   const [resetSent, setResetSent] = useState(false);
   const { user, signIn, signUp, enterDemoMode } = useAuth();
@@ -167,6 +168,13 @@ export const AuthPage: React.FC = () => {
 
     try {
       if (isLogin) {
+        if (rememberMe) {
+          localStorage.setItem('monark-remember-me', 'true');
+          localStorage.setItem('monark-saved-email', email);
+        } else {
+          localStorage.removeItem('monark-remember-me');
+          localStorage.removeItem('monark-saved-email');
+        }
         const { error } = await signIn(email, password);
         if (error) {
           if (error.message.includes('Invalid login credentials')) {
@@ -282,6 +290,20 @@ export const AuthPage: React.FC = () => {
                 <p className="text-xs text-muted-foreground">Must be at least 6 characters</p>
               )}
             </div>
+
+            {isLogin && (
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  id="remember-me"
+                  checked={rememberMe}
+                  onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                  className="border-primary/40 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                />
+                <Label htmlFor="remember-me" className="text-sm text-muted-foreground cursor-pointer">
+                  Remember me
+                </Label>
+              </div>
+            )}
 
             {!isLogin && (
               <div className="flex items-start gap-3 pt-1">
