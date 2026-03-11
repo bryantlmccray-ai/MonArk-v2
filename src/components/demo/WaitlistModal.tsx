@@ -180,35 +180,35 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firstName" className="text-white text-sm">First Name *</Label>
+                <Label htmlFor="firstName" className="text-foreground text-sm font-semibold">First Name *</Label>
                 <div className="relative">
-                  <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${fieldErrors.firstName ? 'text-red-400' : 'text-gray-400'}`} />
+                  <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${fieldErrors.firstName ? 'text-destructive' : 'text-muted-foreground'}`} />
                   <Input
                     id="firstName"
                     type="text"
                     value={formData.firstName}
                     onChange={(e) => handleInputChange('firstName', e.target.value)}
-                    className={`bg-white border-gray-700 text-black pl-10 ${fieldErrors.firstName ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
+                    className={`bg-background border-border text-foreground pl-10 ${fieldErrors.firstName ? 'border-destructive ring-2 ring-destructive/50' : ''}`}
                     placeholder="First name"
                     disabled={isSubmitting}
                     maxLength={100}
                   />
                 </div>
                 {fieldErrors.firstName && (
-                  <p className="text-xs text-red-400 flex items-center gap-1">
+                  <p className="text-xs text-destructive flex items-center gap-1 font-medium">
                     <AlertCircle className="h-3 w-3" />
                     {fieldErrors.firstName}
                   </p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="lastName" className="text-white text-sm">Last Name</Label>
+                <Label htmlFor="lastName" className="text-foreground text-sm font-semibold">Last Name</Label>
                 <Input
                   id="lastName"
                   type="text"
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
-                  className="bg-white border-gray-700 text-black"
+                  className="bg-background border-border text-foreground"
                   placeholder="Last name"
                   disabled={isSubmitting}
                   maxLength={100}
@@ -217,22 +217,22 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-white text-sm">Email Address *</Label>
+              <Label htmlFor="email" className="text-foreground text-sm font-semibold">Email Address *</Label>
               <div className="relative">
-                <Mail className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${fieldErrors.email ? 'text-red-400' : 'text-gray-400'}`} />
+                <Mail className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${fieldErrors.email ? 'text-destructive' : 'text-muted-foreground'}`} />
                 <Input
                   id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  className={`bg-white border-gray-700 text-black pl-10 ${fieldErrors.email ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
+                  className={`bg-background border-border text-foreground pl-10 ${fieldErrors.email ? 'border-destructive ring-2 ring-destructive/50' : ''}`}
                   placeholder="your@email.com"
                   disabled={isSubmitting}
                   maxLength={255}
                 />
               </div>
               {fieldErrors.email && (
-                <p className="text-xs text-red-400 flex items-center gap-1">
+                <p className="text-xs text-destructive flex items-center gap-1 font-medium">
                   <AlertCircle className="h-3 w-3" />
                   {fieldErrors.email}
                 </p>
@@ -245,9 +245,9 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="ageRange" className="text-white text-sm">Age Range *</Label>
+              <Label htmlFor="ageRange" className="text-foreground text-sm font-semibold">Age Range *</Label>
               <Select value={formData.ageRange} onValueChange={(val) => handleInputChange('ageRange', val)} disabled={isSubmitting}>
-                <SelectTrigger className={`bg-white border-gray-700 text-black ${fieldErrors.ageRange ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}>
+                <SelectTrigger className={`bg-background border-border text-foreground ${fieldErrors.ageRange ? 'border-destructive ring-2 ring-destructive/50' : ''}`}>
                   <SelectValue placeholder="Select age range" />
                 </SelectTrigger>
                 <SelectContent>
@@ -259,7 +259,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 </SelectContent>
               </Select>
               {fieldErrors.ageRange && (
-                <p className="text-xs text-red-400 flex items-center gap-1">
+                <p className="text-xs text-destructive flex items-center gap-1 font-medium">
                   <AlertCircle className="h-3 w-3" />
                   {fieldErrors.ageRange}
                 </p>
@@ -267,26 +267,26 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="city" className="text-white text-sm">City *</Label>
+              <Label htmlFor="city" className="text-foreground text-sm font-semibold">City *</Label>
               <div className="relative">
-                <MapPin className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${fieldErrors.city ? 'text-red-400' : 'text-gray-400'}`} />
+                <MapPin className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${fieldErrors.city ? 'text-destructive' : 'text-muted-foreground'}`} />
                 <Input
                   id="city"
                   value={formData.city}
                   onChange={(e) => handleInputChange('city', e.target.value)}
-                  className={`bg-white border-gray-700 text-black pl-10 ${fieldErrors.city ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
+                  className={`bg-background border-border text-foreground pl-10 ${fieldErrors.city ? 'border-destructive ring-2 ring-destructive/50' : ''}`}
                   placeholder="Chicago"
                   disabled={isSubmitting}
                   maxLength={100}
                 />
               </div>
               {fieldErrors.city ? (
-                <p className="text-xs text-red-400 flex items-center gap-1">
+                <p className="text-xs text-destructive flex items-center gap-1 font-medium">
                   <AlertCircle className="h-3 w-3" />
                   {fieldErrors.city}
                 </p>
               ) : (
-                <p className="text-xs text-goldenrod/80 flex items-center gap-1">
+                <p className="text-xs text-primary/80 flex items-center gap-1 font-medium">
                   <AlertCircle className="h-3 w-3" />
                   We're launching in Chicago first
                 </p>
@@ -295,36 +295,36 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="genderIdentity" className="text-white text-sm">I am a... *</Label>
+                <Label htmlFor="genderIdentity" className="text-foreground text-sm font-semibold">I am a... *</Label>
                 <Input
                   id="genderIdentity"
                   value={formData.genderIdentity}
                   onChange={(e) => handleInputChange('genderIdentity', e.target.value)}
-                  className={`bg-white border-gray-700 text-black ${fieldErrors.genderIdentity ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
+                  className={`bg-background border-border text-foreground ${fieldErrors.genderIdentity ? 'border-destructive ring-2 ring-destructive/50' : ''}`}
                   placeholder="e.g. Woman, Man, Non-binary"
                   disabled={isSubmitting}
                   maxLength={100}
                 />
                 {fieldErrors.genderIdentity && (
-                  <p className="text-xs text-red-400 flex items-center gap-1">
+                  <p className="text-xs text-destructive flex items-center gap-1 font-medium">
                     <AlertCircle className="h-3 w-3" />
                     {fieldErrors.genderIdentity}
                   </p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="lookingFor" className="text-white text-sm">Looking for... *</Label>
+                <Label htmlFor="lookingFor" className="text-foreground text-sm font-semibold">Looking for... *</Label>
                 <Input
                   id="lookingFor"
                   value={formData.lookingFor}
                   onChange={(e) => handleInputChange('lookingFor', e.target.value)}
-                  className={`bg-white border-gray-700 text-black ${fieldErrors.lookingFor ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
+                  className={`bg-background border-border text-foreground ${fieldErrors.lookingFor ? 'border-destructive ring-2 ring-destructive/50' : ''}`}
                   placeholder="e.g. Women, Men, Everyone"
                   disabled={isSubmitting}
                   maxLength={100}
                 />
                 {fieldErrors.lookingFor && (
-                  <p className="text-xs text-red-400 flex items-center gap-1">
+                  <p className="text-xs text-destructive flex items-center gap-1 font-medium">
                     <AlertCircle className="h-3 w-3" />
                     {fieldErrors.lookingFor}
                   </p>
@@ -333,9 +333,9 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="relationshipGoal" className="text-white text-sm">What are you looking for? *</Label>
+              <Label htmlFor="relationshipGoal" className="text-foreground text-sm font-semibold">What are you looking for? *</Label>
               <Select value={formData.relationshipGoal} onValueChange={(val) => handleInputChange('relationshipGoal', val)} disabled={isSubmitting}>
-                <SelectTrigger className={`bg-white border-gray-700 text-black ${fieldErrors.relationshipGoal ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}>
+                <SelectTrigger className={`bg-background border-border text-foreground ${fieldErrors.relationshipGoal ? 'border-destructive ring-2 ring-destructive/50' : ''}`}>
                   <SelectValue placeholder="Select your goal" />
                 </SelectTrigger>
                 <SelectContent>
@@ -346,7 +346,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 </SelectContent>
               </Select>
               {fieldErrors.relationshipGoal && (
-                <p className="text-xs text-red-400 flex items-center gap-1">
+                <p className="text-xs text-destructive flex items-center gap-1 font-medium">
                   <AlertCircle className="h-3 w-3" />
                   {fieldErrors.relationshipGoal}
                 </p>
@@ -359,33 +359,33 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="whyMonark" className="text-white text-sm">Why do you want to join MonArk? *</Label>
+              <Label htmlFor="whyMonark" className="text-foreground text-sm font-semibold">Why do you want to join MonArk? *</Label>
               <Textarea
                 id="whyMonark"
                 value={formData.whyMonark}
                 onChange={(e) => handleInputChange('whyMonark', e.target.value)}
-                className={`bg-white border-gray-700 text-black min-h-[120px] ${fieldErrors.whyMonark ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
+                className={`bg-background border-border text-foreground min-h-[120px] ${fieldErrors.whyMonark ? 'border-destructive ring-2 ring-destructive/50' : ''}`}
                 placeholder="Tell us a bit about yourself and what you're hoping to find. What's not working with other dating apps? What excites you about MonArk's approach?"
                 disabled={isSubmitting}
                 maxLength={2000}
               />
               {fieldErrors.whyMonark ? (
-                <p className="text-xs text-red-400 flex items-center gap-1">
+                <p className="text-xs text-destructive flex items-center gap-1 font-medium">
                   <AlertCircle className="h-3 w-3" />
                   {fieldErrors.whyMonark}
                 </p>
               ) : (
-                <p className="text-xs text-gray-400">This helps us understand if MonArk is a good fit for you</p>
+                <p className="text-xs text-muted-foreground font-medium">This helps us understand if MonArk is a good fit for you</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="heardAboutUs" className="text-white text-sm">How did you hear about us?</Label>
+              <Label htmlFor="heardAboutUs" className="text-foreground text-sm font-semibold">How did you hear about us?</Label>
               <Input
                 id="heardAboutUs"
                 value={formData.heardAboutUs}
                 onChange={(e) => handleInputChange('heardAboutUs', e.target.value)}
-                className="bg-white border-gray-700 text-black"
+                className="bg-background border-border text-foreground"
                 placeholder="Social media, friend, article, etc."
                 disabled={isSubmitting}
                 maxLength={500}
@@ -399,9 +399,9 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   checked={formData.willingToBeta}
                   onCheckedChange={(checked) => handleInputChange('willingToBeta', checked as boolean)}
                   disabled={isSubmitting}
-                  className="border-gray-600 data-[state=checked]:bg-goldenrod data-[state=checked]:border-goldenrod"
+                  className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
-                <Label htmlFor="willingToBeta" className="text-white text-sm cursor-pointer">
+                <Label htmlFor="willingToBeta" className="text-foreground/80 text-sm cursor-pointer font-medium">
                   I'm interested in beta testing new features
                 </Label>
               </div>
@@ -412,9 +412,9 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   checked={formData.emailOptIn}
                   onCheckedChange={(checked) => handleInputChange('emailOptIn', checked as boolean)}
                   disabled={isSubmitting}
-                  className="border-gray-600 data-[state=checked]:bg-goldenrod data-[state=checked]:border-goldenrod"
+                  className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
-                <Label htmlFor="emailOptIn" className="text-white text-sm cursor-pointer">
+                <Label htmlFor="emailOptIn" className="text-foreground/80 text-sm cursor-pointer font-medium">
                   Keep me updated about MonArk's launch
                 </Label>
               </div>
@@ -429,12 +429,12 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-lg bg-charcoal-gray border-gray-700 text-white max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-lg bg-card border-2 border-border shadow-[0_8px_40px_-4px_hsl(var(--foreground)/0.25)] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl font-light text-white">
+          <DialogTitle className="text-xl font-semibold text-foreground">
             {isSubmitted ? '🎉 You\'re on the List!' : 'Join the MonArk Waitlist'}
           </DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription className="text-foreground/80 font-medium">
             {isSubmitted 
               ? 'We\'ll review your application and get back to you soon.'
               : `Step ${currentStep} of ${totalSteps}`
@@ -445,20 +445,20 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
         {isSubmitted ? (
           <div className="space-y-6 py-4">
             <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-goldenrod/20 rounded-full flex items-center justify-center mx-auto">
-                <Heart className="h-8 w-8 text-goldenrod" />
+              <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+                <Heart className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-lg text-white font-medium">Welcome, {formData.firstName}!</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Thank you for your interest in MonArk. We're reviewing applications now and will let you know within <span className="text-goldenrod font-medium">1-2 days</span>.
+              <h3 className="text-lg text-foreground font-semibold">Welcome, {formData.firstName}!</h3>
+              <p className="text-foreground/80 text-sm leading-relaxed font-medium">
+                Thank you for your interest in MonArk. We're reviewing applications now and will let you know within <span className="text-primary font-semibold">1-2 days</span>.
               </p>
-              <p className="text-gray-500 text-xs">
+              <p className="text-muted-foreground text-xs font-medium">
                 Check your email for a confirmation from us.
               </p>
             </div>
             <Button
               onClick={handleClose}
-              className="w-full bg-goldenrod text-jet-black hover:bg-goldenrod/90"
+              className="w-full"
             >
               Done
             </Button>
@@ -471,7 +471,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 <div
                   key={i}
                   className={`h-1 flex-1 rounded-full transition-colors ${
-                    i < currentStep ? 'bg-goldenrod' : 'bg-gray-700'
+                    i < currentStep ? 'bg-primary' : 'bg-border'
                   }`}
                 />
               ))}
@@ -487,7 +487,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   variant="ghost"
                   onClick={handleBack}
                   disabled={isSubmitting}
-                  className="text-gray-400 hover:text-white"
+                  className="text-muted-foreground hover:text-foreground font-medium"
                 >
                   <ChevronLeft className="h-4 w-4 mr-1" />
                   Back
@@ -501,7 +501,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   type="button"
                   onClick={handleNext}
                   disabled={isSubmitting}
-                  className="bg-goldenrod text-jet-black hover:bg-goldenrod/90"
+                  className="font-semibold"
                 >
                   Next
                   <ChevronRight className="h-4 w-4 ml-1" />
@@ -510,7 +510,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-goldenrod text-jet-black hover:bg-goldenrod/90 min-w-[140px]"
+                  className="font-semibold min-w-[140px]"
                 >
                   {isSubmitting ? (
                     <div className="flex items-center gap-2">
