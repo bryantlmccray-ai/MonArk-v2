@@ -396,34 +396,34 @@ export const WeeklyRhythmPlans = () => {
                   </div>
 
                   {/* Care Features */}
-                  <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                  <div className="p-4 rounded-xl bg-secondary border-2 border-border">
                     <div className="flex items-center gap-2 mb-3">
-                      <Shield className="w-5 h-5 text-emerald-400" />
-                      <span className="font-medium text-foreground">Wrapped in care</span>
+                      <Shield className="w-5 h-5 text-foreground" />
+                      <span className="font-semibold text-foreground">Wrapped in care</span>
                     </div>
                     <ul className="space-y-2">
-                      <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Check className="w-4 h-4 text-emerald-400" />
+                      <li className="flex items-center gap-2 text-sm text-foreground/70 font-medium">
+                        <Check className="w-4 h-4 text-primary" />
                         Shared itinerary with your safety contact
                       </li>
-                      <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Check className="w-4 h-4 text-emerald-400" />
+                      <li className="flex items-center gap-2 text-sm text-foreground/70 font-medium">
+                        <Check className="w-4 h-4 text-primary" />
                         Visible SOS throughout the date
                       </li>
-                      <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Check className="w-4 h-4 text-emerald-400" />
+                      <li className="flex items-center gap-2 text-sm text-foreground/70 font-medium">
+                        <Check className="w-4 h-4 text-primary" />
                         Clear {selectedPlan.timeWindow.duration} window ({selectedPlan.timeWindow.start} - {selectedPlan.timeWindow.end})
                       </li>
                     </ul>
                   </div>
 
                   {/* Post-Date Promise */}
-                  <div className="p-4 rounded-xl bg-primary/5 border border-primary/20">
+                  <div className="p-4 rounded-xl bg-secondary border-2 border-border">
                     <div className="flex items-center gap-2 mb-2">
-                      <MessageCircle className="w-5 h-5 text-primary" />
-                      <span className="font-medium text-foreground">After the meet</span>
+                      <MessageCircle className="w-5 h-5 text-foreground" />
+                      <span className="font-semibold text-foreground">After the meet</span>
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-foreground/70 font-medium">
                       We'll close the loop — next step if it clicked, kind close if it didn't. No limbo. No ghosting.
                     </p>
                   </div>
@@ -639,7 +639,7 @@ const PlanCard = ({ plan, onSelect }: { plan: DatePlan; onSelect: () => void }) 
             <div className="flex flex-wrap gap-2">
               {plan.careFeatures.map((feature, idx) => (
                 <Badge key={idx} variant="outline" className="bg-background/50 text-xs">
-                  <Shield className="w-3 h-3 mr-1 text-emerald-400" />
+                  <Shield className="w-3 h-3 mr-1 text-primary" />
                   {feature}
                 </Badge>
               ))}
@@ -667,8 +667,8 @@ const PlanCard = ({ plan, onSelect }: { plan: DatePlan; onSelect: () => void }) 
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-foreground">{person.name}, {person.age}</span>
                       <div className="flex items-center gap-1">
-                        <Heart className="w-3 h-3 text-rose-400" />
-                        <span className="text-xs text-rose-400">{person.rifScore}%</span>
+                        <Heart className="w-3 h-3 text-rosegold-deep" />
+                        <span className="text-xs text-foreground/60 font-medium">{person.rifScore}%</span>
                       </div>
                     </div>
                     <div className="text-xs text-muted-foreground truncate">
