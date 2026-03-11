@@ -14,7 +14,7 @@ import { useDemo } from '@/contexts/DemoContext';
 
 const Index = () => {
   const { user, loading: authLoading, isDemoMode, exitDemoMode, signOut } = useAuth();
-  const { profile, loading: profileLoading, refetchProfile } = useProfile();
+  const { profile, loading: profileLoading, refetchProfile, updateProfile } = useProfile();
   const { demoData, setDemoMode } = useDemo();
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = React.useState(false);
   const [showDemo, setShowDemo] = React.useState(false);
@@ -122,7 +122,26 @@ const Index = () => {
   }
 
   // If user has a profile but it's not complete, show profile creation
+  // Also handle edge case where onboarding_step reached 10 but is_profile_complete wasn't set
   if (profile && !profile.is_profile_complete) {
+    // If onboarding completed (step 10) but flag wasn't set, auto-fix it
+    if (profile.onboarding_step != null && profile.onboarding_step >= 10) {
+      // Attempt to fix the flag in background
+      const autoFixProfile = async () => {
+        try {
+          const success = await updateProfile({ is_profile_complete: true });
+          if (success) {
+            console.log('Auto-fixed is_profile_complete flag');
+            refetchProfile();
+            setShowProfileComplete(true);
+          }
+        } catch (e) {
+          console.error('Auto-fix failed:', e);
+        }
+      };
+      autoFixProfile();
+    }
+
     return <ProfileCreation 
       onComplete={async () => {
         await refetchProfile();
