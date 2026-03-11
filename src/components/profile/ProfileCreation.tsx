@@ -328,7 +328,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
 
   if (loading || currentStep === -1) {
     return (
-      <div className="min-h-screen bg-jet-black flex items-center justify-center">
+      <div className="h-full bg-background flex items-center justify-center">
         <div className="text-white text-lg">Loading profile...</div>
       </div>
     );
