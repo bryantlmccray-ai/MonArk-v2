@@ -42,6 +42,7 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
   profileData,
   updateData,
   onNext,
+  onSkip,
 }) => {
   const [identityData, setIdentityData] = useState<IdentityData>({
     genderIdentity: '',
