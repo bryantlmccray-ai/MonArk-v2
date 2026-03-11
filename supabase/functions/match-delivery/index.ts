@@ -546,11 +546,13 @@ async function getPotentialMatches(supabase: any, userId: string) {
 function calculateCompatibility(user1: any, user2: any): number {
   let score = 0.5;
 
+  // Interest overlap (up to +0.2)
   const interests1 = user1.interests || [];
   const interests2 = user2.interests || [];
   const commonInterests = interests1.filter((i: string) => interests2.includes(i));
   score += Math.min(commonInterests.length * 0.05, 0.2);
 
+  // Location proximity (up to +0.1)
   if (user1.location && user2.location) {
     const loc1 = user1.location.toLowerCase();
     const loc2 = user2.location.toLowerCase();
@@ -559,11 +561,20 @@ function calculateCompatibility(user1: any, user2: any): number {
     }
   }
 
+  // Age proximity (up to +0.15)
   if (user1.age && user2.age) {
     const ageDiff = Math.abs(user1.age - user2.age);
     if (ageDiff <= 3) score += 0.15;
     else if (ageDiff <= 5) score += 0.1;
     else if (ageDiff <= 10) score += 0.05;
+  }
+
+  // Relationship goals alignment (up to +0.1)
+  const goals1 = user1.relationship_goals || [];
+  const goals2 = user2.relationship_goals || [];
+  if (goals1.length > 0 && goals2.length > 0) {
+    const commonGoals = goals1.filter((g: string) => goals2.includes(g));
+    score += Math.min(commonGoals.length * 0.05, 0.1);
   }
 
   return Math.min(score, 1);
