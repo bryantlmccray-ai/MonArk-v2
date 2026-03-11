@@ -153,7 +153,8 @@ const Index = () => {
   if (profile && !profile.is_profile_complete) {
     return <ProfileCreation 
       onComplete={async () => {
-        setShowProfileComplete(true);
+        setInitialTab('profile');
+        setHasEnteredApp(true);
         refetchProfile();
       }} 
       onCancel={async () => {
@@ -177,7 +178,8 @@ const Index = () => {
   // Show profile creation after onboarding
   return <ProfileCreation 
     onComplete={async () => {
-      setShowProfileComplete(true);
+      setInitialTab('profile');
+      setHasEnteredApp(true);
       refetchProfile();
     }}
     onCancel={async () => {
