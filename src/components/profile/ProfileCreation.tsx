@@ -68,6 +68,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
   const [currentStep, setCurrentStep] = useState(-1); // -1 means not initialized yet
   const { profile, updateProfile, loading } = useProfile();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [hasInitialized, setHasInitialized] = useState(false);
   
   // Track which steps have been completed vs skipped
