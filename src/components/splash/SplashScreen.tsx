@@ -141,19 +141,19 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               />
 
-              {/* Outer ring — olive sage */}
+              {/* Outer ring — sandy gold */}
               <motion.div
                 className="w-36 h-36 md:w-44 md:h-44 rounded-full"
-                style={{ border: "1.5px solid hsla(80, 20%, 36%, 0.4)" }}
+                style={{ border: "1.5px solid hsla(36, 25%, 52%, 0.5)" }}
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
               />
               
-              {/* Inner ring with sienna accent */}
+              {/* Inner ring with sandy gold */}
               <motion.div
                 className="absolute inset-4 rounded-full"
-                style={{ border: "1px solid hsla(22, 38%, 36%, 0.4)" }}
+                style={{ border: "1px solid hsla(36, 25%, 52%, 0.4)" }}
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 1, ease: "easeOut", delay: 0.4 }}
