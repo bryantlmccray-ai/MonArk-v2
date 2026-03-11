@@ -9,6 +9,7 @@ import { IdentityPreferencesStep } from './IdentityPreferencesStep';
 import { ProfileReviewStep } from './ProfileReviewStep';
 import { useProfile } from '@/hooks/useProfile';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ProfileCreationProps {
   onComplete: () => void;
@@ -279,23 +280,29 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
       }
 
       console.log('[ProfileCreation] Sending update with is_profile_complete:', updateData.is_profile_complete);
-      const success = await updateProfile(updateData);
-
-      if (success) {
-        console.log('[ProfileCreation] Profile saved successfully');
-        toast({
-          title: "Profile completed!",
-          description: "Your profile has been saved successfully.",
-        });
-        onComplete();
-      } else {
-        console.error('[ProfileCreation] updateProfile returned false');
-        toast({
-          title: "Save failed",
-          description: "There was an error saving your profile. Please try again.",
-          variant: "destructive",
-        });
+      
+      // Direct Supabase call to ensure is_profile_complete is set
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (!authUser) {
+        throw new Error('No authenticated user');
       }
+
+      const { error } = await supabase
+        .from('user_profiles')
+        .update({ ...updateData, updated_at: new Date().toISOString() })
+        .eq('user_id', authUser.id);
+
+      if (error) {
+        console.error('[ProfileCreation] Direct update error:', error);
+        throw error;
+      }
+
+      console.log('[ProfileCreation] Profile saved successfully via direct update');
+      toast({
+        title: "Profile completed!",
+        description: "Your profile has been saved successfully.",
+      });
+      onComplete();
     } catch (error) {
       console.error('[ProfileCreation] Error saving profile:', error);
       toast({
