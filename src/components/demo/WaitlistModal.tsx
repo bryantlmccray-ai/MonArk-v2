@@ -429,12 +429,12 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-lg bg-charcoal-gray border-gray-700 text-white max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-lg bg-card border-2 border-border shadow-[0_8px_40px_-4px_hsl(var(--foreground)/0.25)] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl font-light text-white">
+          <DialogTitle className="text-xl font-semibold text-foreground">
             {isSubmitted ? '🎉 You\'re on the List!' : 'Join the MonArk Waitlist'}
           </DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription className="text-foreground/80 font-medium">
             {isSubmitted 
               ? 'We\'ll review your application and get back to you soon.'
               : `Step ${currentStep} of ${totalSteps}`
