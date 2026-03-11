@@ -487,7 +487,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   variant="ghost"
                   onClick={handleBack}
                   disabled={isSubmitting}
-                  className="text-gray-400 hover:text-white"
+                  className="text-muted-foreground hover:text-foreground font-medium"
                 >
                   <ChevronLeft className="h-4 w-4 mr-1" />
                   Back
