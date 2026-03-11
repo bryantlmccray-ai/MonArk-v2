@@ -359,12 +359,12 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="whyMonark" className="text-white text-sm">Why do you want to join MonArk? *</Label>
+              <Label htmlFor="whyMonark" className="text-foreground text-sm font-semibold">Why do you want to join MonArk? *</Label>
               <Textarea
                 id="whyMonark"
                 value={formData.whyMonark}
                 onChange={(e) => handleInputChange('whyMonark', e.target.value)}
-                className={`bg-white border-gray-700 text-black min-h-[120px] ${fieldErrors.whyMonark ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
+                className={`bg-background border-border text-foreground min-h-[120px] ${fieldErrors.whyMonark ? 'border-destructive ring-2 ring-destructive/50' : ''}`}
                 placeholder="Tell us a bit about yourself and what you're hoping to find. What's not working with other dating apps? What excites you about MonArk's approach?"
                 disabled={isSubmitting}
                 maxLength={2000}
