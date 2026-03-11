@@ -24,10 +24,9 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
     return <Clock className="h-5 w-5 text-muted-foreground" />;
   };
   
-  const getStepStatus = (stepKey: keyof StepCompletionStatus, stepRequirement: 'critical' | 'important' | 'optional') => {
+  const getStepStatus = (stepKey: keyof StepCompletionStatus, stepRequirement: string) => {
     const isCompleted = stepCompletion[stepKey];
     if (isCompleted) return { text: 'Completed', color: 'text-primary' };
-    if (stepRequirement === 'critical') return { text: 'Required', color: 'text-destructive' };
     if (stepRequirement === 'important') return { text: 'Recommended', color: 'text-accent' };
     return { text: 'Skipped', color: 'text-muted-foreground' };
   };
