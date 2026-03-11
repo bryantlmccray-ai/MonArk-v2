@@ -95,7 +95,7 @@ export const SimplifiedPhotosStep: React.FC<SimplifiedPhotosStepProps> = ({ onNe
   };
 
   return (
-    <div className="min-h-screen bg-background p-6 flex flex-col overflow-y-auto pb-32">
+    <div className="bg-background p-6 pb-16">
       <div className="flex-1 max-w-md mx-auto w-full space-y-6">
         {/* Progress indicator */}
         <div className="flex justify-center space-x-2">
