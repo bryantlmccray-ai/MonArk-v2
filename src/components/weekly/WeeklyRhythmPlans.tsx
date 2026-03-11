@@ -418,12 +418,12 @@ export const WeeklyRhythmPlans = () => {
                   </div>
 
                   {/* Post-Date Promise */}
-                  <div className="p-4 rounded-xl bg-primary/5 border border-primary/20">
+                  <div className="p-4 rounded-xl bg-secondary border-2 border-border">
                     <div className="flex items-center gap-2 mb-2">
-                      <MessageCircle className="w-5 h-5 text-primary" />
-                      <span className="font-medium text-foreground">After the meet</span>
+                      <MessageCircle className="w-5 h-5 text-foreground" />
+                      <span className="font-semibold text-foreground">After the meet</span>
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-foreground/70 font-medium">
                       We'll close the loop — next step if it clicked, kind close if it didn't. No limbo. No ghosting.
                     </p>
                   </div>
