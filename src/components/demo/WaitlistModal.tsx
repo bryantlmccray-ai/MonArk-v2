@@ -182,7 +182,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
               <div className="space-y-2">
                 <Label htmlFor="firstName" className="text-foreground text-sm font-semibold">First Name *</Label>
                 <div className="relative">
-                  <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${fieldErrors.firstName ? 'text-red-400' : 'text-gray-400'}`} />
+                  <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${fieldErrors.firstName ? 'text-destructive' : 'text-muted-foreground'}`} />
                   <Input
                     id="firstName"
                     type="text"
