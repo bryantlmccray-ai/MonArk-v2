@@ -208,7 +208,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   type="text"
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
-                  className="bg-white border-gray-700 text-black"
+                  className="bg-background border-border text-foreground"
                   placeholder="Last name"
                   disabled={isSubmitting}
                   maxLength={100}
