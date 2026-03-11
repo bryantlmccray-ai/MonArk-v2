@@ -24,6 +24,7 @@ const Index = () => {
   const [skippedProfile, setSkippedProfile] = React.useState(false);
   const [initialTab, setInitialTab] = React.useState<'weekly' | 'profile'>('weekly');
   const [hasEnteredApp, setHasEnteredApp] = React.useState(false);
+  const [autoFixAttempted, setAutoFixAttempted] = React.useState(false);
 
   const handleSplashComplete = () => {
     sessionStorage.setItem('monark-splash-seen', 'true');
