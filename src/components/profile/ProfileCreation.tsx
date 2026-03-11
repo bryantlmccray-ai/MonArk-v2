@@ -54,12 +54,12 @@ export interface StepCompletionStatus {
 }
 
 export interface StepRequirements {
-  bio: 'optional';
-  interests: 'important';
-  photos: 'important'; 
-  lifestyle: 'optional';
-  datePalette: 'optional';
-  identityPreferences: 'critical';
+  bio: 'optional' | 'important';
+  interests: 'optional' | 'important';
+  photos: 'optional' | 'important'; 
+  lifestyle: 'optional' | 'important';
+  datePalette: 'optional' | 'important';
+  identityPreferences: 'optional' | 'important';
 }
 
 export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, onCancel }) => {
@@ -81,11 +81,11 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
   // Define step requirements (critical, important, optional)
   const stepRequirements: StepRequirements = {
     bio: 'optional',
-    interests: 'important',
+    interests: 'optional',
     photos: 'important',
     lifestyle: 'optional', 
     datePalette: 'optional',
-    identityPreferences: 'critical',
+    identityPreferences: 'optional',
   };
   
   const [profileData, setProfileData] = useState<ProfileData>({
@@ -154,9 +154,9 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
       const stepKeys: (keyof StepCompletionStatus)[] = ['bio', 'interests', 'photos', 'lifestyle', 'datePalette', 'identityPreferences'];
       const firstIncompleteIndex = stepKeys.findIndex(key => !newStepCompletion[key]);
       
-      // If identity is complete (the critical step), go straight to review
+      // If at least one photo exists, go straight to review
       // Otherwise, start at the first incomplete step or step 0
-      if (newStepCompletion.identityPreferences) {
+      if (newStepCompletion.photos) {
         setCurrentStep(6); // Review step
       } else if (firstIncompleteIndex !== -1) {
         setCurrentStep(firstIncompleteIndex);
@@ -391,6 +391,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
             profileData={profileData} 
             updateData={updateProfileData} 
             onNext={() => { markStepCompleted('identityPreferences'); nextStep(); }}
+            onSkip={() => { markStepSkipped('identityPreferences'); nextStep(); }}
             stepRequirement={stepRequirements.identityPreferences}
           />
         );

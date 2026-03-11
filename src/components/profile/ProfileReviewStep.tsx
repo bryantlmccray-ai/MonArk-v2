@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Edit, CheckCircle, Clock, AlertTriangle, X } from 'lucide-react';
+import { Edit, CheckCircle, Clock, X } from 'lucide-react';
 import { ProfileData, StepCompletionStatus, StepRequirements } from './ProfileCreation';
 
 interface ProfileReviewStepProps {
@@ -14,18 +14,19 @@ interface ProfileReviewStepProps {
 
 export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileData, stepCompletion, stepRequirements, onEdit, onComplete, onCancel }) => {
   
-  const getStepIcon = (stepKey: keyof StepCompletionStatus, stepRequirement: 'critical' | 'important' | 'optional') => {
+  // Only require at least one photo to complete profile
+  const hasAtLeastOnePhoto = profileData.photos && profileData.photos.length > 0;
+  
+  const getStepIcon = (stepKey: keyof StepCompletionStatus, stepRequirement: string) => {
     const isCompleted = stepCompletion[stepKey];
     if (isCompleted) return <CheckCircle className="h-5 w-5 text-primary" />;
-    if (stepRequirement === 'critical') return <AlertTriangle className="h-5 w-5 text-destructive" />;
     if (stepRequirement === 'important') return <Clock className="h-5 w-5 text-accent" />;
     return <Clock className="h-5 w-5 text-muted-foreground" />;
   };
   
-  const getStepStatus = (stepKey: keyof StepCompletionStatus, stepRequirement: 'critical' | 'important' | 'optional') => {
+  const getStepStatus = (stepKey: keyof StepCompletionStatus, stepRequirement: string) => {
     const isCompleted = stepCompletion[stepKey];
     if (isCompleted) return { text: 'Completed', color: 'text-primary' };
-    if (stepRequirement === 'critical') return { text: 'Required', color: 'text-destructive' };
     if (stepRequirement === 'important') return { text: 'Recommended', color: 'text-accent' };
     return { text: 'Skipped', color: 'text-muted-foreground' };
   };
@@ -193,16 +194,20 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
                 <p><span className="text-primary">Sexual Orientation:</span> {profileData.identityPreferences?.sexualOrientation || 'Not specified'}</p>
               </div>
             ) : (
-              <div className="text-destructive text-sm italic">Identity preferences required to continue</div>
+              <div className="text-muted-foreground text-sm italic">Identity preferences not completed yet</div>
             )}
           </div>
         </div>
       </div>
 
-      <div className="pt-6">
+      <div className="pt-6 space-y-2">
+        {!hasAtLeastOnePhoto && (
+          <p className="text-center text-destructive text-sm">Please add at least one photo to continue</p>
+        )}
         <button
           onClick={onComplete}
-          className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90"
+          disabled={!hasAtLeastOnePhoto}
+          className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           My Profile is Ready
         </button>

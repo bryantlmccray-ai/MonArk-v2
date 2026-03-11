@@ -7,7 +7,8 @@ interface IdentityPreferencesStepProps {
   profileData: ProfileData;
   updateData: (data: Partial<ProfileData>) => void;
   onNext: () => void;
-  stepRequirement: 'critical' | 'important' | 'optional';
+  onSkip?: () => void;
+  stepRequirement: 'optional' | 'important';
 }
 
 interface IdentityData {
@@ -41,6 +42,7 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
   profileData,
   updateData,
   onNext,
+  onSkip,
 }) => {
   const [identityData, setIdentityData] = useState<IdentityData>({
     genderIdentity: '',
@@ -267,6 +269,14 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
         >
           Back
         </button>
+        {onSkip && (
+          <button
+            onClick={onSkip}
+            className="px-6 py-4 text-muted-foreground hover:text-foreground transition-colors text-sm"
+          >
+            Skip
+          </button>
+        )}
         <button
           onClick={handleNext}
           disabled={!canProceed}
