@@ -201,18 +201,18 @@ export const PrivacyDataPortal: React.FC = () => {
       </div>
 
       {/* Legal Information */}
-      <div className="bg-muted/50 rounded-xl p-4 space-y-3">
+      <div className="bg-muted/50 rounded-xl p-4 space-y-3 border-2 border-border shadow-[0_8px_40px_-4px_hsl(var(--foreground)/0.1)]">
         <div className="flex items-center space-x-2">
-          <FileText className="h-4 w-4 text-muted-foreground" />
+          <FileText className="h-4 w-4 text-foreground/70" />
           <span className="text-foreground text-sm font-semibold">Legal Information</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-          <a href="/privacy" className="text-primary hover:underline font-medium">Privacy Policy</a>
-          <a href="/terms" className="text-primary hover:underline font-medium">Terms of Service</a>
-          <a href="/data-processing" className="text-primary hover:underline font-medium">Data Processing Agreement</a>
-          <a href="/cookie-policy" className="text-primary hover:underline font-medium">Cookie Policy</a>
+          <a href="/privacy" className="text-primary hover:underline font-semibold">Privacy Policy</a>
+          <a href="/terms" className="text-primary hover:underline font-semibold">Terms of Service</a>
+          <a href="/data-processing" className="text-primary hover:underline font-semibold">Data Processing Agreement</a>
+          <a href="/cookie-policy" className="text-primary hover:underline font-semibold">Cookie Policy</a>
         </div>
-        <p className="text-muted-foreground text-xs font-medium">
+        <p className="text-foreground/70 text-xs font-medium">
           MonArk complies with GDPR, CCPA, CPRA, and Washington's My Health My Data Act.
         </p>
       </div>
