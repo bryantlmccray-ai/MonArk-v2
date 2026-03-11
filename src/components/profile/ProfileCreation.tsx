@@ -244,10 +244,13 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
     try {
       console.log('[ProfileCreation] Starting profile save...');
       
+      // Helper to convert empty strings to null for DB compatibility
+      const emptyToNull = (val: string) => (val && val.trim() !== '' ? val : null);
+      
       // Prepare the profile data for database update
       const updateData: any = {
-        bio: profileData.bio,
-        interests: profileData.interests,
+        bio: emptyToNull(profileData.bio),
+        interests: profileData.interests.length > 0 ? profileData.interests : null,
         photos: profileData.photos,
         date_preferences: {
           vibe: profileData.vibe,
@@ -255,31 +258,31 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
           timeOfDay: profileData.timeOfDay,
           activityType: profileData.activityType,
         },
-        occupation: profileData.occupation,
-        education_level: profileData.education_level,
-        relationship_goals: profileData.relationship_goals,
-        exercise_habits: profileData.exercise_habits,
-        smoking_status: profileData.smoking_status,
-        drinking_status: profileData.drinking_status,
+        occupation: emptyToNull(profileData.occupation),
+        education_level: emptyToNull(profileData.education_level),
+        relationship_goals: profileData.relationship_goals.length > 0 ? profileData.relationship_goals : null,
+        exercise_habits: emptyToNull(profileData.exercise_habits),
+        smoking_status: emptyToNull(profileData.smoking_status),
+        drinking_status: emptyToNull(profileData.drinking_status),
         height_cm: profileData.height_cm,
         age: profile?.age || 25,
         is_profile_complete: true,
       };
 
-      // Add identity preferences if they exist
-      if (profileData.identityPreferences) {
+      // Add identity preferences if they have data
+      if (profileData.identityPreferences?.genderIdentity) {
         const { identityPreferences } = profileData;
-        updateData.gender_identity = identityPreferences.genderIdentity;
-        updateData.gender_identity_custom = identityPreferences.genderIdentityCustom;
-        updateData.sexual_orientation = identityPreferences.sexualOrientation;
-        updateData.sexual_orientation_custom = identityPreferences.sexualOrientationCustom;
+        updateData.gender_identity = emptyToNull(identityPreferences.genderIdentity);
+        updateData.gender_identity_custom = emptyToNull(identityPreferences.genderIdentityCustom || '');
+        updateData.sexual_orientation = emptyToNull(identityPreferences.sexualOrientation);
+        updateData.sexual_orientation_custom = emptyToNull(identityPreferences.sexualOrientationCustom || '');
         updateData.preference_to_see = identityPreferences.preferenceToSee;
         updateData.preference_to_be_seen_by = identityPreferences.preferenceToBeSeenBy;
-        updateData.discovery_privacy_mode = identityPreferences.discoveryPrivacyMode;
+        updateData.discovery_privacy_mode = identityPreferences.discoveryPrivacyMode || 'open';
         updateData.identity_visibility = identityPreferences.identityVisibility;
       }
 
-      console.log('[ProfileCreation] Sending update with is_profile_complete:', updateData.is_profile_complete);
+      console.log('[ProfileCreation] Sending update with data:', JSON.stringify(updateData));
       
       // Direct Supabase call to ensure is_profile_complete is set
       const { data: { user: authUser } } = await supabase.auth.getUser();
@@ -297,7 +300,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
         throw error;
       }
 
-      console.log('[ProfileCreation] Profile saved successfully via direct update');
+      console.log('[ProfileCreation] Profile saved successfully');
       toast({
         title: "Profile completed!",
         description: "Your profile has been saved successfully.",
