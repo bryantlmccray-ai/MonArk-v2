@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BioStep } from './BioStep';
 import { InterestsStep } from './InterestsStep';
 import { PhotosStep } from './PhotosStep';
@@ -26,7 +26,6 @@ export interface ProfileData {
   budget: string;
   timeOfDay: string[];
   activityType: string[];
-  // Lifestyle fields
   occupation: string;
   education_level: string;
   relationship_goals: string[];
@@ -65,13 +64,13 @@ export interface StepRequirements {
 }
 
 export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, onCancel }) => {
-  const [currentStep, setCurrentStep] = useState(-1); // -1 means not initialized yet
+  const [currentStep, setCurrentStep] = useState(-1);
   const { profile, updateProfile, loading } = useProfile();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [hasInitialized, setHasInitialized] = useState(false);
+  const [editingFromReview, setEditingFromReview] = useState(false);
   
-  // Track which steps have been completed vs skipped
   const [stepCompletion, setStepCompletion] = useState<StepCompletionStatus>({
     bio: false,
     interests: false,
@@ -81,7 +80,6 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
     identityPreferences: false,
   });
   
-  // Define step requirements (critical, important, optional)
   const stepRequirements: StepRequirements = {
     bio: 'optional',
     interests: 'optional',
@@ -99,7 +97,6 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
     budget: '$',
     timeOfDay: [],
     activityType: [],
-    // Initialize lifestyle fields
     occupation: '',
     education_level: '',
     relationship_goals: [],
@@ -109,7 +106,6 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
     height_cm: null,
   });
 
-  // Load existing profile data and determine which steps to skip
   useEffect(() => {
     if (profile && !loading && !hasInitialized) {
       const loadedData = {
@@ -141,7 +137,6 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
       
       setProfileData(prev => ({ ...prev, ...loadedData }));
       
-      // Check which steps have data from onboarding and mark as complete
       const newStepCompletion: StepCompletionStatus = {
         bio: !!(loadedData.bio || loadedData.occupation),
         interests: loadedData.interests.length >= 3,
@@ -153,14 +148,11 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
       
       setStepCompletion(newStepCompletion);
       
-      // Find the first incomplete step, or go to review if all are done
       const stepKeys: (keyof StepCompletionStatus)[] = ['bio', 'interests', 'photos', 'lifestyle', 'datePalette', 'identityPreferences'];
       const firstIncompleteIndex = stepKeys.findIndex(key => !newStepCompletion[key]);
       
-      // If at least one photo exists, go straight to review
-      // Otherwise, start at the first incomplete step or step 0
       if (newStepCompletion.photos) {
-        setCurrentStep(6); // Review step
+        setCurrentStep(6);
       } else if (firstIncompleteIndex !== -1) {
         setCurrentStep(firstIncompleteIndex);
       } else {
@@ -169,14 +161,13 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
       
       setHasInitialized(true);
     } else if (!loading && !profile && !hasInitialized) {
-      // No profile data, start from beginning
       setCurrentStep(0);
       setHasInitialized(true);
     }
   }, [profile, loading, hasInitialized]);
 
-  // Auto-save profile data to DB on each step transition
-  const saveProgressToDb = async (data: Partial<ProfileData>) => {
+  // Save specific data directly to DB (avoids stale state issues)
+  const saveDataToDb = useCallback(async (data: Partial<ProfileData>) => {
     try {
       const updateData: any = {};
       if (data.bio !== undefined) updateData.bio = data.bio;
@@ -210,21 +201,23 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
 
       if (Object.keys(updateData).length > 0) {
         await updateProfile(updateData);
-        console.log('[ProfileCreation] Auto-saved step data');
+        console.log('[ProfileCreation] Auto-saved step data:', Object.keys(updateData));
       }
     } catch (e) {
       console.warn('[ProfileCreation] Auto-save failed (non-blocking):', e);
     }
-  };
+  }, [profileData, updateProfile]);
 
   const updateProfileData = (data: Partial<ProfileData>) => {
     setProfileData(prev => ({ ...prev, ...data }));
   };
   
-  const markStepCompleted = (stepKey: keyof StepCompletionStatus) => {
+  const markStepCompleted = (stepKey: keyof StepCompletionStatus, freshData?: Partial<ProfileData>) => {
     setStepCompletion(prev => ({ ...prev, [stepKey]: true }));
-    // Auto-save current profileData when a step is completed
-    saveProgressToDb(profileData);
+    // Save fresh data directly instead of relying on stale profileData
+    if (freshData) {
+      saveDataToDb(freshData);
+    }
   };
   
   const markStepSkipped = (stepKey: keyof StepCompletionStatus) => {
@@ -240,17 +233,26 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
   };
 
   const goToStep = (step: number) => {
+    setEditingFromReview(true);
     setCurrentStep(step);
+  };
+
+  // Save current step data and return to review
+  const saveAndReturn = (freshData?: Partial<ProfileData>) => {
+    if (freshData) {
+      setProfileData(prev => ({ ...prev, ...freshData }));
+      saveDataToDb(freshData);
+    }
+    toast({ title: "Changes saved", description: "Your edits have been applied." });
+    setEditingFromReview(false);
+    setCurrentStep(6);
   };
 
   const handleComplete = async () => {
     try {
       console.log('[ProfileCreation] Starting profile save...');
-      
-      // Helper to convert empty strings to null for DB compatibility
       const emptyToNull = (val: string) => (val && val.trim() !== '' ? val : null);
       
-      // Prepare the profile data for database update
       const updateData: any = {
         bio: emptyToNull(profileData.bio),
         interests: profileData.interests.length > 0 ? profileData.interests : null,
@@ -272,7 +274,6 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
         is_profile_complete: true,
       };
 
-      // Add identity preferences if they have data
       if (profileData.identityPreferences?.genderIdentity) {
         const { identityPreferences } = profileData;
         updateData.gender_identity = emptyToNull(identityPreferences.genderIdentity);
@@ -285,51 +286,33 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
         updateData.identity_visibility = identityPreferences.identityVisibility;
       }
 
-      console.log('[ProfileCreation] Sending update with data:', JSON.stringify(updateData));
-      
-      // Direct Supabase call to ensure is_profile_complete is set
       const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (!authUser) {
-        throw new Error('No authenticated user');
-      }
+      if (!authUser) throw new Error('No authenticated user');
 
       const { error } = await supabase
         .from('user_profiles')
         .update({ ...updateData, updated_at: new Date().toISOString() })
         .eq('user_id', authUser.id);
 
-      if (error) {
-        console.error('[ProfileCreation] Direct update error:', error);
-        throw error;
-      }
+      if (error) throw error;
 
-      console.log('[ProfileCreation] Profile saved successfully');
-      
-      // Invalidate the react-query cache so profile view shows updated data
       const { data: { user: currentUser } } = await supabase.auth.getUser();
       if (currentUser) {
         await queryClient.invalidateQueries({ queryKey: queryKeys.profile.byUser(currentUser.id) });
       }
       
-      toast({
-        title: "Profile completed!",
-        description: "Your profile has been saved successfully.",
-      });
+      toast({ title: "Profile completed!", description: "Your profile has been saved successfully." });
       onComplete();
     } catch (error) {
       console.error('[ProfileCreation] Error saving profile:', error);
-      toast({
-        title: "Save failed",
-        description: "There was an error saving your profile. Please try again.",
-        variant: "destructive",
-      });
+      toast({ title: "Save failed", description: "There was an error saving your profile. Please try again.", variant: "destructive" });
     }
   };
 
   if (loading || currentStep === -1) {
     return (
       <div className="h-full bg-background flex items-center justify-center">
-        <div className="text-white text-lg">Loading profile...</div>
+        <div className="text-foreground text-lg">Loading profile...</div>
       </div>
     );
   }
@@ -341,10 +324,18 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
           <BioStep 
             profileData={profileData} 
             updateData={updateProfileData} 
-            onNext={() => { markStepCompleted('bio'); nextStep(); }}
+            onNext={() => { 
+              markStepCompleted('bio', { bio: profileData.bio }); 
+              nextStep(); 
+            }}
             onSkip={() => { markStepSkipped('bio'); nextStep(); }}
             onCancel={onCancel}
             stepRequirement={stepRequirements.bio}
+            onSaveAndReturn={editingFromReview ? (bio: string) => {
+              updateProfileData({ bio });
+              markStepCompleted('bio', { bio });
+              saveAndReturn({ bio });
+            } : undefined}
           />
         );
       case 1:
@@ -352,10 +343,14 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
           <InterestsStep 
             profileData={profileData} 
             updateData={updateProfileData} 
-            onNext={() => { markStepCompleted('interests'); nextStep(); }}
+            onNext={() => { markStepCompleted('interests', { interests: profileData.interests }); nextStep(); }}
             onSkip={() => { markStepSkipped('interests'); nextStep(); }}
             onBack={prevStep}
             stepRequirement={stepRequirements.interests}
+            onSaveAndReturn={editingFromReview ? () => {
+              markStepCompleted('interests', { interests: profileData.interests });
+              saveAndReturn({ interests: profileData.interests });
+            } : undefined}
           />
         );
       case 2:
@@ -363,10 +358,14 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
           <PhotosStep 
             profileData={profileData} 
             updateData={updateProfileData} 
-            onNext={() => { markStepCompleted('photos'); nextStep(); }}
+            onNext={() => { markStepCompleted('photos', { photos: profileData.photos }); nextStep(); }}
             onSkip={() => { markStepSkipped('photos'); nextStep(); }}
             onBack={prevStep}
             stepRequirement={stepRequirements.photos}
+            onSaveAndReturn={editingFromReview ? () => {
+              markStepCompleted('photos', { photos: profileData.photos });
+              saveAndReturn({ photos: profileData.photos });
+            } : undefined}
           />
         );
       case 3:
@@ -382,10 +381,25 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
               height_cm: profileData.height_cm,
             }}
             onUpdate={updateProfileData}
-            onNext={() => { markStepCompleted('lifestyle'); nextStep(); }}
+            onNext={() => { markStepCompleted('lifestyle', { 
+              occupation: profileData.occupation, education_level: profileData.education_level,
+              relationship_goals: profileData.relationship_goals, exercise_habits: profileData.exercise_habits,
+              smoking_status: profileData.smoking_status, drinking_status: profileData.drinking_status,
+              height_cm: profileData.height_cm,
+            }); nextStep(); }}
             onSkip={() => { markStepSkipped('lifestyle'); nextStep(); }}
             onBack={() => setCurrentStep(2)}
             stepRequirement={stepRequirements.lifestyle}
+            onSaveAndReturn={editingFromReview ? () => {
+              const data = {
+                occupation: profileData.occupation, education_level: profileData.education_level,
+                relationship_goals: profileData.relationship_goals, exercise_habits: profileData.exercise_habits,
+                smoking_status: profileData.smoking_status, drinking_status: profileData.drinking_status,
+                height_cm: profileData.height_cm,
+              };
+              markStepCompleted('lifestyle', data);
+              saveAndReturn(data);
+            } : undefined}
           />
         );
       case 4:
@@ -393,9 +407,14 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
           <DatePaletteStep 
             profileData={profileData} 
             updateData={updateProfileData} 
-            onNext={() => { markStepCompleted('datePalette'); nextStep(); }}
+            onNext={() => { markStepCompleted('datePalette', { vibe: profileData.vibe, budget: profileData.budget, timeOfDay: profileData.timeOfDay, activityType: profileData.activityType }); nextStep(); }}
             onSkip={() => { markStepSkipped('datePalette'); nextStep(); }}
             stepRequirement={stepRequirements.datePalette}
+            onSaveAndReturn={editingFromReview ? (data: Partial<ProfileData>) => {
+              updateProfileData(data);
+              markStepCompleted('datePalette', data);
+              saveAndReturn(data);
+            } : undefined}
           />
         );
       case 5:
@@ -403,9 +422,14 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
           <IdentityPreferencesStep 
             profileData={profileData} 
             updateData={updateProfileData} 
-            onNext={() => { markStepCompleted('identityPreferences'); nextStep(); }}
+            onNext={() => { markStepCompleted('identityPreferences', { identityPreferences: profileData.identityPreferences }); nextStep(); }}
             onSkip={() => { markStepSkipped('identityPreferences'); nextStep(); }}
             stepRequirement={stepRequirements.identityPreferences}
+            onSaveAndReturn={editingFromReview ? (data: Partial<ProfileData>) => {
+              updateProfileData(data);
+              markStepCompleted('identityPreferences', data);
+              saveAndReturn(data);
+            } : undefined}
           />
         );
       case 6:
@@ -420,16 +444,8 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
           />
         );
       default:
-        return (
-          <BioStep 
-            profileData={profileData} 
-            updateData={updateProfileData} 
-            onNext={() => { markStepCompleted('bio'); nextStep(); }}
-            onSkip={() => { markStepSkipped('bio'); nextStep(); }}
-            onCancel={onCancel}
-            stepRequirement={stepRequirements.bio}
-          />
-        );
+        setCurrentStep(0);
+        return null;
     }
   };
 

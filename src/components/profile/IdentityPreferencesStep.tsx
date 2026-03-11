@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Check, Plus, X } from 'lucide-react';
+import { Check, Save } from 'lucide-react';
 import { ProfileData } from './ProfileCreation';
 
 interface IdentityPreferencesStepProps {
@@ -9,6 +9,7 @@ interface IdentityPreferencesStepProps {
   onNext: () => void;
   onSkip?: () => void;
   stepRequirement: 'optional' | 'important';
+  onSaveAndReturn?: (data: Partial<ProfileData>) => void;
 }
 
 interface IdentityData {
@@ -39,24 +40,22 @@ const DISCOVERY_PREFERENCES = [
 ];
 
 export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = ({
-  profileData,
-  updateData,
-  onNext,
-  onSkip,
+  profileData, updateData, onNext, onSkip, onSaveAndReturn,
 }) => {
+  // Initialize from existing profileData instead of empty defaults
   const [identityData, setIdentityData] = useState<IdentityData>({
-    genderIdentity: '',
-    genderIdentityCustom: '',
-    sexualOrientation: '',
-    sexualOrientationCustom: '',
-    preferenceToSee: [],
-    preferenceToBeSeenBy: [],
-    discoveryPrivacyMode: 'open',
-    identityVisibility: true,
+    genderIdentity: profileData.identityPreferences?.genderIdentity || '',
+    genderIdentityCustom: profileData.identityPreferences?.genderIdentityCustom || '',
+    sexualOrientation: profileData.identityPreferences?.sexualOrientation || '',
+    sexualOrientationCustom: profileData.identityPreferences?.sexualOrientationCustom || '',
+    preferenceToSee: profileData.identityPreferences?.preferenceToSee || [],
+    preferenceToBeSeenBy: profileData.identityPreferences?.preferenceToBeSeenBy || [],
+    discoveryPrivacyMode: profileData.identityPreferences?.discoveryPrivacyMode || 'open',
+    identityVisibility: profileData.identityPreferences?.identityVisibility ?? true,
   });
 
-  const [showCustomGender, setShowCustomGender] = useState(false);
-  const [showCustomOrientation, setShowCustomOrientation] = useState(false);
+  const [showCustomGender, setShowCustomGender] = useState(identityData.genderIdentity === 'Custom');
+  const [showCustomOrientation, setShowCustomOrientation] = useState(identityData.sexualOrientation === 'Custom');
   const [currentStep, setCurrentStep] = useState(0);
 
   const updateIdentityData = (updates: Partial<IdentityData>) => {
@@ -66,6 +65,7 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
   const handleGenderSelect = (gender: string) => {
     if (gender === 'Custom') {
       setShowCustomGender(true);
+      updateIdentityData({ genderIdentity: 'Custom' });
     } else {
       setShowCustomGender(false);
       updateIdentityData({ genderIdentity: gender, genderIdentityCustom: '' });
@@ -75,6 +75,7 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
   const handleOrientationSelect = (orientation: string) => {
     if (orientation === 'Custom') {
       setShowCustomOrientation(true);
+      updateIdentityData({ sexualOrientation: 'Custom' });
     } else {
       setShowCustomOrientation(false);
       updateIdentityData({ sexualOrientation: orientation, sexualOrientationCustom: '' });
@@ -84,7 +85,6 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
   const togglePreference = (preference: string, type: 'see' | 'beSeenBy') => {
     const field = type === 'see' ? 'preferenceToSee' : 'preferenceToBeSeenBy';
     const current = identityData[field];
-    
     if (current.includes(preference)) {
       updateIdentityData({ [field]: current.filter(p => p !== preference) });
     } else {
@@ -93,11 +93,14 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
   };
 
   const handleNext = () => {
-    updateData({
-      ...profileData,
-      identityPreferences: identityData,
-    });
+    updateData({ identityPreferences: identityData });
     onNext();
+  };
+
+  const handleSaveAndReturn = () => {
+    const data = { identityPreferences: identityData };
+    updateData(data);
+    onSaveAndReturn?.(data);
   };
 
   const canProceed = identityData.genderIdentity && identityData.sexualOrientation && identityData.preferenceToSee.length > 0;
@@ -137,10 +140,7 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
                 type="text"
                 placeholder="Please specify your gender identity"
                 value={identityData.genderIdentityCustom}
-                onChange={(e) => updateIdentityData({ 
-                  genderIdentity: 'Custom',
-                  genderIdentityCustom: e.target.value 
-                })}
+                onChange={(e) => updateIdentityData({ genderIdentity: 'Custom', genderIdentityCustom: e.target.value })}
                 className="w-full p-4 bg-card border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
               />
             </div>
@@ -174,10 +174,7 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
                 type="text"
                 placeholder="Please specify your sexual orientation"
                 value={identityData.sexualOrientationCustom}
-                onChange={(e) => updateIdentityData({ 
-                  sexualOrientation: 'Custom',
-                  sexualOrientationCustom: e.target.value 
-                })}
+                onChange={(e) => updateIdentityData({ sexualOrientation: 'Custom', sexualOrientationCustom: e.target.value })}
                 className="w-full p-4 bg-card border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
               />
             </div>
@@ -262,35 +259,47 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
         </div>
       </div>
 
-      <div className="flex space-x-4">
-        <button
-          onClick={() => setCurrentStep(0)}
-          className="flex-1 py-4 bg-secondary text-secondary-foreground rounded-xl hover:bg-secondary/80 transition-colors"
-        >
-          Back
-        </button>
-        {onSkip && (
+      <div className="flex flex-col space-y-3">
+        {onSaveAndReturn && (
           <button
-            onClick={onSkip}
-            className="px-6 py-4 text-muted-foreground hover:text-foreground transition-colors text-sm"
+            onClick={handleSaveAndReturn}
+            disabled={!canProceed}
+            className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            Skip
+            <Save size={18} />
+            Save & Return to Profile
           </button>
         )}
-        <button
-          onClick={handleNext}
-          disabled={!canProceed}
-          className="flex-1 py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Complete Setup
-        </button>
+
+        {!onSaveAndReturn && (
+          <div className="flex space-x-4">
+            <button
+              onClick={() => setCurrentStep(0)}
+              className="flex-1 py-4 bg-secondary text-secondary-foreground rounded-xl hover:bg-secondary/80 transition-colors"
+            >
+              Back
+            </button>
+            {onSkip && (
+              <button onClick={onSkip} className="px-6 py-4 text-muted-foreground hover:text-foreground transition-colors text-sm">
+                Skip
+              </button>
+            )}
+            <button
+              onClick={handleNext}
+              disabled={!canProceed}
+              className="flex-1 py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Complete Setup
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-background p-6 flex items-center justify-center">
-      <div className="w-full max-w-2xl">
+    <div className="bg-background p-6 pb-32">
+      <div className="w-full max-w-2xl mx-auto">
         {currentStep === 0 ? renderStep0() : renderStep1()}
       </div>
     </div>

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
-import { X } from 'lucide-react';
+import { X, Save } from 'lucide-react';
 import { ProfileData } from './ProfileCreation';
 
 interface BioStepProps {
@@ -12,9 +12,10 @@ interface BioStepProps {
   onBack?: () => void;
   onCancel?: () => void;
   stepRequirement: 'critical' | 'important' | 'optional';
+  onSaveAndReturn?: (bio: string) => void;
 }
 
-export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, onCancel, stepRequirement }) => {
+export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, onCancel, stepRequirement, onSaveAndReturn }) => {
   const [bio, setBio] = useState(profileData.bio);
 
   const prompts = [
@@ -36,8 +37,8 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
   };
 
   return (
-    <div className="relative min-h-screen bg-background p-6 flex flex-col">
-      {onCancel && (
+    <div className="relative bg-background p-6 flex flex-col pb-32">
+      {onCancel && !onSaveAndReturn && (
         <div className="absolute top-6 right-6 z-10">
           <button
             onClick={onCancel}
@@ -86,42 +87,56 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
         </div>
       </div>
 
-      <div className="pt-6 space-y-3">
-        {onBack && (
-          <div className="flex space-x-3">
-            <button
-              onClick={onBack}
-              className="flex-1 py-3 text-muted-foreground hover:text-foreground transition-colors border border-border hover:border-primary/50 rounded-xl"
-            >
-              Back
-            </button>
-            <button
-              onClick={handleNext}
-              disabled={bio.trim().length === 0}
-              className="flex-1 py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Continue
-            </button>
-          </div>
-        )}
-        
-        {!onBack && (
+      <div className="pt-6 max-w-2xl mx-auto w-full space-y-3">
+        {onSaveAndReturn && (
           <button
-            onClick={handleNext}
-            disabled={bio.trim().length === 0}
-            className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={() => onSaveAndReturn(bio)}
+            className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 flex items-center justify-center gap-2"
           >
-            Continue
+            <Save size={18} />
+            Save & Return to Profile
           </button>
         )}
-        
-        {stepRequirement !== 'critical' && (
-          <button
-            onClick={onSkip}
-            className="w-full py-3 text-muted-foreground hover:text-foreground transition-colors border border-border hover:border-primary/50 rounded-xl"
-          >
-            Skip for now
-          </button>
+
+        {!onSaveAndReturn && (
+          <>
+            {onBack && (
+              <div className="flex space-x-3">
+                <button
+                  onClick={onBack}
+                  className="flex-1 py-3 text-muted-foreground hover:text-foreground transition-colors border border-border hover:border-primary/50 rounded-xl"
+                >
+                  Back
+                </button>
+                <button
+                  onClick={handleNext}
+                  disabled={bio.trim().length === 0}
+                  className="flex-1 py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Continue
+                </button>
+              </div>
+            )}
+            
+            {!onBack && (
+              <button
+                onClick={handleNext}
+                disabled={bio.trim().length === 0}
+                className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Continue
+              </button>
+            )}
+            
+            {stepRequirement !== 'critical' && (
+              <button
+                onClick={onSkip}
+                className="w-full py-3 text-muted-foreground hover:text-foreground transition-colors border border-border hover:border-primary/50 rounded-xl"
+              >
+                Skip for now
+              </button>
+            )}
+          </>
         )}
       </div>
     </div>
