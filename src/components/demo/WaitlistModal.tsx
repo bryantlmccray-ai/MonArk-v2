@@ -458,7 +458,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
             </div>
             <Button
               onClick={handleClose}
-              className="w-full bg-goldenrod text-jet-black hover:bg-goldenrod/90"
+              className="w-full"
             >
               Done
             </Button>
