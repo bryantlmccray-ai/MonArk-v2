@@ -667,8 +667,8 @@ const PlanCard = ({ plan, onSelect }: { plan: DatePlan; onSelect: () => void }) 
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-foreground">{person.name}, {person.age}</span>
                       <div className="flex items-center gap-1">
-                        <Heart className="w-3 h-3 text-rose-400" />
-                        <span className="text-xs text-rose-400">{person.rifScore}%</span>
+                        <Heart className="w-3 h-3 text-rosegold-deep" />
+                        <span className="text-xs text-foreground/60 font-medium">{person.rifScore}%</span>
                       </div>
                     </div>
                     <div className="text-xs text-muted-foreground truncate">
