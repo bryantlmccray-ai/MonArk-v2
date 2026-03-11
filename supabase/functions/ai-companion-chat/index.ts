@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 import { sanitizeAIOutput } from '../_shared/security.ts'
+import { sanitizeCompanionContext } from '../_shared/ai-sanitizer.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -131,7 +132,10 @@ serve(async (req) => {
     }
 
     const requestData = await req.json()
-    const { type, userContext }: CompanionRequest = requestData
+    const { type, userContext: rawContext }: CompanionRequest = requestData
+
+    // ── LLM Firewall: Strip PII before any AI processing ────
+    const userContext = sanitizeCompanionContext(rawContext || {}) as CompanionRequest['userContext'];
 
     // ── Circuit Breaker Check ───────────────────────────────
     if (!checkCircuitBreaker()) {

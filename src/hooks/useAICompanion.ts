@@ -4,6 +4,7 @@ import { useAuth } from './useAuth';
 import { useProfile } from './useProfile';
 import { useDateConcierge } from './useDateConcierge';
 import { useRIF } from './useRIF';
+import { sanitizeCompanionPayload } from '@/lib/aiSanitizer';
 
 export interface AIMessage {
   id: string;
@@ -34,7 +35,8 @@ export const useAICompanion = () => {
 
     setIsGenerating(true);
     try {
-      const userContext = {
+      // Build raw context, then sanitize via LLM firewall before sending
+      const rawContext = {
         recentDates: journalEntries.slice(0, 5),
         rifProfile,
         interests: profile.interests || [],
@@ -47,7 +49,7 @@ export const useAICompanion = () => {
       const { data, error } = await supabase.functions.invoke('ai-companion-chat', {
         body: {
           type: 'generate_insights',
-          userContext
+          userContext: sanitizeCompanionPayload(rawContext)
         }
       });
 
@@ -67,7 +69,7 @@ export const useAICompanion = () => {
     if (!user) return "I'd love to help, but it seems you're not logged in!";
 
     try {
-      const userContext = {
+      const rawContext = {
         recentDates: journalEntries.slice(0, 3),
         rifProfile,
         interests: profile?.interests || [],
@@ -77,7 +79,7 @@ export const useAICompanion = () => {
       const { data, error } = await supabase.functions.invoke('ai-companion-chat', {
         body: {
           type: 'chat_response',
-          userContext
+          userContext: sanitizeCompanionPayload(rawContext)
         }
       });
 
@@ -107,7 +109,7 @@ export const useAICompanion = () => {
     }
 
     try {
-      const userContext = {
+      const rawContext = {
         totalDates: journalEntries.length,
         averageRating: journalEntries.length > 0 
           ? journalEntries.reduce((sum, entry) => sum + (entry.rating || 0), 0) / journalEntries.length
@@ -119,7 +121,7 @@ export const useAICompanion = () => {
       const { data, error } = await supabase.functions.invoke('ai-companion-chat', {
         body: {
           type: 'celebration',
-          userContext
+          userContext: sanitizeCompanionPayload(rawContext)
         }
       });
 

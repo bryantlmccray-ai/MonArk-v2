@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
+import { sanitizeConciergeContext } from '../_shared/ai-sanitizer.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -189,7 +190,10 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const requestData: DateProposalRequest = await req.json();
+    const rawRequest = await req.json();
+
+    // ── LLM Firewall: Strip PII before any AI processing ────
+    const requestData = sanitizeConciergeContext(rawRequest) as DateProposalRequest;
 
     if (requestData.currentUserId && requestData.currentUserId !== user.id) {
       throw new Error('Cannot create proposals for other users');
