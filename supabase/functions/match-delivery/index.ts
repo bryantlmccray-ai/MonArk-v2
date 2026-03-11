@@ -352,7 +352,7 @@ async function generateDatingPool(supabase: any, userId: string) {
 
   let { data: candidates, error } = await supabase
     .from('user_profiles')
-    .select('user_id, age, location, interests, gender_identity, sexual_orientation')
+    .select('user_id, age, location, interests, gender_identity, sexual_orientation, relationship_goals')
     .eq('is_profile_complete', true)
     .eq('age_verified', true)
     .not('user_id', 'in', `(${excludeIds.join(',')})`)
@@ -365,7 +365,7 @@ async function generateDatingPool(supabase: any, userId: string) {
     console.log(`Small pool (${candidates?.length || 0}), relaxing filters for user ${userId}`);
     const { data: fallbackCandidates, error: fbError } = await supabase
       .from('user_profiles')
-      .select('user_id, age, location, interests, gender_identity, sexual_orientation')
+      .select('user_id, age, location, interests, gender_identity, sexual_orientation, relationship_goals')
       .eq('is_profile_complete', true)
       .not('user_id', 'in', `(${excludeIds.join(',')})`)
       .limit(50);
