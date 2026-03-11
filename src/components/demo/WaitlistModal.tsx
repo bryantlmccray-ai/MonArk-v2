@@ -380,12 +380,12 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="heardAboutUs" className="text-white text-sm">How did you hear about us?</Label>
+              <Label htmlFor="heardAboutUs" className="text-foreground text-sm font-semibold">How did you hear about us?</Label>
               <Input
                 id="heardAboutUs"
                 value={formData.heardAboutUs}
                 onChange={(e) => handleInputChange('heardAboutUs', e.target.value)}
-                className="bg-white border-gray-700 text-black"
+                className="bg-background border-border text-foreground"
                 placeholder="Social media, friend, article, etc."
                 disabled={isSubmitting}
                 maxLength={500}
