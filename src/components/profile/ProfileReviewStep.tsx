@@ -32,7 +32,7 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
   };
 
   return (
-    <div className="min-h-screen bg-background p-6 flex flex-col relative">
+    <div className="min-h-screen bg-background p-6 flex flex-col relative overflow-y-auto">
       {onCancel && (
         <button
           onClick={onCancel}
