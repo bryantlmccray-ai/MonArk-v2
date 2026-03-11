@@ -16,22 +16,43 @@ export default function ResetPassword() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if we have a valid session for password reset
-    const checkSession = async () => {
-      const { data: session } = await supabase.auth.getSession();
-      if (session?.session?.user) {
+    // Listen for the PASSWORD_RECOVERY event that fires when Supabase
+    // processes the recovery token from the URL hash
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY' && session) {
         setIsValidSession(true);
-      } else {
-        toast({
-          title: "Invalid reset link",
-          description: "This password reset link is invalid or has expired.",
-          variant: "destructive"
-        });
-        navigate('/');
+      } else if (event === 'SIGNED_IN' && session) {
+        // Also accept SIGNED_IN — some flows fire this instead of PASSWORD_RECOVERY
+        setIsValidSession(true);
       }
-    };
+    });
 
-    checkSession();
+    // Also check if there's already a valid session (e.g. page refresh)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setIsValidSession(true);
+      }
+    });
+
+    // Set a timeout so we don't hang forever on an invalid link
+    const timeout = setTimeout(() => {
+      setIsValidSession((current) => {
+        if (!current) {
+          toast({
+            title: "Invalid reset link",
+            description: "This password reset link is invalid or has expired.",
+            variant: "destructive"
+          });
+          navigate('/');
+        }
+        return current;
+      });
+    }, 5000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeout);
+    };
   }, [navigate, toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
