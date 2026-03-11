@@ -177,8 +177,8 @@ const Index = () => {
   // Show profile creation after onboarding
   return <ProfileCreation 
     onComplete={async () => {
-      await refetchProfile();
       setShowProfileComplete(true);
+      refetchProfile();
     }}
     onCancel={async () => {
       await signOut();
