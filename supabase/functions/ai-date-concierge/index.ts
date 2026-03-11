@@ -6,6 +6,47 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+// ── Circuit Breaker ─────────────────────────────────────────
+const circuitBreaker = {
+  failures: 0,
+  lastFailure: 0,
+  state: 'closed' as 'closed' | 'open' | 'half-open',
+  FAILURE_THRESHOLD: 3,
+  RECOVERY_TIMEOUT: 60_000,
+};
+
+function checkCircuitBreaker(): boolean {
+  if (circuitBreaker.state === 'closed') return true;
+  if (circuitBreaker.state === 'open') {
+    if (Date.now() - circuitBreaker.lastFailure > circuitBreaker.RECOVERY_TIMEOUT) {
+      circuitBreaker.state = 'half-open';
+      return true;
+    }
+    return false;
+  }
+  return true;
+}
+
+function recordSuccess() { circuitBreaker.failures = 0; circuitBreaker.state = 'closed'; }
+function recordFailure() {
+  circuitBreaker.failures++;
+  circuitBreaker.lastFailure = Date.now();
+  if (circuitBreaker.failures >= circuitBreaker.FAILURE_THRESHOLD) {
+    circuitBreaker.state = 'open';
+    console.log(`Circuit breaker OPEN after ${circuitBreaker.failures} failures`);
+  }
+}
+
+const RESTING_FALLBACK = {
+  title: "Your Date Concierge is Recharging ☁️",
+  activity: "While I'm resting up, here's a classic: grab coffee at a cozy local spot and let the conversation flow naturally.",
+  location_type: "Indoor",
+  vibe: "Relaxed",
+  time_suggestion: "Whenever feels right",
+  rationale: "I'll be back shortly with personalized suggestions! In the meantime, the best dates start with genuine curiosity about each other.",
+  circuit_breaker: 'open',
+};
+
 interface DateProposalRequest {
   conversationId: string;
   matchUserId: string;
@@ -16,7 +57,7 @@ interface DateProposalRequest {
   userProfile?: { bio?: string };
   matchProfile?: { bio?: string };
   recentMessages?: any[];
-  async?: boolean; // If true, return job_id and process in background
+  async?: boolean;
 }
 
 // Pre-built date suggestions for MVP - no external AI required
