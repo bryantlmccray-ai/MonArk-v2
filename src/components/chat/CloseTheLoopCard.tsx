@@ -28,22 +28,22 @@ const FEELING_OPTIONS = [
     id: 'great' as const, 
     label: 'Great energy', 
     icon: Heart, 
-    color: 'text-green-400',
-    bgColor: 'bg-green-500/10 hover:bg-green-500/20 border-green-500/30'
+    color: 'text-primary',
+    bgColor: 'bg-primary/10 hover:bg-primary/15 border-primary/30'
   },
   { 
     id: 'neutral' as const, 
     label: 'Neutral', 
     icon: Meh, 
-    color: 'text-amber-400',
-    bgColor: 'bg-amber-500/10 hover:bg-amber-500/20 border-amber-500/30'
+    color: 'text-goldenrod',
+    bgColor: 'bg-goldenrod/10 hover:bg-goldenrod/15 border-goldenrod/30'
   },
   { 
     id: 'not-a-fit' as const, 
     label: 'Not a fit', 
     icon: X, 
-    color: 'text-rose-400',
-    bgColor: 'bg-rose-500/10 hover:bg-rose-500/20 border-rose-500/30'
+    color: 'text-dusty-rose',
+    bgColor: 'bg-dusty-rose/10 hover:bg-dusty-rose/15 border-dusty-rose/30'
   }
 ];
 
