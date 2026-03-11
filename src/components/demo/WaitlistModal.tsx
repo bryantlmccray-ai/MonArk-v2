@@ -225,7 +225,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  className={`bg-white border-gray-700 text-black pl-10 ${fieldErrors.email ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
+                  className={`bg-background border-border text-foreground pl-10 ${fieldErrors.email ? 'border-destructive ring-2 ring-destructive/50' : ''}`}
                   placeholder="your@email.com"
                   disabled={isSubmitting}
                   maxLength={255}
