@@ -217,10 +217,10 @@ export const CloseTheLoopCard: React.FC<CloseTheLoopCardProps> = ({
                       whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.99 }}
                       onClick={handleGracefulClose}
-                      className="w-full flex items-center gap-3 p-4 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 transition-all text-left"
+                      className="w-full flex items-center gap-3 p-4 rounded-lg bg-dusty-rose/10 hover:bg-dusty-rose/15 border border-dusty-rose/20 transition-all text-left"
                     >
-                      <div className="p-2 rounded-full bg-rose-500/20">
-                        <MessageCircle className="h-4 w-4 text-rose-400" />
+                      <div className="p-2 rounded-full bg-dusty-rose/20">
+                        <MessageCircle className="h-4 w-4 text-dusty-rose" />
                       </div>
                       <div>
                         <span className="text-foreground font-medium block">
