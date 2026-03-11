@@ -200,10 +200,14 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
         </div>
       </div>
 
-      <div className="pt-6">
+      <div className="pt-6 space-y-2">
+        {!hasAtLeastOnePhoto && (
+          <p className="text-center text-destructive text-sm">Please add at least one photo to continue</p>
+        )}
         <button
           onClick={onComplete}
-          className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90"
+          disabled={!hasAtLeastOnePhoto}
+          className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           My Profile is Ready
         </button>
