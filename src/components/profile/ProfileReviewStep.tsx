@@ -14,10 +14,12 @@ interface ProfileReviewStepProps {
 
 export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileData, stepCompletion, stepRequirements, onEdit, onComplete, onCancel }) => {
   
-  const getStepIcon = (stepKey: keyof StepCompletionStatus, stepRequirement: 'critical' | 'important' | 'optional') => {
+  // Only require at least one photo to complete profile
+  const hasAtLeastOnePhoto = profileData.photos && profileData.photos.length > 0;
+  
+  const getStepIcon = (stepKey: keyof StepCompletionStatus, stepRequirement: string) => {
     const isCompleted = stepCompletion[stepKey];
     if (isCompleted) return <CheckCircle className="h-5 w-5 text-primary" />;
-    if (stepRequirement === 'critical') return <AlertTriangle className="h-5 w-5 text-destructive" />;
     if (stepRequirement === 'important') return <Clock className="h-5 w-5 text-accent" />;
     return <Clock className="h-5 w-5 text-muted-foreground" />;
   };

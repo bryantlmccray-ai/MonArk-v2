@@ -154,9 +154,9 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
       const stepKeys: (keyof StepCompletionStatus)[] = ['bio', 'interests', 'photos', 'lifestyle', 'datePalette', 'identityPreferences'];
       const firstIncompleteIndex = stepKeys.findIndex(key => !newStepCompletion[key]);
       
-      // If identity is complete (the critical step), go straight to review
+      // If at least one photo exists, go straight to review
       // Otherwise, start at the first incomplete step or step 0
-      if (newStepCompletion.identityPreferences) {
+      if (newStepCompletion.photos) {
         setCurrentStep(6); // Review step
       } else if (firstIncompleteIndex !== -1) {
         setCurrentStep(firstIncompleteIndex);
