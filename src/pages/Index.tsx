@@ -7,6 +7,7 @@ import { ProfileCompleteScreen } from '../components/profile/ProfileCompleteScre
 import { EnhancedLandingPage } from '@/components/demo/EnhancedLandingPage';
 import { DemoMainApp } from '@/components/demo/DemoMainApp';
 import { SplashScreen } from '@/components/splash/SplashScreen';
+import { AuthGuard } from '@/components/common/AuthGuard';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useDemo } from '@/contexts/DemoContext';
