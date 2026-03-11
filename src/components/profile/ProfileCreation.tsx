@@ -10,6 +10,8 @@ import { ProfileReviewStep } from './ProfileReviewStep';
 import { useProfile } from '@/hooks/useProfile';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '@/lib/queryKeys';
 
 interface ProfileCreationProps {
   onComplete: () => void;
@@ -66,6 +68,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
   const [currentStep, setCurrentStep] = useState(-1); // -1 means not initialized yet
   const { profile, updateProfile, loading } = useProfile();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [hasInitialized, setHasInitialized] = useState(false);
   
   // Track which steps have been completed vs skipped
@@ -301,6 +304,13 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
       }
 
       console.log('[ProfileCreation] Profile saved successfully');
+      
+      // Invalidate the react-query cache so profile view shows updated data
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      if (currentUser) {
+        await queryClient.invalidateQueries({ queryKey: queryKeys.profile.byUser(currentUser.id) });
+      }
+      
       toast({
         title: "Profile completed!",
         description: "Your profile has been saved successfully.",
