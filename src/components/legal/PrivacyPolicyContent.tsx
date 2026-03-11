@@ -28,10 +28,10 @@ export const PrivacyPolicyContent: React.FC = () => {
           <Shield className="h-12 w-12 text-goldenrod" />
           <h1 className="text-4xl font-light text-white">Privacy Policy</h1>
         </div>
-        <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+        <p className="text-gray-100 text-lg max-w-2xl mx-auto">
           Your privacy is fundamental to our mission of creating emotionally safe connections
         </p>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-300">
           Last updated: {new Date().toLocaleDateString()}
         </p>
       </div>
@@ -46,7 +46,7 @@ export const PrivacyPolicyContent: React.FC = () => {
               Information We Collect
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
+          <CardContent className="text-gray-100 space-y-4">
             <div className="space-y-4">
               <div>
                 <h4 className="text-white font-medium mb-2">Profile Information</h4>
@@ -89,7 +89,7 @@ export const PrivacyPolicyContent: React.FC = () => {
               How We Use Your Information
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
+          <CardContent className="text-gray-100 space-y-4">
             <div className="space-y-4">
               <div>
                 <h4 className="text-white font-medium mb-2">Core Services</h4>
@@ -132,7 +132,7 @@ export const PrivacyPolicyContent: React.FC = () => {
               Cookie Policy
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
+          <CardContent className="text-gray-100 space-y-4">
             <p>
               We use cookies and similar technologies to enhance your experience on MonArk. Here's how we use them:
             </p>
@@ -140,7 +140,7 @@ export const PrivacyPolicyContent: React.FC = () => {
             <div className="space-y-4">
               <div className="bg-gray-800/50 rounded-lg p-4">
                 <h4 className="text-white font-medium mb-2">Essential Cookies</h4>
-                <p className="text-sm text-gray-300">
+                <p className="text-sm text-gray-100">
                   Required for basic functionality including authentication, security, and core features. 
                   These cannot be disabled as they are necessary for the platform to function.
                 </p>
@@ -148,7 +148,7 @@ export const PrivacyPolicyContent: React.FC = () => {
               
               <div className="bg-gray-800/50 rounded-lg p-4">
                 <h4 className="text-white font-medium mb-2">Analytics Cookies</h4>
-                <p className="text-sm text-gray-300">
+                <p className="text-sm text-gray-100">
                   Help us understand how users interact with our platform to improve user experience. 
                   Data is anonymized and used solely for internal analysis.
                 </p>
@@ -156,14 +156,14 @@ export const PrivacyPolicyContent: React.FC = () => {
               
               <div className="bg-gray-800/50 rounded-lg p-4">
                 <h4 className="text-white font-medium mb-2">Preference Cookies</h4>
-                <p className="text-sm text-gray-300">
+                <p className="text-sm text-gray-100">
                   Remember your settings and preferences to provide a personalized experience 
                   across sessions and devices.
                 </p>
               </div>
             </div>
             
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray-200">
               You can manage your cookie preferences at any time through your browser settings or our cookie consent banner.
             </p>
           </CardContent>
@@ -177,7 +177,7 @@ export const PrivacyPolicyContent: React.FC = () => {
               Data Sharing and Disclosure
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
+          <CardContent className="text-gray-100 space-y-4">
             <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-4">
               <h4 className="text-green-400 font-medium mb-2">Our Commitment</h4>
               <p className="text-green-200 text-sm">
@@ -217,7 +217,7 @@ export const PrivacyPolicyContent: React.FC = () => {
               Your Rights and Choices
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
+          <CardContent className="text-gray-100 space-y-4">
             <p>
               You have significant control over your personal information. Your rights include:
             </p>
@@ -254,7 +254,7 @@ export const PrivacyPolicyContent: React.FC = () => {
             
             <div className="bg-gray-800/50 rounded-lg p-4 mt-4">
               <h4 className="text-white font-medium mb-2">How to Exercise Your Rights</h4>
-              <p className="text-sm text-gray-300">
+              <p className="text-sm text-gray-100">
                 Contact us at <a href="mailto:privacy@monark.com" className="text-goldenrod hover:underline">privacy@monark.com</a> or 
                 use the data management tools in your account settings. We'll respond within 30 days of your request.
               </p>
@@ -270,7 +270,7 @@ export const PrivacyPolicyContent: React.FC = () => {
               Data Retention
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
+          <CardContent className="text-gray-100 space-y-4">
             <div className="space-y-4">
               <div>
                 <h4 className="text-white font-medium mb-2">Active Accounts</h4>
@@ -307,7 +307,7 @@ export const PrivacyPolicyContent: React.FC = () => {
               International Data Transfers
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
+          <CardContent className="text-gray-100 space-y-4">
             <p>
               MonArk operates globally, and your data may be transferred to and processed in countries 
               other than your residence. We ensure adequate protection through:
@@ -337,7 +337,7 @@ export const PrivacyPolicyContent: React.FC = () => {
               Changes to This Policy
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
+          <CardContent className="text-gray-100 space-y-4">
             <p>
               We may update this Privacy Policy from time to time to reflect changes in our practices, 
               technology, legal requirements, or other factors.
@@ -353,7 +353,7 @@ export const PrivacyPolicyContent: React.FC = () => {
                 </ul>
               </div>
               
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-200">
                 We encourage you to review this policy periodically to stay informed about how we protect your information.
               </p>
             </div>
@@ -375,7 +375,7 @@ export const PrivacyPolicyContent: React.FC = () => {
               </p>
               <p className="text-blue-200 text-sm">
                 For EU users: You can also contact your local data protection authority if you have concerns 
-                about how we handle your personal information.
+                about how we handle your personal data.
               </p>
             </div>
           </div>
