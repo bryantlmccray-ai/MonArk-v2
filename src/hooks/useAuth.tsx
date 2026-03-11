@@ -113,7 +113,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const exitDemoMode = () => {
-    localStorage.removeItem('monark-demo-mode');
     setIsDemoMode(false);
     setUser(null);
     setSession(null);
