@@ -217,7 +217,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-white text-sm">Email Address *</Label>
+              <Label htmlFor="email" className="text-foreground text-sm font-semibold">Email Address *</Label>
               <div className="relative">
                 <Mail className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${fieldErrors.email ? 'text-red-400' : 'text-gray-400'}`} />
                 <Input
