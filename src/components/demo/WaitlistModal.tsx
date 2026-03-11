@@ -501,7 +501,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   type="button"
                   onClick={handleNext}
                   disabled={isSubmitting}
-                  className="bg-goldenrod text-jet-black hover:bg-goldenrod/90"
+                  className="font-semibold"
                 >
                   Next
                   <ChevronRight className="h-4 w-4 ml-1" />
