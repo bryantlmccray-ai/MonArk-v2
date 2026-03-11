@@ -295,12 +295,12 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="genderIdentity" className="text-white text-sm">I am a... *</Label>
+                <Label htmlFor="genderIdentity" className="text-foreground text-sm font-semibold">I am a... *</Label>
                 <Input
                   id="genderIdentity"
                   value={formData.genderIdentity}
                   onChange={(e) => handleInputChange('genderIdentity', e.target.value)}
-                  className={`bg-white border-gray-700 text-black ${fieldErrors.genderIdentity ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
+                  className={`bg-background border-border text-foreground ${fieldErrors.genderIdentity ? 'border-destructive ring-2 ring-destructive/50' : ''}`}
                   placeholder="e.g. Woman, Man, Non-binary"
                   disabled={isSubmitting}
                   maxLength={100}
