@@ -96,12 +96,12 @@ export const PrivacyDataPortal: React.FC = () => {
         <h2 className="text-xl font-semibold text-foreground">Privacy & Data Management</h2>
       </div>
 
-      <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
+      <div className="bg-primary/10 border-2 border-primary/30 rounded-xl p-4 shadow-[0_8px_40px_-4px_hsl(var(--foreground)/0.1)]">
         <div className="flex items-start space-x-3">
           <CheckCircle className="h-5 w-5 text-primary mt-0.5" />
           <div>
-            <h3 className="text-primary font-semibold">Your Privacy Rights</h3>
-            <p className="text-foreground/70 text-sm mt-1 font-medium">
+            <h3 className="text-primary font-semibold text-base">Your Privacy Rights</h3>
+            <p className="text-foreground/80 text-sm mt-1 font-medium">
               MonArk is committed to protecting your privacy. You have complete control over your personal data.
             </p>
           </div>
@@ -110,15 +110,15 @@ export const PrivacyDataPortal: React.FC = () => {
 
       <div className="space-y-4">
         {/* Access My Data */}
-        <div className="bg-card rounded-xl p-6 space-y-4 border border-border">
+        <div className="bg-card rounded-xl p-6 space-y-4 border-2 border-border shadow-[0_8px_40px_-4px_hsl(var(--foreground)/0.1)]">
           <div className="flex items-start space-x-3">
             <Download className="h-5 w-5 text-primary mt-1" />
             <div className="flex-1">
               <h3 className="text-foreground font-semibold">Access My Data</h3>
-              <p className="text-muted-foreground text-sm mt-1 font-medium">
+              <p className="text-foreground/80 text-sm mt-1 font-medium">
                 Download a complete copy of all personal data associated with your account in a machine-readable format.
               </p>
-              <ul className="text-muted-foreground text-xs mt-2 space-y-1">
+              <ul className="text-foreground/70 text-xs mt-2 space-y-1 font-medium">
                 <li>• Profile information and photos</li>
                 <li>• Dating preferences and style</li>
                 <li>• Journal entries and reflections</li>
@@ -147,12 +147,12 @@ export const PrivacyDataPortal: React.FC = () => {
         </div>
 
         {/* Correct My Data */}
-        <div className="bg-card rounded-xl p-6 space-y-4 border border-border">
+        <div className="bg-card rounded-xl p-6 space-y-4 border-2 border-border shadow-[0_8px_40px_-4px_hsl(var(--foreground)/0.1)]">
           <div className="flex items-start space-x-3">
             <Edit className="h-5 w-5 text-primary mt-1" />
             <div className="flex-1">
               <h3 className="text-foreground font-semibold">Correct My Data</h3>
-              <p className="text-muted-foreground text-sm mt-1 font-medium">
+              <p className="text-foreground/80 text-sm mt-1 font-medium">
                 Update your personal information, preferences, and privacy settings.
               </p>
             </div>
@@ -168,17 +168,17 @@ export const PrivacyDataPortal: React.FC = () => {
         </div>
 
         {/* Delete My Account */}
-        <div className="bg-destructive/5 border border-destructive/20 rounded-xl p-6 space-y-4">
+        <div className="bg-destructive/5 border-2 border-destructive/30 rounded-xl p-6 space-y-4 shadow-[0_8px_40px_-4px_hsl(var(--foreground)/0.1)]">
           <div className="flex items-start space-x-3">
             <Trash2 className="h-5 w-5 text-destructive mt-1" />
             <div className="flex-1">
-              <h3 className="text-destructive font-semibold">Delete My Account & Data</h3>
-              <p className="text-foreground/70 text-sm mt-1 font-medium">
+              <h3 className="text-destructive font-semibold text-base">Delete My Account & Data</h3>
+              <p className="text-foreground/80 text-sm mt-1 font-medium">
                 Permanently delete your account and all associated personal data. This action cannot be undone.
               </p>
               <div className="bg-destructive/5 rounded-lg p-3 mt-3">
                 <p className="text-destructive text-xs font-semibold">What will be deleted:</p>
-                <ul className="text-muted-foreground text-xs mt-1 space-y-1">
+                <ul className="text-foreground/70 text-xs mt-1 space-y-1 font-medium">
                   <li>• Your profile and all photos</li>
                   <li>• All conversations and matches</li>
                   <li>• Date journal and reflections</li>
@@ -201,18 +201,18 @@ export const PrivacyDataPortal: React.FC = () => {
       </div>
 
       {/* Legal Information */}
-      <div className="bg-muted/50 rounded-xl p-4 space-y-3">
+      <div className="bg-muted/50 rounded-xl p-4 space-y-3 border-2 border-border shadow-[0_8px_40px_-4px_hsl(var(--foreground)/0.1)]">
         <div className="flex items-center space-x-2">
-          <FileText className="h-4 w-4 text-muted-foreground" />
+          <FileText className="h-4 w-4 text-foreground/70" />
           <span className="text-foreground text-sm font-semibold">Legal Information</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-          <a href="/privacy" className="text-primary hover:underline font-medium">Privacy Policy</a>
-          <a href="/terms" className="text-primary hover:underline font-medium">Terms of Service</a>
-          <a href="/data-processing" className="text-primary hover:underline font-medium">Data Processing Agreement</a>
-          <a href="/cookie-policy" className="text-primary hover:underline font-medium">Cookie Policy</a>
+          <a href="/privacy" className="text-primary hover:underline font-semibold">Privacy Policy</a>
+          <a href="/terms" className="text-primary hover:underline font-semibold">Terms of Service</a>
+          <a href="/data-processing" className="text-primary hover:underline font-semibold">Data Processing Agreement</a>
+          <a href="/cookie-policy" className="text-primary hover:underline font-semibold">Cookie Policy</a>
         </div>
-        <p className="text-muted-foreground text-xs font-medium">
+        <p className="text-foreground/70 text-xs font-medium">
           MonArk complies with GDPR, CCPA, CPRA, and Washington's My Health My Data Act.
         </p>
       </div>
@@ -230,7 +230,7 @@ export const PrivacyDataPortal: React.FC = () => {
               <p className="text-foreground/80 text-sm font-medium">
                 Are you absolutely sure you want to delete your account? This will permanently remove:
               </p>
-              <ul className="text-muted-foreground text-xs space-y-1 ml-4">
+              <ul className="text-foreground/70 text-xs space-y-1 ml-4 font-medium">
                 <li>• Your entire profile and all photos</li>
                 <li>• All conversations, matches, and connections</li>
                 <li>• Date journal entries and reflections</li>
