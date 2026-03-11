@@ -471,7 +471,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 <div
                   key={i}
                   className={`h-1 flex-1 rounded-full transition-colors ${
-                    i < currentStep ? 'bg-goldenrod' : 'bg-gray-700'
+                    i < currentStep ? 'bg-primary' : 'bg-border'
                   }`}
                 />
               ))}
