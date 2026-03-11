@@ -168,6 +168,13 @@ export const AuthPage: React.FC = () => {
 
     try {
       if (isLogin) {
+        if (rememberMe) {
+          localStorage.setItem('monark-remember-me', 'true');
+          localStorage.setItem('monark-saved-email', email);
+        } else {
+          localStorage.removeItem('monark-remember-me');
+          localStorage.removeItem('monark-saved-email');
+        }
         const { error } = await signIn(email, password);
         if (error) {
           if (error.message.includes('Invalid login credentials')) {
