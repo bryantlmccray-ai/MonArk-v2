@@ -204,9 +204,11 @@ serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    // ── ASYNC PATH ──────────────────────────────────────────────
+    if (requestData.async) {
       const serviceClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-      // Create the job
       const { data: job, error: jobError } = await serviceClient
         .from('async_jobs')
         .insert({
@@ -224,9 +226,9 @@ serve(async (req) => {
 
       if (jobError) throw jobError;
 
-      // Process immediately (swap this for a queue dispatch when needed)
       try {
         const proposal = generateProposal(requestData);
+        recordSuccess();
         
         await serviceClient
           .from('async_jobs')
@@ -237,6 +239,7 @@ serve(async (req) => {
           })
           .eq('id', job.id);
       } catch (processError) {
+        recordFailure();
         await serviceClient
           .from('async_jobs')
           .update({
@@ -247,34 +250,31 @@ serve(async (req) => {
           .eq('id', job.id);
       }
 
-      // Return job_id immediately — client subscribes via Realtime
       return new Response(JSON.stringify({ job_id: job.id, status: 'processing' }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     // ── SYNC PATH (default, fast rule-based) ────────────────────
-    const proposal = generateProposal(requestData);
-    console.log('Returning proposal:', proposal.title);
+    try {
+      const proposal = generateProposal(requestData);
+      recordSuccess();
+      console.log('Returning proposal:', proposal.title);
 
-    return new Response(JSON.stringify(proposal), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+      return new Response(JSON.stringify(proposal), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    } catch (genError) {
+      recordFailure();
+      throw genError;
+    }
 
   } catch (error) {
     console.error('Error in ai-date-concierge function:', error);
-    
-    const fallback = {
-      title: "Coffee & Conversation",
-      activity: "Meet at a cozy local coffee shop for great conversation and getting to know each other better.",
-      location_type: "Indoor",
-      vibe: "Relaxed",
-      time_suggestion: "Weekend afternoon",
-      rationale: "A classic first date that provides a comfortable setting for meaningful conversation."
-    };
+    recordFailure();
     
     return new Response(JSON.stringify({ 
-      ...fallback,
+      ...RESTING_FALLBACK,
       error: error instanceof Error ? error.message : 'Unknown error'
     }), {
       status: 200,
