@@ -96,12 +96,12 @@ export const PrivacyDataPortal: React.FC = () => {
         <h2 className="text-xl font-semibold text-foreground">Privacy & Data Management</h2>
       </div>
 
-      <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
+      <div className="bg-primary/10 border-2 border-primary/30 rounded-xl p-4 shadow-[0_8px_40px_-4px_hsl(var(--foreground)/0.1)]">
         <div className="flex items-start space-x-3">
           <CheckCircle className="h-5 w-5 text-primary mt-0.5" />
           <div>
-            <h3 className="text-primary font-semibold">Your Privacy Rights</h3>
-            <p className="text-foreground/70 text-sm mt-1 font-medium">
+            <h3 className="text-primary font-semibold text-base">Your Privacy Rights</h3>
+            <p className="text-foreground/80 text-sm mt-1 font-medium">
               MonArk is committed to protecting your privacy. You have complete control over your personal data.
             </p>
           </div>
