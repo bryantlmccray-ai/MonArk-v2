@@ -17,15 +17,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Demo user for testing
-const DEMO_USER: User = {
-  id: 'demo-user-' + Date.now(),
-  email: 'demo@monark.test',
-  app_metadata: {},
-  user_metadata: { name: 'Demo User' },
-  aud: 'authenticated',
-  created_at: new Date().toISOString(),
-} as User;
+// No fake User object — demo mode uses DemoContext mock data only
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -34,10 +26,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isDemoMode, setIsDemoMode] = useState(false);
 
   useEffect(() => {
-    // Don't auto-restore demo mode from localStorage - require explicit entry
-    // This ensures users always start from the landing page
-    localStorage.removeItem('monark-demo-mode');
-
     let mounted = true;
     let retryCount = 0;
     const maxRetries = 3;
@@ -104,19 +92,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const enterDemoMode = () => {
-    localStorage.setItem('monark-demo-mode', 'true');
+    // Demo mode only sets a flag — no fake User object, no localStorage persistence.
+    // DemoMainApp handles the demo experience with client-side mock data.
+    // AuthGuard verifies real Supabase JWTs, so demo mode cannot access real data.
     setIsDemoMode(true);
-    setUser(DEMO_USER);
     setSession(null);
     setLoading(false);
-    // Dispatch event to notify components
-    setTimeout(() => {
-      window.dispatchEvent(new Event('auth-change'));
-    }, 50);
   };
 
   const exitDemoMode = () => {
-    localStorage.removeItem('monark-demo-mode');
     setIsDemoMode(false);
     setUser(null);
     setSession(null);
