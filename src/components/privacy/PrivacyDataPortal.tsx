@@ -178,7 +178,7 @@ export const PrivacyDataPortal: React.FC = () => {
               </p>
               <div className="bg-destructive/5 rounded-lg p-3 mt-3">
                 <p className="text-destructive text-xs font-semibold">What will be deleted:</p>
-                <ul className="text-muted-foreground text-xs mt-1 space-y-1">
+                <ul className="text-foreground/70 text-xs mt-1 space-y-1 font-medium">
                   <li>• Your profile and all photos</li>
                   <li>• All conversations and matches</li>
                   <li>• Date journal and reflections</li>
