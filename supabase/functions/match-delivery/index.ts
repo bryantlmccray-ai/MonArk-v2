@@ -350,7 +350,7 @@ async function generateDatingPool(supabase: any, userId: string) {
 
   const excludeIds = [userId, ...(curatedMatches?.map((m: any) => m.matched_user_id) || [])];
 
-  const { data: candidates, error } = await supabase
+  let { data: candidates, error } = await supabase
     .from('user_profiles')
     .select('user_id, age, location, interests, gender_identity, sexual_orientation')
     .eq('is_profile_complete', true)
@@ -359,6 +359,24 @@ async function generateDatingPool(supabase: any, userId: string) {
     .limit(50);
 
   if (error) throw error;
+
+  // Fallback: if candidate pool is too small, relax filters (drop age_verified requirement)
+  if (!candidates || candidates.length < 10) {
+    console.log(`Small pool (${candidates?.length || 0}), relaxing filters for user ${userId}`);
+    const { data: fallbackCandidates, error: fbError } = await supabase
+      .from('user_profiles')
+      .select('user_id, age, location, interests, gender_identity, sexual_orientation')
+      .eq('is_profile_complete', true)
+      .not('user_id', 'in', `(${excludeIds.join(',')})`)
+      .limit(50);
+
+    if (!fbError && fallbackCandidates) {
+      // Merge without duplicates
+      const existingIds = new Set(candidates?.map((c: any) => c.user_id) || []);
+      const newCandidates = fallbackCandidates.filter((c: any) => !existingIds.has(c.user_id));
+      candidates = [...(candidates || []), ...newCandidates];
+    }
+  }
 
   const scored = (candidates || []).map((candidate: any) => ({
     ...candidate,
@@ -528,11 +546,13 @@ async function getPotentialMatches(supabase: any, userId: string) {
 function calculateCompatibility(user1: any, user2: any): number {
   let score = 0.5;
 
+  // Interest overlap (up to +0.2)
   const interests1 = user1.interests || [];
   const interests2 = user2.interests || [];
   const commonInterests = interests1.filter((i: string) => interests2.includes(i));
   score += Math.min(commonInterests.length * 0.05, 0.2);
 
+  // Location proximity (up to +0.1)
   if (user1.location && user2.location) {
     const loc1 = user1.location.toLowerCase();
     const loc2 = user2.location.toLowerCase();
@@ -541,11 +561,20 @@ function calculateCompatibility(user1: any, user2: any): number {
     }
   }
 
+  // Age proximity (up to +0.15)
   if (user1.age && user2.age) {
     const ageDiff = Math.abs(user1.age - user2.age);
     if (ageDiff <= 3) score += 0.15;
     else if (ageDiff <= 5) score += 0.1;
     else if (ageDiff <= 10) score += 0.05;
+  }
+
+  // Relationship goals alignment (up to +0.1)
+  const goals1 = user1.relationship_goals || [];
+  const goals2 = user2.relationship_goals || [];
+  if (goals1.length > 0 && goals2.length > 0) {
+    const commonGoals = goals1.filter((g: string) => goals2.includes(g));
+    score += Math.min(commonGoals.length * 0.05, 0.1);
   }
 
   return Math.min(score, 1);
