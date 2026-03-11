@@ -238,9 +238,9 @@ export const useProfile = () => {
     [createMutation]
   );
 
-  const refetchProfile = useCallback(() => {
+  const refetchProfile = useCallback(async () => {
     if (user) {
-      queryClient.invalidateQueries({ queryKey: queryKeys.profile.byUser(user.id) });
+      await queryClient.refetchQueries({ queryKey: queryKeys.profile.byUser(user.id) });
     }
   }, [user, queryClient]);
 
