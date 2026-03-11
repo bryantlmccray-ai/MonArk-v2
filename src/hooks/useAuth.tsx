@@ -104,15 +104,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const enterDemoMode = () => {
-    localStorage.setItem('monark-demo-mode', 'true');
+    // Demo mode only sets a flag — no fake User object, no localStorage persistence.
+    // DemoMainApp handles the demo experience with client-side mock data.
+    // AuthGuard verifies real Supabase JWTs, so demo mode cannot access real data.
     setIsDemoMode(true);
-    setUser(DEMO_USER);
     setSession(null);
     setLoading(false);
-    // Dispatch event to notify components
-    setTimeout(() => {
-      window.dispatchEvent(new Event('auth-change'));
-    }, 50);
   };
 
   const exitDemoMode = () => {
