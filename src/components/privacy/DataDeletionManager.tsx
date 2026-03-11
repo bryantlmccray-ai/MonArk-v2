@@ -121,7 +121,7 @@ export const DataDeletionManager: React.FC = () => {
   return (
     <Card className="bg-card border-border/40">
       <CardHeader>
-        <CardTitle className="text-card-foreground flex items-center gap-3">
+        <CardTitle className="text-foreground font-semibold text-lg flex items-center gap-3">
           <Shield className="h-6 w-6 text-primary" />
           Data Management
         </CardTitle>
