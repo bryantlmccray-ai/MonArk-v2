@@ -125,14 +125,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
           </ProfileGate>
         );
       case 'shareables':
-        return (
-          <ProfileGate 
-            featureName="shareables"
-            onNavigateToProfile={() => handleTabChange('profile')}
-          >
-            <MilestoneCardShowcase />
-          </ProfileGate>
-        );
+        return <MilestoneCardShowcase />;
       case 'profile':
          return (
           <Profile
