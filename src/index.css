@@ -83,7 +83,7 @@
     /* Warm gradients */
     --gradient-editorial: linear-gradient(135deg, hsl(var(--background)), hsl(var(--card)));
     --gradient-surface: linear-gradient(180deg, hsl(36 22% 90%), hsl(var(--card)));
-    --gradient-subtle-accent: linear-gradient(135deg, hsl(var(--color-olive) / 0.08), hsl(var(--color-taupe) / 0.05));
+    --gradient-subtle-accent: linear-gradient(135deg, hsl(var(--primary) / 0.08), hsl(var(--color-taupe) / 0.05));
     --gradient-cta: linear-gradient(135deg, hsl(var(--color-taupe)), hsl(var(--primary)));
     --gradient-warm: linear-gradient(135deg, hsl(var(--color-dusty-rose) / 0.1), hsl(var(--color-goldenrod) / 0.08));
 
