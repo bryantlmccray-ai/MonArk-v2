@@ -230,7 +230,7 @@ export const PrivacyDataPortal: React.FC = () => {
               <p className="text-foreground/80 text-sm font-medium">
                 Are you absolutely sure you want to delete your account? This will permanently remove:
               </p>
-              <ul className="text-muted-foreground text-xs space-y-1 ml-4">
+              <ul className="text-foreground/70 text-xs space-y-1 ml-4 font-medium">
                 <li>• Your entire profile and all photos</li>
                 <li>• All conversations, matches, and connections</li>
                 <li>• Date journal entries and reflections</li>
