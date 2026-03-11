@@ -350,7 +350,7 @@ async function generateDatingPool(supabase: any, userId: string) {
 
   const excludeIds = [userId, ...(curatedMatches?.map((m: any) => m.matched_user_id) || [])];
 
-  const { data: candidates, error } = await supabase
+  let { data: candidates, error } = await supabase
     .from('user_profiles')
     .select('user_id, age, location, interests, gender_identity, sexual_orientation')
     .eq('is_profile_complete', true)
@@ -359,6 +359,24 @@ async function generateDatingPool(supabase: any, userId: string) {
     .limit(50);
 
   if (error) throw error;
+
+  // Fallback: if candidate pool is too small, relax filters (drop age_verified requirement)
+  if (!candidates || candidates.length < 10) {
+    console.log(`Small pool (${candidates?.length || 0}), relaxing filters for user ${userId}`);
+    const { data: fallbackCandidates, error: fbError } = await supabase
+      .from('user_profiles')
+      .select('user_id, age, location, interests, gender_identity, sexual_orientation')
+      .eq('is_profile_complete', true)
+      .not('user_id', 'in', `(${excludeIds.join(',')})`)
+      .limit(50);
+
+    if (!fbError && fallbackCandidates) {
+      // Merge without duplicates
+      const existingIds = new Set(candidates?.map((c: any) => c.user_id) || []);
+      const newCandidates = fallbackCandidates.filter((c: any) => !existingIds.has(c.user_id));
+      candidates = [...(candidates || []), ...newCandidates];
+    }
+  }
 
   const scored = (candidates || []).map((candidate: any) => ({
     ...candidate,
