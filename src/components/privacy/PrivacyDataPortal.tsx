@@ -115,10 +115,10 @@ export const PrivacyDataPortal: React.FC = () => {
             <Download className="h-5 w-5 text-primary mt-1" />
             <div className="flex-1">
               <h3 className="text-foreground font-semibold">Access My Data</h3>
-              <p className="text-muted-foreground text-sm mt-1 font-medium">
+              <p className="text-foreground/80 text-sm mt-1 font-medium">
                 Download a complete copy of all personal data associated with your account in a machine-readable format.
               </p>
-              <ul className="text-muted-foreground text-xs mt-2 space-y-1">
+              <ul className="text-foreground/70 text-xs mt-2 space-y-1 font-medium">
                 <li>• Profile information and photos</li>
                 <li>• Dating preferences and style</li>
                 <li>• Journal entries and reflections</li>
