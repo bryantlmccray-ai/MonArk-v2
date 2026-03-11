@@ -510,7 +510,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-goldenrod text-jet-black hover:bg-goldenrod/90 min-w-[140px]"
+                  className="font-semibold min-w-[140px]"
                 >
                   {isSubmitting ? (
                     <div className="flex items-center gap-2">
