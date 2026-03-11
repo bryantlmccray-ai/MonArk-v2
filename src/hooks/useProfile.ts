@@ -136,19 +136,30 @@ export const useProfile = () => {
         .eq('user_id', user.id)
         .maybeSingle();
 
-      if (fetchError) throw fetchError;
+      if (fetchError) {
+        console.error('[useProfile] Error checking existing profile:', fetchError);
+        throw fetchError;
+      }
 
       if (!existing) {
+        console.log('[useProfile] No existing profile, inserting new one');
         const { error } = await supabase
           .from('user_profiles')
           .insert({ user_id: user.id, ...updateData });
-        if (error) throw error;
+        if (error) {
+          console.error('[useProfile] Insert error:', error);
+          throw error;
+        }
       } else {
+        console.log('[useProfile] Updating existing profile, is_profile_complete:', updateData.is_profile_complete);
         const { error } = await supabase
           .from('user_profiles')
           .update({ ...updateData, updated_at: new Date().toISOString() })
           .eq('user_id', user.id);
-        if (error) throw error;
+        if (error) {
+          console.error('[useProfile] Update error:', error);
+          throw error;
+        }
       }
 
       return updates;
