@@ -313,12 +313,12 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="lookingFor" className="text-white text-sm">Looking for... *</Label>
+                <Label htmlFor="lookingFor" className="text-foreground text-sm font-semibold">Looking for... *</Label>
                 <Input
                   id="lookingFor"
                   value={formData.lookingFor}
                   onChange={(e) => handleInputChange('lookingFor', e.target.value)}
-                  className={`bg-white border-gray-700 text-black ${fieldErrors.lookingFor ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}
+                  className={`bg-background border-border text-foreground ${fieldErrors.lookingFor ? 'border-destructive ring-2 ring-destructive/50' : ''}`}
                   placeholder="e.g. Women, Men, Everyone"
                   disabled={isSubmitting}
                   maxLength={100}
