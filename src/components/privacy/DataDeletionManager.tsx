@@ -132,8 +132,8 @@ export const DataDeletionManager: React.FC = () => {
           <div className="flex items-start gap-4">
             <Download className="h-6 w-6 text-accent flex-shrink-0 mt-1" />
             <div className="flex-1">
-              <h3 className="text-card-foreground font-medium mb-2">Export Your Data</h3>
-              <p className="text-muted-foreground text-sm mb-4">
+              <h3 className="text-foreground font-semibold mb-2">Export Your Data</h3>
+              <p className="text-foreground/80 text-sm mb-4 font-medium">
                 Download a complete copy of all your personal data stored in MonArk. 
                 This includes your profile, preferences, journal entries, and interaction history.
               </p>
