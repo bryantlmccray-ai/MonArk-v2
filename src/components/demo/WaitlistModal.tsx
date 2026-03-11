@@ -202,7 +202,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="lastName" className="text-white text-sm">Last Name</Label>
+                <Label htmlFor="lastName" className="text-foreground text-sm font-semibold">Last Name</Label>
                 <Input
                   id="lastName"
                   type="text"
