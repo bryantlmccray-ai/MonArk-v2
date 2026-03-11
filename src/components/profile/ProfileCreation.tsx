@@ -197,7 +197,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
 
   const handleComplete = async () => {
     try {
-      console.log('Completing profile with data:', profileData);
+      console.log('[ProfileCreation] Starting profile save...');
       
       // Prepare the profile data for database update
       const updateData: any = {
@@ -210,7 +210,6 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
           timeOfDay: profileData.timeOfDay,
           activityType: profileData.activityType,
         },
-        // Add lifestyle fields
         occupation: profileData.occupation,
         education_level: profileData.education_level,
         relationship_goals: profileData.relationship_goals,
@@ -218,7 +217,6 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
         smoking_status: profileData.smoking_status,
         drinking_status: profileData.drinking_status,
         height_cm: profileData.height_cm,
-        // Set default age if not set (for profiles that bypassed age verification)
         age: profile?.age || 25,
         is_profile_complete: true,
       };
@@ -236,17 +234,18 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
         updateData.identity_visibility = identityPreferences.identityVisibility;
       }
 
+      console.log('[ProfileCreation] Sending update with is_profile_complete:', updateData.is_profile_complete);
       const success = await updateProfile(updateData);
 
       if (success) {
-        console.log('Profile completed successfully');
+        console.log('[ProfileCreation] Profile saved successfully');
         toast({
           title: "Profile completed!",
           description: "Your profile has been saved successfully.",
         });
         onComplete();
       } else {
-        console.error('Failed to save profile');
+        console.error('[ProfileCreation] updateProfile returned false');
         toast({
           title: "Save failed",
           description: "There was an error saving your profile. Please try again.",
@@ -254,7 +253,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
         });
       }
     } catch (error) {
-      console.error('Error saving profile:', error);
+      console.error('[ProfileCreation] Error saving profile:', error);
       toast({
         title: "Save failed",
         description: "There was an error saving your profile. Please try again.",
