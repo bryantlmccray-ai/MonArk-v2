@@ -2580,33 +2580,6 @@ export type Database = {
         }
         Relationships: []
       }
-      user_reports_masked: {
-        Row: {
-          created_at: string | null
-          id: string | null
-          report_type: string | null
-          reported_user_id: string | null
-          status: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string | null
-          report_type?: string | null
-          reported_user_id?: string | null
-          status?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string | null
-          report_type?: string | null
-          reported_user_id?: string | null
-          status?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
     }
     Functions: {
       atomic_share_contact: {
@@ -2653,6 +2626,16 @@ export type Database = {
           state: string
           transit_score: number
           walkability_score: number
+        }[]
+      }
+      get_reports_against_me: {
+        Args: never
+        Returns: {
+          created_at: string
+          id: string
+          report_type: string
+          status: string
+          updated_at: string
         }[]
       }
       has_mutual_match: {
