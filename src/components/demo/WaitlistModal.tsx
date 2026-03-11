@@ -333,9 +333,9 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="relationshipGoal" className="text-white text-sm">What are you looking for? *</Label>
+              <Label htmlFor="relationshipGoal" className="text-foreground text-sm font-semibold">What are you looking for? *</Label>
               <Select value={formData.relationshipGoal} onValueChange={(val) => handleInputChange('relationshipGoal', val)} disabled={isSubmitting}>
-                <SelectTrigger className={`bg-white border-gray-700 text-black ${fieldErrors.relationshipGoal ? 'border-red-500 ring-2 ring-red-500/50' : ''}`}>
+                <SelectTrigger className={`bg-background border-border text-foreground ${fieldErrors.relationshipGoal ? 'border-destructive ring-2 ring-destructive/50' : ''}`}>
                   <SelectValue placeholder="Select your goal" />
                 </SelectTrigger>
                 <SelectContent>
