@@ -140,7 +140,7 @@ export const useJournalEngagement = () => {
         id: 'ten_entries',
         title: 'Experienced Dater',
         description: 'Complete 10 journal entries',
-        icon: '💫',
+        icon: 'sparkles',
         unlocked: totalEntries >= 10,
         progress: Math.min(totalEntries, 10),
         maxProgress: 10,
