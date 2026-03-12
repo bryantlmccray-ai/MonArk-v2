@@ -165,7 +165,7 @@ export const useJournalEngagement = () => {
         id: 'month_streak',
         title: 'Dedication Master',
         description: 'Maintain a 30-day journaling streak',
-        icon: '🏆',
+        icon: 'trophy',
         unlocked: streak >= 30,
         progress: Math.min(streak, 30),
         maxProgress: 30,

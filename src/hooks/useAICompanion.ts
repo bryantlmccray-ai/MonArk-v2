@@ -138,7 +138,7 @@ export const useAICompanion = () => {
       return {
         id: `celebration_${Date.now()}`,
         type: 'celebration',
-        content: "Amazing work on your dating journey! Keep being awesome! 🌟",
+        content: "Amazing work on your dating journey! Keep being awesome!",
         timestamp: new Date().toISOString()
       };
     }

@@ -268,7 +268,7 @@ export const useDateConcierge = () => {
       await fetchJournalEntries();
 
       toast({
-        title: "Journal entry saved! 📝",
+        title: "Journal entry saved!",
         description: "Your date experience has been recorded.",
       });
     } catch (error) {

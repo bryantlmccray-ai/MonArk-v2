@@ -5,7 +5,7 @@ import { VendorBrowser } from './VendorBrowser';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { RefreshCw, Calendar, MessageSquare, Copy, Check, Phone, Store } from 'lucide-react';
+import { RefreshCw, Calendar, MessageSquare, Copy, Check, Phone, Store, MapPin } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
