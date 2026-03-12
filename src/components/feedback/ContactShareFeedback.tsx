@@ -239,7 +239,7 @@ export const ContactShareFeedback = ({
       <DialogContent className="max-w-sm">
         <DialogHeader>
           <DialogTitle className="text-center">
-            Quick Check-in 💭
+            Quick Check-in
           </DialogTitle>
         </DialogHeader>
 

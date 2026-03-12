@@ -347,7 +347,7 @@ What would you like to talk about? 😊`,
       case 'update_preferences':
         // Extract question from message content and set it as input
         if (messageContent) {
-          const question = messageContent.replace('💭 "', '').replace('"', '');
+          const question = messageContent.replace('"', '').replace('"', '');
           setUserInput(question);
         }
         break;
