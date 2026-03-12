@@ -131,7 +131,7 @@ export const useJournalEngagement = () => {
         id: 'week_streak',
         title: 'Consistent Reflector',
         description: 'Maintain a 7-day journaling streak',
-        icon: '🔥',
+        icon: 'flame',
         unlocked: streak >= 7,
         progress: Math.min(streak, 7),
         maxProgress: 7,
