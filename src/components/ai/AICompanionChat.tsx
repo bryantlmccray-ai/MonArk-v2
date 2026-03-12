@@ -332,7 +332,7 @@ What would you like to talk about? 😊`,
             const starterMessage: AIMessage = {
               id: `starter_${Date.now()}_${index}`,
               type: 'suggestion',
-              content: `💭 "${question}"`,
+              content: `"${question}"`,
               timestamp: new Date().toISOString(),
               actionable: true,
               action: {
