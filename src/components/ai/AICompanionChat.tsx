@@ -158,7 +158,7 @@ What would you like to talk about? 😊`,
         insights.push({
           id: `celebration_${Date.now()}`,
           type: 'celebration',
-          content: `Amazing work! Your recent dates have been averaging ${userData.averageRating.toFixed(1)} stars. You're clearly connecting well with people - I'm seeing real growth in how you approach dating! 🎉`,
+          content: `Amazing work! Your recent dates have been averaging ${userData.averageRating.toFixed(1)} stars. You're clearly connecting well with people - I'm seeing real growth in how you approach dating!`,
           timestamp: now,
         });
       }
