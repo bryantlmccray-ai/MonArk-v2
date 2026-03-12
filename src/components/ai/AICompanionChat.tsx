@@ -200,7 +200,7 @@ What would you like to talk about? 😊`,
       insights.push({
         id: `milestone_ten_${Date.now()}`,
         type: 'celebration',
-        content: `Wow, 10 dates! You've been putting yourself out there consistently. I'm seeing patterns in what works for you - want me to share what I've learned about your ideal dating style? 🏆`,
+        content: `Wow, 10 dates! You've been putting yourself out there consistently. I'm seeing patterns in what works for you - want me to share what I've learned about your ideal dating style?`,
         timestamp: now,
         actionable: true,
         action: {

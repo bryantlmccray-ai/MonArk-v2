@@ -149,8 +149,9 @@ export const WeeklyOptionsList = () => {
                   </div>
                 )}
                 {createdItinerary.itinerary?.location_data?.address && (
-                  <div className="text-sm text-muted-foreground">
-                    📍 {createdItinerary.itinerary.location_data.address}
+                  <div className="text-sm text-muted-foreground flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5" />
+                    {createdItinerary.itinerary.location_data.address}
                   </div>
                 )}
               </div>

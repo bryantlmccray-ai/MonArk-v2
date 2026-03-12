@@ -48,7 +48,7 @@ export const DebriefOverlay: React.FC<DebriefOverlayProps> = ({ onClose }) => {
                     star <= vibe ? 'text-primary' : 'text-muted'
                   } hover:text-primary transition-colors`}
                 >
-                  ⭐
+                  ★
                 </button>
               ))}
             </div>

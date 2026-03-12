@@ -201,7 +201,7 @@ export const AIConciergeModal: React.FC<AIConciergeModalProps> = ({
       </div>
       <div>
         <h3 className="text-2xl font-light text-foreground mb-3 tracking-wide">
-          Date proposal sent! 🎉
+          Date proposal sent!
         </h3>
         <p className="text-muted-foreground text-sm max-w-sm mx-auto leading-relaxed font-medium">
           {matchName} will receive your thoughtful date idea. 

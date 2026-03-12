@@ -113,7 +113,7 @@ export const AfterDateFeedback = ({
             data: { match_user_id: matchId, itinerary_id: itinId }
           });
 
-        toast.success('🎉 Second-Meet Credit unlocked! You both had a great time.');
+        toast.success('Second-Meet Credit unlocked! You both had a great time.');
       }
     } catch (error) {
       console.error('Error checking second-meet credit:', error);

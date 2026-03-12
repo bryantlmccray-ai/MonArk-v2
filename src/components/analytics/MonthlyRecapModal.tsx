@@ -337,7 +337,7 @@ const ShareSlide: React.FC<{ insights: MonthlyInsights }> = ({ insights }) => (
     </div>
     <div className="bg-primary/5 rounded-xl p-4 border border-primary/20">
       <div className="text-lg font-medium text-foreground mb-2">
-        "I made {insights.shareableStats.connectionsGrown} new connections and reached {insights.shareableStats.milestonesReached} growth milestones on MonArk this month! 🌟"
+        "I made {insights.shareableStats.connectionsGrown} new connections and reached {insights.shareableStats.milestonesReached} growth milestones on MonArk this month!"
       </div>
       <div className="text-sm text-primary font-semibold">
         #{insights.datingPersona.replace(/\s+/g, '')} #MonArkMoments

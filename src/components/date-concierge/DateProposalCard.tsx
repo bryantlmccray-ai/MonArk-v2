@@ -178,7 +178,7 @@ export const DateProposalCard: React.FC<DateProposalCardProps> = ({
               disabled={isUpdating}
               className="w-full bg-purple-600 hover:bg-purple-700 text-white"
             >
-              Mark as Completed 🎉
+              Mark as Completed
             </Button>
           </div>
         )}
