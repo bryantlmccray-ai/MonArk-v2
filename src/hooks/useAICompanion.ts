@@ -103,7 +103,7 @@ export const useAICompanion = () => {
       return {
         id: `celebration_${Date.now()}`,
         type: 'celebration',
-        content: "Congratulations on your milestone! 🎉",
+        content: "Congratulations on your milestone!",
         timestamp: new Date().toISOString()
       };
     }
