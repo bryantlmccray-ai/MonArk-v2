@@ -162,7 +162,7 @@ export const CloseTheLoopCard: React.FC<CloseTheLoopCardProps> = ({
                   <>
                     <div className="text-center">
                       <h4 className="text-foreground font-semibold text-base">
-                        {feeling === 'great' ? '✨ Great! Take the next step' : 'Want to explore further?'}
+                        {feeling === 'great' ? 'Great! Take the next step' : 'Want to explore further?'}
                       </h4>
                       <p className="text-foreground/60 text-sm mt-1 font-medium">
                         Quick suggestions to keep the momentum

@@ -138,7 +138,7 @@ export const ShareableMilestoneCard: React.FC<ShareableMilestoneCardProps> = ({
           await navigator.share({
             files: [file],
             title: 'MonArk Milestone',
-            text: `${headline} ✨ #MonArk #DatingJourney`
+            text: `${headline} #MonArk #DatingJourney`
           });
           
           setShareSuccess(true);

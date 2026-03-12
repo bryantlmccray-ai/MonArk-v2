@@ -171,7 +171,7 @@ export const DateJournalEntryComponent: React.FC<DateJournalEntryProps> = ({
           <div className="flex space-x-3 pt-4">
             <Button type="button" onClick={onClose} variant="outline" className="flex-1">Cancel</Button>
             <Button type="submit" disabled={isSaving || !formData.partner_name || !formData.date_title || !formData.date_activity} className="flex-1">
-              {isSaving ? 'Saving...' : 'Save Entry'} ✨
+              {isSaving ? 'Saving...' : 'Save Entry'}
             </Button>
           </div>
         </form>

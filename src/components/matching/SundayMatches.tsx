@@ -327,7 +327,7 @@ export const SundayMatches = () => {
         <div className="bg-card border-b border-border px-4 py-3">
           <div className="max-w-2xl mx-auto text-center">
             <p className="text-sm text-muted-foreground">
-              ✨ <span className="font-medium text-foreground">Preview Mode</span> — These are example matches to show you what to expect
+              <span className="font-medium text-foreground">Preview Mode</span> — These are example matches to show you what to expect
             </p>
           </div>
         </div>

@@ -108,7 +108,7 @@ export const AIConciergeModal: React.FC<AIConciergeModalProps> = ({
           onClick={handleGenerateProposal}
           className="flex-1"
         >
-          Let's Plan This! ✨
+          Let's Plan This!
         </Button>
       </div>
     </div>
