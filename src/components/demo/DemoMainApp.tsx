@@ -54,7 +54,7 @@ export const DemoMainApp: React.FC<DemoMainAppProps> = ({ onClose }) => {
               <h3 className="text-lg font-semibold text-white">Art Gallery</h3>
               <p className="text-goldenrod text-sm">Cultural, engaging</p>
             </div>
-            <span className="text-2xl">🎨</span>
+            <Palette className="h-6 w-6 text-primary" />
           </div>
           <p className="text-gray-300 text-sm mb-4">Explore a local gallery together - great conversation starters.</p>
           <div className="flex flex-wrap gap-2">
