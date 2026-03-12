@@ -156,7 +156,7 @@ export const useJournalEngagement = () => {
         id: 'diverse_activities',
         title: 'Adventure Seeker',
         description: 'Try 10 different types of activities',
-        icon: '🎯',
+        icon: 'target',
         unlocked: uniqueActivities >= 10,
         progress: Math.min(uniqueActivities, 10),
         maxProgress: 10,
