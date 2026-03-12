@@ -146,7 +146,7 @@ What would you like to talk about? 😊`,
         insights.push({
           id: `pattern_${Date.now()}`,
           type: 'insight',
-          content: `Hey! I've noticed something interesting about your dating pattern... You've been gravitating toward ${uniqueActivities[0]} activities. While consistency shows you know what you like, mixing things up could reveal new sides of your personality to potential matches! 🌟`,
+          content: `Hey! I've noticed something interesting about your dating pattern... You've been gravitating toward ${uniqueActivities[0]} activities. While consistency shows you know what you like, mixing things up could reveal new sides of your personality to potential matches!`,
           timestamp: now,
           actionable: true,
           action: {
