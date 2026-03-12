@@ -93,7 +93,7 @@ export const useAICompanion = () => {
       return data.message || "I'm here to help you with your dating journey! What's on your mind?";
     } catch (error) {
       console.error('Error generating AI response:', error);
-      return "I'm recharging my thoughts right now 🌙 Check back in a moment — I'll be ready to help!";
+      return "I'm recharging my thoughts right now. Check back in a moment — I'll be ready to help!";
     }
   };
 
