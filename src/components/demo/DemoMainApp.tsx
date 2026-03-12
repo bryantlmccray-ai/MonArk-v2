@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDemo } from '@/contexts/DemoContext';
 import { Button } from '@/components/ui/button';
-import { X, MessageCircle, Calendar, User, BookOpen } from 'lucide-react';
+import { X, MessageCircle, Calendar, User, BookOpen, Coffee, Palette, TreeDeciduous } from 'lucide-react';
 
 interface DemoMainAppProps {
   onClose: () => void;
