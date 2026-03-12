@@ -87,7 +87,7 @@ export const useAICompanion = () => {
 
       // If circuit breaker is open, the backend returns a warm resting message
       if (data.circuit_breaker === 'open') {
-        return data.message || "I'm taking a quick rest — back soon with fresh insights! 💫";
+        return data.message || "I'm taking a quick rest — back soon with fresh insights!";
       }
 
       return data.message || "I'm here to help you with your dating journey! What's on your mind?";
