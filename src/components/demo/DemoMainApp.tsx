@@ -40,7 +40,7 @@ export const DemoMainApp: React.FC<DemoMainAppProps> = ({ onClose }) => {
               <h3 className="text-lg font-semibold text-white">Coffee Walk</h3>
               <p className="text-goldenrod text-sm">Low-key, conversation-focused</p>
             </div>
-            <span className="text-2xl">☕</span>
+            <Coffee className="h-6 w-6 text-primary" />
           </div>
           <p className="text-gray-300 text-sm mb-4">A relaxed coffee walk through the park - perfect for deep conversations.</p>
           <div className="flex flex-wrap gap-2">
