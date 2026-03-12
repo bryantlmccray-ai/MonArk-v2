@@ -182,7 +182,7 @@ What would you like to talk about? 😊`,
         insights.push({
           id: `rif_readiness_${Date.now()}`,
           type: 'insight',
-          content: `Your emotional readiness score is really strong! I can tell you're in a great headspace for meaningful connections. This is the perfect time to be open to deeper conversations and experiences. 💫`,
+          content: `Your emotional readiness score is really strong! I can tell you're in a great headspace for meaningful connections. This is the perfect time to be open to deeper conversations and experiences.`,
           timestamp: now,
         });
       }
