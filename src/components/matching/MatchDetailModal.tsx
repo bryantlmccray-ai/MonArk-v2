@@ -223,13 +223,13 @@ export const MatchDetailModal = ({
                 <h3 className="font-semibold text-foreground mb-2">Lifestyle</h3>
                 <div className="flex flex-wrap gap-2">
                   {match.exercise_habits && (
-                    <Badge variant="outline">🏃 {match.exercise_habits}</Badge>
+                    <Badge variant="outline">{match.exercise_habits}</Badge>
                   )}
                   {match.smoking_status && (
-                    <Badge variant="outline">🚭 {match.smoking_status}</Badge>
+                    <Badge variant="outline">{match.smoking_status}</Badge>
                   )}
                   {match.drinking_status && (
-                    <Badge variant="outline">🍷 {match.drinking_status}</Badge>
+                    <Badge variant="outline">{match.drinking_status}</Badge>
                   )}
                 </div>
               </div>

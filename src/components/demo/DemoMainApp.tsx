@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDemo } from '@/contexts/DemoContext';
 import { Button } from '@/components/ui/button';
-import { X, MessageCircle, Calendar, User, BookOpen } from 'lucide-react';
+import { X, MessageCircle, Calendar, User, BookOpen, Coffee, Palette, TreeDeciduous } from 'lucide-react';
 
 interface DemoMainAppProps {
   onClose: () => void;
@@ -40,7 +40,7 @@ export const DemoMainApp: React.FC<DemoMainAppProps> = ({ onClose }) => {
               <h3 className="text-lg font-semibold text-white">Coffee Walk</h3>
               <p className="text-goldenrod text-sm">Low-key, conversation-focused</p>
             </div>
-            <span className="text-2xl">☕</span>
+            <Coffee className="h-6 w-6 text-primary" />
           </div>
           <p className="text-gray-300 text-sm mb-4">A relaxed coffee walk through the park - perfect for deep conversations.</p>
           <div className="flex flex-wrap gap-2">
@@ -54,7 +54,7 @@ export const DemoMainApp: React.FC<DemoMainAppProps> = ({ onClose }) => {
               <h3 className="text-lg font-semibold text-white">Art Gallery</h3>
               <p className="text-goldenrod text-sm">Cultural, engaging</p>
             </div>
-            <span className="text-2xl">🎨</span>
+            <Palette className="h-6 w-6 text-primary" />
           </div>
           <p className="text-gray-300 text-sm mb-4">Explore a local gallery together - great conversation starters.</p>
           <div className="flex flex-wrap gap-2">
@@ -68,7 +68,7 @@ export const DemoMainApp: React.FC<DemoMainAppProps> = ({ onClose }) => {
               <h3 className="text-lg font-semibold text-white">Botanical Garden</h3>
               <p className="text-goldenrod text-sm">Peaceful, scenic</p>
             </div>
-            <span className="text-2xl">🌳</span>
+            <TreeDeciduous className="h-6 w-6 text-primary" />
           </div>
           <p className="text-gray-300 text-sm mb-4">Stroll through beautiful gardens at golden hour.</p>
           <div className="flex flex-wrap gap-2">

@@ -146,7 +146,7 @@ What would you like to talk about? 😊`,
         insights.push({
           id: `pattern_${Date.now()}`,
           type: 'insight',
-          content: `Hey! I've noticed something interesting about your dating pattern... You've been gravitating toward ${uniqueActivities[0]} activities. While consistency shows you know what you like, mixing things up could reveal new sides of your personality to potential matches! 🌟`,
+          content: `Hey! I've noticed something interesting about your dating pattern... You've been gravitating toward ${uniqueActivities[0]} activities. While consistency shows you know what you like, mixing things up could reveal new sides of your personality to potential matches!`,
           timestamp: now,
           actionable: true,
           action: {
@@ -158,7 +158,7 @@ What would you like to talk about? 😊`,
         insights.push({
           id: `celebration_${Date.now()}`,
           type: 'celebration',
-          content: `Amazing work! Your recent dates have been averaging ${userData.averageRating.toFixed(1)} stars. You're clearly connecting well with people - I'm seeing real growth in how you approach dating! 🎉`,
+          content: `Amazing work! Your recent dates have been averaging ${userData.averageRating.toFixed(1)} stars. You're clearly connecting well with people - I'm seeing real growth in how you approach dating!`,
           timestamp: now,
         });
       }
@@ -170,7 +170,7 @@ What would you like to talk about? 😊`,
         insights.push({
           id: `rif_pacing_${Date.now()}`,
           type: 'suggestion',
-          content: `I know you prefer taking things slow, which is wonderful for building genuine connections. Ready for a personalized date idea? I have the perfect low-pressure suggestion that matches your style... ✨`,
+          content: `I know you prefer taking things slow, which is wonderful for building genuine connections. Ready for a personalized date idea? I have the perfect low-pressure suggestion that matches your style...`,
           timestamp: now,
           actionable: true,
           action: {
@@ -182,7 +182,7 @@ What would you like to talk about? 😊`,
         insights.push({
           id: `rif_readiness_${Date.now()}`,
           type: 'insight',
-          content: `Your emotional readiness score is really strong! I can tell you're in a great headspace for meaningful connections. This is the perfect time to be open to deeper conversations and experiences. 💫`,
+          content: `Your emotional readiness score is really strong! I can tell you're in a great headspace for meaningful connections. This is the perfect time to be open to deeper conversations and experiences.`,
           timestamp: now,
         });
       }
@@ -193,14 +193,14 @@ What would you like to talk about? 😊`,
       insights.push({
         id: `milestone_first_${Date.now()}`,
         type: 'celebration',
-        content: `Congratulations on your first journal entry! Taking time to reflect after dates shows real emotional intelligence. This is going to help you grow so much in your dating journey. 🌱`,
+        content: `Congratulations on your first journal entry! Taking time to reflect after dates shows real emotional intelligence. This is going to help you grow so much in your dating journey.`,
         timestamp: now,
       });
     } else if (userData.totalDates === 10) {
       insights.push({
         id: `milestone_ten_${Date.now()}`,
         type: 'celebration',
-        content: `Wow, 10 dates! You've been putting yourself out there consistently. I'm seeing patterns in what works for you - want me to share what I've learned about your ideal dating style? 🏆`,
+        content: `Wow, 10 dates! You've been putting yourself out there consistently. I'm seeing patterns in what works for you - want me to share what I've learned about your ideal dating style?`,
         timestamp: now,
         actionable: true,
         action: {
@@ -332,7 +332,7 @@ What would you like to talk about? 😊`,
             const starterMessage: AIMessage = {
               id: `starter_${Date.now()}_${index}`,
               type: 'suggestion',
-              content: `💭 "${question}"`,
+              content: `"${question}"`,
               timestamp: new Date().toISOString(),
               actionable: true,
               action: {
@@ -347,7 +347,7 @@ What would you like to talk about? 😊`,
       case 'update_preferences':
         // Extract question from message content and set it as input
         if (messageContent) {
-          const question = messageContent.replace('💭 "', '').replace('"', '');
+          const question = messageContent.replace('"', '').replace('"', '');
           setUserInput(question);
         }
         break;

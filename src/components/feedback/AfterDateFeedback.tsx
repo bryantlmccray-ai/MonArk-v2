@@ -108,12 +108,12 @@ export const AfterDateFeedback = ({
           .insert({
             user_id: userId,
             type: 'second_meet_credit',
-            title: '🎉 Second-Meet Credit Unlocked!',
+            title: 'Second-Meet Credit Unlocked!',
             message: `You and ${matchName} both had a great time! Enjoy a bonus match credit.`,
             data: { match_user_id: matchId, itinerary_id: itinId }
           });
 
-        toast.success('🎉 Second-Meet Credit unlocked! You both had a great time.');
+        toast.success('Second-Meet Credit unlocked! You both had a great time.');
       }
     } catch (error) {
       console.error('Error checking second-meet credit:', error);

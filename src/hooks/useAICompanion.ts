@@ -87,13 +87,13 @@ export const useAICompanion = () => {
 
       // If circuit breaker is open, the backend returns a warm resting message
       if (data.circuit_breaker === 'open') {
-        return data.message || "I'm taking a quick rest — back soon with fresh insights! 💫";
+        return data.message || "I'm taking a quick rest — back soon with fresh insights!";
       }
 
       return data.message || "I'm here to help you with your dating journey! What's on your mind?";
     } catch (error) {
       console.error('Error generating AI response:', error);
-      return "I'm recharging my thoughts right now 🌙 Check back in a moment — I'll be ready to help!";
+      return "I'm recharging my thoughts right now. Check back in a moment — I'll be ready to help!";
     }
   };
 
@@ -103,7 +103,7 @@ export const useAICompanion = () => {
       return {
         id: `celebration_${Date.now()}`,
         type: 'celebration',
-        content: "Congratulations on your milestone! 🎉",
+        content: "Congratulations on your milestone!",
         timestamp: new Date().toISOString()
       };
     }
@@ -138,7 +138,7 @@ export const useAICompanion = () => {
       return {
         id: `celebration_${Date.now()}`,
         type: 'celebration',
-        content: "Amazing work on your dating journey! Keep being awesome! 🌟",
+        content: "Amazing work on your dating journey! Keep being awesome!",
         timestamp: new Date().toISOString()
       };
     }
