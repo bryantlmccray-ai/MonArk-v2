@@ -108,7 +108,7 @@ export const AfterDateFeedback = ({
           .insert({
             user_id: userId,
             type: 'second_meet_credit',
-            title: '🎉 Second-Meet Credit Unlocked!',
+            title: 'Second-Meet Credit Unlocked!',
             message: `You and ${matchName} both had a great time! Enjoy a bonus match credit.`,
             data: { match_user_id: matchId, itinerary_id: itinId }
           });
