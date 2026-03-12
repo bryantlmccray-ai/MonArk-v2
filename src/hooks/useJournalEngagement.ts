@@ -149,7 +149,7 @@ export const useJournalEngagement = () => {
         id: 'high_ratings',
         title: 'Quality Connections',
         description: 'Maintain an average rating above 4',
-        icon: '⭐',
+        icon: 'star',
         unlocked: averageRating >= 4 && totalEntries >= 5,
       },
       {
