@@ -198,7 +198,7 @@ export const useDateConcierge = () => {
       if (error) throw error;
 
       toast({
-        title: "Date idea generated! 🎉",
+        title: "Date idea generated!",
         description: "Your AI concierge has crafted a personalized date proposal.",
       });
 
