@@ -193,7 +193,7 @@ What would you like to talk about? 😊`,
       insights.push({
         id: `milestone_first_${Date.now()}`,
         type: 'celebration',
-        content: `Congratulations on your first journal entry! Taking time to reflect after dates shows real emotional intelligence. This is going to help you grow so much in your dating journey. 🌱`,
+        content: `Congratulations on your first journal entry! Taking time to reflect after dates shows real emotional intelligence. This is going to help you grow so much in your dating journey.`,
         timestamp: now,
       });
     } else if (userData.totalDates === 10) {
