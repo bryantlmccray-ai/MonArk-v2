@@ -187,7 +187,7 @@ export const AIConciergeModal: React.FC<AIConciergeModalProps> = ({
             onClick={handleSendProposal}
             className="flex-1"
           >
-            Send to {matchName} 💫
+            Send to {matchName}
           </Button>
         </div>
       </div>
