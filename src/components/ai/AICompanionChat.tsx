@@ -170,7 +170,7 @@ What would you like to talk about? 😊`,
         insights.push({
           id: `rif_pacing_${Date.now()}`,
           type: 'suggestion',
-          content: `I know you prefer taking things slow, which is wonderful for building genuine connections. Ready for a personalized date idea? I have the perfect low-pressure suggestion that matches your style... ✨`,
+          content: `I know you prefer taking things slow, which is wonderful for building genuine connections. Ready for a personalized date idea? I have the perfect low-pressure suggestion that matches your style...`,
           timestamp: now,
           actionable: true,
           action: {
