@@ -124,7 +124,7 @@ export const useJournalEngagement = () => {
         id: 'first_entry',
         title: 'First Steps',
         description: 'Complete your first journal entry',
-        icon: '📝',
+        icon: 'pencil',
         unlocked: totalEntries >= 1,
       },
       {
