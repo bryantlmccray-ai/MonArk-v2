@@ -167,10 +167,10 @@ export const useCuratedMatches = () => {
       const match = matches.find(m => m.id === matchId);
       if (!match) throw new Error('Match not found');
 
-      const { error } = await supabase
-        .from('curated_matches' as any)
-        .update({ status: 'accepted', responded_at: new Date().toISOString() })
-        .eq('id', matchId);
+      const { error } = await supabase.rpc('respond_to_curated_match' as any, {
+        p_match_id: matchId,
+        p_status: 'accepted'
+      });
       if (error) throw error;
 
       const { data: mutualCheck } = await supabase.rpc('check_mutual_match', {
