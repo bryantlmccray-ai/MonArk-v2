@@ -260,6 +260,71 @@ serve(async (req) => {
       });
     }
 
+    // ── AUTO-GENERATE PATH (on mutual match) ─────────────────
+    if (requestData.autoGenerate) {
+      try {
+        const serviceClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+        // Fetch both profiles for better matching
+        const { data: userProfile } = await serviceClient
+          .from('user_profiles')
+          .select('interests, location, bio')
+          .eq('user_id', user.id)
+          .single();
+
+        const { data: matchProfile } = await serviceClient
+          .from('user_profiles')
+          .select('interests, bio')
+          .eq('user_id', requestData.matchUserId)
+          .single();
+
+        // Enrich request with real profile data
+        const enrichedRequest = {
+          ...requestData,
+          userInterests: userProfile?.interests || [],
+          matchInterests: matchProfile?.interests || [],
+          userLocation: userProfile?.location || undefined,
+        };
+
+        const proposal = generateProposal(enrichedRequest);
+        recordSuccess();
+
+        // Auto-save the proposal to the database
+        const { error: insertError } = await serviceClient
+          .from('date_proposals')
+          .insert({
+            creator_user_id: user.id,
+            recipient_user_id: requestData.matchUserId,
+            conversation_id: requestData.conversationId,
+            title: proposal.title,
+            activity: proposal.activity,
+            location_type: proposal.location_type,
+            vibe: proposal.vibe,
+            time_suggestion: proposal.time_suggestion,
+            rationale: proposal.rationale,
+            ai_generated: true,
+            proposal_data: proposal,
+          });
+
+        if (insertError) {
+          console.error('Error auto-saving date proposal:', insertError);
+        } else {
+          console.log('Auto-generated date proposal saved:', proposal.title);
+        }
+
+        return new Response(JSON.stringify({ success: true, proposal }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      } catch (autoErr) {
+        recordFailure();
+        console.error('Auto-generate error:', autoErr);
+        return new Response(JSON.stringify({ success: false, error: 'Auto-generation failed' }), {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
     // ── SYNC PATH (default, fast rule-based) ────────────────────
     try {
       const proposal = generateProposal(requestData);
