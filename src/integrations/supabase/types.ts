@@ -2684,6 +2684,10 @@ export type Database = {
           fuzzed_lng: number
         }[]
       }
+      get_conversation_partner_name: {
+        Args: { p_partner_id: string }
+        Returns: string
+      }
       get_discoverable_profiles: {
         Args: never
         Returns: {
