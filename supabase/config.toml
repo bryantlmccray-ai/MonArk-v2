@@ -1,67 +1,70 @@
 project_id = "yjidsifrdmaxubkmqung"
 
 [functions.ai-companion-chat]
-verify_jwt = true
+verify_jwt = false
 
 [functions.ai-date-concierge]
-verify_jwt = true
+verify_jwt = false
 
 [functions.ml-compatibility-trainer]
-verify_jwt = true
+verify_jwt = false
 
 [functions.rif-engine]
-verify_jwt = true
+verify_jwt = false
 
 [functions.send-notification-email]
-verify_jwt = true
+verify_jwt = false
 
 [functions.google-maps-config]
-verify_jwt = true
+verify_jwt = false
 
 [functions.weekly-scheduler]
-verify_jwt = true
+verify_jwt = false
 
 [functions.create-itinerary]
-verify_jwt = true
+verify_jwt = false
 
 [functions.adaptive-discovery-engine]
-verify_jwt = true
+verify_jwt = false
 
 [functions.waitlist-confirmation-email]
 verify_jwt = false
 
 [functions.waitlist-approval-email]
-verify_jwt = true
+verify_jwt = false
 
 [functions.waitlist-rejection-email]
-verify_jwt = true
+verify_jwt = false
 
 [functions.match-delivery]
-verify_jwt = true
+verify_jwt = false
 
 [functions.share-contact]
-verify_jwt = true
+verify_jwt = false
 
 [functions.check-date-feedback]
-verify_jwt = true
+verify_jwt = false
 
 [functions.security-middleware]
-verify_jwt = true
+verify_jwt = false
 
 [functions.account-deletion]
-verify_jwt = true
+verify_jwt = false
 
 [functions.abuse-detection]
-verify_jwt = true
+verify_jwt = false
 
 [functions.session-invalidation]
-verify_jwt = true
+verify_jwt = false
 
 [functions.validate-upload]
-verify_jwt = true
+verify_jwt = false
 
 [functions.audit-log-rotation]
 verify_jwt = false
 
 [functions.token-refresh-monitor]
+verify_jwt = false
+
+[functions.photo-moderation]
 verify_jwt = false
