@@ -10,6 +10,7 @@ interface MutualMatchModalProps {
   matchName: string;
   matchPhoto?: string;
   onStartChat: () => void;
+  onPlanDate?: () => void;
 }
 
 export const MutualMatchModal = ({
