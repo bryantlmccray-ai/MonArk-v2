@@ -7,9 +7,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
-const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+// SECURITY FIX: No global service_role client — created per-request after auth
 
 interface JourneyStage {
   id: string;
@@ -56,48 +54,63 @@ serve(async (req) => {
   }
 
   try {
-    // Authenticate user
-    const authHeader = req.headers.get('Authorization')
+    // SECURITY FIX: Authenticate user properly
+    const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      throw new Error('Missing authorization header')
+      return new Response(
+        JSON.stringify({ error: 'Authentication required' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser(
-      authHeader.replace('Bearer ', '')
-    )
-    
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+
+    const authClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const { data: { user }, error: authError } = await authClient.auth.getUser();
     if (authError || !user) {
-      throw new Error('Unauthorized')
+      return new Response(
+        JSON.stringify({ error: 'Invalid or expired authentication' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
+
+    // SECURITY FIX: Create service client per-request, not globally
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const { action, data } = await req.json();
     console.log('Adaptive Discovery Engine called with action:', action, 'for user:', user.id);
 
-    // Ensure user can only access their own data
-    if (data?.user_id && data.user_id !== user.id) {
-      throw new Error('Cannot access other users data')
-    }
+    // SECURITY FIX: Force user_id to authenticated user — never trust client
+    const safeUserId = user.id;
 
     let result;
 
     switch (action) {
       case 'analyze_behavioral_patterns':
-        result = await analyzeBehavioralPatterns(data.user_id);
+        result = await analyzeBehavioralPatterns(supabase, safeUserId);
         break;
       case 'update_journey_stage':
-        result = await updateJourneyStage(data.user_id, data.new_stage, data.reason);
+        result = await updateJourneyStage(supabase, safeUserId, data?.new_stage, data?.reason);
         break;
       case 'record_relationship_outcome':
-        result = await recordRelationshipOutcome(data);
+        result = await recordRelationshipOutcome(supabase, { ...data, user_id: safeUserId });
         break;
       case 'generate_adaptive_insights':
-        result = await generateAdaptiveInsights(data.user_id);
+        result = await generateAdaptiveInsights(supabase, safeUserId);
         break;
       case 'update_discovery_preferences':
-        result = await updateDiscoveryPreferences(data.user_id);
+        result = await updateDiscoveryPreferences(supabase, safeUserId);
         break;
       default:
-        throw new Error(`Unknown action: ${action}`);
+        return new Response(
+          JSON.stringify({ error: 'Unknown action' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
     }
 
     return new Response(JSON.stringify({ success: true, data: result }), {
@@ -105,9 +118,10 @@ serve(async (req) => {
     });
 
   } catch (error) {
+    // SECURITY FIX: Never leak error.message to client
     console.error('Error in adaptive discovery engine:', error);
     return new Response(JSON.stringify({ 
-      error: error.message,
+      error: 'An internal error occurred',
       success: false 
     }), {
       status: 500,
@@ -116,10 +130,9 @@ serve(async (req) => {
   }
 });
 
-async function analyzeBehavioralPatterns(userId: string) {
+async function analyzeBehavioralPatterns(supabase: any, userId: string) {
   console.log('Analyzing behavioral patterns for user:', userId);
 
-  // Get user's interaction history
   const { data: feedbackHistory } = await supabase
     .from('user_compatibility_feedback')
     .select('*')
@@ -133,13 +146,8 @@ async function analyzeBehavioralPatterns(userId: string) {
     .eq('user_id', userId)
     .order('created_at', { ascending: false });
 
-  // Analyze communication patterns
   const communicationPattern = analyzeCommunicationPattern(feedbackHistory || []);
-  
-  // Analyze preference evolution
   const preferencePattern = analyzePreferenceEvolution(feedbackHistory || [], relationshipHistory || []);
-  
-  // Analyze dating frequency patterns
   const datingPattern = analyzeDatingFrequency(relationshipHistory || []);
 
   const patterns: BehavioralPattern[] = [
@@ -163,7 +171,6 @@ async function analyzeBehavioralPatterns(userId: string) {
     }
   ];
 
-  // Store patterns
   for (const pattern of patterns) {
     await supabase
       .from('behavioral_patterns')
@@ -185,7 +192,7 @@ function analyzeCommunicationPattern(feedbackHistory: any[]) {
   }
 
   const messageInteractions = feedbackHistory.filter(f => f.interaction_type === 'message');
-  const avgResponseTime = messageInteractions.reduce((acc, curr) => acc + (curr.feedback_score || 5), 0) / messageInteractions.length;
+  const avgResponseTime = messageInteractions.reduce((acc: number, curr: any) => acc + (curr.feedback_score || 5), 0) / messageInteractions.length;
   
   return {
     confidence: Math.min(feedbackHistory.length / 20, 1),
@@ -200,7 +207,6 @@ function analyzePreferenceEvolution(feedbackHistory: any[], relationshipHistory:
     return { confidence: 0.3, insights: ['Building preference profile...'] };
   }
 
-  // Analyze what types of people user actually connects with vs initial preferences
   const likedProfiles = feedbackHistory.filter(f => f.interaction_type === 'like');
   const passedProfiles = feedbackHistory.filter(f => f.interaction_type === 'pass');
   
@@ -223,11 +229,11 @@ function analyzeDatingFrequency(relationshipHistory: any[]) {
 
   const avgDuration = relationshipHistory
     .filter(r => r.duration_days)
-    .reduce((acc, curr) => acc + curr.duration_days, 0) / relationshipHistory.length;
+    .reduce((acc: number, curr: any) => acc + curr.duration_days, 0) / relationshipHistory.length;
 
   const datingFrequency = relationshipHistory.length > 0 ? 
     (Date.now() - new Date(relationshipHistory[relationshipHistory.length - 1].created_at).getTime()) 
-    / (relationshipHistory.length * 30 * 24 * 60 * 60 * 1000) : 0; // relationships per month
+    / (relationshipHistory.length * 30 * 24 * 60 * 60 * 1000) : 0;
 
   return {
     confidence: Math.min(relationshipHistory.length / 10, 1),
@@ -238,39 +244,34 @@ function analyzeDatingFrequency(relationshipHistory: any[]) {
   };
 }
 
-async function updateJourneyStage(userId: string, newStage: string, reason?: string) {
+async function updateJourneyStage(supabase: any, userId: string, newStage: string, reason?: string) {
   console.log('Updating journey stage for user:', userId, 'to:', newStage);
 
-  // End current stage
   await supabase
     .from('user_journey_stages')
-    .update({ 
-      stage_end_date: new Date().toISOString() 
-    })
+    .update({ stage_end_date: new Date().toISOString() })
     .eq('user_id', userId)
     .is('stage_end_date', null);
 
-  // Start new stage
   const { data, error } = await supabase
     .from('user_journey_stages')
     .insert({
       user_id: userId,
       stage: newStage,
       transition_reason: reason,
-      stage_data: { previous_stages: await getPreviousStages(userId) }
+      stage_data: { previous_stages: await getPreviousStages(supabase, userId) }
     })
     .select()
     .single();
 
   if (error) throw error;
 
-  // Trigger adaptive insights generation
-  await generateAdaptiveInsights(userId);
+  await generateAdaptiveInsights(supabase, userId);
 
   return data;
 }
 
-async function recordRelationshipOutcome(outcomeData: RelationshipOutcome) {
+async function recordRelationshipOutcome(supabase: any, outcomeData: RelationshipOutcome) {
   console.log('Recording relationship outcome for user:', outcomeData.user_id);
 
   const { data, error } = await supabase
@@ -281,28 +282,24 @@ async function recordRelationshipOutcome(outcomeData: RelationshipOutcome) {
 
   if (error) throw error;
 
-  // Analyze patterns after new outcome
-  await analyzeBehavioralPatterns(outcomeData.user_id);
+  await analyzeBehavioralPatterns(supabase, outcomeData.user_id);
   
-  // Update journey stage if needed
   if (outcomeData.outcome.includes('ended')) {
-    await updateJourneyStage(outcomeData.user_id, 'healing', 'relationship_ended');
+    await updateJourneyStage(supabase, outcomeData.user_id, 'healing', 'relationship_ended');
   }
 
   return data;
 }
 
-async function generateAdaptiveInsights(userId: string) {
+async function generateAdaptiveInsights(supabase: any, userId: string) {
   console.log('Generating adaptive insights for user:', userId);
 
-  // Get current behavioral patterns
   const { data: patterns } = await supabase
     .from('behavioral_patterns')
     .select('*')
     .eq('user_id', userId)
     .eq('is_active', true);
 
-  // Get current journey stage
   const { data: currentStage } = await supabase
     .from('user_journey_stages')
     .select('*')
@@ -314,7 +311,6 @@ async function generateAdaptiveInsights(userId: string) {
 
   const insights: AdaptiveInsight[] = [];
 
-  // Generate insights based on patterns
   if (patterns) {
     for (const pattern of patterns) {
       const patternInsights = generateInsightsFromPattern(pattern, currentStage?.stage);
@@ -322,23 +318,18 @@ async function generateAdaptiveInsights(userId: string) {
     }
   }
 
-  // Store insights
   for (const insight of insights) {
     await supabase
       .from('adaptive_insights')
-      .insert({
-        ...insight,
-        user_id: userId
-      });
+      .insert({ ...insight, user_id: userId });
   }
 
   return { insights_generated: insights.length, insights };
 }
 
-async function updateDiscoveryPreferences(userId: string) {
+async function updateDiscoveryPreferences(supabase: any, userId: string) {
   console.log('Updating discovery preferences for user:', userId);
 
-  // Get successful relationship patterns
   const { data: successfulOutcomes } = await supabase
     .from('relationship_outcomes')
     .select('*')
@@ -349,33 +340,29 @@ async function updateDiscoveryPreferences(userId: string) {
     return { message: 'Not enough data to update preferences' };
   }
 
-  // Extract common characteristics from successful relationships
   const preferenceUpdates = extractPreferenceUpdates(successfulOutcomes);
 
-  // Update user's ML preferences
   await supabase
     .from('user_ml_preferences')
     .upsert({
       user_id: userId,
       ...preferenceUpdates,
       updated_at: new Date().toISOString()
-    }, {
-      onConflict: 'user_id'
-    });
+    }, { onConflict: 'user_id' });
 
   return { preferences_updated: preferenceUpdates };
 }
 
 // Helper functions
 function generateCommunicationInsights(avgResponse: number, messageCount: number): string[] {
-  const insights = [];
+  const insights: string[] = [];
   if (avgResponse > 7) insights.push('You prefer deeper, more thoughtful conversations');
   if (messageCount > 0.7) insights.push('You value frequent communication');
   return insights;
 }
 
 function generatePreferenceInsights(liked: any[], successful: any[]): string[] {
-  const insights = [];
+  const insights: string[] = [];
   if (successful.length > 0) {
     insights.push('Your most successful connections share certain traits');
     insights.push('Consider being more open to profiles similar to your past successes');
@@ -384,27 +371,21 @@ function generatePreferenceInsights(liked: any[], successful: any[]): string[] {
 }
 
 function generateDatingFrequencyInsights(duration: number, frequency: number): string[] {
-  const insights = [];
+  const insights: string[] = [];
   if (duration < 30) insights.push('You might benefit from taking more time to get to know matches');
   if (frequency > 3) insights.push('Consider focusing on fewer, higher-quality connections');
   return insights;
 }
 
-function detectPreferenceShifts(liked: any[], passed: any[]): any {
-  return {
-    shift_detected: Math.random() > 0.5, // Placeholder for actual analysis
-    shift_direction: 'more_selective'
-  };
+function detectPreferenceShifts(_liked: any[], _passed: any[]): any {
+  return { shift_detected: Math.random() > 0.5, shift_direction: 'more_selective' };
 }
 
-function extractSuccessPatterns(successful: any[]): any {
-  return {
-    common_traits: ['emotional_intelligence', 'shared_interests'],
-    avg_compatibility_score: 0.8
-  };
+function extractSuccessPatterns(_successful: any[]): any {
+  return { common_traits: ['emotional_intelligence', 'shared_interests'], avg_compatibility_score: 0.8 };
 }
 
-function generateInsightsFromPattern(pattern: any, currentStage?: string): AdaptiveInsight[] {
+function generateInsightsFromPattern(pattern: any, _currentStage?: string): AdaptiveInsight[] {
   const insights: AdaptiveInsight[] = [];
   
   if (pattern.pattern_type === 'communication' && pattern.confidence_score > 0.7) {
@@ -421,16 +402,16 @@ function generateInsightsFromPattern(pattern: any, currentStage?: string): Adapt
   return insights;
 }
 
-function extractPreferenceUpdates(successfulOutcomes: any[]): any {
+function extractPreferenceUpdates(_successfulOutcomes: any[]): any {
   return {
-    rif_weight: 0.45, // Increase RIF importance based on successful emotional connections
+    rif_weight: 0.45,
     interest_weight: 0.25,
     behavioral_weight: 0.3,
-    confidence_level: Math.min(successfulOutcomes.length / 5, 1)
+    confidence_level: Math.min(_successfulOutcomes.length / 5, 1)
   };
 }
 
-async function getPreviousStages(userId: string): Promise<string[]> {
+async function getPreviousStages(supabase: any, userId: string): Promise<string[]> {
   const { data } = await supabase
     .from('user_journey_stages')
     .select('stage')
@@ -438,5 +419,5 @@ async function getPreviousStages(userId: string): Promise<string[]> {
     .order('created_at', { ascending: false })
     .limit(5);
 
-  return data?.map(s => s.stage) || [];
+  return data?.map((s: any) => s.stage) || [];
 }
