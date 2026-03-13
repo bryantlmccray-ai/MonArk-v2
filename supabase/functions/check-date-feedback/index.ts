@@ -48,6 +48,11 @@ async function verifyCronOrAdmin(req: Request): Promise<{ authorized: boolean; m
     .single();
 
   if (roleData?.role === 'admin') {
+    // Require MFA (aal2) for admin operations
+    const mfaResponse = requireAAL2(req);
+    if (mfaResponse) {
+      return { authorized: false, method: 'mfa_required' };
+    }
     return { authorized: true, method: 'admin_jwt' };
   }
 
