@@ -514,6 +514,7 @@ export const SundayMatches = () => {
         matchName={mutualMatch?.name || ''}
         matchPhoto={mutualMatch?.photo}
         onStartChat={handleStartChat}
+        onPlanDate={handlePlanDate}
       />
     </div>
   );
