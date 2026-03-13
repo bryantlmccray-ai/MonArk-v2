@@ -50,6 +50,42 @@ export function unauthorizedResponse(message = 'Unauthorized'): Response {
 }
 
 /**
+ * Extract the AAL (Authenticator Assurance Level) from the JWT.
+ * Supabase JWTs include an `aal` claim (aal1 or aal2).
+ * Returns 'aal1' if the claim is missing or cannot be decoded.
+ */
+export function getAALFromJWT(req: Request): string {
+  try {
+    const authHeader = req.headers.get('Authorization')
+    if (!authHeader) return 'aal1'
+    const token = authHeader.replace('Bearer ', '')
+    const parts = token.split('.')
+    if (parts.length !== 3) return 'aal1'
+    // Decode the payload (base64url → JSON)
+    const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')))
+    return payload.aal || 'aal1'
+  } catch {
+    return 'aal1'
+  }
+}
+
+/**
+ * Verify that the caller has completed MFA (aal2).
+ * Returns a 403 response if not, or null if verified.
+ */
+export function requireAAL2(req: Request): Response | null {
+  const aal = getAALFromJWT(req)
+  if (aal !== 'aal2') {
+    console.error(`Security: MFA required but session is ${aal}`)
+    return new Response(
+      JSON.stringify({ error: 'MFA verification required. Please complete two-factor authentication.' }),
+      { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
+  }
+  return null
+}
+
+/**
  * Create a forbidden response
  */
 export function forbiddenResponse(message = 'Access denied'): Response {
