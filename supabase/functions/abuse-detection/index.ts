@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { corsHeaders, verifyAuth, errorResponse } from '../_shared/security.ts'
+import { corsHeaders, verifyAuth, errorResponse, requireAAL2 } from '../_shared/security.ts'
 
 // Thresholds for flagging abusive users
 const THRESHOLDS = {
@@ -42,6 +42,10 @@ serve(async (req) => {
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
+
+    // Require MFA (aal2) for admin operations
+    const mfaResponse = requireAAL2(req)
+    if (mfaResponse) return mfaResponse
 
     const windowStart = new Date()
     windowStart.setDate(windowStart.getDate() - THRESHOLDS.window_days)

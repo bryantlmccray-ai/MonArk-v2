@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
-import { corsHeaders, verifyAuth, unauthorizedResponse, forbiddenResponse, validateEmail, validateLength, validationErrorResponse, errorResponse } from '../_shared/security.ts'
+import { corsHeaders, verifyAuth, unauthorizedResponse, forbiddenResponse, validateEmail, validateLength, validationErrorResponse, errorResponse, requireAAL2 } from '../_shared/security.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
@@ -36,6 +36,10 @@ const handler = async (req: Request): Promise<Response> => {
     if (!isAdmin) {
       return forbiddenResponse('Admin access required');
     }
+
+    // Require MFA (aal2) for admin operations
+    const mfaResponse = requireAAL2(req);
+    if (mfaResponse) return mfaResponse;
 
     let body: Record<string, unknown>;
     try {

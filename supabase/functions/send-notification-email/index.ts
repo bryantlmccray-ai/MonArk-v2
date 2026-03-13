@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
-import { corsHeaders, verifyAuth, unauthorizedResponse, errorResponse } from '../_shared/security.ts'
+import { corsHeaders, verifyAuth, unauthorizedResponse, errorResponse, requireAAL2 } from '../_shared/security.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
@@ -144,6 +144,10 @@ const handler = async (req: Request): Promise<Response> => {
           { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
       }
+
+      // Require MFA (aal2) for admin email operations
+      const mfaResponse = requireAAL2(req);
+      if (mfaResponse) return mfaResponse;
     }
 
     // Validate type against allowed values

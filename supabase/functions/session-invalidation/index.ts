@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { corsHeaders, verifyAuth, errorResponse, validationErrorResponse } from '../_shared/security.ts'
+import { corsHeaders, verifyAuth, errorResponse, validationErrorResponse, requireAAL2 } from '../_shared/security.ts'
 import { validateUUID } from '../_shared/security.ts'
 
 serve(async (req) => {
@@ -50,6 +50,10 @@ serve(async (req) => {
           { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
       }
+
+      // Require MFA (aal2) for admin session invalidation
+      const mfaResponse = requireAAL2(req)
+      if (mfaResponse) return mfaResponse
     }
 
     // Force invalidate sessions by updating the user's password nonce
