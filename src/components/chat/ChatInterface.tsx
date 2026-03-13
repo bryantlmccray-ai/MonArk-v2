@@ -6,6 +6,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ReportBlockModal } from '@/components/safety/ReportBlockModal';
 import { CloseTheLoopCard } from './CloseTheLoopCard';
+import { MatchDateSuggestionCard } from './MatchDateSuggestionCard';
  import { MessagingLockCard } from './MessagingLockCard';
  import { ApiErrorFallback } from '@/components/common/ApiErrorFallback';
 import { useMessages } from '@/hooks/useMessages';
