@@ -319,6 +319,13 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {/* Curated Date Suggestion - shows at top of conversation */}
+        <MatchDateSuggestionCard
+          conversationId={conversationId}
+          matchUserId={matchUserId}
+          matchName={matchName}
+        />
+
         {messages.length === 0 ? (
           <div className="text-center text-muted-foreground py-8">
             <p>Start your conversation with {matchName}</p>
