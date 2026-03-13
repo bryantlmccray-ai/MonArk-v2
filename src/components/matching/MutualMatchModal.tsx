@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Heart, MessageCircle, Sparkles } from 'lucide-react';
+import { Heart, MessageCircle, Sparkles, Calendar } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface MutualMatchModalProps {
