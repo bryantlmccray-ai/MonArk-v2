@@ -186,6 +186,22 @@ export const useCuratedMatches = () => {
           user_id: user.id,
           match_user_id: match.matched_user_id
         });
+
+        // Auto-generate a curated date proposal for the new match
+        try {
+          await supabase.functions.invoke('ai-date-concierge', {
+            body: {
+              matchUserId: match.matched_user_id,
+              conversationId,
+              userInterests: [],
+              matchInterests: [],
+              currentUserId: user.id,
+              autoGenerate: true
+            }
+          });
+        } catch (dateErr) {
+          console.warn('Auto date proposal generation failed (non-blocking):', dateErr);
+        }
       }
 
       return { matchId, isMutual: !!mutualCheck, conversationId, matchName: match.profile.name, matchPhoto: match.profile.photos?.[0] };
@@ -193,12 +209,10 @@ export const useCuratedMatches = () => {
     onSuccess: (result) => {
       if (result.isMutual) {
         toast.success("It's a match! You can now message each other.");
-        // Invalidate conversations since a new one was created
         queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
       } else {
         toast.success("Interest sent! You'll be notified if it's mutual.");
       }
-      // Remove from cache optimistically
       queryClient.invalidateQueries({ queryKey: queryKeys.curatedMatches.all });
     },
   });

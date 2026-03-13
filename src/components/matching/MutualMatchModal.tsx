@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Heart, MessageCircle, Sparkles } from 'lucide-react';
+import { Heart, MessageCircle, Sparkles, Calendar } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface MutualMatchModalProps {
@@ -10,6 +10,7 @@ interface MutualMatchModalProps {
   matchName: string;
   matchPhoto?: string;
   onStartChat: () => void;
+  onPlanDate?: () => void;
 }
 
 export const MutualMatchModal = ({
@@ -17,7 +18,8 @@ export const MutualMatchModal = ({
   onClose,
   matchName,
   matchPhoto,
-  onStartChat
+  onStartChat,
+  onPlanDate
 }: MutualMatchModalProps) => {
   useEffect(() => {
     if (isOpen) {
@@ -99,6 +101,17 @@ export const MutualMatchModal = ({
             <MessageCircle className="w-5 h-5 mr-2" />
             Start Chatting
           </Button>
+          {onPlanDate && (
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full border-primary/30 text-primary hover:bg-primary/10"
+              onClick={onPlanDate}
+            >
+              <Calendar className="w-5 h-5 mr-2" />
+              Plan a Date Together
+            </Button>
+          )}
           <Button
             variant="ghost"
             size="lg"
