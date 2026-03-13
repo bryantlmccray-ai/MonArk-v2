@@ -37,6 +37,10 @@ const handler = async (req: Request): Promise<Response> => {
       return forbiddenResponse('Admin access required');
     }
 
+    // Require MFA (aal2) for admin operations
+    const mfaResponse = requireAAL2(req);
+    if (mfaResponse) return mfaResponse;
+
     let body: Record<string, unknown>;
     try {
       body = await req.json();

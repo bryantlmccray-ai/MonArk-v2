@@ -50,6 +50,10 @@ serve(async (req) => {
           { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
       }
+
+      // Require MFA (aal2) for admin session invalidation
+      const mfaResponse = requireAAL2(req)
+      if (mfaResponse) return mfaResponse
     }
 
     // Force invalidate sessions by updating the user's password nonce

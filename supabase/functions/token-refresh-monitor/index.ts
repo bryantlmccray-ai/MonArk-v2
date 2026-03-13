@@ -51,6 +51,10 @@ serve(async (req) => {
           { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
       }
+
+      // Require MFA (aal2) for admin operations
+      const mfaResponse = requireAAL2(req)
+      if (mfaResponse) return mfaResponse
     }
 
     const supabaseAdmin = createClient(

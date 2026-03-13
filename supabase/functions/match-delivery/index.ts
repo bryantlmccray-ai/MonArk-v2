@@ -75,6 +75,10 @@ serve(async (req) => {
       );
     }
 
+    // Require MFA (aal2) for admin operations
+    const mfaResponse = requireAAL2(req);
+    if (mfaResponse) return mfaResponse;
+
     let body: Record<string, unknown>;
     try {
       body = await req.json();

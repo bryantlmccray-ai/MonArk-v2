@@ -43,6 +43,10 @@ serve(async (req) => {
       )
     }
 
+    // Require MFA (aal2) for admin operations
+    const mfaResponse = requireAAL2(req)
+    if (mfaResponse) return mfaResponse
+
     const windowStart = new Date()
     windowStart.setDate(windowStart.getDate() - THRESHOLDS.window_days)
     const windowISO = windowStart.toISOString()

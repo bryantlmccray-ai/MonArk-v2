@@ -144,6 +144,10 @@ const handler = async (req: Request): Promise<Response> => {
           { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
       }
+
+      // Require MFA (aal2) for admin email operations
+      const mfaResponse = requireAAL2(req);
+      if (mfaResponse) return mfaResponse;
     }
 
     // Validate type against allowed values
