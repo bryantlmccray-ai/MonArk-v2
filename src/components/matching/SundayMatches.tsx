@@ -278,6 +278,13 @@ export const SundayMatches = () => {
     setMutualMatch(null);
   };
 
+  const handlePlanDate = () => {
+    if (mutualMatch?.conversationId) {
+      navigate(`/chat/${mutualMatch.conversationId}`);
+    }
+    setMutualMatch(null);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
