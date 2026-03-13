@@ -12,19 +12,32 @@ serve(async (req) => {
   }
 
   try {
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
-    )
-
-    const authHeader = req.headers.get('Authorization')!
-    const { data: { user } } = await supabaseClient.auth.getUser(authHeader.replace('Bearer ', ''))
-    
-    if (!user) {
-      throw new Error('Unauthorized')
+    // SECURITY FIX: Proper auth with null-safety
+    const authHeader = req.headers.get('Authorization')
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'Authentication required' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
     }
 
-    const { user_id } = await req.json()
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      { global: { headers: { Authorization: authHeader } } }
+    )
+
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser()
+    
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid or expired authentication' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // SECURITY FIX: Force user_id to authenticated user — ignore client-supplied value
+    const userId = user.id
 
     // Get user's feedback history for learning
     const { data: feedbackData } = await supabaseClient
@@ -33,7 +46,7 @@ serve(async (req) => {
         *,
         target_profiles:user_profiles!user_compatibility_feedback_target_user_id_fkey(*)
       `)
-      .eq('user_id', user_id)
+      .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(100)
 
@@ -48,7 +61,7 @@ serve(async (req) => {
     const patterns = analyzeUserPatterns(feedbackData)
     
     // Update user's personalized ML weights
-    await updatePersonalizedWeights(supabaseClient, user_id, patterns)
+    await updatePersonalizedWeights(supabaseClient, userId, patterns)
     
     // Generate insights for the user
     const insights = generatePersonalizedInsights(patterns)
@@ -59,7 +72,7 @@ serve(async (req) => {
         .from('rif_insights')
         .insert(
           insights.map(insight => ({
-            user_id: user_id,
+            user_id: userId,
             insight_type: 'ml_learning',
             title: insight.title,
             content: insight.content,
@@ -77,10 +90,11 @@ serve(async (req) => {
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   } catch (error) {
+    // SECURITY FIX: Never leak error.message to client
     console.error('ML Trainer Error:', error)
     return new Response(
-      JSON.stringify({ error: error.message }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+      JSON.stringify({ error: 'An internal error occurred' }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
     )
   }
 })
@@ -95,29 +109,26 @@ function analyzeUserPatterns(feedbackData: any[]): any {
     learning_confidence: 0.5
   }
 
-  // Analyze interaction preferences
-  const interactionCounts = feedbackData.reduce((acc, feedback) => {
+  const interactionCounts = feedbackData.reduce((acc: any, feedback: any) => {
     acc[feedback.interaction_type] = (acc[feedback.interaction_type] || 0) + 1
     return acc
   }, {})
 
   const totalInteractions = feedbackData.length
   
-  // Determine interaction style preference
   if (interactionCounts.message > totalInteractions * 0.6) {
     patterns.preferred_interaction_style = 'conversation_focused'
-    patterns.rif_weight_preference = 0.5  // Values emotional compatibility more
+    patterns.rif_weight_preference = 0.5
     patterns.behavioral_weight_preference = 0.3
     patterns.interest_weight_preference = 0.2
   } else if (interactionCounts.like > totalInteractions * 0.7) {
     patterns.preferred_interaction_style = 'attraction_focused'
-    patterns.interest_weight_preference = 0.4  // Values shared interests more
+    patterns.interest_weight_preference = 0.4
     patterns.rif_weight_preference = 0.3
     patterns.behavioral_weight_preference = 0.3
   }
 
-  // Analyze feedback scores to understand user's selectivity
-  const avgFeedbackScore = feedbackData.reduce((sum, f) => sum + f.feedback_score, 0) / feedbackData.length
+  const avgFeedbackScore = feedbackData.reduce((sum: number, f: any) => sum + f.feedback_score, 0) / feedbackData.length
   
   if (avgFeedbackScore > 7) {
     patterns.activity_preference = 'selective'
@@ -125,7 +136,6 @@ function analyzeUserPatterns(feedbackData: any[]): any {
     patterns.activity_preference = 'exploratory'
   }
 
-  // Calculate learning confidence based on data volume and consistency
   patterns.learning_confidence = Math.min(1.0, feedbackData.length / 50) * 
     (1 - (calculateFeedbackVariance(feedbackData) / 25))
 
@@ -133,14 +143,13 @@ function analyzeUserPatterns(feedbackData: any[]): any {
 }
 
 function calculateFeedbackVariance(feedbackData: any[]): number {
-  const scores = feedbackData.map(f => f.feedback_score)
-  const mean = scores.reduce((sum, score) => sum + score, 0) / scores.length
-  const variance = scores.reduce((sum, score) => sum + Math.pow(score - mean, 2), 0) / scores.length
+  const scores = feedbackData.map((f: any) => f.feedback_score)
+  const mean = scores.reduce((sum: number, score: number) => sum + score, 0) / scores.length
+  const variance = scores.reduce((sum: number, score: number) => sum + Math.pow(score - mean, 2), 0) / scores.length
   return variance
 }
 
 async function updatePersonalizedWeights(supabaseClient: any, userId: string, patterns: any) {
-  // Store personalized ML weights for this user
   await supabaseClient
     .from('user_ml_preferences')
     .upsert({
@@ -156,7 +165,7 @@ async function updatePersonalizedWeights(supabaseClient: any, userId: string, pa
 }
 
 function generatePersonalizedInsights(patterns: any): any[] {
-  const insights = []
+  const insights: any[] = []
 
   if (patterns.learning_confidence > 0.7) {
     if (patterns.preferred_interaction_style === 'conversation_focused') {
