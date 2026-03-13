@@ -59,6 +59,7 @@ interface DateProposalRequest {
   matchProfile?: { bio?: string };
   recentMessages?: any[];
   async?: boolean;
+  autoGenerate?: boolean;
 }
 
 // Pre-built date suggestions for MVP - no external AI required
