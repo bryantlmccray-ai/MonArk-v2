@@ -18,7 +18,8 @@ export const MutualMatchModal = ({
   onClose,
   matchName,
   matchPhoto,
-  onStartChat
+  onStartChat,
+  onPlanDate
 }: MutualMatchModalProps) => {
   useEffect(() => {
     if (isOpen) {
