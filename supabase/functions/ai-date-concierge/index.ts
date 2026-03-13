@@ -345,7 +345,7 @@ serve(async (req) => {
     
     return new Response(JSON.stringify({ 
       ...RESTING_FALLBACK,
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: 'An error occurred while generating date suggestions'
     }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
