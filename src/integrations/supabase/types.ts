@@ -2684,6 +2684,55 @@ export type Database = {
           fuzzed_lng: number
         }[]
       }
+      get_discoverable_profiles: {
+        Args: never
+        Returns: {
+          age: number | null
+          age_verification_timestamp: string | null
+          age_verified: boolean | null
+          bio: string | null
+          created_at: string
+          date_of_birth: string | null
+          date_preferences: Json | null
+          discovery_privacy_mode: string | null
+          drinking_status: string | null
+          education_level: string | null
+          exercise_habits: string | null
+          gender_identity: Database["public"]["Enums"]["gender_identity"] | null
+          gender_identity_custom: string | null
+          height_cm: number | null
+          id: string
+          identity_visibility: boolean | null
+          interests: string[] | null
+          is_profile_complete: boolean | null
+          last_preference_update: string | null
+          location: string | null
+          location_consent: boolean | null
+          location_data: Json | null
+          occupation: string | null
+          onboarding_step: number | null
+          phone_number: string | null
+          photos: string[] | null
+          preference_to_be_seen_by: string[] | null
+          preference_to_see: string[] | null
+          relationship_goals: string[] | null
+          rif_quiz_answers: Json | null
+          sexual_orientation:
+            | Database["public"]["Enums"]["sexual_orientation"]
+            | null
+          sexual_orientation_custom: string | null
+          show_location_on_profile: boolean | null
+          smoking_status: string | null
+          updated_at: string
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "user_profiles"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       get_reports_against_me: {
         Args: never
         Returns: {
@@ -2735,6 +2784,10 @@ export type Database = {
       }
       mark_messages_as_read: {
         Args: { p_conversation_id: string; p_user_id: string }
+        Returns: undefined
+      }
+      respond_to_curated_match: {
+        Args: { p_match_id: string; p_status: string }
         Returns: undefined
       }
       verify_age_18_plus: { Args: { birth_date: string }; Returns: boolean }
