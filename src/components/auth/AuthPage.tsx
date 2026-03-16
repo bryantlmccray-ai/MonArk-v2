@@ -334,19 +334,34 @@ export const AuthPage: React.FC = () => {
             )}
 
             {!isLogin && (
-              <div className="flex items-start gap-3 pt-1">
-                <Checkbox
-                  checked={agreedToTerms}
-                  onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
-                  className="mt-1 border-primary/40 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                />
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  I agree to MonArk's{' '}
-                  <a href="/terms" className="text-primary font-medium hover:underline" target="_blank" rel="noopener noreferrer">Terms of Service</a>{' '}
-                  and{' '}
-                  <a href="/privacy" className="text-primary font-medium hover:underline" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
-                </p>
-              </div>
+              <>
+                <div className="flex items-start gap-3 pt-1">
+                  <Checkbox
+                    checked={agreedToTerms}
+                    onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                    className="mt-1 border-primary/40 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                  />
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    I agree to MonArk's{' '}
+                    <a href="/terms" className="text-primary font-medium hover:underline" target="_blank" rel="noopener noreferrer">Terms of Service</a>{' '}
+                    and{' '}
+                    <a href="/privacy" className="text-primary font-medium hover:underline" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
+                  </p>
+                </div>
+
+                {TURNSTILE_SITE_KEY && (
+                  <div className="flex justify-center pt-1">
+                    <Turnstile
+                      ref={turnstileRef}
+                      siteKey={TURNSTILE_SITE_KEY}
+                      onSuccess={(token) => setCaptchaToken(token)}
+                      onExpire={() => setCaptchaToken(null)}
+                      onError={() => setCaptchaToken(null)}
+                      options={{ theme: 'light', size: 'normal' }}
+                    />
+                  </div>
+                )}
+              </>
             )}
 
             <motion.button
