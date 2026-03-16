@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "14.4"
   }
   public: {
     Tables: {
@@ -58,6 +58,63 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      applications: {
+        Row: {
+          applied_at: string | null
+          cover_letter: string | null
+          follow_up_due: string | null
+          id: string
+          job_posting_id: string | null
+          last_updated: string | null
+          match_score: number | null
+          notes: string | null
+          resume_version_id: string | null
+          status: string | null
+          tailored_resume: string | null
+        }
+        Insert: {
+          applied_at?: string | null
+          cover_letter?: string | null
+          follow_up_due?: string | null
+          id?: string
+          job_posting_id?: string | null
+          last_updated?: string | null
+          match_score?: number | null
+          notes?: string | null
+          resume_version_id?: string | null
+          status?: string | null
+          tailored_resume?: string | null
+        }
+        Update: {
+          applied_at?: string | null
+          cover_letter?: string | null
+          follow_up_due?: string | null
+          id?: string
+          job_posting_id?: string | null
+          last_updated?: string | null
+          match_score?: number | null
+          notes?: string | null
+          resume_version_id?: string | null
+          status?: string | null
+          tailored_resume?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applications_job_posting_id_fkey"
+            columns: ["job_posting_id"]
+            isOneToOne: false
+            referencedRelation: "job_postings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "applications_resume_version_id_fkey"
+            columns: ["resume_version_id"]
+            isOneToOne: false
+            referencedRelation: "resume_versions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       async_jobs: {
         Row: {
@@ -702,6 +759,87 @@ export type Database = {
         }
         Relationships: []
       }
+      digest_log: {
+        Row: {
+          date: string | null
+          digest_sent_at: string | null
+          id: string
+          jobs_applied: number | null
+          jobs_matched: number | null
+          jobs_scraped: number | null
+          jobs_skipped: number | null
+          summary: string | null
+        }
+        Insert: {
+          date?: string | null
+          digest_sent_at?: string | null
+          id?: string
+          jobs_applied?: number | null
+          jobs_matched?: number | null
+          jobs_scraped?: number | null
+          jobs_skipped?: number | null
+          summary?: string | null
+        }
+        Update: {
+          date?: string | null
+          digest_sent_at?: string | null
+          id?: string
+          jobs_applied?: number | null
+          jobs_matched?: number | null
+          jobs_scraped?: number | null
+          jobs_skipped?: number | null
+          summary?: string | null
+        }
+        Relationships: []
+      }
+      investor_email_log: {
+        Row: {
+          action: string | null
+          body_preview: string | null
+          id: number
+          intent: string | null
+          processed_at: string | null
+          reasoning: string | null
+          received_at: string | null
+          reply_body: string | null
+          reply_subject: string | null
+          sender_email: string
+          sender_name: string | null
+          subject: string | null
+          uid: string
+        }
+        Insert: {
+          action?: string | null
+          body_preview?: string | null
+          id?: number
+          intent?: string | null
+          processed_at?: string | null
+          reasoning?: string | null
+          received_at?: string | null
+          reply_body?: string | null
+          reply_subject?: string | null
+          sender_email: string
+          sender_name?: string | null
+          subject?: string | null
+          uid: string
+        }
+        Update: {
+          action?: string | null
+          body_preview?: string | null
+          id?: number
+          intent?: string | null
+          processed_at?: string | null
+          reasoning?: string | null
+          received_at?: string | null
+          reply_body?: string | null
+          reply_subject?: string | null
+          sender_email?: string
+          sender_name?: string | null
+          subject?: string | null
+          uid?: string
+        }
+        Relationships: []
+      }
       itineraries: {
         Row: {
           completed_at: string | null
@@ -865,6 +1003,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      job_postings: {
+        Row: {
+          applied_at: string | null
+          company: string
+          description: string | null
+          id: string
+          job_title: string
+          job_url: string
+          location: string | null
+          match_score: number | null
+          notes: string | null
+          required_skills: string[] | null
+          scraped_at: string | null
+          source: string
+          status: string | null
+        }
+        Insert: {
+          applied_at?: string | null
+          company: string
+          description?: string | null
+          id?: string
+          job_title: string
+          job_url: string
+          location?: string | null
+          match_score?: number | null
+          notes?: string | null
+          required_skills?: string[] | null
+          scraped_at?: string | null
+          source: string
+          status?: string | null
+        }
+        Update: {
+          applied_at?: string | null
+          company?: string
+          description?: string | null
+          id?: string
+          job_title?: string
+          job_url?: string
+          location?: string | null
+          match_score?: number | null
+          notes?: string | null
+          required_skills?: string[] | null
+          scraped_at?: string | null
+          source?: string
+          status?: string | null
+        }
+        Relationships: []
       }
       kpi_snapshots: {
         Row: {
@@ -1343,6 +1529,39 @@ export type Database = {
           what_didnt_work?: Json | null
           what_worked?: Json | null
           would_date_similar?: boolean | null
+        }
+        Relationships: []
+      }
+      resume_versions: {
+        Row: {
+          base_template: string
+          created_at: string | null
+          id: string
+          key_skills: string[] | null
+          target_industry: string
+          target_role: string
+          updated_at: string | null
+          version_name: string
+        }
+        Insert: {
+          base_template: string
+          created_at?: string | null
+          id?: string
+          key_skills?: string[] | null
+          target_industry: string
+          target_role: string
+          updated_at?: string | null
+          version_name: string
+        }
+        Update: {
+          base_template?: string
+          created_at?: string | null
+          id?: string
+          key_skills?: string[] | null
+          target_industry?: string
+          target_role?: string
+          updated_at?: string | null
+          version_name?: string
         }
         Relationships: []
       }
@@ -2176,6 +2395,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      venue_reply_log: {
+        Row: {
+          action_taken: string | null
+          body_preview: string | null
+          id: number
+          intent: string | null
+          key_signal: string | null
+          message_id: string
+          processed_at: string | null
+          reply_drafted: string | null
+          sender: string | null
+          subject: string | null
+          thread_id: string | null
+          venue_name: string | null
+        }
+        Insert: {
+          action_taken?: string | null
+          body_preview?: string | null
+          id?: number
+          intent?: string | null
+          key_signal?: string | null
+          message_id: string
+          processed_at?: string | null
+          reply_drafted?: string | null
+          sender?: string | null
+          subject?: string | null
+          thread_id?: string | null
+          venue_name?: string | null
+        }
+        Update: {
+          action_taken?: string | null
+          body_preview?: string | null
+          id?: number
+          intent?: string | null
+          key_signal?: string | null
+          message_id?: string
+          processed_at?: string | null
+          reply_drafted?: string | null
+          sender?: string | null
+          subject?: string | null
+          thread_id?: string | null
+          venue_name?: string | null
+        }
+        Relationships: []
       }
       venue_types: {
         Row: {
