@@ -158,6 +158,57 @@ export type Database = {
         }
         Relationships: []
       }
+      automation_team: {
+        Row: {
+          color: string
+          created_at: string | null
+          id: number
+          initials: string
+          name: string
+          prompt_hint: string | null
+          schedule: string
+          script_label: string
+          script_name: string
+          sort_order: number
+          status: string
+          tier: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          color?: string
+          created_at?: string | null
+          id?: number
+          initials: string
+          name: string
+          prompt_hint?: string | null
+          schedule: string
+          script_label: string
+          script_name: string
+          sort_order?: number
+          status?: string
+          tier?: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          color?: string
+          created_at?: string | null
+          id?: number
+          initials?: string
+          name?: string
+          prompt_hint?: string | null
+          schedule?: string
+          script_label?: string
+          script_name?: string
+          sort_order?: number
+          status?: string
+          tier?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       behavior_analytics: {
         Row: {
           created_at: string
