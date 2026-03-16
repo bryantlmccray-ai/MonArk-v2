@@ -316,6 +316,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <img
                   src={founderPortrait}
                   alt="Bryant McCray, MonArk Founder"
+                  loading="lazy"
                   className="w-full h-auto object-cover"
                 />
                 <motion.div
