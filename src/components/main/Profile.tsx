@@ -220,6 +220,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                         key={i}
                         src={photo}
                         alt={`Photo ${i + 2}`}
+                        loading="lazy"
                         className="w-20 h-20 rounded-xl object-cover border-2 border-card flex-shrink-0 shadow-sm"
                       />
                     ))}

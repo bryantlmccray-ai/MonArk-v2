@@ -203,6 +203,7 @@ export const Conversations: React.FC = () => {
                   <img
                     src={conversation.image}
                     alt={conversation.name}
+                    loading="lazy"
                     className="w-12 h-12 rounded-full ring-2 ring-border/80 group-hover:ring-primary/25 transition-all object-cover"
                   />
                   {conversation.mutualEngagement > 0.7 && conversation.messageCount > 15 && (

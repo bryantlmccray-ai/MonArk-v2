@@ -399,6 +399,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                     <img
                       src={member.img}
                       alt={member.name}
+                      loading="lazy"
                       className="w-full h-full object-cover"
                     />
                   </div>
