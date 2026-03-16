@@ -206,6 +206,16 @@ export const AuthPage: React.FC = () => {
           }
         }
       } else {
+        // Require CAPTCHA for signup if Turnstile is configured
+        if (TURNSTILE_SITE_KEY && !captchaToken) {
+          toast({
+            title: "Verification required",
+            description: "Please complete the CAPTCHA verification.",
+            variant: "destructive"
+          });
+          setLoading(false);
+          return;
+        }
         setSignupData({ email, password, name });
         setShowAgeVerification(true);
         setLoading(false);
