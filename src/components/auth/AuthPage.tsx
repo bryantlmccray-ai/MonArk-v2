@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -11,6 +11,9 @@ import { MonArkLogo } from '@/components/MonArkLogo';
 import { supabase } from '@/integrations/supabase/client';
 import { signInSchema, signUpSchema, emailSchema, getFirstError } from '@/lib/validation';
 import { motion } from 'framer-motion';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
+
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '';
 
 export const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
