@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -11,6 +11,9 @@ import { MonArkLogo } from '@/components/MonArkLogo';
 import { supabase } from '@/integrations/supabase/client';
 import { signInSchema, signUpSchema, emailSchema, getFirstError } from '@/lib/validation';
 import { motion } from 'framer-motion';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
+
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '';
 
 export const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -25,6 +28,8 @@ export const AuthPage: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(() => localStorage.getItem('monark-remember-me') === 'true');
   const [resetEmail, setResetEmail] = useState('');
   const [resetSent, setResetSent] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileInstance>(null);
   const { user, signIn, signUp, enterDemoMode } = useAuth();
   const { updateProfile } = useProfile();
   const { toast } = useToast();
@@ -107,7 +112,18 @@ export const AuthPage: React.FC = () => {
 
     setLoading(true);
     try {
-      const { error } = await signUp(signupData.email, signupData.password, signupData.name);
+      // Pass CAPTCHA token if Turnstile is enabled
+      let signUpOptions: Parameters<typeof supabase.auth.signUp>[0] = {
+        email: signupData.email,
+        password: signupData.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+          data: { name: signupData.name },
+          ...(captchaToken ? { captchaToken } : {}),
+        },
+      };
+
+      const { error } = await supabase.auth.signUp(signUpOptions);
       
       if (error) {
         toast({
@@ -136,6 +152,8 @@ export const AuthPage: React.FC = () => {
       setLoading(false);
       setShowAgeVerification(false);
       setSignupData(null);
+      setCaptchaToken(null);
+      turnstileRef.current?.reset();
     }
   };
 
@@ -188,6 +206,16 @@ export const AuthPage: React.FC = () => {
           }
         }
       } else {
+        // Require CAPTCHA for signup if Turnstile is configured
+        if (TURNSTILE_SITE_KEY && !captchaToken) {
+          toast({
+            title: "Verification required",
+            description: "Please complete the CAPTCHA verification.",
+            variant: "destructive"
+          });
+          setLoading(false);
+          return;
+        }
         setSignupData({ email, password, name });
         setShowAgeVerification(true);
         setLoading(false);
@@ -306,19 +334,34 @@ export const AuthPage: React.FC = () => {
             )}
 
             {!isLogin && (
-              <div className="flex items-start gap-3 pt-1">
-                <Checkbox
-                  checked={agreedToTerms}
-                  onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
-                  className="mt-1 border-primary/40 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                />
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  I agree to MonArk's{' '}
-                  <a href="/terms" className="text-primary font-medium hover:underline" target="_blank" rel="noopener noreferrer">Terms of Service</a>{' '}
-                  and{' '}
-                  <a href="/privacy" className="text-primary font-medium hover:underline" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
-                </p>
-              </div>
+              <>
+                <div className="flex items-start gap-3 pt-1">
+                  <Checkbox
+                    checked={agreedToTerms}
+                    onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                    className="mt-1 border-primary/40 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                  />
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    I agree to MonArk's{' '}
+                    <a href="/terms" className="text-primary font-medium hover:underline" target="_blank" rel="noopener noreferrer">Terms of Service</a>{' '}
+                    and{' '}
+                    <a href="/privacy" className="text-primary font-medium hover:underline" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
+                  </p>
+                </div>
+
+                {TURNSTILE_SITE_KEY && (
+                  <div className="flex justify-center pt-1">
+                    <Turnstile
+                      ref={turnstileRef}
+                      siteKey={TURNSTILE_SITE_KEY}
+                      onSuccess={(token) => setCaptchaToken(token)}
+                      onExpire={() => setCaptchaToken(null)}
+                      onError={() => setCaptchaToken(null)}
+                      options={{ theme: 'light', size: 'normal' }}
+                    />
+                  </div>
+                )}
+              </>
             )}
 
             <motion.button
