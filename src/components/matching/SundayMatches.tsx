@@ -398,6 +398,7 @@ export const SundayMatches = () => {
                       <img
                         src={displayCurated[0].photos?.[0] || '/placeholder.svg'}
                         alt={displayCurated[0].name || 'Match'}
+                        loading="lazy"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
