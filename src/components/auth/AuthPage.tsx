@@ -152,6 +152,8 @@ export const AuthPage: React.FC = () => {
       setLoading(false);
       setShowAgeVerification(false);
       setSignupData(null);
+      setCaptchaToken(null);
+      turnstileRef.current?.reset();
     }
   };
 
