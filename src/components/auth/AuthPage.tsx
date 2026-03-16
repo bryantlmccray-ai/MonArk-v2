@@ -28,6 +28,8 @@ export const AuthPage: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(() => localStorage.getItem('monark-remember-me') === 'true');
   const [resetEmail, setResetEmail] = useState('');
   const [resetSent, setResetSent] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileInstance>(null);
   const { user, signIn, signUp, enterDemoMode } = useAuth();
   const { updateProfile } = useProfile();
   const { toast } = useToast();
