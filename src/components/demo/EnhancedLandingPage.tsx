@@ -208,6 +208,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <img
                   src={image}
                   alt={`MonArk Instagram post ${i + 1}`}
+                  loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/50 transition-all duration-300 flex items-center justify-center">
