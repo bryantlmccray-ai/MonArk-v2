@@ -112,7 +112,18 @@ export const AuthPage: React.FC = () => {
 
     setLoading(true);
     try {
-      const { error } = await signUp(signupData.email, signupData.password, signupData.name);
+      // Pass CAPTCHA token if Turnstile is enabled
+      let signUpOptions: Parameters<typeof supabase.auth.signUp>[0] = {
+        email: signupData.email,
+        password: signupData.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+          data: { name: signupData.name },
+          ...(captchaToken ? { captchaToken } : {}),
+        },
+      };
+
+      const { error } = await supabase.auth.signUp(signUpOptions);
       
       if (error) {
         toast({
