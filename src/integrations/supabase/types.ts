@@ -2069,7 +2069,9 @@ export type Database = {
           discovery_privacy_mode: string | null
           drinking_status: string | null
           education_level: string | null
+          engagement_score: number | null
           exercise_habits: string | null
+          financial_score: number | null
           gender_identity: Database["public"]["Enums"]["gender_identity"] | null
           gender_identity_custom: string | null
           height_cm: number | null
@@ -2077,18 +2079,26 @@ export type Database = {
           identity_visibility: boolean | null
           interests: string[] | null
           is_profile_complete: boolean | null
+          last_login_days_ago: number | null
           last_preference_update: string | null
           location: string | null
           location_consent: boolean | null
           location_data: Json | null
+          mrr: number | null
+          nps: number | null
           occupation: string | null
           onboarding_step: number | null
+          open_tickets: number | null
+          outcomes_score: number | null
           phone_number: string | null
           photos: string[] | null
           preference_to_be_seen_by: string[] | null
           preference_to_see: string[] | null
+          product_adoption_score: number | null
           relationship_goals: string[] | null
+          relationship_score: number | null
           rif_quiz_answers: Json | null
+          segment: string | null
           sexual_orientation:
             | Database["public"]["Enums"]["sexual_orientation"]
             | null
@@ -2109,7 +2119,9 @@ export type Database = {
           discovery_privacy_mode?: string | null
           drinking_status?: string | null
           education_level?: string | null
+          engagement_score?: number | null
           exercise_habits?: string | null
+          financial_score?: number | null
           gender_identity?:
             | Database["public"]["Enums"]["gender_identity"]
             | null
@@ -2119,18 +2131,26 @@ export type Database = {
           identity_visibility?: boolean | null
           interests?: string[] | null
           is_profile_complete?: boolean | null
+          last_login_days_ago?: number | null
           last_preference_update?: string | null
           location?: string | null
           location_consent?: boolean | null
           location_data?: Json | null
+          mrr?: number | null
+          nps?: number | null
           occupation?: string | null
           onboarding_step?: number | null
+          open_tickets?: number | null
+          outcomes_score?: number | null
           phone_number?: string | null
           photos?: string[] | null
           preference_to_be_seen_by?: string[] | null
           preference_to_see?: string[] | null
+          product_adoption_score?: number | null
           relationship_goals?: string[] | null
+          relationship_score?: number | null
           rif_quiz_answers?: Json | null
+          segment?: string | null
           sexual_orientation?:
             | Database["public"]["Enums"]["sexual_orientation"]
             | null
@@ -2151,7 +2171,9 @@ export type Database = {
           discovery_privacy_mode?: string | null
           drinking_status?: string | null
           education_level?: string | null
+          engagement_score?: number | null
           exercise_habits?: string | null
+          financial_score?: number | null
           gender_identity?:
             | Database["public"]["Enums"]["gender_identity"]
             | null
@@ -2161,18 +2183,26 @@ export type Database = {
           identity_visibility?: boolean | null
           interests?: string[] | null
           is_profile_complete?: boolean | null
+          last_login_days_ago?: number | null
           last_preference_update?: string | null
           location?: string | null
           location_consent?: boolean | null
           location_data?: Json | null
+          mrr?: number | null
+          nps?: number | null
           occupation?: string | null
           onboarding_step?: number | null
+          open_tickets?: number | null
+          outcomes_score?: number | null
           phone_number?: string | null
           photos?: string[] | null
           preference_to_be_seen_by?: string[] | null
           preference_to_see?: string[] | null
+          product_adoption_score?: number | null
           relationship_goals?: string[] | null
+          relationship_score?: number | null
           rif_quiz_answers?: Json | null
+          segment?: string | null
           sexual_orientation?:
             | Database["public"]["Enums"]["sexual_orientation"]
             | null
@@ -3016,7 +3046,9 @@ export type Database = {
           discovery_privacy_mode: string | null
           drinking_status: string | null
           education_level: string | null
+          engagement_score: number | null
           exercise_habits: string | null
+          financial_score: number | null
           gender_identity: Database["public"]["Enums"]["gender_identity"] | null
           gender_identity_custom: string | null
           height_cm: number | null
@@ -3024,18 +3056,26 @@ export type Database = {
           identity_visibility: boolean | null
           interests: string[] | null
           is_profile_complete: boolean | null
+          last_login_days_ago: number | null
           last_preference_update: string | null
           location: string | null
           location_consent: boolean | null
           location_data: Json | null
+          mrr: number | null
+          nps: number | null
           occupation: string | null
           onboarding_step: number | null
+          open_tickets: number | null
+          outcomes_score: number | null
           phone_number: string | null
           photos: string[] | null
           preference_to_be_seen_by: string[] | null
           preference_to_see: string[] | null
+          product_adoption_score: number | null
           relationship_goals: string[] | null
+          relationship_score: number | null
           rif_quiz_answers: Json | null
+          segment: string | null
           sexual_orientation:
             | Database["public"]["Enums"]["sexual_orientation"]
             | null
