@@ -61,15 +61,15 @@
     --input: 28 28% 90%;
     --ring: 36 25% 52%;
 
-    /* Sidebar — warm deep taupe, grounded */
-    --sidebar-background: 30 20% 26%;
-    --sidebar-foreground: 28 38% 92%;
-    --sidebar-primary: 28 38% 92%;
-    --sidebar-primary-foreground: 30 20% 26%;
-    --sidebar-accent: 36 22% 34%;
-    --sidebar-accent-foreground: 28 38% 92%;
-    --sidebar-border: 30 16% 22%;
-    --sidebar-ring: 28 38% 92%;
+    /* Sidebar — sandy taupe, cohesive mid-tone warmth */
+    --sidebar-background: 30 16% 40%;
+    --sidebar-foreground: 28 38% 94%;
+    --sidebar-primary: 28 38% 94%;
+    --sidebar-primary-foreground: 30 16% 40%;
+    --sidebar-accent: 30 18% 48%;
+    --sidebar-accent-foreground: 28 38% 94%;
+    --sidebar-border: 30 14% 34%;
+    --sidebar-ring: 28 38% 94%;
 
     --radius: 0.75rem;
 
@@ -103,7 +103,7 @@
     --chart-4: 30 20% 26%;
     --chart-5: 36 18% 44%;
 
-    --sidebar: 30 20% 26%;
+    --sidebar: 30 16% 40%;
     --font-sans: 'DM Sans', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
     --font-serif: 'Playfair Display', 'Georgia', ui-serif, serif;
     --font-mono: 'Space Mono', ui-monospace, SFMono-Regular, monospace;
