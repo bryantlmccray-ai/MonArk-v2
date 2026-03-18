@@ -10,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { MonArkLogo } from '../MonArkLogo';
+import monarkLogoHorizontal from '@/assets/monark-logo-horizontal.png';
 
 interface SidebarNavigationProps {
   activeTab: string;
