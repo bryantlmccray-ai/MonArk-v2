@@ -2063,6 +2063,7 @@ export type Database = {
           age_verification_timestamp: string | null
           age_verified: boolean | null
           bio: string | null
+          churn_risk: string | null
           created_at: string
           date_of_birth: string | null
           date_preferences: Json | null
@@ -2079,11 +2080,14 @@ export type Database = {
           identity_visibility: boolean | null
           interests: string[] | null
           is_profile_complete: boolean | null
+          last_active_at: string | null
           last_login_days_ago: number | null
           last_preference_update: string | null
           location: string | null
           location_consent: boolean | null
           location_data: Json | null
+          matches_responded: number | null
+          matches_viewed: number | null
           mrr: number | null
           nps: number | null
           occupation: string | null
@@ -2113,6 +2117,7 @@ export type Database = {
           age_verification_timestamp?: string | null
           age_verified?: boolean | null
           bio?: string | null
+          churn_risk?: string | null
           created_at?: string
           date_of_birth?: string | null
           date_preferences?: Json | null
@@ -2131,11 +2136,14 @@ export type Database = {
           identity_visibility?: boolean | null
           interests?: string[] | null
           is_profile_complete?: boolean | null
+          last_active_at?: string | null
           last_login_days_ago?: number | null
           last_preference_update?: string | null
           location?: string | null
           location_consent?: boolean | null
           location_data?: Json | null
+          matches_responded?: number | null
+          matches_viewed?: number | null
           mrr?: number | null
           nps?: number | null
           occupation?: string | null
@@ -2165,6 +2173,7 @@ export type Database = {
           age_verification_timestamp?: string | null
           age_verified?: boolean | null
           bio?: string | null
+          churn_risk?: string | null
           created_at?: string
           date_of_birth?: string | null
           date_preferences?: Json | null
@@ -2183,11 +2192,14 @@ export type Database = {
           identity_visibility?: boolean | null
           interests?: string[] | null
           is_profile_complete?: boolean | null
+          last_active_at?: string | null
           last_login_days_ago?: number | null
           last_preference_update?: string | null
           location?: string | null
           location_consent?: boolean | null
           location_data?: Json | null
+          matches_responded?: number | null
+          matches_viewed?: number | null
           mrr?: number | null
           nps?: number | null
           occupation?: string | null
@@ -3040,6 +3052,7 @@ export type Database = {
           age_verification_timestamp: string | null
           age_verified: boolean | null
           bio: string | null
+          churn_risk: string | null
           created_at: string
           date_of_birth: string | null
           date_preferences: Json | null
@@ -3056,11 +3069,14 @@ export type Database = {
           identity_visibility: boolean | null
           interests: string[] | null
           is_profile_complete: boolean | null
+          last_active_at: string | null
           last_login_days_ago: number | null
           last_preference_update: string | null
           location: string | null
           location_consent: boolean | null
           location_data: Json | null
+          matches_responded: number | null
+          matches_viewed: number | null
           mrr: number | null
           nps: number | null
           occupation: string | null
@@ -3149,6 +3165,7 @@ export type Database = {
         Args: { p_match_id: string; p_status: string }
         Returns: undefined
       }
+      run_churn_detection: { Args: never; Returns: number }
       verify_age_18_plus: { Args: { birth_date: string }; Returns: boolean }
     }
     Enums: {
