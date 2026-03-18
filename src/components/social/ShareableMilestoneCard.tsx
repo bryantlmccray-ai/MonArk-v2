@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { MonArkLogo } from '../MonArkLogo';
+import monarkLogoHorizontal from '@/assets/monark-logo-horizontal.png';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Share2, Download, Check, Loader2 } from 'lucide-react';
