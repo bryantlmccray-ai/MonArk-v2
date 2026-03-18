@@ -29,14 +29,14 @@
     --color-rosegold-deep: 22 38% 36%;
     --color-warm-glow: 36 30% 62%;
 
-    /* Background: warm linen */
-    --background: 28 30% 87%;
-    /* Foreground: deep forest — strong contrast on linen */
-    --foreground: 30 20% 22%;
+    /* Background: bone canvas */
+    --background: 30 24% 90%;
+    /* Foreground: warm charcoal */
+    --foreground: 30 20% 20%;
 
-    /* Cards: lighter linen */
-    --card: 28 38% 94%;
-    --card-foreground: 30 20% 22%;
+    /* Cards: soft linen */
+    --card: 30 28% 93%;
+    --card-foreground: 30 20% 20%;
 
     --popover: 28 38% 94%;
     --popover-foreground: 30 20% 22%;
