@@ -61,15 +61,15 @@
     --input: 28 28% 90%;
     --ring: 36 25% 52%;
 
-    /* Sidebar — Sandy Gold surface with dark typography */
-    --sidebar-background: 36 25% 52%;
-    --sidebar-foreground: 30 20% 22%;
-    --sidebar-primary: 30 20% 22%;
-    --sidebar-primary-foreground: 36 25% 52%;
-    --sidebar-accent: 36 22% 46%;
-    --sidebar-accent-foreground: 30 20% 22%;
-    --sidebar-border: 36 20% 44%;
-    --sidebar-ring: 30 20% 22%;
+    /* Sidebar — Dark warm surface */
+    --sidebar-background: 30 18% 15%;
+    --sidebar-foreground: 30 19% 46%;
+    --sidebar-primary: 32 38% 71%;
+    --sidebar-primary-foreground: 30 18% 15%;
+    --sidebar-accent: 36 19% 42% / 0.2;
+    --sidebar-accent-foreground: 32 38% 71%;
+    --sidebar-border: 30 16% 22%;
+    --sidebar-ring: 32 38% 71%;
 
     --radius: 0.75rem;
 
