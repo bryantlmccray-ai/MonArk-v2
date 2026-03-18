@@ -124,7 +124,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
 
           {/* Main content */}
           <div className="relative flex flex-col items-center">
-            {/* Logo mark with warm glow */}
+            {/* Logo with warm glow */}
             <motion.div
               className="relative mb-10"
               initial={{ scale: 0.8, opacity: 0 }}
@@ -133,7 +133,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
             >
               {/* Warm glow behind logo */}
               <motion.div
-                className="absolute -inset-8 rounded-full"
+                className="absolute -inset-12 rounded-full"
                 style={{ background: "radial-gradient(circle, hsla(22, 38%, 36%, 0.12) 0%, transparent 70%)" }}
                 animate={{
                   scale: [1, 1.2, 1],
@@ -142,48 +142,12 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               />
 
-              {/* Outer ring — sandy gold */}
-              <motion.div
-                className="w-36 h-36 md:w-44 md:h-44 rounded-full"
-                style={{ border: "1.5px solid hsla(36, 25%, 52%, 0.5)" }}
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
+              <img 
+                src={monarkLogoHorizontal} 
+                alt="MonArk — Date well." 
+                className="relative h-24 md:h-32 w-auto object-contain"
+                style={{ filter: "drop-shadow(0 0 20px hsla(22, 38%, 36%, 0.15))" }}
               />
-              
-              {/* Inner ring with sandy gold */}
-              <motion.div
-                className="absolute inset-4 rounded-full"
-                style={{ border: "1px solid hsla(36, 25%, 52%, 0.4)" }}
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 1, ease: "easeOut", delay: 0.4 }}
-              >
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  style={{ background: "hsla(22, 38%, 36%, 0.04)" }}
-                  animate={{ 
-                    boxShadow: [
-                      "0 0 25px hsla(22, 38%, 36%, 0.08)",
-                      "0 0 50px hsla(22, 38%, 36%, 0.18)",
-                      "0 0 25px hsla(22, 38%, 36%, 0.08)",
-                    ]
-                  }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                />
-              </motion.div>
-
-              {/* Center monogram */}
-              <motion.div
-                className="absolute inset-0 flex items-center justify-center"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-              >
-                <span className="font-serif text-5xl md:text-6xl tracking-widest" style={{ color: "hsl(80, 18%, 24%)" }}>
-                  M
-                </span>
-              </motion.div>
             </motion.div>
 
             {/* "Welcome to" letter reveal */}
@@ -213,24 +177,6 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               </motion.div>
             </motion.div>
 
-            {/* Brand name */}
-            <motion.div
-              className="overflow-hidden"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 1.2 }}
-            >
-              <motion.h1
-                className="font-serif text-4xl md:text-5xl tracking-[0.25em] uppercase"
-                style={{ color: "hsl(80, 18%, 24%)" }}
-                initial={{ y: 40 }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.8, delay: 1.3, ease: [0.22, 1, 0.36, 1] }}
-              >
-                Mon<span style={{ color: "hsl(22, 38%, 36%)" }}>A</span>rk
-              </motion.h1>
-            </motion.div>
-
             {/* Tagline */}
             <motion.p
               className="mt-8 font-body text-base md:text-lg tracking-[0.2em] uppercase"
@@ -242,10 +188,10 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               The Art of Intentional Dating
             </motion.p>
 
-            {/* Gradient line — olive to sienna */}
+            {/* Gradient line */}
             <motion.div
               className="mt-10 h-px"
-              style={{ background: "linear-gradient(to right, transparent, hsla(80, 20%, 36%, 0.4), hsla(22, 38%, 36%, 0.3), transparent)" }}
+              style={{ background: "linear-gradient(to right, transparent, hsla(36, 25%, 52%, 0.4), hsla(22, 38%, 36%, 0.3), transparent)" }}
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: 160, opacity: 1 }}
               transition={{ duration: 1.2, delay: 1.8, ease: "easeOut" }}

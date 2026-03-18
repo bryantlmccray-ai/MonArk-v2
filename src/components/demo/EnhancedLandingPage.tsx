@@ -482,7 +482,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       {/* ═══════════ FOOTER ═══════════ */}
       <footer className="py-12 bg-muted border-t border-border">
         <div className="max-w-4xl mx-auto px-5 text-center">
-          <MonArkLogo size="md" variant="compact" className="mx-auto mb-6" />
+          <img src={monarkLogoHorizontal} alt="MonArk — Date well." className="h-10 w-auto object-contain mx-auto mb-6" />
 
           <div className="mb-6">
             <a

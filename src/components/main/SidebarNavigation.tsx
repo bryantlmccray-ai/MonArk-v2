@@ -31,12 +31,11 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
     <Sidebar className="border-r border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border p-6">
         <div className="flex items-center justify-center">
-          <MonArkLogo 
-            clickable={true}
+          <img 
+            src={monarkLogoHorizontal} 
+            alt="MonArk — Date well."
+            className="h-12 w-auto object-contain cursor-pointer hover:opacity-80 transition-opacity duration-300"
             onClick={onArkNavigation || (() => onTabChange('dates'))}
-            variant="compact"
-            size="lg"
-            rotateOnLoad={true}
           />
         </div>
       </SidebarHeader>

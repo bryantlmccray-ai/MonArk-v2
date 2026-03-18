@@ -4,6 +4,7 @@ import { PrivacyDataPortal } from '@/components/privacy/PrivacyDataPortal';
 import { DataDeletionManager } from '@/components/privacy/DataDeletionManager';
 import { Button } from '@/components/ui/button';
 import { FileText, Settings } from 'lucide-react';
+import monarkLogoHorizontal from '@/assets/monark-logo-horizontal.png';
 
 export default function Privacy() {
   const [activeTab, setActiveTab] = useState<'policy' | 'data'>('policy');
@@ -11,6 +12,10 @@ export default function Privacy() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
+        {/* Brand header */}
+        <div className="flex justify-center mb-6">
+          <a href="/"><img src={monarkLogoHorizontal} alt="MonArk — Date well." className="h-10 w-auto object-contain" /></a>
+        </div>
         {/* Tab Navigation */}
         <div className="flex justify-center mb-8">
           <div className="bg-card rounded-lg p-1 border border-border">
