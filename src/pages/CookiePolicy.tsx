@@ -2,12 +2,17 @@ import React from 'react';
 import { Cookie, ArrowLeft, Home, Shield, Eye, Settings, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import monarkLogoHorizontal from '@/assets/monark-logo-horizontal.png';
 
 export default function CookiePolicy() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto space-y-8">
+          {/* Brand header */}
+          <div className="flex justify-center mb-2">
+            <a href="/"><img src={monarkLogoHorizontal} alt="MonArk — Date well." className="h-10 w-auto object-contain" /></a>
+          </div>
           {/* Navigation */}
           <div className="flex items-center justify-between mb-6">
             <Button variant="ghost" onClick={() => window.history.back()} className="text-primary hover:bg-primary/10">

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { MonArkLogo } from '@/components/MonArkLogo';
+import monarkLogoHorizontal from '@/assets/monark-logo-horizontal.png';
 import { PenLine, Heart, MapPin, ArrowRight, Instagram } from 'lucide-react';
 import { motion } from 'framer-motion';
 import founderPortrait from '@/assets/founder-portrait.jpeg';
@@ -481,7 +482,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       {/* ═══════════ FOOTER ═══════════ */}
       <footer className="py-12 bg-muted border-t border-border">
         <div className="max-w-4xl mx-auto px-5 text-center">
-          <MonArkLogo size="md" variant="compact" className="mx-auto mb-6" />
+          <img src={monarkLogoHorizontal} alt="MonArk — Date well." className="h-10 w-auto object-contain mx-auto mb-6" />
 
           <div className="mb-6">
             <a

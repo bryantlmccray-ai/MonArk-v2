@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { MonArkLogo } from '../MonArkLogo';
+import monarkLogoHorizontal from '@/assets/monark-logo-horizontal.png';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Share2, Download, Check, Loader2 } from 'lucide-react';
@@ -377,18 +377,7 @@ export const ShareableMilestoneCard: React.FC<ShareableMilestoneCardProps> = ({
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
           >
-            <div className="flex items-center gap-3">
-              <MonArkLogo size="sm" showTitle={false} />
-              <span 
-                className="text-lg tracking-[0.2em] font-light"
-                style={{ 
-                  fontFamily: "'Canela', 'Playfair Display', serif",
-                  color: 'hsl(35, 30%, 92%)'
-                }}
-              >
-                MonArk
-              </span>
-            </div>
+            <img src={monarkLogoHorizontal} alt="MonArk — Date well." className="h-8 w-auto object-contain brightness-110" />
             <Badge 
               variant="outline" 
               className="border-white/20 bg-white/5 text-white/60 text-[10px] tracking-wider"
