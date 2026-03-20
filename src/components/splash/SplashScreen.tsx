@@ -11,7 +11,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
-    if (sessionStorage.getItem('monark-splash-seen-v3')) {
+    if (sessionStorage.getItem('monark-splash-seen-v4')) {
       onComplete();
       return;
     }
