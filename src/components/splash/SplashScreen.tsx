@@ -11,7 +11,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
-    if (sessionStorage.getItem('monark-splash-seen-v4')) {
+    if (sessionStorage.getItem('monark-splash-seen-v5')) {
       onComplete();
       return;
     }
@@ -21,7 +21,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
 
   const handleEnter = () => {
     setIsExiting(true);
-    sessionStorage.setItem('monark-splash-seen-v4', 'true');
+    sessionStorage.setItem('monark-splash-seen-v5', 'true');
     setTimeout(onComplete, 800);
   };
 
@@ -37,18 +37,15 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         >
           {/* Animated hero image filling the screen with cinematic zoom */}
           <motion.div
-            className="absolute inset-0 w-full h-full overflow-hidden"
+            className="absolute inset-0 w-full h-full bg-center bg-cover bg-no-repeat"
             initial={{ scale: 1.3, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 3.5, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <img
-              src={splashHero}
-              alt=""
-              className="w-full h-full object-cover"
-              style={{ filter: 'grayscale(100%) contrast(1.1)' }}
-            />
-          </motion.div>
+            style={{
+              backgroundImage: `url(${splashHero})`,
+              filter: 'grayscale(100%) contrast(1.1)',
+            }}
+          />
           {/* Dark gradient overlay for text legibility */}
           <div
             className="absolute inset-0"

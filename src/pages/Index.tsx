@@ -27,7 +27,7 @@ const Index = () => {
   const [autoFixAttempted, setAutoFixAttempted] = React.useState(false);
 
   const handleSplashComplete = () => {
-    sessionStorage.setItem('monark-splash-seen-v4', 'true');
+    sessionStorage.setItem('monark-splash-seen-v5', 'true');
     setShowSplash(false);
   };
 
