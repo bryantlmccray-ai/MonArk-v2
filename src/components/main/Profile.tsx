@@ -564,6 +564,16 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
       <LocationConsentModal isOpen={showLocationModal} onClose={() => setShowLocationModal(false)} onSuccess={handleLocationUpdate} />
       <AnalyticsConsentModal isOpen={showAnalyticsModal} onClose={() => setShowAnalyticsModal(false)} />
       <MonthlyRecapModal isOpen={showRecapModal} onClose={() => setShowRecapModal(false)} />
+
+      {profile?.photos && profile.photos.length > 0 && (
+        <PhotoLightbox
+          photos={profile.photos}
+          initialIndex={lightboxIndex}
+          isOpen={lightboxOpen}
+          onClose={() => setLightboxOpen(false)}
+          name={userName}
+        />
+      )}
     </div>
   );
 };
