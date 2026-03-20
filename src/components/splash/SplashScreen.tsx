@@ -36,13 +36,16 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           transition={{ duration: 0.8, ease: "easeInOut" }}
           onClick={isReady ? handleEnter : undefined}
         >
-          {/* Animated hero image filling the screen */}
-          <div
+          {/* Animated hero image filling the screen with cinematic zoom */}
+          <motion.div
             className="absolute inset-0 w-full h-full"
+            initial={{ scale: 1.3, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 3.5, ease: [0.22, 1, 0.36, 1] }}
             style={{
               backgroundImage: `url('/images/splash-hero.jpeg')`,
               backgroundSize: 'cover',
-              backgroundPosition: 'center',
+              backgroundPosition: 'center top',
               filter: 'grayscale(100%) contrast(1.1)',
             }}
           />
