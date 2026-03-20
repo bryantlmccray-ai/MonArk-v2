@@ -11,12 +11,12 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
 
   const handleEnter = () => {
     setIsExiting(true);
-    sessionStorage.setItem("monark-splash-seen-v6", "true");
+    sessionStorage.setItem("monark-splash-seen-v7", "true");
     window.setTimeout(onComplete, 800);
   };
 
   useEffect(() => {
-    if (sessionStorage.getItem("monark-splash-seen-v6")) {
+    if (sessionStorage.getItem("monark-splash-seen-v7")) {
       onComplete();
       return;
     }
@@ -35,15 +35,15 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           transition={{ duration: 0.8, ease: "easeInOut" }}
           onClick={handleEnter}
         >
-          <motion.div
-            className="absolute inset-0 h-full w-full bg-cover bg-center bg-no-repeat"
-            initial={{ scale: 1.3, opacity: 0 }}
+          <motion.img
+            src={splashHero}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover"
+            initial={{ scale: 1.12, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 3.5, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              backgroundImage: `url(${splashHero})`,
-              filter: "grayscale(100%) contrast(1.1)",
-            }}
+            transition={{ duration: 3.2, ease: [0.22, 1, 0.36, 1] }}
+            style={{ filter: "grayscale(100%) contrast(1.08)" }}
           />
         </motion.div>
       ) : null}
