@@ -70,30 +70,37 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
 
           {/* Main content — bottom-aligned like the reference */}
           <div className="relative z-10 flex flex-col items-center justify-end h-full w-full pb-32 md:pb-40">
-            {/* Logo */}
-            <motion.div
-              className="relative mb-6"
+            {/* MonArk wordmark */}
+            <motion.h1
+              className="font-serif text-4xl md:text-5xl tracking-[0.25em] uppercase"
+              style={{ color: "#D4B896" }}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, delay: 1.2, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1.2, delay: 1.0, ease: [0.22, 1, 0.36, 1] }}
             >
-              <img
-                src={monarkLogoHorizontal}
-                alt="MonArk — Date well."
-                className="relative h-16 md:h-24 w-auto object-contain"
-                style={{ filter: "drop-shadow(0 0 20px rgba(212,184,150,0.3))" }}
-              />
-            </motion.div>
+              MONARK
+            </motion.h1>
 
-            {/* Tagline */}
+            {/* Tagline — between MonArk and Date well */}
             <motion.p
-              className="font-body text-sm md:text-base tracking-[0.35em] uppercase"
-              style={{ color: "rgba(255,255,255,0.6)" }}
+              className="font-body text-xs md:text-sm tracking-[0.3em] uppercase mt-3"
+              style={{ color: "rgba(255,255,255,0.5)" }}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.8, ease: "easeOut" }}
+              transition={{ duration: 0.8, delay: 1.6, ease: "easeOut" }}
             >
               The Art of Intentional Dating
+            </motion.p>
+
+            {/* Date well. */}
+            <motion.p
+              className="font-serif text-lg md:text-xl tracking-[0.2em] italic mt-3"
+              style={{ color: "#D4B896" }}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 2.0, ease: "easeOut" }}
+            >
+              Date well.
             </motion.p>
 
             {/* Separator line */}
