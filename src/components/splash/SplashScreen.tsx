@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import monarkLogoHorizontal from '@/assets/monark-logo-horizontal.png';
-import splashHero from '@/assets/splash-hero.jpeg';
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -41,7 +40,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           <div
             className="absolute inset-0 w-full h-full"
             style={{
-              backgroundImage: `url(${splashHero})`,
+              backgroundImage: `url('/images/splash-hero.jpeg')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               filter: 'grayscale(100%) contrast(1.1)',
