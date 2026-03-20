@@ -24,19 +24,17 @@ const variants = {
     opacity: 1,
     scale: 1,
     transition: {
-    x: { type: 'spring', stiffness: 260, damping: 30 },
-    opacity: { duration: 0.3 },
-    scale: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const },
-  },
+      duration: 0.4,
+      ease: 'easeOut',
+    },
   },
   exit: (direction: number) => ({
     x: direction < 0 ? '100%' : '-100%',
     opacity: 0,
     scale: 0.92,
     transition: {
-      x: { type: 'spring', stiffness: 260, damping: 30 },
-      opacity: { duration: 0.2 },
-      scale: { duration: 0.3 },
+      duration: 0.3,
+      ease: 'easeIn',
     },
   }),
 };
