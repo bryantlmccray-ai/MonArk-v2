@@ -205,7 +205,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onSk
       case 8:
         return <RelationshipGoalsStep onNext={handleGoalsNext} onBack={() => goBack(7)} onSkip={skipToNext} />;
       case 9:
-        return <DatingStyleQuiz onComplete={handleDatingStyleComplete} onSkip={skipToNext} />;
+        return <RIFQuiz userId={profile?.user_id || ''} onComplete={handleRIFQuizComplete} onSkip={skipToNext} />;
       case 10:
         return <RIFComplete onContinueToProfile={onComplete} onSkipProfile={onSkipToWaiting} />;
       default:
