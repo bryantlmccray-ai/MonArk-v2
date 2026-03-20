@@ -2988,6 +2988,28 @@ export type Database = {
         }
         Relationships: []
       }
+      rif_match_candidates: {
+        Row: {
+          age: number | null
+          boundary_respect: number | null
+          emotional_readiness: number | null
+          gender_identity: Database["public"]["Enums"]["gender_identity"] | null
+          intent_clarity: number | null
+          location: string | null
+          onboarding_step: number | null
+          pacing_preferences: number | null
+          post_date_alignment: number | null
+          preference_to_see: string[] | null
+          profile_version: number | null
+          relationship_goals: string[] | null
+          rif_updated_at: string | null
+          sexual_orientation:
+            | Database["public"]["Enums"]["sexual_orientation"]
+            | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       atomic_share_contact: {

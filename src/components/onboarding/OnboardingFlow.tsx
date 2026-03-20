@@ -2,17 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { OnboardingWelcome } from './OnboardingWelcome';
 import { OnboardingDifference } from './OnboardingDifference';
 import { RIFIntro } from './RIFIntro';
+import RIFQuiz, { type RIFScores } from './RIFQuiz';
 import { SimplifiedPhotosStep } from './SimplifiedPhotosStep';
 import { SimplifiedBioStep } from './SimplifiedBioStep';
 import { SimplifiedInterestsStep } from './SimplifiedInterestsStep';
 import { LocationStep } from './LocationStep';
 import { SimplifiedIdentityStep } from './SimplifiedIdentityStep';
 import { RelationshipGoalsStep } from './RelationshipGoalsStep';
-import RIFQuiz, { type RIFScores } from './RIFQuiz';
 import { RIFComplete } from './RIFComplete';
 import { useProfile } from '@/hooks/useProfile';
 import { useToast } from '@/hooks/use-toast';
-
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -39,13 +38,13 @@ interface OnboardingData {
 // 0: Welcome Screen
 // 1: Why MonArk is Different
 // 2: RIF Intro
-// 3: Photos (min 2)
-// 4: Bio & Occupation
-// 5: Interests Selection
-// 6: Location
-// 7: Identity & Orientation
-// 8: Relationship Goals
-// 9: Dating Style Quiz (RIF Assessment)
+// 3: RIF Quiz (15-question assessment)
+// 4: Photos (min 2)
+// 5: Bio & Occupation
+// 6: Interests Selection
+// 7: Location
+// 8: Identity & Orientation
+// 9: Relationship Goals
 // 10: Profile Complete Screen
 
 export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onSkipToWaiting, onExit, showExitButton = false }) => {
@@ -63,13 +62,11 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onSk
   
   const { profile, updateProfile } = useProfile();
   const { toast } = useToast();
-  
 
   // Resume from saved step if user returns to onboarding
   useEffect(() => {
     if (profile?.onboarding_step && profile.onboarding_step > 0 && profile.onboarding_step < 10) {
       setCurrentStep(profile.onboarding_step);
-      // Restore saved data
       setOnboardingData({
         photos: profile.photos || [],
         bio: profile.bio || '',
@@ -83,9 +80,9 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onSk
     }
   }, [profile?.onboarding_step]);
 
-  // Save progress when step changes (for screens 3+)
+  // Save progress when step changes (for screens 4+ where profile data is collected)
   const saveProgress = async (step: number, data?: Partial<OnboardingData>) => {
-    if (step < 3) return; // Don't save progress for intro screens
+    if (step < 4) return; // Don't save progress for intro/quiz screens
     
     try {
       await updateProfile({
@@ -104,76 +101,67 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onSk
     }
   };
 
-  // Skip handlers - move to next step without saving data
   const skipToNext = () => {
-    if (currentStep < 9) {
+    if (currentStep < 10) {
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
       saveProgress(nextStep);
-    } else if (currentStep === 9) {
-      // Skip RIF quiz — go straight to complete
-      setCurrentStep(10);
     }
+  };
+
+  const handleRIFQuizComplete = async (scores: RIFScores) => {
+    setOnboardingData(prev => ({ ...prev, rifScores: scores }));
+    // RIFQuiz component already saves scores to DB — just advance
+    setCurrentStep(4);
   };
 
   const handlePhotosNext = async (photos: string[]) => {
     const updatedData = { ...onboardingData, photos };
     setOnboardingData(updatedData);
-    setCurrentStep(4);
-    await saveProgress(4, { photos });
+    setCurrentStep(5);
+    await saveProgress(5, { photos });
   };
 
   const handleBioNext = async (data: { bio: string; occupation: string }) => {
     const updatedData = { ...onboardingData, bio: data.bio, occupation: data.occupation };
     setOnboardingData(updatedData);
-    setCurrentStep(5);
-    await saveProgress(5, { bio: data.bio, occupation: data.occupation });
+    setCurrentStep(6);
+    await saveProgress(6, { bio: data.bio, occupation: data.occupation });
   };
 
   const handleInterestsNext = async (interests: string[]) => {
     const updatedData = { ...onboardingData, interests };
     setOnboardingData(updatedData);
-    setCurrentStep(6);
-    await saveProgress(6, { interests });
+    setCurrentStep(7);
+    await saveProgress(7, { interests });
   };
 
   const handleLocationNext = async (location: string) => {
     const updatedData = { ...onboardingData, location };
     setOnboardingData(updatedData);
-    setCurrentStep(7);
-    await saveProgress(7, { location });
+    setCurrentStep(8);
+    await saveProgress(8, { location });
   };
 
   const handleIdentityNext = async (data: { genderIdentity: string; sexualOrientation: string }) => {
     const updatedData = { ...onboardingData, ...data };
     setOnboardingData(updatedData);
-    setCurrentStep(8);
-    await saveProgress(8, data);
+    setCurrentStep(9);
+    await saveProgress(9, data);
   };
 
   const handleGoalsNext = async (goals: string[]) => {
     const updatedData = { ...onboardingData, relationshipGoals: goals };
     setOnboardingData(updatedData);
-    setCurrentStep(9);
-    await saveProgress(9, { relationshipGoals: goals });
-  };
-
-  const handleRIFQuizComplete = async (scores: RIFScores) => {
-    setOnboardingData(prev => ({ ...prev, rifScores: scores }));
     
     try {
       await updateProfile({
+        relationship_goals: goals,
         onboarding_step: 10,
         is_profile_complete: true,
       });
-      console.log('RIF profile created/updated successfully');
     } catch (error) {
-      console.error('Error finalizing onboarding:', error);
-      toast({
-        title: "Couldn't save quiz results",
-        description: "Don't worry, you can continue. We'll try again.",
-        variant: "destructive",
-      });
+      console.error('Error completing profile:', error);
     }
     
     setCurrentStep(10);
@@ -192,19 +180,19 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onSk
       case 2:
         return <RIFIntro onNext={() => setCurrentStep(3)} onBack={() => setCurrentStep(1)} />;
       case 3:
-        return <SimplifiedPhotosStep onNext={handlePhotosNext} onSkip={skipToNext} />;
-      case 4:
-        return <SimplifiedBioStep onNext={handleBioNext} onBack={() => goBack(3)} onSkip={skipToNext} />;
-      case 5:
-        return <SimplifiedInterestsStep onNext={handleInterestsNext} onBack={() => goBack(4)} onSkip={skipToNext} />;
-      case 6:
-        return <LocationStep onNext={handleLocationNext} onBack={() => goBack(5)} onSkip={skipToNext} />;
-      case 7:
-        return <SimplifiedIdentityStep onNext={handleIdentityNext} onBack={() => goBack(6)} onSkip={skipToNext} />;
-      case 8:
-        return <RelationshipGoalsStep onNext={handleGoalsNext} onBack={() => goBack(7)} onSkip={skipToNext} />;
-      case 9:
         return <RIFQuiz userId={profile?.user_id || ''} onComplete={handleRIFQuizComplete} onSkip={skipToNext} />;
+      case 4:
+        return <SimplifiedPhotosStep onNext={handlePhotosNext} onSkip={skipToNext} />;
+      case 5:
+        return <SimplifiedBioStep onNext={handleBioNext} onBack={() => goBack(4)} onSkip={skipToNext} />;
+      case 6:
+        return <SimplifiedInterestsStep onNext={handleInterestsNext} onBack={() => goBack(5)} onSkip={skipToNext} />;
+      case 7:
+        return <LocationStep onNext={handleLocationNext} onBack={() => goBack(6)} onSkip={skipToNext} />;
+      case 8:
+        return <SimplifiedIdentityStep onNext={handleIdentityNext} onBack={() => goBack(7)} onSkip={skipToNext} />;
+      case 9:
+        return <RelationshipGoalsStep onNext={handleGoalsNext} onBack={() => goBack(8)} onSkip={skipToNext} />;
       case 10:
         return <RIFComplete onContinueToProfile={onComplete} onSkipProfile={onSkipToWaiting} />;
       default:
