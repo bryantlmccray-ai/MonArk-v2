@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import monarkLogoHorizontal from '@/assets/monark-logo-horizontal.png';
+import splashHero from '@/assets/splash-hero.jpeg';
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -26,17 +27,6 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     setTimeout(onComplete, 800);
   };
 
-  /* Palette mapped to site tokens (index.css):
-     Background  --background   28 30% 87%  (warm linen)
-     Card        --card         28 38% 94%  (parchment)
-     Foreground  --foreground   80 18% 24%  (deep forest)
-     Primary     --primary      80 20% 36%  (sage olive)
-     Accent      --accent       22 38% 36%  (sienna/taupe)
-     Muted       --muted-fg     36 18% 42%  (dusty taupe)
-     Goldenrod   --color-goldenrod 36 25% 52%
-     Rosegold    --color-rosegold  22 34% 50%
-  */
-
   return (
     <AnimatePresence>
       {!isExiting ? (
@@ -46,205 +36,123 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
           onClick={isReady ? handleEnter : undefined}
-          style={{ background: "linear-gradient(160deg, hsl(28, 30%, 87%) 0%, hsl(28, 38%, 91%) 40%, hsl(28, 28%, 84%) 100%)" }}
         >
-          {/* Warm ambient light */}
+          {/* Animated hero image filling the screen */}
           <motion.div
             className="absolute inset-0"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 2.5 }}
+            initial={{ scale: 1.3, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 3, ease: [0.22, 1, 0.36, 1] }}
           >
-            {/* Sienna warm orb — top center */}
-            <motion.div
-              className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full"
-              style={{ background: "radial-gradient(circle, hsla(22, 38%, 36%, 0.18) 0%, transparent 70%)" }}
-              animate={{
-                scale: [1, 1.15, 1],
-                opacity: [0.6, 0.9, 0.6],
-              }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            <img
+              src={splashHero}
+              alt=""
+              className="w-full h-full object-cover"
+              style={{ filter: "grayscale(100%) contrast(1.1)" }}
             />
-            {/* Sandy gold accent — bottom */}
-            <motion.div
-              className="absolute bottom-1/3 right-1/3 w-[400px] h-[400px] rounded-full"
-              style={{ background: "radial-gradient(circle, hsla(36, 25%, 52%, 0.12) 0%, transparent 70%)" }}
-              animate={{
-                x: [0, -30, 0],
-                y: [0, -20, 0],
-                scale: [1, 1.1, 1],
+            {/* Dark gradient overlay for text legibility */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.15) 100%)",
               }}
-              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-            />
-            {/* Olive primary accent — top right, subtle */}
-            <motion.div
-              className="absolute top-1/3 right-1/4 w-[350px] h-[350px] rounded-full"
-              style={{ background: "radial-gradient(circle, hsla(80, 20%, 36%, 0.08) 0%, transparent 70%)" }}
-              animate={{
-                scale: [1, 1.08, 1],
-                opacity: [0.4, 0.7, 0.4],
-              }}
-              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
             />
           </motion.div>
 
-          {/* Soft vignette bars (warm, not black) */}
-          <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-[hsl(28,22%,78%)]/30 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[hsl(28,22%,78%)]/30 to-transparent" />
+          {/* Film grain texture overlay */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none opacity-20"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E")`,
+            }}
+            animate={{ opacity: [0.15, 0.25, 0.15] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          />
 
-          {/* Floating warm particles */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {[...Array(8)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-1 h-1 rounded-full"
-                style={{
-                  left: `${15 + i * 10}%`,
-                  top: `${25 + (i % 4) * 15}%`,
-                  background: i % 3 === 0 
-                    ? "hsla(80, 20%, 36%, 0.45)"   /* olive */
-                    : i % 3 === 1
-                    ? "hsla(22, 38%, 36%, 0.4)"     /* sienna */
-                    : "hsla(36, 25%, 52%, 0.35)",   /* goldenrod */
-                }}
-                animate={{
-                  y: [-15, 25, -15],
-                  x: [-5, 5, -5],
-                  opacity: [0.2, 0.6, 0.2],
-                }}
-                transition={{
-                  duration: 5 + i * 0.7,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: i * 0.4,
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Main content */}
-          <div className="relative flex flex-col items-center">
-            {/* Logo with warm glow */}
+          {/* Main content — bottom-aligned like the reference */}
+          <div className="relative z-10 flex flex-col items-center justify-end h-full w-full pb-32 md:pb-40">
+            {/* Logo */}
             <motion.div
-              className="relative mb-10"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+              className="relative mb-6"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, delay: 1.2, ease: [0.22, 1, 0.36, 1] }}
             >
-              {/* Warm glow behind logo */}
-              <motion.div
-                className="absolute -inset-12 rounded-full"
-                style={{ background: "radial-gradient(circle, hsla(22, 38%, 36%, 0.12) 0%, transparent 70%)" }}
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.5, 0.8, 0.5],
-                }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              <img
+                src={monarkLogoHorizontal}
+                alt="MonArk — Date well."
+                className="relative h-16 md:h-24 w-auto object-contain"
+                style={{ filter: "brightness(10) drop-shadow(0 0 30px rgba(255,255,255,0.15))" }}
               />
-
-              <img 
-                src={monarkLogoHorizontal} 
-                alt="MonArk — Date well." 
-                className="relative h-24 md:h-32 w-auto object-contain"
-                style={{ filter: "drop-shadow(0 0 20px hsla(22, 38%, 36%, 0.15))" }}
-              />
-            </motion.div>
-
-            {/* "Welcome to" letter reveal */}
-            <motion.div
-              className="overflow-hidden mb-3"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.7 }}
-            >
-              <motion.div className="flex justify-center">
-                {"Welcome to".split("").map((letter, index) => (
-                  <motion.span
-                    key={index}
-                    className="font-serif text-sm md:text-base tracking-[0.3em] italic"
-                    style={{ color: "hsla(36, 18%, 42%, 0.85)" }}
-                    initial={{ opacity: 0, y: 20, rotateX: 90 }}
-                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                    transition={{
-                      duration: 0.6,
-                      delay: 0.8 + index * 0.05,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                  >
-                    {letter === " " ? "\u00A0" : letter}
-                  </motion.span>
-                ))}
-              </motion.div>
             </motion.div>
 
             {/* Tagline */}
             <motion.p
-              className="mt-8 font-body text-base md:text-lg tracking-[0.2em] uppercase"
-              style={{ color: "hsla(36, 18%, 42%, 0.75)" }}
-              initial={{ opacity: 0, y: 20 }}
+              className="font-body text-sm md:text-base tracking-[0.35em] uppercase"
+              style={{ color: "rgba(255,255,255,0.6)" }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.6, ease: "easeOut" }}
+              transition={{ duration: 0.8, delay: 1.8, ease: "easeOut" }}
             >
               The Art of Intentional Dating
             </motion.p>
 
-            {/* Gradient line */}
+            {/* Separator line */}
             <motion.div
-              className="mt-10 h-px"
-              style={{ background: "linear-gradient(to right, transparent, hsla(36, 25%, 52%, 0.4), hsla(22, 38%, 36%, 0.3), transparent)" }}
+              className="mt-8 h-px"
+              style={{ background: "linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent)" }}
               initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 160, opacity: 1 }}
-              transition={{ duration: 1.2, delay: 1.8, ease: "easeOut" }}
+              animate={{ width: 140, opacity: 1 }}
+              transition={{ duration: 1, delay: 2.2, ease: "easeOut" }}
             />
-          </div>
 
-          {/* Enter section */}
-          <AnimatePresence>
-            {isReady && (
-              <motion.div
-                className="absolute bottom-14 md:bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-              >
-                {/* Olive glass CTA button */}
-                <motion.button
-                  onClick={handleEnter}
-                  className="group flex items-center gap-3 px-10 py-4 rounded-full transition-all duration-500"
-                  style={{
-                    background: "hsla(80, 20%, 36%, 0.1)",
-                    border: "1px solid hsla(80, 20%, 36%, 0.35)",
-                    backdropFilter: "blur(12px)",
-                  }}
-                  whileHover={{ 
-                    scale: 1.03,
-                    boxShadow: "0 0 30px hsla(80, 20%, 36%, 0.15)",
-                  }}
-                  whileTap={{ scale: 0.98 }}
+            {/* Enter section */}
+            <AnimatePresence>
+              {isReady && (
+                <motion.div
+                  className="mt-10 flex flex-col items-center gap-5"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
                 >
-                  <span className="font-body text-sm tracking-[0.2em] uppercase" style={{ color: "hsl(80, 18%, 24%)" }}>
-                    Enter
-                  </span>
-                  <motion.div
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  <motion.button
+                    onClick={handleEnter}
+                    className="group flex items-center gap-3 px-10 py-4 rounded-full"
+                    style={{
+                      background: "rgba(255,255,255,0.08)",
+                      border: "1px solid rgba(255,255,255,0.2)",
+                      backdropFilter: "blur(8px)",
+                    }}
+                    whileHover={{
+                      scale: 1.03,
+                      boxShadow: "0 0 30px rgba(255,255,255,0.1)",
+                    }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <ArrowRight className="w-4 h-4" style={{ color: "hsl(22, 38%, 36%)" }} />
-                  </motion.div>
-                </motion.button>
+                    <span className="font-body text-sm tracking-[0.2em] uppercase" style={{ color: "rgba(255,255,255,0.9)" }}>
+                      Enter
+                    </span>
+                    <motion.div
+                      animate={{ x: [0, 5, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <ArrowRight className="w-4 h-4" style={{ color: "rgba(255,255,255,0.7)" }} />
+                    </motion.div>
+                  </motion.button>
 
-                <motion.p
-                  className="font-body text-xs tracking-[0.15em] uppercase"
-                  style={{ color: "hsla(36, 18%, 42%, 0.55)" }}
-                  animate={{ opacity: [0.4, 0.8, 0.4] }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  tap anywhere to continue
-                </motion.p>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  <motion.p
+                    className="font-body text-xs tracking-[0.15em] uppercase"
+                    style={{ color: "rgba(255,255,255,0.35)" }}
+                    animate={{ opacity: [0.3, 0.7, 0.3] }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    tap anywhere to continue
+                  </motion.p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </motion.div>
       ) : null}
     </AnimatePresence>
