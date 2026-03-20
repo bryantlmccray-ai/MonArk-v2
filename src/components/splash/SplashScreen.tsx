@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import monarkLogoHorizontal from '@/assets/monark-logo-horizontal-fixed.png';
 import splashHero from '@/assets/splash-hero.jpeg';
 interface SplashScreenProps {
   onComplete: () => void;
@@ -12,7 +11,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
-    if (sessionStorage.getItem('monark-splash-seen-v3')) {
+    if (sessionStorage.getItem('monark-splash-seen-v4')) {
       onComplete();
       return;
     }
@@ -22,7 +21,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
 
   const handleEnter = () => {
     setIsExiting(true);
-    sessionStorage.setItem('monark-splash-seen-v3', 'true');
+    sessionStorage.setItem('monark-splash-seen-v4', 'true');
     setTimeout(onComplete, 800);
   };
 
