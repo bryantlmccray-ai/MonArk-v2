@@ -63,7 +63,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onSk
   
   const { profile, updateProfile } = useProfile();
   const { toast } = useToast();
-  const { submitFeedback } = useRIF();
+  
 
   // Resume from saved step if user returns to onboarding
   useEffect(() => {
