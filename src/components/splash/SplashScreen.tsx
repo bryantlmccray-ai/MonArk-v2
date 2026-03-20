@@ -38,17 +38,18 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         >
           {/* Animated hero image filling the screen with cinematic zoom */}
           <motion.div
-            className="absolute inset-0 w-full h-full"
+            className="absolute inset-0 w-full h-full overflow-hidden"
             initial={{ scale: 1.3, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 3.5, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              backgroundImage: `url('/images/splash-hero.jpeg')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center top',
-              filter: 'grayscale(100%) contrast(1.1)',
-            }}
-          />
+          >
+            <img
+              src={splashHero}
+              alt=""
+              className="w-full h-full object-cover"
+              style={{ filter: 'grayscale(100%) contrast(1.1)' }}
+            />
+          </motion.div>
           {/* Dark gradient overlay for text legibility */}
           <div
             className="absolute inset-0"
