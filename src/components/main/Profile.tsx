@@ -170,12 +170,12 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
             >
               {/* Cover Photo Area */}
               {profile?.photos?.[0] ? (
-                <div className="relative aspect-[16/10] overflow-hidden">
+                <div className="relative aspect-[16/10] overflow-hidden cursor-pointer" onClick={() => { setLightboxIndex(0); setLightboxOpen(true); }}>
                   <img
                     src={profile.photos[0]}
                     alt="Profile"
                     loading="lazy"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover hover:brightness-95 transition-all duration-200"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
                   
