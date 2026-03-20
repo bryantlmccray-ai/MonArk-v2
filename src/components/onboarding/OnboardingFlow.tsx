@@ -13,7 +13,6 @@ import { RIFComplete } from './RIFComplete';
 import { useProfile } from '@/hooks/useProfile';
 import { useToast } from '@/hooks/use-toast';
 import { useRIF } from '@/hooks/useRIF';
-import { mapQuizAnswersToRIFScores } from '@/utils/rifScoreMapping';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
