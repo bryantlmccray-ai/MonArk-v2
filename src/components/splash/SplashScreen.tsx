@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import monarkLogoHorizontal from '@/assets/monark-logo-horizontal.png';
-
+import splashHero from '@/assets/splash-hero.jpeg';
 interface SplashScreenProps {
   onComplete: () => void;
 }
