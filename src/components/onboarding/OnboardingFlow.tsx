@@ -159,38 +159,19 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onSk
     await saveProgress(9, { relationshipGoals: goals });
   };
 
-  const handleDatingStyleComplete = async (answers: DatingStyleAnswers) => {
-    setOnboardingData(prev => ({ ...prev, datingStyleAnswers: answers }));
+  const handleRIFQuizComplete = async (scores: RIFScores) => {
+    setOnboardingData(prev => ({ ...prev, rifScores: scores }));
     
-    // Map quiz answers to RIF dimension scores
-    const rifScores = mapQuizAnswersToRIFScores(answers);
-    console.log('Calculated RIF scores:', rifScores);
-    
-    // Save RIF quiz answers directly to user_profiles
     try {
       await updateProfile({
-        rif_quiz_answers: answers,
         onboarding_step: 10,
         is_profile_complete: true,
       });
-      
-      // Submit RIF scores as onboarding feedback to create/update RIF profile
-      await submitFeedback('onboarding', {
-        quiz_answers: answers,
-        ...rifScores,
-        // Map to the expected feedback structure
-        intent_clarity: rifScores.intent_clarity,
-        pacing_comfort: rifScores.pacing_preferences,
-        emotional_availability: rifScores.emotional_readiness,
-        boundary_communication: rifScores.boundary_respect,
-        reflection_habits: rifScores.post_date_alignment,
-      });
-      
       console.log('RIF profile created/updated successfully');
     } catch (error) {
-      console.error('Error saving RIF answers:', error);
+      console.error('Error finalizing onboarding:', error);
       toast({
-        title: "Couldn't save quiz answers",
+        title: "Couldn't save quiz results",
         description: "Don't worry, you can continue. We'll try again.",
         variant: "destructive",
       });
