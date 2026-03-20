@@ -68,49 +68,8 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           />
 
-          {/* Main content — bottom-aligned like the reference */}
-          <div className="relative z-10 flex flex-col items-center justify-end h-full w-full pb-32 md:pb-40">
-            {/* MonArk wordmark */}
-            <motion.h1
-              className="font-serif text-4xl md:text-5xl tracking-[0.25em] uppercase"
-              style={{ color: "#D4B896" }}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, delay: 1.0, ease: [0.22, 1, 0.36, 1] }}
-            >
-              MONARK
-            </motion.h1>
-
-            {/* Tagline — between MonArk and Date well */}
-            <motion.p
-              className="font-body text-xs md:text-sm tracking-[0.3em] uppercase mt-3"
-              style={{ color: "rgba(255,255,255,0.5)" }}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.6, ease: "easeOut" }}
-            >
-              The Art of Intentional Dating
-            </motion.p>
-
-            {/* Date well. */}
-            <motion.p
-              className="font-serif text-lg md:text-xl tracking-[0.2em] italic mt-3"
-              style={{ color: "#D4B896" }}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 2.0, ease: "easeOut" }}
-            >
-              Date well.
-            </motion.p>
-
-            {/* Separator line */}
-            <motion.div
-              className="mt-8 h-px"
-              style={{ background: "linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent)" }}
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 140, opacity: 1 }}
-              transition={{ duration: 1, delay: 2.2, ease: "easeOut" }}
-            />
+          {/* Enter section — bottom-aligned */}
+          <div className="relative z-10 flex flex-col items-center justify-end h-full w-full pb-14 md:pb-20">
 
             {/* Enter section */}
             <AnimatePresence>
