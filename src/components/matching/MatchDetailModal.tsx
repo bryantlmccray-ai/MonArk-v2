@@ -9,6 +9,7 @@ import {
   MessageCircle, Flag
 } from 'lucide-react';
 import { ReportBlockModal } from '@/components/safety/ReportBlockModal';
+import { PhotoLightbox } from '@/components/ui/PhotoLightbox';
 
 interface MatchProfile {
   id: string;
