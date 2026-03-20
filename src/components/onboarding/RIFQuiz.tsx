@@ -272,11 +272,11 @@ export async function saveRifProfile(
 
     if (queueError) throw queueError;
 
-    await supabase.from("rif_event_log").insert({
+    await supabase.from("rif_event_log").insert([{
       user_id: userId,
       event_type: "rif_quiz_completed",
-      event_data: { scores, answer_count: Object.keys(answers).length },
-    });
+      event_data: { scores, answer_count: Object.keys(answers).length } as unknown as import('@/integrations/supabase/types').Json,
+    }]);
 
     return { success: true, scores };
   } catch (err: any) {
