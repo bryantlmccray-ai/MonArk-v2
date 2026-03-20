@@ -282,6 +282,14 @@ export const MatchDetailModal = ({
             userName={match.name || 'This user'}
           />
         )}
+
+        <PhotoLightbox
+          photos={photos}
+          initialIndex={currentPhotoIndex}
+          isOpen={lightboxOpen}
+          onClose={() => setLightboxOpen(false)}
+          name={match.name}
+        />
       </DialogContent>
     </Dialog>
   );
