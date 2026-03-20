@@ -54,7 +54,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
             <div
               className="absolute inset-0"
               style={{
-                background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.15) 100%)",
+                background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.05) 100%)",
               }}
             />
           </motion.div>
