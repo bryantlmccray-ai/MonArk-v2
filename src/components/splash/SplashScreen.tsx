@@ -38,26 +38,22 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           onClick={isReady ? handleEnter : undefined}
         >
           {/* Animated hero image filling the screen */}
-          <motion.div
+          <div
+            className="absolute inset-0 w-full h-full"
+            style={{
+              backgroundImage: `url(${splashHero})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              filter: 'grayscale(100%) contrast(1.1)',
+            }}
+          />
+          {/* Dark gradient overlay for text legibility */}
+          <div
             className="absolute inset-0"
-            initial={{ scale: 1.3, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 3, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <img
-              src={splashHero}
-              alt=""
-              className="w-full h-full object-cover"
-              style={{ filter: "grayscale(100%) contrast(1.1)" }}
-            />
-            {/* Dark gradient overlay for text legibility */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.05) 100%)",
-              }}
-            />
-          </motion.div>
+            style={{
+              background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.05) 100%)",
+            }}
+          />
 
           {/* Film grain texture overlay */}
           <motion.div
