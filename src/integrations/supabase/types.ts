@@ -2098,6 +2098,8 @@ export type Database = {
           open_tickets: number | null
           outcomes_score: number | null
           phone_number: string | null
+          photo_uploaded_at: string | null
+          photo_url: string | null
           photos: string[] | null
           preference_to_be_seen_by: string[] | null
           preference_to_see: string[] | null
@@ -2154,6 +2156,8 @@ export type Database = {
           open_tickets?: number | null
           outcomes_score?: number | null
           phone_number?: string | null
+          photo_uploaded_at?: string | null
+          photo_url?: string | null
           photos?: string[] | null
           preference_to_be_seen_by?: string[] | null
           preference_to_see?: string[] | null
@@ -2210,6 +2214,8 @@ export type Database = {
           open_tickets?: number | null
           outcomes_score?: number | null
           phone_number?: string | null
+          photo_uploaded_at?: string | null
+          photo_url?: string | null
           photos?: string[] | null
           preference_to_be_seen_by?: string[] | null
           preference_to_see?: string[] | null
@@ -3109,6 +3115,8 @@ export type Database = {
           open_tickets: number | null
           outcomes_score: number | null
           phone_number: string | null
+          photo_uploaded_at: string | null
+          photo_url: string | null
           photos: string[] | null
           preference_to_be_seen_by: string[] | null
           preference_to_see: string[] | null

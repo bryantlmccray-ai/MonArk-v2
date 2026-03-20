@@ -9,6 +9,7 @@ import {
   MessageCircle, Flag
 } from 'lucide-react';
 import { ReportBlockModal } from '@/components/safety/ReportBlockModal';
+import { PhotoLightbox } from '@/components/ui/PhotoLightbox';
 
 interface MatchProfile {
   id: string;
@@ -50,6 +51,7 @@ export const MatchDetailModal = ({
 }: MatchDetailModalProps) => {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [showReportBlock, setShowReportBlock] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   if (!match) return null;
 
@@ -78,7 +80,8 @@ export const MatchDetailModal = ({
           <img
             src={photos[currentPhotoIndex]}
             alt={`${match.name}'s photo`}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover cursor-pointer hover:brightness-95 transition-all duration-200"
+            onClick={() => setLightboxOpen(true)}
           />
           
           {/* Photo navigation */}
@@ -279,6 +282,14 @@ export const MatchDetailModal = ({
             userName={match.name || 'This user'}
           />
         )}
+
+        <PhotoLightbox
+          photos={photos}
+          initialIndex={currentPhotoIndex}
+          isOpen={lightboxOpen}
+          onClose={() => setLightboxOpen(false)}
+          name={match.name}
+        />
       </DialogContent>
     </Dialog>
   );
