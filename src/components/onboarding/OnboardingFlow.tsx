@@ -33,7 +33,7 @@ interface OnboardingData {
   genderIdentity: string;
   sexualOrientation: string;
   relationshipGoals: string[];
-  datingStyleAnswers?: DatingStyleAnswers;
+  rifScores?: RIFScores;
 }
 
 // Onboarding Flow (11 screens total):
