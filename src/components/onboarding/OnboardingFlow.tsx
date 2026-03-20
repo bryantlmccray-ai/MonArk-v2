@@ -112,19 +112,8 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onSk
       setCurrentStep(nextStep);
       saveProgress(nextStep);
     } else if (currentStep === 9) {
-      // Skip RIF quiz - complete with empty answers
-      handleDatingStyleComplete({
-        attachmentStyle: '',
-        energyType: '',
-        datePreferences: [],
-        availabilityWindows: [],
-        communicationStyle: '',
-        pacePreference: '',
-        conflictStyle: '',
-        loveLanguage: '',
-        socialBattery: '',
-        dealBreaker: '',
-      });
+      // Skip RIF quiz — go straight to complete
+      setCurrentStep(10);
     }
   };
 
