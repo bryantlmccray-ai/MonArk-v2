@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { PhotoLightbox } from '@/components/ui/PhotoLightbox';
 import { Settings, ShieldCheck, Edit, LogOut, MapPin, TrendingUp, Calendar, Heart, Briefcase, GraduationCap, Ruler, Dumbbell, Cigarette, Wine, Sparkles, Camera, Palette, Clock, DollarSign, Eye } from 'lucide-react';
 import { ProfileCreation } from '../profile/ProfileCreation';
 import { LocationConsentModal } from '../location/LocationConsentModal';
@@ -24,6 +25,8 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
   const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
   const [showRecapModal, setShowRecapModal] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
   const { user, signOut } = useAuth();
   const { profile, loading } = useProfile();
   const { clearLocation } = useLocation();
@@ -167,12 +170,12 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
             >
               {/* Cover Photo Area */}
               {profile?.photos?.[0] ? (
-                <div className="relative aspect-[16/10] overflow-hidden">
+                <div className="relative aspect-[16/10] overflow-hidden cursor-pointer" onClick={() => { setLightboxIndex(0); setLightboxOpen(true); }}>
                   <img
                     src={profile.photos[0]}
                     alt="Profile"
                     loading="lazy"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover hover:brightness-95 transition-all duration-200"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
                   
@@ -221,7 +224,8 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                         src={photo}
                         alt={`Photo ${i + 2}`}
                         loading="lazy"
-                        className="w-20 h-20 rounded-xl object-cover border-2 border-card flex-shrink-0 shadow-sm"
+                        className="w-20 h-20 rounded-xl object-cover border-2 border-card flex-shrink-0 shadow-sm cursor-pointer hover:brightness-90 transition-all duration-200"
+                        onClick={() => { setLightboxIndex(i + 1); setLightboxOpen(true); }}
                       />
                     ))}
                   </div>
@@ -560,6 +564,16 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
       <LocationConsentModal isOpen={showLocationModal} onClose={() => setShowLocationModal(false)} onSuccess={handleLocationUpdate} />
       <AnalyticsConsentModal isOpen={showAnalyticsModal} onClose={() => setShowAnalyticsModal(false)} />
       <MonthlyRecapModal isOpen={showRecapModal} onClose={() => setShowRecapModal(false)} />
+
+      {profile?.photos && profile.photos.length > 0 && (
+        <PhotoLightbox
+          photos={profile.photos}
+          initialIndex={lightboxIndex}
+          isOpen={lightboxOpen}
+          onClose={() => setLightboxOpen(false)}
+          name={userName}
+        />
+      )}
     </div>
   );
 };
