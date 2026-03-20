@@ -254,7 +254,7 @@ export async function saveRifProfile(
       .from("user_profiles")
       .update({
         rif_quiz_answers: answers,
-        onboarding_step: 10,
+        onboarding_step: 4,
         updated_at: new Date().toISOString(),
       })
       .eq("user_id", userId);
