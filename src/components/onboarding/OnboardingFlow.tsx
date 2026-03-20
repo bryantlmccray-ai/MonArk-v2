@@ -8,7 +8,7 @@ import { SimplifiedInterestsStep } from './SimplifiedInterestsStep';
 import { LocationStep } from './LocationStep';
 import { SimplifiedIdentityStep } from './SimplifiedIdentityStep';
 import { RelationshipGoalsStep } from './RelationshipGoalsStep';
-import { DatingStyleQuiz, DatingStyleAnswers } from './DatingStyleQuiz';
+import RIFQuiz, { type RIFScores } from './RIFQuiz';
 import { RIFComplete } from './RIFComplete';
 import { useProfile } from '@/hooks/useProfile';
 import { useToast } from '@/hooks/use-toast';
