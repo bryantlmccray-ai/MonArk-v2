@@ -18,6 +18,7 @@ const Privacy = lazy(() => import("./pages/Privacy"));
 const Terms = lazy(() => import("./pages/Terms"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const DataProcessing = lazy(() => import("./pages/DataProcessing"));
+const Waitlist = lazy(() => import("./pages/Waitlist"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const Admin = lazy(() => import("./pages/Admin").then(m => ({ default: m.Admin })));
 const AdminWaitlist = lazy(() => import("./pages/AdminWaitlist"));
