@@ -81,7 +81,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 src={monarkLogoHorizontal}
                 alt="MonArk — Date well."
                 className="relative h-16 md:h-24 w-auto object-contain"
-                style={{ filter: "brightness(0) invert(1) drop-shadow(0 0 30px rgba(255,255,255,0.15))" }}
+                style={{ filter: "drop-shadow(0 0 20px rgba(212,184,150,0.3))" }}
               />
             </motion.div>
 
