@@ -40,7 +40,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           <div
             className="absolute inset-0 w-full h-full"
             style={{
-              backgroundImage: `url(${splashHero})`,
+              backgroundImage: `url('/images/splash-hero.jpeg')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               filter: 'grayscale(100%) contrast(1.1)',
