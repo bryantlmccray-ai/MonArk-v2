@@ -51,6 +51,7 @@ export const MatchDetailModal = ({
 }: MatchDetailModalProps) => {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [showReportBlock, setShowReportBlock] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   if (!match) return null;
 
