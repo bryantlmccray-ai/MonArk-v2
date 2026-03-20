@@ -80,7 +80,8 @@ export const MatchDetailModal = ({
           <img
             src={photos[currentPhotoIndex]}
             alt={`${match.name}'s photo`}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover cursor-pointer hover:brightness-95 transition-all duration-200"
+            onClick={() => setLightboxOpen(true)}
           />
           
           {/* Photo navigation */}
