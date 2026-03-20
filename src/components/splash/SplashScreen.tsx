@@ -21,7 +21,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
 
   const handleEnter = () => {
     setIsExiting(true);
-    sessionStorage.setItem('monark-splash-seen-v3', 'true');
+    sessionStorage.setItem('monark-splash-seen-v4', 'true');
     setTimeout(onComplete, 800);
   };
 
