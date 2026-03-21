@@ -1,8 +1,7 @@
 import React from 'react';
-import { MonArkLogo } from '@/components/MonArkLogo';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { OnboardingProgressDots } from './OnboardingProgressDots';
 
 interface OnboardingWelcomeProps {
   onNext: () => void;
@@ -10,38 +9,45 @@ interface OnboardingWelcomeProps {
 
 export const OnboardingWelcome: React.FC<OnboardingWelcomeProps> = ({ onNext }) => {
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
-      <motion.div 
+    <div className="min-h-screen bg-background flex items-center justify-center p-6">
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="max-w-md w-full text-center space-y-8"
+        className="w-full max-w-[420px] bg-card rounded-2xl p-10 shadow-lg"
       >
-        <MonArkLogo size="lg" animated={true} className="mx-auto" />
-        
-        <div className="space-y-4">
-          <h1 className="text-3xl sm:text-4xl font-semibold text-foreground">
-            Welcome to MonArk
-          </h1>
-          <p className="text-sm md:text-base font-body tracking-[0.1em] text-muted-foreground uppercase leading-relaxed">
-            We're different. Instead of endless swiping, we send you <span className="text-foreground font-medium">3 curated matches</span> every week.
-          </p>
-        </div>
+        <OnboardingProgressDots currentStep={1} totalSteps={11} />
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.4 }}
-        >
-          <Button 
+        <div className="text-center">
+          {/* Monogram */}
+          <div className="w-[72px] h-[72px] rounded-full border border-primary/40 flex items-center justify-center mx-auto mb-7 bg-card">
+            <span className="font-serif text-[26px] text-accent tracking-tight">MA</span>
+          </div>
+
+          <h1 className="font-serif text-[32px] font-normal text-foreground mb-3 leading-tight tracking-tight">
+            Welcome to MonArk.
+          </h1>
+
+          <p className="text-[15px] text-muted-foreground leading-relaxed mb-2 font-light">
+            You're here because connection matters to you.
+          </p>
+          <p className="text-sm text-primary leading-relaxed mb-10">
+            We don't do swiping. We don't do algorithms.<br />
+            We do <em>intentional.</em>
+          </p>
+
+          <Button
             onClick={onNext}
-            className="w-full py-6 text-lg font-medium"
+            className="w-full rounded-full py-4 uppercase tracking-[0.12em] text-[13px] font-medium"
             size="lg"
           >
-            Get Started
-            <ArrowRight className="ml-2 h-5 w-5" />
+            Begin
           </Button>
-        </motion.div>
+
+          <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground/50 mt-6">
+            MonArk · Date well.
+          </p>
+        </div>
       </motion.div>
     </div>
   );
