@@ -61,7 +61,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 opacity: currentImage === index ? 1 : 0,
                 scale: currentImage === index ? 1 : 1.12,
               }}
-              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 2, ease: [0.22, 1, 0.36, 1] }}
               style={{ filter: "grayscale(100%) contrast(1.08)" }}
             />
           ))}
