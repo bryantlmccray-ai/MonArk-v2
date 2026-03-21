@@ -177,7 +177,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                     loading="lazy"
                     className="w-full h-full object-cover hover:brightness-95 transition-all duration-200"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent pointer-events-none" />
                   
                   {/* Name overlay on photo */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 pb-8">
