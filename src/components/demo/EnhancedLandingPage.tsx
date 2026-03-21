@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { MonArkLogo } from '@/components/MonArkLogo';
 import monarkLogoHorizontal from '@/assets/monark-logo-horizontal.png';
 import { PenLine, Heart, MapPin, ArrowRight, Instagram } from 'lucide-react';
+import { MonArkPricing } from '@/components/pricing/MonArkPricing';
 import { motion } from 'framer-motion';
 import founderPortrait from '@/assets/founder-portrait.jpeg';
 import sheezaPortrait from '@/assets/team/sheeza-anwar.png';
