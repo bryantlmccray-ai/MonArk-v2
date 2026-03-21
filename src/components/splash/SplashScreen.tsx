@@ -56,12 +56,13 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               alt=""
               aria-hidden="true"
               className="absolute inset-0 h-full w-full object-cover"
-              initial={{ opacity: 0, scale: 1.12 }}
+              initial={{ opacity: 0, x: '8%', scale: 1.08 }}
               animate={{
                 opacity: currentImage === index ? 1 : 0,
-                scale: currentImage === index ? 1 : 1.12,
+                x: currentImage === index ? '0%' : '-8%',
+                scale: currentImage === index ? 1 : 1.08,
               }}
-              transition={{ duration: 2, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 2.5, ease: [0.25, 0.1, 0.25, 1] }}
               style={{ filter: "grayscale(100%) contrast(1.08)" }}
             />
           ))}
