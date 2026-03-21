@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
-import { useAuth } from '@/hooks/useAuth';
 import {
   AdminSidebar, AdminLoading, AdminNotAuthorized, KPICard,
   TAB_CONFIG, type TabKey,
@@ -13,7 +12,6 @@ import { NotificationsTab, type Notification } from '@/components/admin/Notifica
 import { ReportsTab, type UserReport } from '@/components/admin/ReportsTab';
 
 export const Admin: React.FC = () => {
-  const { user } = useAuth();
   const { isAdmin, isModerator, loading: roleLoading } = useAdmin();
   const [activeTab, setActiveTab] = useState<TabKey>('users');
   const [users, setUsers] = useState<UserProfile[]>([]);
