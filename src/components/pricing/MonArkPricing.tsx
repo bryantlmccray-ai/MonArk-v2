@@ -1,0 +1,273 @@
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+
+const TIERS = {
+  ark: {
+    name: "The Ark",
+    monthly: 39.99,
+    quarterly: 29.99,
+    badge: null,
+    description:
+      "The full MonArk experience. Three curated connections every week, built on emotional intelligence.",
+    features: [
+      "RIF behavioral assessment & profile",
+      "3 weekly curated connections — Your 3",
+      "Close the Loop anti-ghosting protocol",
+      "Venue-integrated date suggestions",
+      "Post-date alignment check-ins",
+      "Community features & weekly reflections",
+    ],
+    cta: "Join The Ark",
+    accent: false,
+  },
+  innerArk: {
+    name: "The Inner Ark",
+    monthly: 79.99,
+    quarterly: 59.99,
+    badge: "Most Intentional",
+    description:
+      "The elevated experience. Deeper insights, wider reach, and concierge-level curation.",
+    features: [
+      "Everything in The Ark",
+      "Discovery Map — 50–100 additional curated profiles",
+      "Priority matching in the RIF engine",
+      "Venue concierge — reservations at partner locations",
+      "Enhanced RIF insights & relational analytics",
+      "Early access to new features & city expansions",
+    ],
+    cta: "Go Deeper",
+    accent: true,
+  },
+};
+
+const FOUNDING = {
+  name: "Founding Members",
+  tagline: "Chicago. First 150.",
+  description:
+    "Lock in founding pricing and shape the platform from day one. Founding Members get lifetime rate protection and a direct line to the team building MonArk.",
+  cta: "Request Founding Access",
+};
+
+const easeOut = [0.22, 1, 0.36, 1] as const;
+
+export const MonArkPricing = () => {
+  const [isQuarterly, setIsQuarterly] = useState(false);
+
+  return (
+    <section id="pricing" className="bg-background py-20 px-6">
+      <div className="max-w-[1100px] mx-auto">
+        {/* Section Header */}
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: easeOut }}
+        >
+          <p className="font-caption text-primary mb-3">Membership</p>
+          <h2 className="font-editorial text-4xl md:text-[42px] text-foreground mb-3">
+            Invest in how you connect
+          </h2>
+          <p className="font-body text-base text-muted-foreground max-w-[520px] mx-auto">
+            No free tier. No swiping. Every MonArk member is here with intention.
+          </p>
+        </motion.div>
+
+        {/* Billing Toggle */}
+        <div className="flex items-center justify-center gap-4 mb-12">
+          <span
+            className={`text-sm font-body transition-all duration-300 ${
+              isQuarterly
+                ? "text-muted-foreground font-normal"
+                : "text-foreground font-semibold"
+            }`}
+          >
+            Monthly
+          </span>
+          <Switch
+            checked={isQuarterly}
+            onCheckedChange={setIsQuarterly}
+            className="data-[state=checked]:bg-primary"
+          />
+          <span
+            className={`text-sm font-body transition-all duration-300 ${
+              isQuarterly
+                ? "text-foreground font-semibold"
+                : "text-muted-foreground font-normal"
+            }`}
+          >
+            Quarterly
+          </span>
+          {isQuarterly && (
+            <motion.span
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-[11px] font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full tracking-wide"
+            >
+              Save up to 25%
+            </motion.span>
+          )}
+        </div>
+
+        {/* Tier Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          {Object.values(TIERS).map((tier, idx) => {
+            const price = isQuarterly ? tier.quarterly : tier.monthly;
+            const isAccent = tier.accent;
+
+            return (
+              <motion.div
+                key={tier.name}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: idx * 0.15, ease: easeOut }}
+                whileHover={{ y: -4 }}
+                className={`relative flex flex-col rounded-2xl p-8 md:p-10 transition-shadow duration-300 ${
+                  isAccent
+                    ? "bg-[hsl(230_18%_15%)] shadow-[0_8px_40px_rgba(28,31,46,0.3)] hover:shadow-[0_12px_48px_rgba(28,31,46,0.4)]"
+                    : "bg-card border border-border shadow-editorial hover:shadow-elevated"
+                }`}
+              >
+                {/* Badge */}
+                {tier.badge && (
+                  <Badge className="absolute -top-3 right-6 bg-primary text-primary-foreground text-[11px] tracking-[0.12em] uppercase px-4 py-1.5 rounded-full">
+                    {tier.badge}
+                  </Badge>
+                )}
+
+                {/* Tier Name */}
+                <h3
+                  className={`font-editorial text-2xl mb-2 ${
+                    isAccent
+                      ? "text-[hsl(30_40%_72%)]"
+                      : "text-foreground"
+                  }`}
+                >
+                  {tier.name}
+                </h3>
+
+                {/* Description */}
+                <p
+                  className={`font-body text-sm leading-relaxed mb-6 ${
+                    isAccent ? "text-[hsl(240_6%_64%)]" : "text-muted-foreground"
+                  }`}
+                >
+                  {tier.description}
+                </p>
+
+                {/* Price */}
+                <div className="mb-7">
+                  <span
+                    className={`font-editorial-headline text-5xl leading-none ${
+                      isAccent ? "text-[hsl(28_38%_94%)]" : "text-foreground"
+                    }`}
+                  >
+                    ${price.toFixed(2).split(".")[0]}
+                  </span>
+                  <span
+                    className={`text-xl font-medium align-super ${
+                      isAccent ? "text-[hsl(30_40%_72%)]" : "text-primary"
+                    }`}
+                  >
+                    .{price.toFixed(2).split(".")[1]}
+                  </span>
+                  <span
+                    className={`text-sm ml-1 ${
+                      isAccent ? "text-[hsl(240_6%_46%)]" : "text-muted-foreground"
+                    }`}
+                  >
+                    /month
+                  </span>
+                  {isQuarterly && (
+                    <p
+                      className={`text-xs mt-1 ${
+                        isAccent ? "text-[hsl(240_6%_46%)]" : "text-muted-foreground"
+                      }`}
+                    >
+                      Billed ${(price * 3).toFixed(2)} every 3 months
+                    </p>
+                  )}
+                </div>
+
+                {/* Divider */}
+                <div
+                  className={`h-px mb-6 ${
+                    isAccent
+                      ? "bg-[hsl(30_40%_72%/0.15)]"
+                      : "bg-border"
+                  }`}
+                />
+
+                {/* Features */}
+                <ul className="list-none p-0 m-0 mb-8 flex-1 space-y-3.5">
+                  {tier.features.map((feature, i) => (
+                    <li
+                      key={i}
+                      className={`flex items-start gap-2.5 text-sm leading-relaxed ${
+                        isAccent ? "text-[hsl(240_6%_78%)]" : "text-foreground/80"
+                      }`}
+                    >
+                      <span
+                        className={`text-sm leading-[21px] shrink-0 ${
+                          isAccent ? "text-[hsl(30_40%_72%)]" : "text-primary"
+                        }`}
+                      >
+                        ✦
+                      </span>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* CTA */}
+                <button
+                  className={`w-full py-3.5 px-8 rounded-full font-body text-sm font-medium tracking-[0.12em] uppercase transition-all duration-300 ${
+                    isAccent
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                      : "bg-transparent text-primary border-[1.5px] border-primary hover:bg-muted"
+                  }`}
+                >
+                  {tier.cta}
+                </button>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Founding Members Banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: easeOut }}
+          className="bg-[hsl(230_18%_15%)] rounded-2xl p-8 md:p-10 flex items-center justify-between gap-8 flex-wrap shadow-[0_4px_24px_rgba(28,31,46,0.2)]"
+        >
+          <div className="flex-1 min-w-[280px]">
+            <div className="flex items-center gap-3 mb-3">
+              <h3 className="font-editorial text-2xl text-[hsl(30_40%_72%)]">
+                {FOUNDING.name}
+              </h3>
+              <Badge className="bg-[hsl(30_40%_72%)] text-[hsl(230_18%_15%)] text-[11px] tracking-[0.12em] uppercase px-2.5 py-0.5 rounded-full hover:bg-[hsl(30_40%_72%)]">
+                Invite Only
+              </Badge>
+            </div>
+            <p className="font-body text-sm leading-relaxed text-[hsl(240_6%_64%)] max-w-[540px]">
+              {FOUNDING.description}
+            </p>
+          </div>
+          <button className="py-3.5 px-8 rounded-full border-[1.5px] border-[hsl(30_40%_72%)] bg-transparent text-[hsl(30_40%_72%)] font-body text-sm font-medium tracking-[0.12em] uppercase transition-all duration-300 hover:bg-[hsl(30_40%_72%/0.1)] whitespace-nowrap">
+            {FOUNDING.cta}
+          </button>
+        </motion.div>
+
+        {/* Bottom Note */}
+        <p className="text-center text-[13px] text-muted-foreground mt-8 italic font-editorial">
+          No swiping. No algorithms. No free tier. Just intention.
+        </p>
+      </div>
+    </section>
+  );
+};
