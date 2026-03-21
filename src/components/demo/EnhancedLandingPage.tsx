@@ -423,8 +423,8 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       <section className="py-16 bg-secondary/30">
         <div className="max-w-3xl mx-auto px-5">
           <motion.div className="text-center mb-10" initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
-            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-2">Early-Bird Access</h2>
-            <p className="text-xs sm:text-sm font-caption text-muted-foreground tracking-[0.15em] uppercase">Limited-time founding member pricing</p>
+            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-2">Founding Members</h2>
+            <p className="text-xs sm:text-sm font-caption text-muted-foreground tracking-[0.15em] uppercase">First 200 signups — Lifetime pricing, full Inner Ark access</p>
             <SectionDivider />
           </motion.div>
 
@@ -443,7 +443,8 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   <span className="text-5xl sm:text-6xl font-editorial-headline text-foreground">$35</span>
                   <span className="text-lg text-muted-foreground font-body">/mo</span>
                 </div>
-                <p className="text-base font-editorial-headline text-foreground mt-1">Core Access</p>
+                <p className="text-base font-editorial-headline text-foreground mt-1">Lifetime Founding Rate</p>
+                <p className="text-xs text-primary font-caption mt-1 tracking-wide">Full Inner Ark access as features roll out</p>
               </div>
 
               <div className="space-y-5">
@@ -455,9 +456,9 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 </div>
 
                 <div className="border-t border-border pt-5">
-                  <h3 className="font-editorial-headline text-base text-foreground mb-1">Ark AI Concierge</h3>
+                  <h3 className="font-editorial-headline text-base text-foreground mb-1">All Inner Ark Features</h3>
                   <p className="text-muted-foreground text-sm font-body leading-relaxed">
-                    Chat-based AI that personalizes your date options and helps coordinate plans.
+                    Discovery Map, venue concierge, enhanced RIF insights, priority matching, and early access to every new feature — included at your locked-in rate.
                   </p>
                 </div>
 
@@ -467,7 +468,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                     className="w-full py-5 text-sm tracking-[0.08em] font-body"
                     size="lg"
                   >
-                    JOIN WAITLIST
+                    CLAIM FOUNDING ACCESS
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>

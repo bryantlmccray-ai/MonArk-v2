@@ -44,10 +44,10 @@ const TIERS = {
 
 const FOUNDING = {
   name: "Founding Members",
-  tagline: "Chicago. First 150.",
+  tagline: "First 200 Signups",
   description:
-    "Lock in founding pricing and shape the platform from day one. Founding Members get lifetime rate protection and a direct line to the team building MonArk.",
-  cta: "Request Founding Access",
+    "Lock in lifetime pricing and get full access to every Inner Ark feature as we roll them out. Founding Members shape the platform from day one — with a direct line to the team building MonArk.",
+  cta: "Claim Founding Access",
 };
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
