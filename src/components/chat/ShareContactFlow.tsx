@@ -95,10 +95,10 @@ function StateMutual({ name, phone, email }: { name: string; phone?: string | nu
   const hasContact = phone || email;
   return (
     <>
-      <IconCircle className="bg-green-500/10 border-green-500/30">
-        <span className="text-2xl text-green-600">✦</span>
+      <IconCircle className="bg-primary/10 border-primary/30">
+        <span className="text-2xl text-primary">✦</span>
       </IconCircle>
-      <h3 className="font-serif text-xl text-green-600 text-center mb-3 leading-tight">
+      <h3 className="font-serif text-xl text-primary text-center mb-3 leading-tight">
         Mutual interest. You're connected.
       </h3>
       <p className="text-sm text-muted-foreground text-center leading-relaxed mb-6 font-light">
