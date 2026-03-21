@@ -3046,6 +3046,7 @@ export type Database = {
       }
       cleanup_expired_async_jobs: { Args: never; Returns: undefined }
       cleanup_old_rate_limits: { Args: never; Returns: undefined }
+      compute_daily_kpi_snapshot: { Args: never; Returns: undefined }
       delete_user_completely: {
         Args: { user_id_input: string }
         Returns: undefined
