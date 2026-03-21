@@ -9,7 +9,7 @@ interface RIFIntroProps {
 }
 
 const dimensions = [
-  ['Intent Clarity', 'What you're looking for'],
+  ['Intent Clarity', "What you're looking for"],
   ['Emotional Readiness', 'Where you are right now'],
   ['Pacing Preference', 'How fast you move'],
   ['Boundary Respect', 'What you need honored'],
