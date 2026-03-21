@@ -34,7 +34,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   useEffect(() => {
     const interval = window.setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % heroImages.length);
-    }, 2000);
+    }, 3500);
     return () => window.clearInterval(interval);
   }, []);
 
