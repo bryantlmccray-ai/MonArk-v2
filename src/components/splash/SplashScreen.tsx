@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import splashHero1 from "@/assets/splash-hero.jpeg";
 import splashHero2 from "@/assets/splash-hero-2.jpeg";
+import splashHero4 from "@/assets/splash-hero-4.jpeg";
 
-const heroImages = [splashHero1, splashHero2];
+const heroImages = [splashHero1, splashHero2, splashHero4];
 
 interface SplashScreenProps {
   onComplete: () => void;
