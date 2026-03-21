@@ -59,6 +59,39 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_action_log: {
+        Row: {
+          action: string
+          admin_id: string
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          reason: string | null
+          target_id: string
+          target_type: string
+        }
+        Insert: {
+          action: string
+          admin_id: string
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          reason?: string | null
+          target_id: string
+          target_type: string
+        }
+        Update: {
+          action?: string
+          admin_id?: string
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          reason?: string | null
+          target_id?: string
+          target_type?: string
+        }
+        Relationships: []
+      }
       applications: {
         Row: {
           applied_at: string | null
@@ -1199,8 +1232,13 @@ export type Database = {
           curated_count: number | null
           delivered_at: string
           delivery_method: string | null
+          flag_reason: string | null
+          flag_timestamp: string | null
+          flagged: boolean | null
           id: string
           pool_count: number | null
+          removed: boolean | null
+          removed_at: string | null
           user_id: string
           week_start: string
         }
@@ -1209,8 +1247,13 @@ export type Database = {
           curated_count?: number | null
           delivered_at?: string
           delivery_method?: string | null
+          flag_reason?: string | null
+          flag_timestamp?: string | null
+          flagged?: boolean | null
           id?: string
           pool_count?: number | null
+          removed?: boolean | null
+          removed_at?: string | null
           user_id: string
           week_start: string
         }
@@ -1219,8 +1262,13 @@ export type Database = {
           curated_count?: number | null
           delivered_at?: string
           delivery_method?: string | null
+          flag_reason?: string | null
+          flag_timestamp?: string | null
+          flagged?: boolean | null
           id?: string
           pool_count?: number | null
+          removed?: boolean | null
+          removed_at?: string | null
           user_id?: string
           week_start?: string
         }
@@ -2062,6 +2110,7 @@ export type Database = {
       }
       user_profiles: {
         Row: {
+          admin_notes: string | null
           age: number | null
           age_verification_timestamp: string | null
           age_verified: boolean | null
@@ -2076,6 +2125,10 @@ export type Database = {
           engagement_score: number | null
           exercise_habits: string | null
           financial_score: number | null
+          flag_reason: string | null
+          flag_timestamp: string | null
+          flagged: boolean | null
+          flagged_by: string | null
           gender_identity: Database["public"]["Enums"]["gender_identity"] | null
           gender_identity_custom: string | null
           height_cm: number | null
@@ -2114,10 +2167,14 @@ export type Database = {
           sexual_orientation_custom: string | null
           show_location_on_profile: boolean | null
           smoking_status: string | null
+          suspended: boolean | null
+          suspended_at: string | null
+          suspension_reason: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          admin_notes?: string | null
           age?: number | null
           age_verification_timestamp?: string | null
           age_verified?: boolean | null
@@ -2132,6 +2189,10 @@ export type Database = {
           engagement_score?: number | null
           exercise_habits?: string | null
           financial_score?: number | null
+          flag_reason?: string | null
+          flag_timestamp?: string | null
+          flagged?: boolean | null
+          flagged_by?: string | null
           gender_identity?:
             | Database["public"]["Enums"]["gender_identity"]
             | null
@@ -2172,10 +2233,14 @@ export type Database = {
           sexual_orientation_custom?: string | null
           show_location_on_profile?: boolean | null
           smoking_status?: string | null
+          suspended?: boolean | null
+          suspended_at?: string | null
+          suspension_reason?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          admin_notes?: string | null
           age?: number | null
           age_verification_timestamp?: string | null
           age_verified?: boolean | null
@@ -2190,6 +2255,10 @@ export type Database = {
           engagement_score?: number | null
           exercise_habits?: string | null
           financial_score?: number | null
+          flag_reason?: string | null
+          flag_timestamp?: string | null
+          flagged?: boolean | null
+          flagged_by?: string | null
           gender_identity?:
             | Database["public"]["Enums"]["gender_identity"]
             | null
@@ -2230,6 +2299,9 @@ export type Database = {
           sexual_orientation_custom?: string | null
           show_location_on_profile?: boolean | null
           smoking_status?: string | null
+          suspended?: boolean | null
+          suspended_at?: string | null
+          suspension_reason?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -2911,6 +2983,23 @@ export type Database = {
       }
     }
     Views: {
+      admin_flagged_users: {
+        Row: {
+          admin_notes: string | null
+          churn_risk: string | null
+          email: string | null
+          flag_reason: string | null
+          flag_timestamp: string | null
+          flagged: boolean | null
+          last_active_at: string | null
+          member_since: string | null
+          suspended: boolean | null
+          suspended_at: string | null
+          suspension_reason: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
       public_user_profiles: {
         Row: {
           age: number | null
@@ -3080,6 +3169,7 @@ export type Database = {
       get_discoverable_profiles: {
         Args: never
         Returns: {
+          admin_notes: string | null
           age: number | null
           age_verification_timestamp: string | null
           age_verified: boolean | null
@@ -3094,6 +3184,10 @@ export type Database = {
           engagement_score: number | null
           exercise_habits: string | null
           financial_score: number | null
+          flag_reason: string | null
+          flag_timestamp: string | null
+          flagged: boolean | null
+          flagged_by: string | null
           gender_identity: Database["public"]["Enums"]["gender_identity"] | null
           gender_identity_custom: string | null
           height_cm: number | null
@@ -3132,6 +3226,9 @@ export type Database = {
           sexual_orientation_custom: string | null
           show_location_on_profile: boolean | null
           smoking_status: string | null
+          suspended: boolean | null
+          suspended_at: string | null
+          suspension_reason: string | null
           updated_at: string
           user_id: string
         }[]
