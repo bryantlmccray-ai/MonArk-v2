@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import splashHero from "@/assets/splash-hero.jpeg";
+import splashHero1 from "@/assets/splash-hero.jpeg";
+import splashHero2 from "@/assets/splash-hero-2.jpeg";
+
+const heroImages = [splashHero1, splashHero2];
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -9,6 +12,7 @@ interface SplashScreenProps {
 export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isExiting, setIsExiting] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const [currentImage, setCurrentImage] = useState(0);
 
   const handleEnter = () => {
     setIsExiting(true);
@@ -26,6 +30,14 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     return () => window.clearTimeout(readyTimer);
   }, [onComplete]);
 
+  // Rotate images every 2 seconds
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % heroImages.length);
+    }, 2000);
+    return () => window.clearInterval(interval);
+  }, []);
+
   return (
     <AnimatePresence>
       {!isExiting ? (
@@ -36,17 +48,23 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           transition={{ duration: 0.8, ease: "easeInOut" }}
           onClick={isReady ? handleEnter : undefined}
         >
-          {/* Full-bleed hero image */}
-          <motion.img
-            src={splashHero}
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-cover"
-            initial={{ scale: 1.12, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 3.2, ease: [0.22, 1, 0.36, 1] }}
-            style={{ filter: "grayscale(100%) contrast(1.08)" }}
-          />
+          {/* Rotating hero images with crossfade */}
+          {heroImages.map((src, index) => (
+            <motion.img
+              key={src}
+              src={src}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover"
+              initial={{ opacity: 0, scale: 1.12 }}
+              animate={{
+                opacity: currentImage === index ? 1 : 0,
+                scale: currentImage === index ? 1 : 1.12,
+              }}
+              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+              style={{ filter: "grayscale(100%) contrast(1.08)" }}
+            />
+          ))}
 
           {/* Subtle bottom gradient for text legibility */}
           <div
