@@ -110,11 +110,11 @@ export const CuratedMatches = () => {
       {/* Mutual match modal */}
       {mutualMatch && (
         <MutualMatchModal
-          open={!!mutualMatch}
+          isOpen={!!mutualMatch}
           onClose={() => setMutualMatch(null)}
-          matchName={mutualMatch.matchName}
+          matchName={mutualMatch.matchName || 'Your match'}
           matchPhoto={mutualMatch.matchPhoto}
-          conversationId={mutualMatch.conversationId}
+          onStartChat={() => setMutualMatch(null)}
         />
       )}
     </div>
