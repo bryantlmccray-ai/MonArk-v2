@@ -1,18 +1,31 @@
 import { useState } from 'react';
 import { useCuratedMatches } from '@/hooks/useCuratedMatches';
 import { MatchProfileCard } from './MatchProfileCard';
+import { MutualMatchModal } from './MutualMatchModal';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
-import { Calendar, Sparkles, Heart } from 'lucide-react';
-import { format, formatDistanceToNow } from 'date-fns';
+import { Calendar, Sparkles } from 'lucide-react';
+import { formatDistanceToNow, format } from 'date-fns';
 
 export const CuratedMatches = () => {
   const { matches, loading, acceptMatch, passMatch, getNextRefreshDate, pendingCount } = useCuratedMatches();
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [mutualMatch, setMutualMatch] = useState<{
+    matchName?: string;
+    matchPhoto?: string;
+    conversationId?: string;
+  } | null>(null);
 
   const handleAccept = async (matchId: string) => {
     setProcessingId(matchId);
-    await acceptMatch(matchId);
+    const result = await acceptMatch(matchId);
     setProcessingId(null);
+    if (result.isMutual) {
+      setMutualMatch({
+        matchName: result.matchName,
+        matchPhoto: result.matchPhoto,
+        conversationId: result.conversationId,
+      });
+    }
   };
 
   const handlePass = async (matchId: string) => {
@@ -30,51 +43,43 @@ export const CuratedMatches = () => {
   }
 
   const nextRefresh = getNextRefreshDate();
+  const now = new Date();
+  const daysUntil = Math.ceil((nextRefresh.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 
   return (
-    <div className="space-y-6 p-4 md:p-6">
+    <div className="space-y-6 p-4 md:p-6 max-w-lg mx-auto">
       {/* Header */}
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
-          <Sparkles className="w-4 h-4" />
-          Curated For You
+      <div className="space-y-1">
+        <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-1.5">
+          <Sparkles className="w-3 h-3" />
+          MonArk
         </div>
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+        <h2 className="font-serif text-3xl text-foreground font-normal tracking-tight">
           Your 3 This Week
         </h2>
-        <p className="text-muted-foreground max-w-md mx-auto">
-          Hand-picked matches based on your RIF profile and dating style. 
-          Choose wisely — new matches arrive every Sunday.
-        </p>
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <Calendar className="w-3.5 h-3.5" />
+          <span>New matches in {formatDistanceToNow(nextRefresh)}</span>
+        </div>
       </div>
 
-      {/* Countdown to refresh */}
-      <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-        <Calendar className="w-4 h-4" />
-        <span>
-          New matches in {formatDistanceToNow(nextRefresh)}
-        </span>
-      </div>
-
-      {/* Matches Grid or Empty State */}
+      {/* Matches or Empty State */}
       {matches.length === 0 ? (
-        <div className="text-center py-12 bg-card/50 rounded-xl border border-border/50">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
-            <Heart className="w-8 h-8 text-primary" />
+        <div className="text-center py-12">
+          <div className="w-16 h-16 rounded-full border border-primary/30 flex items-center justify-center mx-auto mb-6 bg-card">
+            <span className="font-serif text-2xl text-primary italic">3</span>
           </div>
-          <h3 className="text-lg font-semibold text-foreground mb-2">
-            All caught up!
+          <h3 className="font-serif text-2xl text-foreground font-normal mb-2.5">
+            Your 3 arrive Monday.
           </h3>
-          <p className="text-muted-foreground mb-4 max-w-sm mx-auto">
-            You've responded to all your matches for this week. 
-            Check back on Sunday for your next 3 curated matches.
-          </p>
-          <p className="text-sm text-primary">
-            Next batch: {format(nextRefresh, 'EEEE, MMMM d')}
+          <p className="text-sm text-muted-foreground font-light leading-relaxed max-w-[280px] mx-auto">
+            {daysUntil <= 1
+              ? "They're being curated now. Check back tomorrow morning."
+              : `${daysUntil} days until your next delivery.`}
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="flex flex-col gap-5">
           {matches.map((match) => (
             <MatchProfileCard
               key={match.id}
@@ -87,11 +92,30 @@ export const CuratedMatches = () => {
         </div>
       )}
 
-      {/* Progress indicator */}
+      {/* Footer */}
+      {matches.length > 0 && (
+        <p className="text-xs text-muted-foreground text-center leading-relaxed">
+          Three matches. One week. No inbox to sort.<br />
+          <em className="text-primary">Date well.</em>
+        </p>
+      )}
+
+      {/* Progress */}
       {pendingCount > 0 && pendingCount < 3 && (
-        <div className="text-center text-sm text-muted-foreground">
+        <div className="text-center text-xs text-muted-foreground">
           {3 - pendingCount} of 3 reviewed this week
         </div>
+      )}
+
+      {/* Mutual match modal */}
+      {mutualMatch && (
+        <MutualMatchModal
+          open={!!mutualMatch}
+          onClose={() => setMutualMatch(null)}
+          matchName={mutualMatch.matchName}
+          matchPhoto={mutualMatch.matchPhoto}
+          conversationId={mutualMatch.conversationId}
+        />
       )}
     </div>
   );
