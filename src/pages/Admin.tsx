@@ -13,7 +13,6 @@ import { NotificationsTab, type Notification } from '@/components/admin/Notifica
 import { ReportsTab, type UserReport } from '@/components/admin/ReportsTab';
 
 export const Admin: React.FC = () => {
-  const { user } = useAuth();
   const { isAdmin, isModerator, loading: roleLoading } = useAdmin();
   const [activeTab, setActiveTab] = useState<TabKey>('users');
   const [users, setUsers] = useState<UserProfile[]>([]);

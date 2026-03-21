@@ -106,7 +106,7 @@ export function AdminNotAuthorized() {
 
 export function AdminLoading() {
   return (
-    <div className="min-h-screen bg-[hsl(var(--sidebar-bg,220,15%,15%))] flex items-center justify-center">
+    <div className="min-h-screen bg-[#1C1F2E] flex items-center justify-center">
       <div className="text-center space-y-4">
         <div className="w-12 h-12 rounded-full border-2 border-primary mx-auto animate-pulse" />
         <p className="text-muted-foreground text-sm tracking-widest">Loading command center…</p>
