@@ -130,7 +130,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                     ref={videoRef}
                     src="/MonArk_Logo_GoldOnly.webm"
                     className="w-36 h-36 md:w-48 md:h-48"
-                    style={{ objectFit: "contain" }}
+                    style={{ objectFit: "contain", mixBlendMode: "screen" }}
                     muted
                     loop
                     playsInline
