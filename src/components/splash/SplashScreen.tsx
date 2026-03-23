@@ -54,23 +54,34 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           transition={{ duration: 0.8, ease: "easeInOut" }}
           onClick={isReady ? handleEnter : undefined}
         >
-          {/* Rotating hero images with crossfade */}
+          {/* Rotating hero images with responsive desktop scaling */}
           {heroImages.map((src, index) => (
-            <motion.img
+            <motion.div
               key={src}
-              src={src}
-              alt=""
               aria-hidden="true"
-              className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
-              initial={{ opacity: 0, x: '8%', scale: 1.08 }}
+              className="absolute inset-0"
+              initial={{ opacity: 0, x: "8%", scale: 1.08 }}
               animate={{
                 opacity: currentImage === index ? 1 : 0,
-                x: currentImage === index ? '0%' : '-8%',
+                x: currentImage === index ? "0%" : "-8%",
                 scale: currentImage === index ? 1 : 1.08,
               }}
               transition={{ duration: 2.5, ease: [0.25, 0.1, 0.25, 1] }}
-              style={{ filter: "grayscale(100%) contrast(1.08)" }}
-            />
+            >
+              <img
+                src={src}
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover object-[center_20%] md:scale-110 md:blur-xl"
+                style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.72)" }}
+              />
+
+              <img
+                src={src}
+                alt=""
+                className="absolute inset-0 hidden h-full w-full object-contain px-8 py-8 md:block lg:px-14 lg:py-12"
+                style={{ filter: "grayscale(100%) contrast(1.08)" }}
+              />
+            </motion.div>
           ))}
 
           {/* Bottom gradient for text legibility */}
