@@ -117,7 +117,8 @@ export const MonArkPricing = () => {
         {/* Tier Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           {Object.values(TIERS).map((tier, idx) => {
-            const price = isQuarterly ? tier.quarterly : tier.monthly;
+            const price = isQuarterly ? tier.quarterlyPerMonth : tier.monthly;
+            const quarterlyTotal = tier.quarterlyPerMonth * 3;
             const isAccent = tier.accent;
 
             return (
@@ -182,16 +183,21 @@ export const MonArkPricing = () => {
                       isAccent ? "text-[hsl(240_6%_46%)]" : "text-muted-foreground"
                     }`}
                   >
-                    /month
+                    /mo
                   </span>
                   {isQuarterly && (
-                    <p
-                      className={`text-xs mt-1 ${
-                        isAccent ? "text-[hsl(240_6%_46%)]" : "text-muted-foreground"
-                      }`}
-                    >
-                      Billed ${(price * 3).toFixed(2)} every 3 months
-                    </p>
+                    <div className="mt-1.5 flex items-center gap-2">
+                      <p
+                        className={`text-xs ${
+                          isAccent ? "text-[hsl(240_6%_46%)]" : "text-muted-foreground"
+                        }`}
+                      >
+                        Billed ${quarterlyTotal.toFixed(2)} every 3 months
+                      </p>
+                      <span className="text-[11px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                        Save ${tier.quarterlySavings}
+                      </span>
+                    </div>
                   )}
                 </div>
 
