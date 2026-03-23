@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import splashHero6 from "@/assets/splash-hero-6.jpeg";
 import splashHero1 from "@/assets/splash-hero.jpeg";
@@ -15,9 +15,7 @@ interface SplashScreenProps {
 export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isExiting, setIsExiting] = useState(false);
   const [isReady, setIsReady] = useState(false);
-  const [showLogo, setShowLogo] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleEnter = () => {
     setIsExiting(true);
@@ -31,11 +29,8 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
       return;
     }
 
-    // Show logo after a brief delay for dramatic entrance
-    const logoTimer = window.setTimeout(() => setShowLogo(true), 800);
     const readyTimer = window.setTimeout(() => setIsReady(true), 2400);
     return () => {
-      window.clearTimeout(logoTimer);
       window.clearTimeout(readyTimer);
     };
   }, [onComplete]);
@@ -48,12 +43,6 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     return () => window.clearInterval(interval);
   }, []);
 
-  // Play the logo video when it becomes visible
-  useEffect(() => {
-    if (showLogo && videoRef.current) {
-      videoRef.current.play().catch(() => {});
-    }
-  }, [showLogo]);
 
   return (
     <AnimatePresence>
@@ -84,15 +73,6 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
             />
           ))}
 
-          {/* Vignette overlay for depth and logo legibility */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(ellipse at center, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.5) 100%)",
-            }}
-          />
-
           {/* Bottom gradient for text legibility */}
           <div
             className="absolute inset-0 pointer-events-none"
@@ -101,45 +81,6 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 "linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 40%, transparent 100%)",
             }}
           />
-
-          {/* Animated gold logo — centered with luxury reveal */}
-          <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-            <AnimatePresence>
-              {showLogo && (
-                <motion.div
-                  className="relative"
-                  initial={{ opacity: 0, scale: 0.7 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.1 }}
-                  transition={{
-                    opacity: { duration: 1.2, ease: [0.25, 0.1, 0.25, 1] },
-                    scale: { duration: 1.8, ease: [0.16, 1, 0.3, 1] },
-                  }}
-                >
-                  {/* Soft glow behind the logo */}
-                  <motion.div
-                    className="absolute inset-0 rounded-full"
-                    style={{
-                      background: "radial-gradient(circle, rgba(212,184,150,0.12) 0%, transparent 70%)",
-                      transform: "scale(2.5)",
-                    }}
-                    animate={{ opacity: [0.4, 0.7, 0.4] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                  <video
-                    ref={videoRef}
-                    src="/MonArk_Logo_GoldOnly.webm"
-                    className="w-36 h-36 md:w-48 md:h-48"
-                    style={{ objectFit: "contain", mixBlendMode: "screen" }}
-                    muted
-                    loop
-                    playsInline
-                    aria-hidden="true"
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
 
           {/* Bottom text */}
           <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center pb-16 md:pb-20 pointer-events-none">
