@@ -15,9 +15,7 @@ interface SplashScreenProps {
 export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isExiting, setIsExiting] = useState(false);
   const [isReady, setIsReady] = useState(false);
-  const [showLogo, setShowLogo] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleEnter = () => {
     setIsExiting(true);
