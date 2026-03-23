@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import splashHero6 from "@/assets/splash-hero-6.jpeg";
 import splashHero1 from "@/assets/splash-hero.jpeg";
