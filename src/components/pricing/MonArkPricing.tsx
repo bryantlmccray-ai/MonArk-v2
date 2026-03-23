@@ -118,8 +118,9 @@ export const MonArkPricing = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           {Object.values(TIERS).map((tier, idx) => {
             const price = isQuarterly ? tier.quarterlyPerMonth : tier.monthly;
-            const quarterlyTotal = tier.quarterlyPerMonth * 3;
+            const quarterlyTotal = (tier.quarterlyPerMonth * 3);
             const isAccent = tier.accent;
+            const cardKey = `${tier.name}-${isQuarterly ? 'q' : 'm'}`;
 
             return (
               <motion.div
