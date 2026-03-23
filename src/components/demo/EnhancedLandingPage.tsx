@@ -420,65 +420,6 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       </section>
 
       {/* ═══════════ PRICING ═══════════ */}
-      <section className="py-16 bg-secondary/30">
-        <div className="max-w-3xl mx-auto px-5">
-          <motion.div className="text-center mb-10" initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
-            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-2">Founding Members</h2>
-            <p className="text-xs sm:text-sm font-caption text-muted-foreground tracking-[0.15em] uppercase">First 200 signups — Lifetime pricing, full Inner Ark access</p>
-            <SectionDivider />
-          </motion.div>
-
-          <motion.div
-            className="relative group max-w-lg mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="absolute -inset-1.5 rounded-2xl blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-700 bg-primary/15" />
-
-            <div className="relative bg-card rounded-2xl p-8 sm:p-10 border border-border shadow-[var(--shadow-elevated)]">
-              <div className="text-center mb-7">
-                <div className="inline-flex items-baseline gap-1">
-                  <span className="text-5xl sm:text-6xl font-editorial-headline text-foreground">$35</span>
-                  <span className="text-lg text-muted-foreground font-body">/mo</span>
-                </div>
-                <p className="text-base font-editorial-headline text-foreground mt-1">Lifetime Founding Rate</p>
-                <p className="text-xs text-primary font-caption mt-1 tracking-wide">Full Inner Ark access as features roll out</p>
-              </div>
-
-              <div className="space-y-5">
-                <div>
-                  <h3 className="font-editorial-headline text-base text-foreground mb-1">Your 3 Every Week</h3>
-                  <p className="text-muted-foreground text-sm font-body leading-relaxed">
-                    3 curated matches every Sunday, powered by Smart Matching. Each comes with an AI-suggested date idea.
-                  </p>
-                </div>
-
-                <div className="border-t border-border pt-5">
-                  <h3 className="font-editorial-headline text-base text-foreground mb-1">All Inner Ark Features</h3>
-                  <p className="text-muted-foreground text-sm font-body leading-relaxed">
-                    Discovery Map, venue concierge, enhanced RIF insights, priority matching, and early access to every new feature — included at your locked-in rate.
-                  </p>
-                </div>
-
-                <div className="border-t border-border pt-5">
-                  <Button
-                    onClick={() => setShowWaitlistModal(true)}
-                    className="w-full py-5 text-sm tracking-[0.08em] font-body"
-                    size="lg"
-                  >
-                    CLAIM FOUNDING ACCESS
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ═══════════ PRICING ═══════════ */}
       <SectionDivider />
       <MonArkPricing />
 
