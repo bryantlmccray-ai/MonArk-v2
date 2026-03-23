@@ -43,12 +43,6 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     return () => window.clearInterval(interval);
   }, []);
 
-  // Play the logo video when it becomes visible
-  useEffect(() => {
-    if (showLogo && videoRef.current) {
-      videoRef.current.play().catch(() => {});
-    }
-  }, [showLogo]);
 
   return (
     <AnimatePresence>
