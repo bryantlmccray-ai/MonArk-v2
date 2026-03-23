@@ -61,7 +61,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               src={src}
               alt=""
               aria-hidden="true"
-              className="absolute inset-0 h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
               initial={{ opacity: 0, x: '8%', scale: 1.08 }}
               animate={{
                 opacity: currentImage === index ? 1 : 0,
