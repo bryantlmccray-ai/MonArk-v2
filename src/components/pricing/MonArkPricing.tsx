@@ -7,17 +7,18 @@ const TIERS = {
   ark: {
     name: "The Ark",
     monthly: 39.99,
-    quarterly: 29.99,
+    quarterlyPerMonth: 33.99,
+    quarterlySavings: 18,
     badge: null,
     description:
       "The full MonArk experience. Three curated connections every week, built on emotional intelligence.",
     features: [
-      "RIF behavioral assessment & profile",
-      "3 weekly curated connections — Your 3",
-      "Close the Loop anti-ghosting protocol",
-      "Venue-integrated date suggestions",
-      "Post-date alignment check-ins",
-      "Community features & weekly reflections",
+      'Weekly "Your 3" curated matches',
+      "Access to Discovery Map",
+      "In-app messaging",
+      "Close the Loop anti-ghosting feature",
+      "Basic RIF compatibility insights",
+      "MonArk venue recommendations with matches",
     ],
     cta: "Join The Ark",
     accent: false,
@@ -25,17 +26,19 @@ const TIERS = {
   innerArk: {
     name: "The Inner Ark",
     monthly: 79.99,
-    quarterly: 59.99,
+    quarterlyPerMonth: 67.99,
+    quarterlySavings: 36,
     badge: "Most Intentional",
     description:
       "The elevated experience. Deeper insights, wider reach, and concierge-level curation.",
     features: [
       "Everything in The Ark",
-      "Discovery Map — 50–100 additional curated profiles",
-      "Priority matching in the RIF engine",
-      "Venue concierge — reservations at partner locations",
-      "Enhanced RIF insights & relational analytics",
-      "Early access to new features & city expansions",
+      "Priority match queue — first pick before standard members",
+      "Expanded match pool — 5 curated instead of 3",
+      "Full RIF compatibility report per match",
+      "Concierge date planning suggestions",
+      "Early access to new features",
+      "Inner Ark badge — visible signal of seriousness",
     ],
     cta: "Go Deeper",
     accent: true,
@@ -106,7 +109,7 @@ export const MonArkPricing = () => {
               animate={{ opacity: 1, scale: 1 }}
               className="text-[11px] font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full tracking-wide"
             >
-              Save up to 25%
+              Save up to $36
             </motion.span>
           )}
         </div>
@@ -114,7 +117,8 @@ export const MonArkPricing = () => {
         {/* Tier Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           {Object.values(TIERS).map((tier, idx) => {
-            const price = isQuarterly ? tier.quarterly : tier.monthly;
+            const price = isQuarterly ? tier.quarterlyPerMonth : tier.monthly;
+            const quarterlyTotal = tier.quarterlyPerMonth * 3;
             const isAccent = tier.accent;
 
             return (
@@ -179,16 +183,21 @@ export const MonArkPricing = () => {
                       isAccent ? "text-[hsl(240_6%_46%)]" : "text-muted-foreground"
                     }`}
                   >
-                    /month
+                    /mo
                   </span>
                   {isQuarterly && (
-                    <p
-                      className={`text-xs mt-1 ${
-                        isAccent ? "text-[hsl(240_6%_46%)]" : "text-muted-foreground"
-                      }`}
-                    >
-                      Billed ${(price * 3).toFixed(2)} every 3 months
-                    </p>
+                    <div className="mt-1.5 flex items-center gap-2">
+                      <p
+                        className={`text-xs ${
+                          isAccent ? "text-[hsl(240_6%_46%)]" : "text-muted-foreground"
+                        }`}
+                      >
+                        Billed ${quarterlyTotal.toFixed(2)} every 3 months
+                      </p>
+                      <span className="text-[11px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                        Save ${tier.quarterlySavings}
+                      </span>
+                    </div>
                   )}
                 </div>
 
