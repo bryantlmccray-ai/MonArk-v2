@@ -29,11 +29,8 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
       return;
     }
 
-    // Show logo after a brief delay for dramatic entrance
-    const logoTimer = window.setTimeout(() => setShowLogo(true), 800);
     const readyTimer = window.setTimeout(() => setIsReady(true), 2400);
     return () => {
-      window.clearTimeout(logoTimer);
       window.clearTimeout(readyTimer);
     };
   }, [onComplete]);
