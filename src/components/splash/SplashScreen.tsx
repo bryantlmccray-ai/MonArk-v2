@@ -6,7 +6,7 @@ import splashHero2 from "@/assets/splash-hero-2.jpeg";
 import splashHero4 from "@/assets/splash-hero-4.jpeg";
 import splashHero5 from "@/assets/splash-hero-5.jpeg";
 
-const heroImages = [splashHero6, splashHero1, splashHero2, splashHero4, splashHero5];
+const heroImages = [splashHero6, splashHero2, splashHero1, splashHero4, splashHero5];
 
 interface SplashScreenProps {
   onComplete: () => void;
