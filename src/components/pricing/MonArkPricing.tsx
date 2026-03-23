@@ -118,8 +118,9 @@ export const MonArkPricing = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           {Object.values(TIERS).map((tier, idx) => {
             const price = isQuarterly ? tier.quarterlyPerMonth : tier.monthly;
-            const quarterlyTotal = tier.quarterlyPerMonth * 3;
+            const quarterlyTotal = (tier.quarterlyPerMonth * 3);
             const isAccent = tier.accent;
+            const cardKey = `${tier.name}-${isQuarterly ? 'q' : 'm'}`;
 
             return (
               <motion.div
@@ -164,29 +165,41 @@ export const MonArkPricing = () => {
 
                 {/* Price */}
                 <div className="mb-7">
-                  <span
-                    className={`font-editorial-headline text-5xl leading-none ${
-                      isAccent ? "text-[hsl(28_38%_94%)]" : "text-foreground"
-                    }`}
+                  <motion.div
+                    key={`${tier.name}-${isQuarterly}`}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    ${price.toFixed(2).split(".")[0]}
-                  </span>
-                  <span
-                    className={`text-xl font-medium align-super ${
-                      isAccent ? "text-[hsl(30_40%_72%)]" : "text-primary"
-                    }`}
-                  >
-                    .{price.toFixed(2).split(".")[1]}
-                  </span>
-                  <span
-                    className={`text-sm ml-1 ${
-                      isAccent ? "text-[hsl(240_6%_46%)]" : "text-muted-foreground"
-                    }`}
-                  >
-                    /mo
-                  </span>
+                    <span
+                      className={`font-editorial-headline text-5xl leading-none ${
+                        isAccent ? "text-[hsl(28_38%_94%)]" : "text-foreground"
+                      }`}
+                    >
+                      ${price.toFixed(2).split(".")[0]}
+                    </span>
+                    <span
+                      className={`text-xl font-medium align-super ${
+                        isAccent ? "text-[hsl(30_40%_72%)]" : "text-primary"
+                      }`}
+                    >
+                      .{price.toFixed(2).split(".")[1]}
+                    </span>
+                    <span
+                      className={`text-sm ml-1 ${
+                        isAccent ? "text-[hsl(240_6%_46%)]" : "text-muted-foreground"
+                      }`}
+                    >
+                      /mo
+                    </span>
+                  </motion.div>
                   {isQuarterly && (
-                    <div className="mt-1.5 flex items-center gap-2">
+                    <motion.div
+                      className="mt-1.5 flex items-center gap-2"
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: 0.1 }}
+                    >
                       <p
                         className={`text-xs ${
                           isAccent ? "text-[hsl(240_6%_46%)]" : "text-muted-foreground"
@@ -197,7 +210,7 @@ export const MonArkPricing = () => {
                       <span className="text-[11px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
                         Save ${tier.quarterlySavings}
                       </span>
-                    </div>
+                    </motion.div>
                   )}
                 </div>
 
