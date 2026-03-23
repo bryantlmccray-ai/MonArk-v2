@@ -91,7 +91,10 @@ export const MonArkPricing = () => {
           </span>
           <Switch
             checked={isQuarterly}
-            onCheckedChange={setIsQuarterly}
+            onCheckedChange={(val) => {
+              console.log('Toggle clicked, new value:', val);
+              setIsQuarterly(val);
+            }}
             className="data-[state=checked]:bg-primary"
           />
           <span
