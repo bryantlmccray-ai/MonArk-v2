@@ -13,7 +13,7 @@ const TIERS = {
     description:
       "The full MonArk experience. Three curated connections every week, built on emotional intelligence.",
     features: [
-      "Weekly "Your 3" curated matches",
+      'Weekly "Your 3" curated matches',
       "Access to Discovery Map",
       "In-app messaging",
       "Close the Loop anti-ghosting feature",
