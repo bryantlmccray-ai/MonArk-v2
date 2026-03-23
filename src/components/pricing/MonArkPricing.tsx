@@ -109,7 +109,7 @@ export const MonArkPricing = () => {
               animate={{ opacity: 1, scale: 1 }}
               className="text-[11px] font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full tracking-wide"
             >
-              Save up to 25%
+              Save up to $36
             </motion.span>
           )}
         </div>
