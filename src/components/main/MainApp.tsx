@@ -18,7 +18,9 @@ import { useAnalytics } from '@/hooks/useAnalytics';
 import { useContactFeedback } from '@/hooks/useContactFeedback';
 import { ContactShareFeedback } from '@/components/feedback/ContactShareFeedback';
 import { MilestoneCardShowcase } from '@/components/social/MilestoneCardShowcase';
- import { ProfileGate } from '@/components/common/ProfileGate';
+import { ProfileGate } from '@/components/common/ProfileGate';
+import PaywallModal from '@/components/PaywallModal';
+import { useSubscription } from '@/hooks/useSubscription';
 
 interface MainAppProps {
   initialTab?: string;
@@ -34,6 +36,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   const [showPostDateReflection, setShowPostDateReflection] = useState(false);
   const [reflectionPartnerName, setReflectionPartnerName] = useState('');
   const isMobile = useIsMobile();
+  const { showPaywall, setShowPaywall, tier } = useSubscription();
   
   // Email notification triggers
   useNotificationTriggers();
@@ -173,7 +176,9 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
             onSubmit={submitFeedback}
             loading={feedbackLoading}
           />
-        )}
+         )}
+
+        <PaywallModal isOpen={showPaywall} onClose={() => setShowPaywall(false)} currentTier={tier} />
       </div>
     );
   }
@@ -185,7 +190,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
           <SidebarTrigger className="ml-4 text-muted-foreground hover:text-primary transition-colors" />
         </header>
 
-        <SidebarNavigation activeTab={activeTab} onTabChange={handleTabChange} onArkNavigation={handleJournalNavigation} />
+        <SidebarNavigation activeTab={activeTab} onTabChange={handleTabChange} onArkNavigation={handleJournalNavigation} onUpgrade={() => setShowPaywall(true)} />
 
         <main className="flex-1 pt-12">
           {/* RIF Beta Insights Card for desktop */}
@@ -225,7 +230,9 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
             onSubmit={submitFeedback}
             loading={feedbackLoading}
           />
-        )}
+         )}
+
+        <PaywallModal isOpen={showPaywall} onClose={() => setShowPaywall(false)} currentTier={tier} />
       </div>
     </SidebarProvider>
   );

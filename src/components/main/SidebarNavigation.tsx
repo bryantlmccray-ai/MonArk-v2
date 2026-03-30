@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, MessageCircle, BookOpen, Calendar, Share2 } from 'lucide-react';
+import { User, MessageCircle, BookOpen, Calendar, Share2, Crown } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -15,9 +15,10 @@ interface SidebarNavigationProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
   onArkNavigation?: () => void;
+  onUpgrade?: () => void;
 }
 
-export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab, onTabChange, onArkNavigation }) => {
+export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab, onTabChange, onArkNavigation, onUpgrade }) => {
   const tabs = [
     { id: 'weekly', icon: Calendar, label: 'Your 3 Options' },
     { id: 'matches', icon: MessageCircle, label: 'Connections' },
@@ -67,6 +68,25 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Upgrade Button */}
+        {onUpgrade && (
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    onClick={onUpgrade}
+                    className="w-full justify-start text-primary hover:bg-primary/10 font-semibold transition-all duration-300 rounded-xl"
+                  >
+                    <Crown className="h-5 w-5 stroke-[2px]" />
+                    <span className="tracking-wide">Upgrade</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
     </Sidebar>
   );
