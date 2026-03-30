@@ -18,7 +18,7 @@ interface SidebarNavigationProps {
   onUpgrade?: () => void;
 }
 
-export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab, onTabChange, onArkNavigation }) => {
+export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab, onTabChange, onArkNavigation, onUpgrade }) => {
   const tabs = [
     { id: 'weekly', icon: Calendar, label: 'Your 3 Options' },
     { id: 'matches', icon: MessageCircle, label: 'Connections' },
