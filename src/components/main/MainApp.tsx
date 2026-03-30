@@ -190,7 +190,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
           <SidebarTrigger className="ml-4 text-muted-foreground hover:text-primary transition-colors" />
         </header>
 
-        <SidebarNavigation activeTab={activeTab} onTabChange={handleTabChange} onArkNavigation={handleJournalNavigation} />
+        <SidebarNavigation activeTab={activeTab} onTabChange={handleTabChange} onArkNavigation={handleJournalNavigation} onUpgrade={() => setShowPaywall(true)} />
 
         <main className="flex-1 pt-12">
           {/* RIF Beta Insights Card for desktop */}
