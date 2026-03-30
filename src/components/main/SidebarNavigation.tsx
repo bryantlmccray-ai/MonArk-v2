@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, MessageCircle, BookOpen, Calendar, Share2 } from 'lucide-react';
+import { User, MessageCircle, BookOpen, Calendar, Share2, Crown } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
