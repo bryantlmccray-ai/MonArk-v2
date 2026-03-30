@@ -176,7 +176,9 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
             onSubmit={submitFeedback}
             loading={feedbackLoading}
           />
-        )}
+         )}
+
+        <PaywallModal isOpen={showPaywall} onClose={() => setShowPaywall(false)} currentTier={tier} />
       </div>
     );
   }
