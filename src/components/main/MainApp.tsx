@@ -18,7 +18,9 @@ import { useAnalytics } from '@/hooks/useAnalytics';
 import { useContactFeedback } from '@/hooks/useContactFeedback';
 import { ContactShareFeedback } from '@/components/feedback/ContactShareFeedback';
 import { MilestoneCardShowcase } from '@/components/social/MilestoneCardShowcase';
- import { ProfileGate } from '@/components/common/ProfileGate';
+import { ProfileGate } from '@/components/common/ProfileGate';
+import PaywallModal from '@/components/PaywallModal';
+import { useSubscription } from '@/hooks/useSubscription';
 
 interface MainAppProps {
   initialTab?: string;
