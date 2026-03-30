@@ -15,6 +15,7 @@ interface SidebarNavigationProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
   onArkNavigation?: () => void;
+  onUpgrade?: () => void;
 }
 
 export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab, onTabChange, onArkNavigation }) => {
