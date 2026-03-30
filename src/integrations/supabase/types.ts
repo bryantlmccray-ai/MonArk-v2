@@ -1961,6 +1961,55 @@ export type Database = {
         }
         Relationships: []
       }
+      subscription_events: {
+        Row: {
+          created_at: string
+          currency: string | null
+          environment: string | null
+          event_type: string
+          id: string
+          payload: Json | null
+          previous_tier: Database["public"]["Enums"]["subscription_tier"] | null
+          price_usd: number | null
+          product_id: string | null
+          revenuecat_event_id: string | null
+          tier: Database["public"]["Enums"]["subscription_tier"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string | null
+          environment?: string | null
+          event_type: string
+          id?: string
+          payload?: Json | null
+          previous_tier?:
+            | Database["public"]["Enums"]["subscription_tier"]
+            | null
+          price_usd?: number | null
+          product_id?: string | null
+          revenuecat_event_id?: string | null
+          tier: Database["public"]["Enums"]["subscription_tier"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string | null
+          environment?: string | null
+          event_type?: string
+          id?: string
+          payload?: Json | null
+          previous_tier?:
+            | Database["public"]["Enums"]["subscription_tier"]
+            | null
+          price_usd?: number | null
+          product_id?: string | null
+          revenuecat_event_id?: string | null
+          tier?: Database["public"]["Enums"]["subscription_tier"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_actions: {
         Row: {
           action_type: string
@@ -2159,6 +2208,7 @@ export type Database = {
           product_adoption_score: number | null
           relationship_goals: string[] | null
           relationship_score: number | null
+          revenuecat_customer_id: string | null
           rif_quiz_answers: Json | null
           segment: string | null
           sexual_orientation:
@@ -2167,9 +2217,14 @@ export type Database = {
           sexual_orientation_custom: string | null
           show_location_on_profile: boolean | null
           smoking_status: string | null
+          subscription_expires_at: string | null
+          subscription_status: string
+          subscription_tier: Database["public"]["Enums"]["subscription_tier"]
           suspended: boolean | null
           suspended_at: string | null
           suspension_reason: string | null
+          trial_ends_at: string | null
+          trial_started_at: string | null
           updated_at: string
           user_id: string
         }
@@ -2225,6 +2280,7 @@ export type Database = {
           product_adoption_score?: number | null
           relationship_goals?: string[] | null
           relationship_score?: number | null
+          revenuecat_customer_id?: string | null
           rif_quiz_answers?: Json | null
           segment?: string | null
           sexual_orientation?:
@@ -2233,9 +2289,14 @@ export type Database = {
           sexual_orientation_custom?: string | null
           show_location_on_profile?: boolean | null
           smoking_status?: string | null
+          subscription_expires_at?: string | null
+          subscription_status?: string
+          subscription_tier?: Database["public"]["Enums"]["subscription_tier"]
           suspended?: boolean | null
           suspended_at?: string | null
           suspension_reason?: string | null
+          trial_ends_at?: string | null
+          trial_started_at?: string | null
           updated_at?: string
           user_id: string
         }
@@ -2291,6 +2352,7 @@ export type Database = {
           product_adoption_score?: number | null
           relationship_goals?: string[] | null
           relationship_score?: number | null
+          revenuecat_customer_id?: string | null
           rif_quiz_answers?: Json | null
           segment?: string | null
           sexual_orientation?:
@@ -2299,9 +2361,14 @@ export type Database = {
           sexual_orientation_custom?: string | null
           show_location_on_profile?: boolean | null
           smoking_status?: string | null
+          subscription_expires_at?: string | null
+          subscription_status?: string
+          subscription_tier?: Database["public"]["Enums"]["subscription_tier"]
           suspended?: boolean | null
           suspended_at?: string | null
           suspension_reason?: string | null
+          trial_ends_at?: string | null
+          trial_started_at?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -3105,6 +3172,18 @@ export type Database = {
         }
         Relationships: []
       }
+      subscription_overview: {
+        Row: {
+          active_count: number | null
+          in_trial_count: number | null
+          subscription_status: string | null
+          subscription_tier:
+            | Database["public"]["Enums"]["subscription_tier"]
+            | null
+          user_count: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       atomic_share_contact: {
@@ -3218,6 +3297,7 @@ export type Database = {
           product_adoption_score: number | null
           relationship_goals: string[] | null
           relationship_score: number | null
+          revenuecat_customer_id: string | null
           rif_quiz_answers: Json | null
           segment: string | null
           sexual_orientation:
@@ -3226,9 +3306,14 @@ export type Database = {
           sexual_orientation_custom: string | null
           show_location_on_profile: boolean | null
           smoking_status: string | null
+          subscription_expires_at: string | null
+          subscription_status: string
+          subscription_tier: Database["public"]["Enums"]["subscription_tier"]
           suspended: boolean | null
           suspended_at: string | null
           suspension_reason: string | null
+          trial_ends_at: string | null
+          trial_started_at: string | null
           updated_at: string
           user_id: string
         }[]
@@ -3249,6 +3334,7 @@ export type Database = {
           updated_at: string
         }[]
       }
+      has_feature: { Args: { feature_name: string }; Returns: boolean }
       has_mutual_match: {
         Args: { user_a: string; user_b: string }
         Returns: boolean
@@ -3322,6 +3408,7 @@ export type Database = {
         | "Demisexual"
         | "Questioning"
         | "Custom"
+      subscription_tier: "free" | "plus" | "monarch"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -3473,6 +3560,7 @@ export const Constants = {
         "Questioning",
         "Custom",
       ],
+      subscription_tier: ["free", "plus", "monarch"],
     },
   },
 } as const
