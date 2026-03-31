@@ -302,7 +302,8 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.15 }}
           >
-            <p className="text-center text-xs font-caption text-primary tracking-[0.2em] uppercase mb-6">Preview: Sample Questions</p>
+            <h3 className="text-center font-editorial-headline text-xl sm:text-2xl text-foreground mb-2">A Glimpse Into Your RIF</h3>
+            <p className="text-center text-xs font-caption text-primary tracking-[0.2em] uppercase mb-8">The questions that power smarter matches</p>
             <div className="flex flex-col gap-4 max-w-2xl mx-auto">
               {[
                 { num: "Q3", text: "How do you typically show up in conflict — do you go quiet or speak up immediately?" },
@@ -311,18 +312,25 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               ].map((q, i) => (
                 <motion.div
                   key={i}
-                  className="relative bg-card border border-border rounded-2xl p-5 sm:p-6 shadow-[var(--shadow-editorial)] hover:border-primary/30 transition-all duration-300"
+                  className="relative bg-[hsl(230_18%_15%)] border border-[hsl(30_40%_72%/0.2)] rounded-2xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(28,31,46,0.25)] hover:border-[hsl(30_40%_72%/0.4)] transition-all duration-300"
                   initial={{ opacity: 0, x: i % 2 === 0 ? -16 : 16 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.1 * i }}
                 >
-                  <span className="absolute top-4 right-5 text-[10px] font-caption text-primary/50 tracking-[0.15em] uppercase">{q.num}</span>
-                  <p className="font-editorial-headline text-base sm:text-lg text-foreground leading-relaxed pr-8 italic">"{q.text}"</p>
+                  <div className="flex items-start gap-4">
+                    <div className="w-9 h-9 rounded-xl bg-[hsl(30_40%_72%/0.15)] flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <HelpCircle className="w-4.5 h-4.5 text-[hsl(30_40%_72%)]" strokeWidth={1.5} />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-editorial-headline text-base sm:text-lg text-[hsl(30_40%_85%)] leading-relaxed italic">"{q.text}"</p>
+                    </div>
+                  </div>
+                  <span className="absolute top-4 right-5 text-[10px] font-caption text-[hsl(30_40%_72%/0.4)] tracking-[0.15em] uppercase">{q.num}</span>
                 </motion.div>
               ))}
             </div>
-            <p className="text-center mt-5 text-xs text-muted-foreground font-body">15 thoughtful questions. 5 minutes. That's all it takes to unlock smarter matches.</p>
+            <p className="text-center mt-6 text-xs text-muted-foreground font-body">15 thoughtful questions. 5 minutes. That's all it takes to unlock smarter matches.</p>
           </motion.div>
         </div>
       </section>
