@@ -71,7 +71,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onStartRIF, onSign
               </h3>
               <p className="text-sm font-body text-[hsl(240_6%_60%)] leading-relaxed">
                 {rifComplete
-                  ? 'Your Relational Intelligence profile is active. We're using it to curate your matches.'
+                  ? "Your Relational Intelligence profile is active. We're using it to curate your matches."
                   : '10 thoughtful questions help us understand how you connect, communicate, and love.'
                 }
               </p>
