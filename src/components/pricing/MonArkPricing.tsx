@@ -83,39 +83,34 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
         </motion.div>
 
         {/* Billing Toggle */}
-        <div className="flex items-center justify-center gap-4 mb-12">
-          <span
-            className={`text-sm font-body transition-all duration-300 ${
-              isQuarterly
-                ? "text-muted-foreground font-normal"
-                : "text-foreground font-semibold"
-            }`}
-          >
-            Monthly
-          </span>
-          <Switch
-            checked={isQuarterly}
-            onCheckedChange={setIsQuarterly}
-            className="data-[state=checked]:bg-primary"
-          />
-          <span
-            className={`text-sm font-body transition-all duration-300 ${
-              isQuarterly
-                ? "text-foreground font-semibold"
-                : "text-muted-foreground font-normal"
-            }`}
-          >
-            Quarterly
-          </span>
-          {isQuarterly && (
-            <motion.span
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-[11px] font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full tracking-wide uppercase"
+        <div className="flex items-center justify-center mb-12">
+          <div className="inline-flex items-center bg-secondary rounded-full p-1 gap-0.5">
+            <button
+              onClick={() => setIsQuarterly(false)}
+              className={`px-5 py-2 rounded-full text-sm font-medium tracking-wide transition-all duration-300 ${
+                !isQuarterly
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
             >
-              Save 20%
-            </motion.span>
-          )}
+              Monthly
+            </button>
+            <button
+              onClick={() => setIsQuarterly(true)}
+              className={`px-5 py-2 rounded-full text-sm font-medium tracking-wide transition-all duration-300 flex items-center gap-2 ${
+                isQuarterly
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Quarterly
+              {isQuarterly && (
+                <span className="text-[10px] font-semibold bg-primary-foreground/20 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                  Save 20%
+                </span>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Tier Cards */}
