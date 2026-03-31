@@ -23,30 +23,48 @@ export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) =
   const greeting = getTimeGreeting();
   const contextLine = getContextLine();
   const ref = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  const handleScroll = useCallback(() => {
-    if (!ref.current) return;
-    const el = ref.current;
-    const rect = el.getBoundingClientRect();
-    const elHeight = el.offsetHeight;
-    // Start fading as soon as the element begins to scroll off-screen
-    // Full fade-out after scrolling 180px past the top of the element
-    const fadeDistance = 180;
-    const scrolled = Math.max(0, -rect.top + elHeight * 0.3);
-    const progress = Math.min(1, scrolled / fadeDistance);
-    setScrollProgress(progress);
-  }, []);
+  const rafId = useRef<number>(0);
 
   useEffect(() => {
-    const scrollParent = ref.current?.closest('[class*="overflow"]') || window;
-    const target = scrollParent === window ? window : scrollParent;
-    target.addEventListener('scroll', handleScroll, { passive: true });
-    return () => target.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+    const el = ref.current;
+    if (!el) return;
 
-  const opacity = 1 - scrollProgress;
-  const translateY = -scrollProgress * 24;
+    const scrollParent =
+      (el.closest('[class*="overflow"]') as HTMLElement) || null;
+
+    const onScroll = () => {
+      cancelAnimationFrame(rafId.current);
+      rafId.current = requestAnimationFrame(() => {
+        const scrollY = scrollParent ? scrollParent.scrollTop : window.scrollY;
+
+        // Two-layer animation driven by raw scrollY:
+        // 1) Slide-up: 0→24px over first 180px of scroll
+        // 2) Pure opacity dissolve: 0→1 over first 120px of scroll
+        const slideProgress = Math.min(1, scrollY / 180);
+        const fadeProgress = Math.min(1, scrollY / 120);
+
+        // Ease-out curve for silky deceleration
+        const easedSlide = 1 - Math.pow(1 - slideProgress, 3);
+        const easedFade = 1 - Math.pow(1 - fadeProgress, 2);
+
+        const translateY = -easedSlide * 24;
+        const opacity = 1 - easedFade;
+
+        el.style.transform = `translateY(${translateY}px)`;
+        el.style.opacity = String(opacity);
+        el.style.willChange = scrollY > 0 ? 'transform, opacity' : 'auto';
+      });
+    };
+
+    const target = scrollParent || window;
+    target.addEventListener('scroll', onScroll, { passive: true });
+    onScroll(); // sync initial state
+
+    return () => {
+      target.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(rafId.current);
+    };
+  }, []);
 
   return (
     <motion.div
@@ -55,11 +73,6 @@ export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) =
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      style={{
-        opacity,
-        transform: `translateY(${translateY}px)`,
-        willChange: scrollProgress > 0 ? 'transform, opacity' : 'auto',
-      }}
     >
       <h1 className="font-editorial text-2xl md:text-3xl tracking-tight text-foreground">
         {greeting}, <span className="text-primary">{firstName}</span>.
