@@ -29,43 +29,55 @@ export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) =
     const el = ref.current;
     if (!el) return;
 
-    const mobileQuery = window.matchMedia('(max-width: 767px)');
+    const getScrollY = () =>
+      Math.max(
+        window.scrollY || 0,
+        window.pageYOffset || 0,
+        document.scrollingElement?.scrollTop || 0,
+        document.documentElement.scrollTop || 0,
+        document.body.scrollTop || 0,
+      );
+
+    const applyScrollStyles = () => {
+      const scrollY = getScrollY();
+      const isMobile = window.matchMedia('(max-width: 767px)').matches;
+
+      if (scrollY <= 0) {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+        el.style.willChange = 'auto';
+        return;
+      }
+
+      const fadeDistance = isMobile ? 120 : 180;
+      const fadeProgress = Math.min(1, scrollY / fadeDistance);
+      const easedFade = 1 - Math.pow(1 - fadeProgress, 2);
+
+      if (isMobile) {
+        el.style.opacity = String(1 - easedFade);
+        el.style.transform = 'none';
+        el.style.willChange = 'opacity';
+        return;
+      }
+
+      const slideProgress = Math.min(1, scrollY / 180);
+      const easedSlide = 1 - Math.pow(1 - slideProgress, 3);
+
+      el.style.opacity = String(1 - easedFade);
+      el.style.transform = `translateY(${-easedSlide * 24}px)`;
+      el.style.willChange = 'transform, opacity';
+    };
 
     const onScroll = () => {
       cancelAnimationFrame(rafId.current);
-      rafId.current = requestAnimationFrame(() => {
-        const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
-        const isMobile = mobileQuery.matches;
-
-        if (scrollY === 0) {
-          el.style.transform = 'none';
-          el.style.opacity = '1';
-          el.style.willChange = 'auto';
-          return;
-        }
-
-        if (isMobile) {
-          // Mobile: pure opacity dissolve, no movement
-          const fadeProgress = Math.min(1, scrollY / 120);
-          const easedFade = 1 - Math.pow(1 - fadeProgress, 2);
-          el.style.transform = 'none';
-          el.style.opacity = String(1 - easedFade);
-        } else {
-          // Desktop: slide-up + fade combined
-          const slideProgress = Math.min(1, scrollY / 180);
-          const fadeProgress = Math.min(1, scrollY / 180);
-          const easedSlide = 1 - Math.pow(1 - slideProgress, 3);
-          const easedFade = 1 - Math.pow(1 - fadeProgress, 2);
-          el.style.transform = `translateY(${-easedSlide * 24}px)`;
-          el.style.opacity = String(1 - easedFade);
-        }
-
-        el.style.willChange = 'transform, opacity';
-      });
+      rafId.current = requestAnimationFrame(applyScrollStyles);
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
+
+    if (getScrollY() > 0) {
+      applyScrollStyles();
+    }
 
     return () => {
       window.removeEventListener('scroll', onScroll);
