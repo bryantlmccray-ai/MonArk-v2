@@ -9,6 +9,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Switch } from "@/components/ui/switch";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "@/hooks/use-toast";
 
 // ─── Types ───────────────────────────────────────────────────
 type TierKey = "free" | "plus" | "monarch";
@@ -114,6 +115,18 @@ export default function PaywallModal({
     setLoading(tier.key);
 
     try {
+      const rcApiKey = import.meta.env.VITE_REVENUECAT_API_KEY;
+
+      if (!rcApiKey) {
+        toast({
+          title: "Payment not available",
+          description: "Subscription system is not configured yet. Please contact support.",
+          variant: "destructive",
+        });
+        setLoading(null);
+        return;
+      }
+
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -123,10 +136,8 @@ export default function PaywallModal({
         ? tier.productIdQuarterly
         : tier.productIdMonthly;
 
-      const rcApiKey = import.meta.env.VITE_REVENUECAT_API_KEY;
-
-      if (!rcApiKey || !productId) {
-        throw new Error("Payment system not configured. Please contact support.");
+      if (!productId) {
+        throw new Error("Product not configured. Please contact support.");
       }
 
       // RevenueCat web billing — redirect to hosted checkout
@@ -137,7 +148,11 @@ export default function PaywallModal({
     } catch (err) {
       const message = err instanceof Error ? err.message : "Purchase failed. Please try again.";
       console.error("Purchase failed:", message);
-      alert(message);
+      toast({
+        title: "Purchase failed",
+        description: message,
+        variant: "destructive",
+      });
     } finally {
       setLoading(null);
     }
