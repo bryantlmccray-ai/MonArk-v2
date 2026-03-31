@@ -532,7 +532,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
               ) : (
                 <Button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !formData.agreeToTerms}
                   className="font-semibold min-w-[140px]"
                 >
                   {isSubmitting ? (
