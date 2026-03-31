@@ -448,6 +448,58 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
+      {/* ═══════════ TESTIMONIALS ═══════════ */}
+      <section className="py-16 bg-background">
+        <div className="max-w-5xl mx-auto px-5 sm:px-8">
+          <motion.div
+            className="text-center mb-10"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <p className="text-xs font-caption text-primary tracking-[0.2em] uppercase mb-2">What Members Are Saying</p>
+            <SectionDivider />
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              {
+                quote: "MonArk felt like having a matchmaker in my pocket. Three matches a week, and every single one was someone I'd actually want to meet.",
+                name: "Marcus T.",
+                city: "Atlanta",
+              },
+              {
+                quote: "I deleted every other app the first week. The RIF compatibility insight before my date? Game changer. I finally felt prepared, not just hopeful.",
+                name: "Jasmine L.",
+                city: "Chicago",
+              },
+              {
+                quote: "The intentionality here is real. No ghosting culture, no games. I went on the best first date of my life within two weeks.",
+                name: "David R.",
+                city: "New York",
+              },
+            ].map((testimonial, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.12, ease: easeOut }}
+                className="bg-[hsl(230_18%_15%)] rounded-2xl p-7 flex flex-col justify-between shadow-[0_8px_32px_rgba(28,31,46,0.25)]"
+              >
+                <p className="text-[hsl(240_6%_78%)] font-body text-sm leading-relaxed mb-6 italic">
+                  "{testimonial.quote}"
+                </p>
+                <p className="text-[hsl(30_40%_72%)] font-caption text-xs tracking-[0.12em] uppercase">
+                  — {testimonial.name}, {testimonial.city}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ═══════════ PRICING ═══════════ */}
       <SectionDivider />
       <MonArkPricing onSelectPlan={() => setShowWaitlistModal(true)} />
