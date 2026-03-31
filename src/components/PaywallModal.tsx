@@ -135,7 +135,9 @@ export default function PaywallModal({
 
       onClose();
     } catch (err) {
-      console.error("Purchase failed:", err);
+      const message = err instanceof Error ? err.message : "Purchase failed. Please try again.";
+      console.error("Purchase failed:", message);
+      alert(message);
     } finally {
       setLoading(null);
     }
