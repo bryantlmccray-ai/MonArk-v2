@@ -67,23 +67,6 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
 
   const locationDisplay = getLocationDisplay();
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background p-6 flex items-center justify-center">
-        <div className="text-foreground text-lg font-body">Loading profile...</div>
-      </div>
-    );
-  }
-
-  if (showProfileCreation) {
-    return (
-      <ProfileCreation 
-        onComplete={() => setShowProfileCreation(false)}
-        onCancel={() => { console.log('Profile creation cancelled'); setShowProfileCreation(false); }}
-      />
-    );
-  }
-
   const hasCompleteProfile = profile?.is_profile_complete;
   const userName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || user?.user_metadata?.name || 'User';
   const firstName = profile?.first_name || user?.user_metadata?.name?.split(' ')[0] || 'User';
@@ -105,6 +88,23 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
     setEditingName(false);
     toast({ title: 'Name updated' });
   }, [editFirstName, editLastName, updateProfile, toast]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background p-6 flex items-center justify-center">
+        <div className="text-foreground text-lg font-body">Loading profile...</div>
+      </div>
+    );
+  }
+
+  if (showProfileCreation) {
+    return (
+      <ProfileCreation 
+        onComplete={() => setShowProfileCreation(false)}
+        onCancel={() => { console.log('Profile creation cancelled'); setShowProfileCreation(false); }}
+      />
+    );
+  }
 
   // Height conversion helper
   const formatHeight = (cm: number) => {
