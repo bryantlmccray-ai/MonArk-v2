@@ -209,7 +209,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="lastName" className="text-foreground text-sm font-semibold">Last Name</Label>
+                <Label htmlFor="lastName" className="text-foreground text-sm font-semibold">Last Name <span className="text-muted-foreground font-normal">(optional)</span></Label>
                 <Input
                   id="lastName"
                   type="text"
@@ -291,6 +291,11 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 <p className="text-xs text-destructive flex items-center gap-1 font-medium">
                   <AlertCircle className="h-3 w-3" />
                   {fieldErrors.city}
+                </p>
+              ) : formData.city.trim() !== '' && formData.city.trim().toLowerCase() !== 'chicago' ? (
+                <p className="text-xs text-[hsl(36_80%_40%)] flex items-center gap-1 font-medium">
+                  <AlertCircle className="h-3 w-3" />
+                  MonArk is currently only available in Chicago. We'll notify you when we launch in your city!
                 </p>
               ) : (
                 <p className="text-xs text-primary/80 flex items-center gap-1 font-medium">
