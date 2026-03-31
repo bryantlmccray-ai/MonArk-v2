@@ -85,8 +85,26 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
   }
 
   const hasCompleteProfile = profile?.is_profile_complete;
-  const userName = user?.user_metadata?.name || 'User';
-  const firstName = userName.split(' ')[0];
+  const userName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || user?.user_metadata?.name || 'User';
+  const firstName = profile?.first_name || user?.user_metadata?.name?.split(' ')[0] || 'User';
+
+  const handleStartEditName = useCallback(() => {
+    setEditFirstName(profile?.first_name || user?.user_metadata?.name?.split(' ')[0] || '');
+    setEditLastName(profile?.last_name || user?.user_metadata?.name?.split(' ').slice(1).join(' ') || '');
+    setEditingName(true);
+  }, [profile, user]);
+
+  const handleSaveName = useCallback(async () => {
+    const trimmedFirst = editFirstName.trim();
+    const trimmedLast = editLastName.trim();
+    if (!trimmedFirst) {
+      toast({ title: 'First name is required', variant: 'destructive' });
+      return;
+    }
+    await updateProfile({ first_name: trimmedFirst, last_name: trimmedLast || null });
+    setEditingName(false);
+    toast({ title: 'Name updated' });
+  }, [editFirstName, editLastName, updateProfile, toast]);
 
   // Height conversion helper
   const formatHeight = (cm: number) => {
