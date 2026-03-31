@@ -291,7 +291,7 @@ export default function PaywallModal({
             const isCurrent = currentTier === tier.key;
             const price = isQuarterly ? tier.quarterlyPerMonth : tier.monthly;
             const isHighlighted = tier.highlighted;
-            const isLoading = loading === tier.key;
+            const isLoading = loading;
 
             return (
               <div
