@@ -21,6 +21,11 @@ import { MilestoneCardShowcase } from '@/components/social/MilestoneCardShowcase
 import { ProfileGate } from '@/components/common/ProfileGate';
 import PaywallModal from '@/components/PaywallModal';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useAuth } from '@/hooks/useAuth';
+import { useProfile } from '@/hooks/useProfile';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { MonArkLogo } from '@/components/MonArkLogo';
+import NotificationBell from '@/components/NotificationBell';
 
 interface MainAppProps {
   initialTab?: string;
@@ -37,6 +42,13 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   const [reflectionPartnerName, setReflectionPartnerName] = useState('');
   const isMobile = useIsMobile();
   const { showPaywall, setShowPaywall, tier } = useSubscription();
+  const { user } = useAuth();
+  const { profile } = useProfile();
+  
+  const displayName = profile?.bio?.split(' ')[0] || user?.user_metadata?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'Member';
+  const avatarUrl = profile?.photos?.[0] || user?.user_metadata?.avatar_url || null;
+  const initials = displayName.slice(0, 2).toUpperCase();
+  
   
   // Email notification triggers
   useNotificationTriggers();
@@ -139,6 +151,20 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   if (isMobile) {
     return (
       <div className="min-h-screen bg-background relative">
+        {/* Mobile header with logo + avatar */}
+        <header className="sticky top-0 z-40 flex items-center justify-between px-5 py-3 bg-card/98 backdrop-blur-2xl border-b border-border/50" style={{ boxShadow: '0 1px 12px rgba(90, 70, 50, 0.06)' }}>
+          <MonArkLogo size="sm" />
+          <div className="flex items-center gap-3">
+            {user && <NotificationBell userId={user.id} />}
+            <button onClick={() => handleTabChange('profile')} aria-label="Profile" className="group">
+              <Avatar className="h-8 w-8 border-2 border-primary/30 group-hover:border-primary/60 transition-colors shadow-sm">
+                {avatarUrl ? <AvatarImage src={avatarUrl} alt={displayName} className="object-cover" /> : null}
+                <AvatarFallback className="bg-muted text-primary font-caption text-xs tracking-wider">{initials}</AvatarFallback>
+              </Avatar>
+            </button>
+          </div>
+        </header>
+
         <div className="pb-24 px-5 pt-3 space-y-5">
            {/* RIF Beta Insights Card */}
            {activeTab === 'profile' && <RifInsightsCard />}
