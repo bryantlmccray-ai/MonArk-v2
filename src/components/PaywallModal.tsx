@@ -290,15 +290,16 @@ export default function PaywallModal({
             marginBottom: 32,
           }}
         >
-          {TIERS.map((tier) => {
-            const isCurrent = currentTier === tier.key;
+          {(Object.keys(tiers) as TierKey[]).map((tierKey) => {
+            const tier = tiers[tierKey];
+            const isCurrent = currentTier === tierKey;
             const price = isQuarterly ? tier.quarterlyPerMonth : tier.monthly;
             const isHighlighted = tier.highlighted;
             const isLoading = loading;
 
             return (
               <div
-                key={tier.key}
+                key={tierKey}
                 style={{
                   backgroundColor: isHighlighted ? t.fg : t.bg,
                   borderRadius: 16,
