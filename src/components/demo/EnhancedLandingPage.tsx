@@ -53,6 +53,12 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
   const { demoData, setDemoMode } = useDemo();
   const [showFullDemo, setShowFullDemo] = useState(false);
   const [showWaitlistModal, setShowWaitlistModal] = useState(false);
+  const [waitlistPlan, setWaitlistPlan] = useState<string | undefined>();
+
+  const openWaitlist = (plan?: string) => {
+    setWaitlistPlan(plan);
+    setShowWaitlistModal(true);
+  };
 
   const startFullDemo = () => {
     if (onStartDemo) {
