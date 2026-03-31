@@ -484,7 +484,7 @@ export default function PaywallModal({
                     ? "Current plan"
                     : isLoading
                     ? "Processing..."
-                    : tier.key === "free"
+                    : tierKey === "free"
                     ? "Stay on Free"
                     : `Upgrade to ${tier.name}`}
                 </button>
