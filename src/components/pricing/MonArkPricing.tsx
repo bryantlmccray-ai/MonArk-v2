@@ -3,6 +3,10 @@ import { motion } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 
+interface MonArkPricingProps {
+  onSelectPlan?: (planName: string) => void;
+}
+
 const TIERS = {
   ark: {
     name: "The Ark",
