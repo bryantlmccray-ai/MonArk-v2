@@ -204,7 +204,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <div className="relative bg-card rounded-2xl p-7 border border-border shadow-[var(--shadow-elevated)]">
                   <p className="text-[10px] font-caption text-primary tracking-[0.2em] mb-2">LIMITED EARLY ACCESS</p>
                   <h2 className="text-2xl sm:text-3xl font-editorial-headline text-foreground mb-1">Get Your 3</h2>
-                  <p className="text-sm text-muted-foreground font-body mb-6">Join 500+ intentional daters on the waitlist</p>
+                  <p className="text-sm text-muted-foreground font-body mb-6">Join 100+ intentional daters on the waitlist</p>
 
                   <Button
                     onClick={() => openWaitlist()}
@@ -441,7 +441,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             transition={{ duration: 0.5 }}
           >
             <p className="text-xs font-caption text-primary tracking-[0.2em] uppercase mb-2">What Members Are Saying</p>
-            <p className="text-sm text-muted-foreground font-body mb-3">Join 500+ intentional daters already finding connection</p>
+            <p className="text-sm text-muted-foreground font-body mb-3">Join 100+ intentional daters already finding connection</p>
             <SectionDivider />
           </motion.div>
 
