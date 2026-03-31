@@ -106,7 +106,8 @@ export const usePhotoUpload = () => {
         // Fail open — don't block upload if moderation service is down
       }
 
-      return publicUrl;
+      // Store the file path (not the signed URL) so we can regenerate signed URLs later
+      return filePath;
     } catch (error) {
       return null;
     } finally {
