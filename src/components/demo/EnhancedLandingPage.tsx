@@ -96,7 +96,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             </a>
           </div>
           <button
-            onClick={() => setShowWaitlistModal(true)}
+            onClick={() => openWaitlist()}
             className="text-sm font-body font-medium tracking-[0.08em] uppercase px-5 py-2 rounded-full border border-primary bg-transparent text-primary hover:bg-primary/10 transition-all duration-300"
           >
             Join the Waitlist
