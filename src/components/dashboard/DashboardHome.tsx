@@ -5,14 +5,15 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useSubscription } from '@/hooks/useSubscription';
-import { MonArkLogo } from '@/components/MonArkLogo';
+import { AuthenticatedNav } from './AuthenticatedNav';
 
 interface DashboardHomeProps {
   onStartRIF: () => void;
   onSignOut: () => void;
+  onNavigate?: (section: string) => void;
 }
 
-export const DashboardHome: React.FC<DashboardHomeProps> = ({ onStartRIF, onSignOut }) => {
+export const DashboardHome: React.FC<DashboardHomeProps> = ({ onStartRIF, onSignOut, onNavigate }) => {
   const { user } = useAuth();
   const { profile } = useProfile();
   const { tier } = useSubscription();
