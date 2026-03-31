@@ -47,9 +47,10 @@ const SectionDivider = () => (
 interface EnhancedLandingPageProps {
   onExitToApp?: () => void;
   onStartDemo?: () => void;
+  onSignIn?: () => void;
 }
 
-export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExitToApp, onStartDemo }) => {
+export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExitToApp, onStartDemo, onSignIn }) => {
   const { demoData, setDemoMode } = useDemo();
   const [showFullDemo, setShowFullDemo] = useState(false);
   const [showWaitlistModal, setShowWaitlistModal] = useState(false);
@@ -85,6 +86,12 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           <div className="hidden md:flex items-center gap-8">
             <a href="#how-it-works" className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide">How It Works</a>
             <a href="#pricing" className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide">Pricing</a>
+            <button
+              onClick={() => onSignIn?.()}
+              className="text-sm font-body font-medium text-primary hover:text-primary/80 transition-colors tracking-wide"
+            >
+              Sign In
+            </button>
           </div>
           <button
             onClick={() => openWaitlist()}
@@ -122,6 +129,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <div className="flex-1 flex flex-col gap-2 p-5">
               <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-base font-body font-medium text-foreground py-3 border-b border-border/50 transition-colors hover:text-primary">How It Works</a>
               <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="text-base font-body font-medium text-foreground py-3 border-b border-border/50 transition-colors hover:text-primary">Pricing</a>
+              <button onClick={() => { setMobileMenuOpen(false); onSignIn?.(); }} className="text-base font-body font-medium text-primary py-3 border-b border-border/50 transition-colors hover:text-primary/80 text-left">Sign In</button>
             </div>
             <div className="p-5 border-t border-border">
               <Button onClick={() => { setMobileMenuOpen(false); openWaitlist(); }} className="w-full py-3 text-sm tracking-[0.08em] font-body">

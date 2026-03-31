@@ -110,12 +110,13 @@ const Index = () => {
   if (!user && !isDemoMode) {
     return <EnhancedLandingPage 
       onExitToApp={() => {
-        
         setShowAuth(true);
       }}
       onStartDemo={() => {
-        
         setShowDemo(true);
+      }}
+      onSignIn={() => {
+        setShowAuth(true);
       }}
     />;
   }
