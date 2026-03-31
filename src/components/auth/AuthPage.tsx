@@ -45,8 +45,9 @@ export const AuthPage: React.FC = () => {
         title: "Welcome back!",
         description: "You have successfully signed in to MonArk.",
       });
+      navigate('/dashboard', { replace: true });
     }
-  }, [user, toast]);
+  }, [user, toast, navigate]);
 
   const handlePasswordReset = async () => {
     const result = emailSchema.safeParse(resetEmail);
