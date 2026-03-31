@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { MonArkLogo } from '@/components/MonArkLogo';
 import monarkLogoHorizontal from '@/assets/monark-logo-horizontal.png';
-import { PenLine, Heart, MapPin, ArrowRight, Instagram, Menu, X } from 'lucide-react';
+import { PenLine, Heart, MapPin, ArrowRight, Instagram, Menu, X, HelpCircle } from 'lucide-react';
 import { MonArkPricing } from '@/components/pricing/MonArkPricing';
 import { motion } from 'framer-motion';
 import founderPortrait from '@/assets/founder-bryant.jpeg';
