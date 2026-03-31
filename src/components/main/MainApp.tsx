@@ -167,8 +167,8 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
         </header>
 
         <div className="pb-24 px-5 pt-3 space-y-5">
-           {/* Premium greeting */}
-           {activeTab === 'weekly' && <PremiumGreeting firstName={firstName} />}
+           
+
            
            {/* RIF Beta Insights Card */}
            {activeTab === 'profile' && <RifInsightsCard />}
