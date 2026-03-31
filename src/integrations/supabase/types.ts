@@ -1817,6 +1817,57 @@ export type Database = {
         }
         Relationships: []
       }
+      rif_quiz_answers: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          q1: string | null
+          q10: string | null
+          q2: string | null
+          q3: string | null
+          q4: string | null
+          q5: string | null
+          q6: string | null
+          q7: string | null
+          q8: string | null
+          q9: string | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          q1?: string | null
+          q10?: string | null
+          q2?: string | null
+          q3?: string | null
+          q4?: string | null
+          q5?: string | null
+          q6?: string | null
+          q7?: string | null
+          q8?: string | null
+          q9?: string | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          q1?: string | null
+          q10?: string | null
+          q2?: string | null
+          q3?: string | null
+          q4?: string | null
+          q5?: string | null
+          q6?: string | null
+          q7?: string | null
+          q8?: string | null
+          q9?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       rif_recommendations: {
         Row: {
           content: Json
