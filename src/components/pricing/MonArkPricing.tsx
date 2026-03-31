@@ -10,9 +10,9 @@ interface MonArkPricingProps {
 const TIERS = {
   ark: {
     name: "The Ark",
-    monthly: 59,
-    quarterlyPerMonth: 47,
-    quarterlySavings: 36,
+    monthly: 39.99,
+    quarterlyPerMonth: 29.99,
+    quarterlyTotal: 89.97,
     badge: null,
     description:
       "The full MonArk experience. Three curated connections every week, built on emotional intelligence.",
@@ -29,9 +29,9 @@ const TIERS = {
   },
   innerArk: {
     name: "The Inner Ark",
-    monthly: 129,
-    quarterlyPerMonth: 103,
-    quarterlySavings: 78,
+    monthly: 79.99,
+    quarterlyPerMonth: 59.99,
+    quarterlyTotal: 179.97,
     badge: "Most Intentional",
     description:
       "The elevated experience. Deeper insights, wider reach, and concierge-level curation.",
@@ -207,7 +207,7 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
                         Billed ${quarterlyTotal.toFixed(2)} every 3 months
                       </p>
                       <span className="text-[11px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                        Save ${tier.quarterlySavings}
+                        Save 25%
                       </span>
                     </motion.div>
                   )}
