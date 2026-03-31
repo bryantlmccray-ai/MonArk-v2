@@ -3,6 +3,10 @@ import { motion } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 
+interface MonArkPricingProps {
+  onSelectPlan?: (planName: string) => void;
+}
+
 const TIERS = {
   ark: {
     name: "The Ark",
@@ -55,7 +59,7 @@ const FOUNDING = {
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
-export const MonArkPricing = () => {
+export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
   const [isQuarterly, setIsQuarterly] = useState(false);
 
   return (
@@ -246,6 +250,7 @@ export const MonArkPricing = () => {
 
                 {/* CTA */}
                 <button
+                  onClick={() => onSelectPlan?.(tier.name)}
                   className={`w-full py-3.5 px-8 rounded-full font-body text-sm font-medium tracking-[0.12em] uppercase transition-all duration-300 ${
                     isAccent
                       ? "bg-primary text-primary-foreground hover:bg-primary/90"
@@ -280,7 +285,10 @@ export const MonArkPricing = () => {
               {FOUNDING.description}
             </p>
           </div>
-          <button className="py-3.5 px-8 rounded-full border-[1.5px] border-[hsl(30_40%_72%)] bg-transparent text-[hsl(30_40%_72%)] font-body text-sm font-medium tracking-[0.12em] uppercase transition-all duration-300 hover:bg-[hsl(30_40%_72%/0.1)] whitespace-nowrap">
+          <button
+            onClick={() => onSelectPlan?.("Founding Members")}
+            className="py-3.5 px-8 rounded-full border-[1.5px] border-[hsl(30_40%_72%)] bg-transparent text-[hsl(30_40%_72%)] font-body text-sm font-medium tracking-[0.12em] uppercase transition-all duration-300 hover:bg-[hsl(30_40%_72%/0.1)] whitespace-nowrap"
+          >
             {FOUNDING.cta}
           </button>
         </motion.div>
