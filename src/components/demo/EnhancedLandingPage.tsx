@@ -188,17 +188,15 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.4 }}
             >
-              {onExitToApp && (
-                <div>
-                  <Button
-                    onClick={onExitToApp}
-                    variant="outline"
-                    className="px-8 py-3 text-sm tracking-[0.08em] font-body"
-                  >
-                    FIND YOUR ARK, SIGN UP HERE
-                  </Button>
-                </div>
-              )}
+              <div>
+                <Button
+                  onClick={() => setShowWaitlistModal(true)}
+                  variant="outline"
+                  className="px-8 py-3 text-sm tracking-[0.08em] font-body"
+                >
+                  FIND YOUR ARK, SIGN UP HERE
+                </Button>
+              </div>
             </motion.div>
           </div>
         </div>
