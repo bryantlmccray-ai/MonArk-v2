@@ -144,13 +144,7 @@ serve(async (req: Request) => {
       );
     }
 
-    // Log the subscription event
-    const previousTierResult = await supabase
-      .from("user_profiles")
-      .select("subscription_tier")
-      .eq("user_id", appUserId)
-      .single();
-
+    // Log the subscription event (previousTier was fetched before update)
     await supabase.from("subscription_events").insert({
       user_id: appUserId,
       event_type: eventType,
