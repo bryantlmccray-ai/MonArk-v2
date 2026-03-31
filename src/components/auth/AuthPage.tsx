@@ -423,6 +423,7 @@ export const AuthPage: React.FC = () => {
             </Button>
 
           </div>
+          <p className="text-xs text-muted-foreground text-center pt-1 font-medium">🔒 Your data is encrypted and secure</p>
         </div>
 
         {/* Toggle + Forgot */}

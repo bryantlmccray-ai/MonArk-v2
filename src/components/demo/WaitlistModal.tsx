@@ -546,6 +546,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                 </Button>
               )}
             </div>
+            <p className="text-xs text-muted-foreground text-center pt-1 font-medium">🔒 Your data is encrypted and secure</p>
           </form>
         )}
       </DialogContent>
