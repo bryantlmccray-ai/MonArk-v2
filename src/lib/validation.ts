@@ -47,11 +47,7 @@ export const waitlistStep2Schema = z.object({
     .string()
     .trim()
     .min(1, 'City is required')
-    .max(100, 'City name too long')
-    .refine(
-      (val) => val.toLowerCase().includes('chicago'),
-      'We\'re launching in Chicago first'
-    ),
+    .max(100, 'City name too long'),
   genderIdentity: z.string().trim().min(1, 'Gender identity is required').max(100),
   lookingFor: z.string().trim().min(1, 'This field is required').max(100),
   relationshipGoal: z.string().min(1, 'Relationship goal is required'),
