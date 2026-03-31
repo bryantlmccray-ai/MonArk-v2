@@ -92,7 +92,13 @@ export function useSubscription() {
       } catch (err) {
         console.error("Failed to fetch subscription:", err);
         if (mounted) {
-          setState((prev) => ({ ...prev, loading: false }));
+          setState({
+            tier: "free",
+            status: "inactive",
+            expiresAt: null,
+            trialEndsAt: null,
+            loading: false,
+          });
         }
       }
     }
