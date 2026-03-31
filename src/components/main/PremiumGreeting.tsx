@@ -53,7 +53,7 @@ export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) =
         }
 
         const slideProgress = Math.min(1, scrollY / 180);
-        const fadeProgress = Math.min(1, scrollY / 180);
+        const fadeProgress = Math.min(1, scrollY / 120);
         const easedSlide = 1 - Math.pow(1 - slideProgress, 3);
         const easedFade = 1 - Math.pow(1 - fadeProgress, 2);
 
