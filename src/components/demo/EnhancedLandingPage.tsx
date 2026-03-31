@@ -560,13 +560,14 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           <p className="text-muted-foreground font-body text-sm mb-5">
             &copy; {new Date().getFullYear()} MonArk. Dating reimagined with Smart Matching.
           </p>
-          <div className="flex items-center justify-center gap-8 text-sm">
-            <a href="/privacy" className="text-muted-foreground hover:text-foreground hover:underline font-body transition-colors">
-              Privacy Policy
-            </a>
-            <a href="/terms" className="text-muted-foreground hover:text-foreground hover:underline font-body transition-colors">
-              Terms of Service
-            </a>
+          <div className="flex flex-wrap items-center justify-center gap-2 text-sm font-body text-muted-foreground">
+            <a href="#how-it-works" className="hover:text-foreground hover:underline transition-colors">How It Works</a>
+            <span className="text-border">·</span>
+            <a href="#pricing" className="hover:text-foreground hover:underline transition-colors">Pricing</a>
+            <span className="text-border">·</span>
+            <a href="/privacy" className="hover:text-foreground hover:underline transition-colors">Privacy Policy</a>
+            <span className="text-border">·</span>
+            <a href="/terms" className="hover:text-foreground hover:underline transition-colors">Terms of Service</a>
           </div>
         </div>
       </footer>
