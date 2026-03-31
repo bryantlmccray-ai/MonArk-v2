@@ -85,7 +85,7 @@ export const PremiumGreeting = ({ firstName }: PremiumGreetingProps) => {
 
     const updateStyles = () => {
       const scrollY = getScrollY();
-      const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
+      const isMobile = window.matchMedia('(max-width: 767px)').matches;
 
       if (scrollY <= 0) {
         resetStyles(el);
