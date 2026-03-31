@@ -171,7 +171,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   <p className="text-sm text-muted-foreground font-body mb-6">Join 500+ intentional daters on the waitlist</p>
 
                   <Button
-                    onClick={() => setShowWaitlistModal(true)}
+                    onClick={() => openWaitlist()}
                     className="w-full py-5 text-sm tracking-[0.08em] font-body"
                     size="lg"
                   >
