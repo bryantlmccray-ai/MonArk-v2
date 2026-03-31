@@ -28,7 +28,7 @@ export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) =
         {greeting}, <span className="text-primary">{firstName}</span>.
       </h1>
       <p className="text-sm font-caption text-muted-foreground mt-0.5 tracking-wide">
-        Date well. Date with intention.
+        {contextLine}
       </p>
       <div className="mt-3 h-px bg-primary/30" />
     </div>
