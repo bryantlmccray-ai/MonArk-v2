@@ -283,7 +283,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                         value={editFirstName}
                         onChange={(e) => setEditFirstName(e.target.value)}
                         maxLength={50}
-                        className="w-full px-3 py-2 text-sm bg-secondary/50 border border-border/60 rounded-xl text-foreground font-body focus:outline-none focus:border-primary/40 transition-colors"
+                        className="w-full h-11 px-4 py-2.5 text-sm bg-card border border-border/70 rounded-xl text-foreground font-body ring-offset-background placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary/40 transition-all duration-200"
                         placeholder="First name"
                         autoFocus
                       />
