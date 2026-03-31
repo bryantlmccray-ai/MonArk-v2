@@ -32,6 +32,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
     heardAboutUs: '',
     willingToBeta: false,
     emailOptIn: true,
+    agreeToTerms: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
