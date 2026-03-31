@@ -45,6 +45,10 @@ const DashboardContent: React.FC = () => {
     <DashboardHome
       onStartRIF={() => setShowRIF(true)}
       onSignOut={handleSignOut}
+      onNavigate={(section) => {
+        // Future: navigate to profile/matches/settings sections
+        console.log('Navigate to:', section);
+      }}
     />
   );
 };
