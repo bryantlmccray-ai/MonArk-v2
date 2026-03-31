@@ -151,6 +151,20 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   if (isMobile) {
     return (
       <div className="min-h-screen bg-background relative">
+        {/* Mobile header with logo + avatar */}
+        <header className="sticky top-0 z-40 flex items-center justify-between px-5 py-3 bg-card/98 backdrop-blur-2xl border-b border-border/50" style={{ boxShadow: '0 1px 12px rgba(90, 70, 50, 0.06)' }}>
+          <MonArkLogo size="sm" />
+          <div className="flex items-center gap-3">
+            <NotificationBell />
+            <button onClick={() => handleTabChange('profile')} aria-label="Profile" className="group">
+              <Avatar className="h-8 w-8 border-2 border-primary/30 group-hover:border-primary/60 transition-colors shadow-sm">
+                {avatarUrl ? <AvatarImage src={avatarUrl} alt={displayName} className="object-cover" /> : null}
+                <AvatarFallback className="bg-muted text-primary font-caption text-xs tracking-wider">{initials}</AvatarFallback>
+              </Avatar>
+            </button>
+          </div>
+        </header>
+
         <div className="pb-24 px-5 pt-3 space-y-5">
            {/* RIF Beta Insights Card */}
            {activeTab === 'profile' && <RifInsightsCard />}
