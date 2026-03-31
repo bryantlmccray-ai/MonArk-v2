@@ -42,7 +42,7 @@ const TIERS = {
       "Full RIF compatibility report per match",
       "Concierge date planning suggestions",
       "Early access to new features",
-      "Inner Ark badge — visible signal of seriousness",
+      "Inner Ark badge — visible signal of seriousness ✦",
     ],
     cta: "Go Deeper",
     accent: true,
