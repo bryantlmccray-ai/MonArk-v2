@@ -29,9 +29,9 @@ const TIERS = {
   },
   innerArk: {
     name: "The Inner Ark",
-    monthly: 79.99,
-    quarterlyPerMonth: 67.99,
-    quarterlySavings: 36,
+    monthly: 129,
+    quarterlyPerMonth: 103,
+    quarterlySavings: 78,
     badge: "Most Intentional",
     description:
       "The elevated experience. Deeper insights, wider reach, and concierge-level curation.",
