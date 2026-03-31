@@ -29,21 +29,14 @@ export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) =
     const el = ref.current;
     if (!el) return;
 
-    const scrollParent =
-      (el.closest('[class*="overflow"]') as HTMLElement) || null;
-
     const onScroll = () => {
       cancelAnimationFrame(rafId.current);
       rafId.current = requestAnimationFrame(() => {
-        const scrollY = scrollParent ? scrollParent.scrollTop : window.scrollY;
+        const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
 
-        // Two-layer animation driven by raw scrollY:
-        // 1) Slide-up: 0→24px over first 180px of scroll
-        // 2) Pure opacity dissolve: 0→1 over first 120px of scroll
         const slideProgress = Math.min(1, scrollY / 180);
         const fadeProgress = Math.min(1, scrollY / 120);
 
-        // Ease-out curve for silky deceleration
         const easedSlide = 1 - Math.pow(1 - slideProgress, 3);
         const easedFade = 1 - Math.pow(1 - fadeProgress, 2);
 
@@ -56,12 +49,11 @@ export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) =
       });
     };
 
-    const target = scrollParent || window;
-    target.addEventListener('scroll', onScroll, { passive: true });
-    onScroll(); // sync initial state
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
 
     return () => {
-      target.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scroll', onScroll);
       cancelAnimationFrame(rafId.current);
     };
   }, []);
