@@ -59,7 +59,7 @@ const FOUNDING = {
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
-export const MonArkPricing = () => {
+export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
   const [isQuarterly, setIsQuarterly] = useState(false);
 
   return (
