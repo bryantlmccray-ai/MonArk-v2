@@ -472,7 +472,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
           <DialogDescription className="text-foreground/80 font-medium">
             {isSubmitted 
               ? 'We\'ll review your application and get back to you soon.'
-              : `Step ${currentStep} of ${totalSteps}`
+              : (<><span>{`Step ${currentStep} of ${totalSteps}`}</span><br /><span className="font-semibold text-foreground/70">{stepNames[currentStep]}</span></>)
             }
           </DialogDescription>
         </DialogHeader>
