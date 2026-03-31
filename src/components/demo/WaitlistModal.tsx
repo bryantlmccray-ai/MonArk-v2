@@ -292,6 +292,11 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   <AlertCircle className="h-3 w-3" />
                   {fieldErrors.city}
                 </p>
+              ) : formData.city.trim() !== '' && formData.city.trim().toLowerCase() !== 'chicago' ? (
+                <p className="text-xs text-[hsl(36_80%_40%)] flex items-center gap-1 font-medium">
+                  <AlertCircle className="h-3 w-3" />
+                  MonArk is currently only available in Chicago. We'll notify you when we launch in your city!
+                </p>
               ) : (
                 <p className="text-xs text-primary/80 flex items-center gap-1 font-medium">
                   <AlertCircle className="h-3 w-3" />

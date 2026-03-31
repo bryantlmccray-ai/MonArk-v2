@@ -149,7 +149,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        <div className="relative max-w-4xl mx-auto px-5 sm:px-8 pt-14 pb-16 sm:pt-20 sm:pb-20">
+        <div className="relative max-w-4xl mx-auto px-5 sm:px-8 pt-8 pb-16 sm:pt-12 sm:pb-20">
           <div className="text-center space-y-7">
             {/* Brand */}
             <motion.div
