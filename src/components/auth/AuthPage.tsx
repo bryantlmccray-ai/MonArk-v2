@@ -422,14 +422,6 @@ export const AuthPage: React.FC = () => {
               {isLogin ? 'Continue with Google' : 'Sign up with Google'}
             </Button>
 
-            <Button
-              onClick={enterDemoMode}
-              disabled={loading}
-              variant="outline"
-              className="w-full h-11 font-medium rounded-xl border-dashed border-primary/30 text-primary hover:bg-primary/5 transition-all duration-200"
-            >
-              🧪 Continue as Guest (Demo Mode)
-            </Button>
           </div>
         </div>
 
