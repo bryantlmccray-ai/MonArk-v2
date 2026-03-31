@@ -37,29 +37,30 @@ export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) =
 
         if (scrollY <= 0) {
           el.style.opacity = '1';
-          el.style.transform = 'none';
+          el.style.transform = 'translateY(0px)';
           el.style.willChange = 'auto';
           return;
         }
 
         if (isMobile) {
-          const fadeProgress = Math.min(1, scrollY / 120);
-          const easedFade = 1 - Math.pow(1 - fadeProgress, 2);
-
-          el.style.opacity = String(1 - easedFade);
-          el.style.transform = 'none';
           el.style.willChange = 'opacity';
+          const fadeProgress = Math.min(1, scrollY / 120);
+          const easedFade = 1 - Math.pow(fadeProgress, 2);
+
+          el.style.opacity = String(easedFade);
+          el.style.transform = 'none';
           return;
         }
 
+        el.style.willChange = 'transform, opacity';
         const slideProgress = Math.min(1, scrollY / 180);
         const fadeProgress = Math.min(1, scrollY / 120);
         const easedSlide = 1 - Math.pow(1 - slideProgress, 3);
-        const easedFade = 1 - Math.pow(1 - fadeProgress, 2);
+        const easedFade = 1 - Math.pow(fadeProgress, 2);
+        const translateY = easedSlide * 24;
 
-        el.style.opacity = String(1 - easedFade);
-        el.style.transform = `translateY(${-easedSlide * 24}px)`;
-        el.style.willChange = 'transform, opacity';
+        el.style.transform = `translateY(-${translateY}px)`;
+        el.style.opacity = String(easedFade);
       });
     };
 
