@@ -66,6 +66,7 @@ export const waitlistStep3Schema = z.object({
   heardAboutUs: z.string().trim().max(500).optional().default(''),
   willingToBeta: z.boolean().default(false),
   emailOptIn: z.boolean().default(true),
+  agreeToTerms: z.literal(true, { errorMap: () => ({ message: 'You must agree to the Terms of Service and Privacy Policy' }) }),
 });
 
 export const waitlistSubmissionSchema = waitlistStep1Schema

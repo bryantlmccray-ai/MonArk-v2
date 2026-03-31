@@ -32,6 +32,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
     heardAboutUs: '',
     willingToBeta: false,
     emailOptIn: true,
+    agreeToTerms: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -164,7 +165,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
       setFormData({
         firstName: '', lastName: '', email: '',
         ageRange: '', city: '', genderIdentity: '', lookingFor: '', relationshipGoal: '',
-        whyMonark: '', heardAboutUs: '', willingToBeta: false, emailOptIn: true
+        whyMonark: '', heardAboutUs: '', willingToBeta: false, emailOptIn: true, agreeToTerms: false
       });
       setIsSubmitted(false);
       setCurrentStep(1);
@@ -418,6 +419,28 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
                   Keep me updated about MonArk's launch
                 </Label>
               </div>
+
+              <div className="flex items-start space-x-2 pt-2 border-t border-border">
+                <Checkbox
+                  id="agreeToTerms"
+                  checked={formData.agreeToTerms}
+                  onCheckedChange={(checked) => handleInputChange('agreeToTerms', checked as boolean)}
+                  disabled={isSubmitting}
+                  className={`border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary mt-0.5 ${fieldErrors.agreeToTerms ? 'border-destructive ring-2 ring-destructive/50' : ''}`}
+                />
+                <Label htmlFor="agreeToTerms" className="text-foreground/80 text-sm cursor-pointer font-medium leading-snug">
+                  I agree to MonArk's{' '}
+                  <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Terms of Service</a>
+                  {' '}and{' '}
+                  <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Privacy Policy</a> *
+                </Label>
+              </div>
+              {fieldErrors.agreeToTerms && (
+                <p className="text-xs text-destructive flex items-center gap-1 font-medium ml-6">
+                  <AlertCircle className="h-3 w-3" />
+                  {fieldErrors.agreeToTerms}
+                </p>
+              )}
             </div>
           </div>
         );
@@ -509,7 +532,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
               ) : (
                 <Button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !formData.agreeToTerms}
                   className="font-semibold min-w-[140px]"
                 >
                   {isSubmitting ? (
