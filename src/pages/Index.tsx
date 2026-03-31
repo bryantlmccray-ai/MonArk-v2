@@ -1,4 +1,5 @@
 import React from 'react';
+import { Navigate } from 'react-router-dom';
 import { OnboardingFlow } from '../components/onboarding/OnboardingFlow';
 import { MainApp } from '../components/main/MainApp';
 import { AuthPage } from '../components/auth/AuthPage';
