@@ -102,7 +102,7 @@ export default function PaywallModal({
   currentTier = "free",
 }: PaywallModalProps) {
   const [isQuarterly, setIsQuarterly] = useState(false);
-  const [loading, setLoading] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
