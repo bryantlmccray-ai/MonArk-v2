@@ -1,4 +1,5 @@
 import React from 'react';
+import { Navigate } from 'react-router-dom';
 import { OnboardingFlow } from '../components/onboarding/OnboardingFlow';
 import { MainApp } from '../components/main/MainApp';
 import { AuthPage } from '../components/auth/AuthPage';
@@ -99,6 +100,11 @@ const Index = () => {
         <div className="text-foreground text-lg">Loading...</div>
       </div>
     );
+  }
+
+  // Redirect authenticated users to /dashboard
+  if (user && !isDemoMode) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   // Show auth page if requested (and not in demo mode)

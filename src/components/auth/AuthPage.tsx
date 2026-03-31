@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,6 +18,7 @@ import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '';
 
 export const AuthPage: React.FC = () => {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState(() => localStorage.getItem('monark-saved-email') || '');
   const [password, setPassword] = useState('');
@@ -43,8 +45,9 @@ export const AuthPage: React.FC = () => {
         title: "Welcome back!",
         description: "You have successfully signed in to MonArk.",
       });
+      navigate('/dashboard', { replace: true });
     }
-  }, [user, toast]);
+  }, [user, toast, navigate]);
 
   const handlePasswordReset = async () => {
     const result = emailSchema.safeParse(resetEmail);
