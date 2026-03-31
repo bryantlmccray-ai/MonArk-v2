@@ -123,6 +123,14 @@ serve(async (req: Request) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    // Fetch previous tier BEFORE updating
+    const { data: prevData } = await supabase
+      .from("user_profiles")
+      .select("subscription_tier")
+      .eq("user_id", appUserId)
+      .single();
+    const previousTier = prevData?.subscription_tier || "free";
+
     // Update user_profiles with new subscription state
     const { error: updateError } = await supabase
       .from("user_profiles")
@@ -144,12 +152,12 @@ serve(async (req: Request) => {
       );
     }
 
-    // Log the subscription event (previousTier was fetched before update)
+    // Log the subscription event
     await supabase.from("subscription_events").insert({
       user_id: appUserId,
       event_type: eventType,
       tier: newTier,
-      previous_tier: previousTierResult.data?.subscription_tier || "free",
+      previous_tier: previousTier,
       product_id: productId,
       price_usd: priceUsd,
       currency: currency,
