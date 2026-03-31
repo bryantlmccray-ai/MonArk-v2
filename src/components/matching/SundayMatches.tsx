@@ -341,25 +341,17 @@ export const SundayMatches = () => {
       )}
 
       {/* Hero Header */}
-      <div className="relative overflow-hidden border-b border-border/40">
-        <div className="relative px-5 py-8 max-w-2xl mx-auto text-center">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/8 text-primary text-[11px] font-semibold tracking-widest uppercase mb-4">
-            <Sun className="w-3 h-3" />
-            Your Weekly Matches
+      <div className="border-b border-border/40 px-4 py-3">
+        <div className="max-w-2xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Sun className="w-3.5 h-3.5 text-primary" />
+            <span>{displayCurated.length} curated matches</span>
+            <span className="text-border">·</span>
+            <span className="flex items-center gap-1">
+              <Calendar className="w-3 h-3" />
+              Refreshes {formatDistanceToNow(nextRefresh, { addSuffix: true })}
+            </span>
           </div>
-          
-          <h1 className="text-3xl font-serif text-foreground mb-2.5 tracking-tight">
-            Curated Just For You
-          </h1>
-          
-          <p className="text-muted-foreground max-w-xs mx-auto mb-4 text-sm leading-relaxed">
-            {displayCurated.length} hand-picked matches based on your values and what matters most
-          </p>
-          
-          <Badge variant="outline" className="flex items-center gap-1.5 mx-auto w-fit px-3 py-1">
-            <Calendar className="w-3 h-3" />
-            Refreshes {formatDistanceToNow(nextRefresh, { addSuffix: true })}
-          </Badge>
         </div>
       </div>
 
