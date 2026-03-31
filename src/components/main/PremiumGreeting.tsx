@@ -20,6 +20,7 @@ const getContextLine = (): string => {
 
 export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) => {
   const greeting = getTimeGreeting();
+  const contextLine = getContextLine();
 
   return (
     <div className="py-2">
