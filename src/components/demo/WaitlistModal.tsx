@@ -124,8 +124,9 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
           willing_to_beta: formData.willingToBeta,
           email_opt_in: formData.emailOptIn,
           user_agent: navigator.userAgent,
-          source_page: sourcePage
-        });
+           source_page: sourcePage,
+           other_notes: selectedPlan ? `Selected plan: ${selectedPlan}` : 'Early Access Waitlist',
+         });
 
       if (error) {
         console.error('Waitlist submission error:', error);
@@ -181,11 +182,19 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
       case 1:
         return (
           <div className="space-y-4">
-            {selectedPlan && (
-              <div className="bg-primary/10 border border-primary/20 rounded-xl px-4 py-2.5 text-sm font-medium text-foreground">
-                Selected plan: <span className="font-semibold text-primary">{selectedPlan}</span>
-              </div>
-            )}
+            {(() => {
+              const planLabels: Record<string, string> = {
+                'The Ark': 'The Ark — $39.99/mo',
+                'The Inner Ark': 'The Inner Ark — $79.99/mo',
+                'Founding Members': 'Founding Member — $35/mo (lifetime)',
+              };
+              const label = selectedPlan ? (planLabels[selectedPlan] || selectedPlan) : 'Early Access Waitlist';
+              return (
+                <div className="bg-primary/10 border border-primary/20 rounded-xl px-4 py-2.5 text-sm font-medium text-foreground">
+                  Applying for: <span className="font-semibold text-primary">{label}</span>
+                </div>
+              );
+            })()}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firstName" className="text-foreground text-sm font-semibold">First Name *</Label>
