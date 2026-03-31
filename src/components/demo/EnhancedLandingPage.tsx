@@ -179,7 +179,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               transition={{ duration: 0.6, delay: 0.15, ease: easeOut }}
             >
               No endless swiping. No algorithm games. Just{' '}
-              <span className="text-foreground font-medium">Smart Matching</span> that
+              <a href="#how-it-works" className="text-foreground font-medium hover:text-primary transition-colors underline underline-offset-4 decoration-primary/40">Smart Matching</a> that
               understands how you connect, communicate, and love.
             </motion.p>
 
@@ -433,6 +433,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             transition={{ duration: 0.5 }}
           >
             <p className="text-xs font-caption text-primary tracking-[0.2em] uppercase mb-2">What Members Are Saying</p>
+            <p className="text-sm text-muted-foreground font-body mb-3">Join 500+ intentional daters already finding connection</p>
             <SectionDivider />
           </motion.div>
 
