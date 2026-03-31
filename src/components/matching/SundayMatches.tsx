@@ -280,6 +280,15 @@ export const SundayMatches = () => {
     setMutualMatch(null);
   };
 
+  const [showWelcomeTip, setShowWelcomeTip] = useState(() => {
+    return !localStorage.getItem('monark-welcome-tip-dismissed');
+  });
+
+  const dismissWelcomeTip = () => {
+    localStorage.setItem('monark-welcome-tip-dismissed', 'true');
+    setShowWelcomeTip(false);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -297,6 +306,20 @@ export const SundayMatches = () => {
 
   return (
     <div className="min-h-screen bg-background">
+
+      {/* Welcome Tip Banner */}
+      {showWelcomeTip && (
+        <div className="bg-primary/10 border-b border-primary/15 px-4 py-3">
+          <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
+            <p className="text-sm text-foreground">
+              ✨ <span className="font-medium">Welcome to MonArk!</span> View and edit your profile anytime in the Profile tab below.
+            </p>
+            <Button variant="ghost" size="sm" onClick={dismissWelcomeTip} className="shrink-0 text-xs">
+              Got it
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Demo Mode Banner */}
       {isUsingDemoData && (
