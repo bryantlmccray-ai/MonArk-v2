@@ -12,8 +12,15 @@ const getTimeGreeting = (): string => {
   return 'Good night';
 };
 
+const getContextLine = (): string => {
+  const day = new Date().getDay();
+  if (day === 0) return 'Your weekly matches are here for you.';
+  return 'Date well. Date with intention.';
+};
+
 export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) => {
   const greeting = getTimeGreeting();
+  const contextLine = getContextLine();
 
   return (
     <div className="py-2">
@@ -21,7 +28,7 @@ export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) =
         {greeting}, <span className="text-primary">{firstName}</span>.
       </h1>
       <p className="text-sm font-caption text-muted-foreground mt-0.5 tracking-wide">
-        Date well. Date with intention.
+        {contextLine}
       </p>
       <div className="mt-3 h-px bg-primary/30" />
     </div>
