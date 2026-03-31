@@ -18,8 +18,8 @@ export const AuthenticatedNav: React.FC<AuthenticatedNavProps> = ({ onSignOut, o
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const displayName = profile?.bio?.split(' ')[0] || user?.email?.split('@')[0] || 'Member';
-  const avatarUrl = profile?.photos?.[0] || null;
+  const displayName = profile?.bio?.split(' ')[0] || user?.user_metadata?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'Member';
+  const avatarUrl = profile?.photos?.[0] || user?.user_metadata?.avatar_url || null;
   const initials = displayName.slice(0, 2).toUpperCase();
 
   useEffect(() => {
