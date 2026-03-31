@@ -10,9 +10,9 @@ interface MonArkPricingProps {
 const TIERS = {
   ark: {
     name: "The Ark",
-    monthly: 39.99,
-    quarterlyPerMonth: 33.99,
-    quarterlySavings: 18,
+    monthly: 59,
+    quarterlyPerMonth: 47,
+    quarterlySavings: 36,
     badge: null,
     description:
       "The full MonArk experience. Three curated connections every week, built on emotional intelligence.",
@@ -29,9 +29,9 @@ const TIERS = {
   },
   innerArk: {
     name: "The Inner Ark",
-    monthly: 79.99,
-    quarterlyPerMonth: 67.99,
-    quarterlySavings: 36,
+    monthly: 129,
+    quarterlyPerMonth: 103,
+    quarterlySavings: 78,
     badge: "Most Intentional",
     description:
       "The elevated experience. Deeper insights, wider reach, and concierge-level curation.",
@@ -111,9 +111,9 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
             <motion.span
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-[11px] font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full tracking-wide"
+              className="text-[11px] font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full tracking-wide uppercase"
             >
-              Save up to $36
+              Save 20%
             </motion.span>
           )}
         </div>
