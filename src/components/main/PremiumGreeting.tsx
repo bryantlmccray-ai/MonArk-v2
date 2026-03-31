@@ -12,7 +12,7 @@ const getTimeGreeting = (): string => {
   return 'Good night';
 };
 
-export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ displayName }) => {
+export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) => {
   const greeting = getTimeGreeting();
 
   return (
