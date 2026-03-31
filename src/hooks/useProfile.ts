@@ -54,6 +54,8 @@ export interface UserProfile {
 const createDemoProfile = (userId: string): UserProfile => ({
   id: 'demo-profile-id',
   user_id: userId,
+  first_name: null,
+  last_name: null,
   bio: null,
   age: null,
   location: null,
