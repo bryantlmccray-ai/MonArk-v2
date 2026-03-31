@@ -106,13 +106,16 @@ export default function PaywallModal({
 
   if (!isOpen) return null;
 
-  const handlePurchase = async (tier: (typeof TIERS)[number]) => {
-    if (tier.key === "free" || tier.key === currentTier) {
+  const handlePurchase = async (tierKey: TierKey) => {
+    if (tierKey === "free" || tierKey === currentTier) {
       onClose();
       return;
     }
 
-    setLoading(tier.key);
+    const tier = TIERS.find((t) => t.key === tierKey);
+    if (!tier) return;
+
+    setLoading(tierKey);
 
     try {
       const rcApiKey = import.meta.env.VITE_REVENUECAT_API_KEY;
