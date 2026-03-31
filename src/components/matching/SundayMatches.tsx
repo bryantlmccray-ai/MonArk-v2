@@ -280,6 +280,15 @@ export const SundayMatches = () => {
     setMutualMatch(null);
   };
 
+  const [showWelcomeTip, setShowWelcomeTip] = useState(() => {
+    return !localStorage.getItem('monark-welcome-tip-dismissed');
+  });
+
+  const dismissWelcomeTip = () => {
+    localStorage.setItem('monark-welcome-tip-dismissed', 'true');
+    setShowWelcomeTip(false);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
