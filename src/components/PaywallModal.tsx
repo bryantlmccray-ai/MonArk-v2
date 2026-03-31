@@ -21,9 +21,19 @@ interface PaywallModalProps {
 }
 
 // ─── Tier Config ─────────────────────────────────────────────
-const TIERS = [
-  {
-    key: "free" as TierKey,
+interface TierConfig {
+  name: string;
+  tagline: string;
+  monthly: number;
+  quarterlyPerMonth: number;
+  quarterlySavings: number;
+  features: string[];
+  productId: string;
+  highlighted: boolean;
+}
+
+const tiers: Record<TierKey, TierConfig> = {
+  free: {
     name: "Free",
     tagline: "Explore with intention",
     monthly: 0,
@@ -35,12 +45,10 @@ const TIERS = [
       "Neighborhood discovery",
       "Community safety features",
     ],
-    productIdMonthly: "",
-    productIdQuarterly: "",
+    productId: "",
     highlighted: false,
   },
-  {
-    key: "plus" as TierKey,
+  plus: {
     name: "The Ark",
     tagline: "The full MonArk experience",
     monthly: 39.99,
@@ -54,12 +62,10 @@ const TIERS = [
       "Basic RIF compatibility insights",
       "MonArk venue recommendations",
     ],
-    productIdMonthly: "monark_ark_monthly",
-    productIdQuarterly: "monark_ark_quarterly",
+    productId: "monark_ark",
     highlighted: true,
   },
-  {
-    key: "monarch" as TierKey,
+  monarch: {
     name: "The Inner Ark",
     tagline: "Deeper insights, wider reach",
     monthly: 79.99,
@@ -74,11 +80,10 @@ const TIERS = [
       "Early access to new features",
       "Inner Ark badge",
     ],
-    productIdMonthly: "monark_inner_ark_monthly",
-    productIdQuarterly: "monark_inner_ark_quarterly",
+    productId: "monark_inner_ark",
     highlighted: false,
   },
-];
+};
 
 // ─── Brand Tokens ────────────────────────────────────────────
 const t = {
