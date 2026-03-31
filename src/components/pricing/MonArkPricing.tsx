@@ -285,7 +285,10 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
               {FOUNDING.description}
             </p>
           </div>
-          <button className="py-3.5 px-8 rounded-full border-[1.5px] border-[hsl(30_40%_72%)] bg-transparent text-[hsl(30_40%_72%)] font-body text-sm font-medium tracking-[0.12em] uppercase transition-all duration-300 hover:bg-[hsl(30_40%_72%/0.1)] whitespace-nowrap">
+          <button
+            onClick={() => onSelectPlan?.("Founding Members")}
+            className="py-3.5 px-8 rounded-full border-[1.5px] border-[hsl(30_40%_72%)] bg-transparent text-[hsl(30_40%_72%)] font-body text-sm font-medium tracking-[0.12em] uppercase transition-all duration-300 hover:bg-[hsl(30_40%_72%/0.1)] whitespace-nowrap"
+          >
             {FOUNDING.cta}
           </button>
         </motion.div>

@@ -421,7 +421,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
       {/* ═══════════ PRICING ═══════════ */}
       <SectionDivider />
-      <MonArkPricing />
+      <MonArkPricing onSelectPlan={() => setShowWaitlistModal(true)} />
 
       {/* Waitlist Modal */}
       <WaitlistModal isOpen={showWaitlistModal} onClose={() => setShowWaitlistModal(false)} sourcePage="enhanced-landing" />
