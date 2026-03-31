@@ -12,15 +12,8 @@ const getTimeGreeting = (): string => {
   return 'Good night';
 };
 
-const getContextLine = (): string => {
-  const day = new Date().getDay();
-  if (day === 0) return 'Your weekly matches are here for you.';
-  return 'Date well. Date with intention.';
-};
-
 export const PremiumGreeting = ({ firstName }: PremiumGreetingProps) => {
   const greeting = getTimeGreeting();
-  const contextLine = getContextLine();
 
   return (
     <motion.div
@@ -32,10 +25,6 @@ export const PremiumGreeting = ({ firstName }: PremiumGreetingProps) => {
       <h1 className="font-editorial text-2xl md:text-3xl tracking-tight text-foreground">
         {greeting}, <span className="text-primary">{firstName}</span>.
       </h1>
-      <p className="text-sm font-caption text-muted-foreground mt-0.5 tracking-wide">
-        {contextLine}
-      </p>
-      <div className="mt-3 h-px bg-primary/30" />
     </motion.div>
   );
 };
