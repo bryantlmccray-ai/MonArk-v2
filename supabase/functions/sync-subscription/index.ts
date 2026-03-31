@@ -66,9 +66,42 @@ serve(async (req: Request) => {
       );
     }
 
-    // Determine the tier from entitlements
+    // Optional: Verify subscription state with RevenueCat REST API (server-to-server key)
+    const rcServerKey = Deno.env.get("REVENUECAT_API_KEY");
+    let verifiedEntitlements = entitlements;
+
+    if (rcServerKey) {
+      try {
+        const rcResponse = await fetch(
+          `https://api.revenuecat.com/v1/subscribers/${encodeURIComponent(appUserId)}`,
+          {
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${rcServerKey}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (rcResponse.ok) {
+          const rcData = await rcResponse.json();
+          const activeEntitlements = rcData?.subscriber?.entitlements || {};
+          verifiedEntitlements = Object.keys(activeEntitlements).filter(
+            (key) => activeEntitlements[key]?.expires_date === null ||
+              new Date(activeEntitlements[key]?.expires_date) > new Date()
+          );
+          console.log("RevenueCat verified entitlements:", verifiedEntitlements);
+        } else {
+          console.warn(`RevenueCat API returned ${rcResponse.status}, falling back to webhook data`);
+        }
+      } catch (rcErr) {
+        console.warn("RevenueCat verification failed, using webhook data:", rcErr);
+      }
+    }
+
+    // Determine the tier from entitlements (use verified if available)
     let newTier = "free";
-    for (const entitlement of entitlements) {
+    const entitlementsToCheck = verifiedEntitlements.length > 0 ? verifiedEntitlements : entitlements;
+    for (const entitlement of entitlementsToCheck) {
       const mapped = ENTITLEMENT_TO_TIER[entitlement.toLowerCase()];
       if (mapped) {
         // Pick the highest tier
