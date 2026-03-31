@@ -223,6 +223,11 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
                   >
                     {isAccent ? "Only 8 spots remaining this month" : "Only 12 spots remaining this month"}
                   </p>
+                  {!isAccent && (
+                    <p className="text-xs italic font-editorial text-muted-foreground/60 mt-1">
+                      That's less than one bad date
+                    </p>
+                  )}
                 </div>
 
                 {/* Divider */}
