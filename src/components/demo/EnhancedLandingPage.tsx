@@ -69,8 +69,37 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
   return (
     <div className="min-h-screen bg-background relative">
+      {/* ═══════════ STICKY NAV ═══════════ */}
+      <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
+        <div className="max-w-5xl mx-auto px-5 sm:px-8 flex items-center justify-between h-14">
+          <div className="flex items-center gap-2">
+            <img src={monarkLogoHorizontal} alt="MonArk" className="h-7 object-contain" />
+          </div>
+          <div className="hidden sm:flex items-center gap-8">
+            <a
+              href="#how-it-works"
+              className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide"
+            >
+              How It Works
+            </a>
+            <a
+              href="#pricing"
+              className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide"
+            >
+              Pricing
+            </a>
+          </div>
+          <button
+            onClick={() => setShowWaitlistModal(true)}
+            className="text-sm font-body font-medium tracking-[0.08em] uppercase px-5 py-2 rounded-full border border-primary bg-transparent text-primary hover:bg-primary/10 transition-all duration-300"
+          >
+            Join the Waitlist
+          </button>
+        </div>
+      </nav>
+
       {/* Subtle warm texture overlay */}
-      <div className="fixed inset-0 opacity-[0.015] pointer-events-none" style={{
+      <div className="fixed inset-0 opacity-[0.015] pointer-events-none z-0" style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
       }} />
 
