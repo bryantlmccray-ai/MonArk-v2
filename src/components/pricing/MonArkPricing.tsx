@@ -57,6 +57,81 @@ const FOUNDING = {
   cta: "Claim Founding Access",
 };
 
+const VALID_INVITE_CODE = "MONARK2026";
+
+const FoundingMembersBanner = ({ onSelectPlan }: { onSelectPlan?: (plan: string) => void }) => {
+  const [inviteCode, setInviteCode] = useState("");
+  const [codeState, setCodeState] = useState<"idle" | "valid" | "invalid">("idle");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleVerify = () => {
+    if (inviteCode.trim().toUpperCase() === VALID_INVITE_CODE) {
+      setCodeState("valid");
+      setTimeout(() => onSelectPlan?.("Founding Members"), 600);
+    } else {
+      setCodeState("invalid");
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7, ease: easeOut }}
+      className="bg-[hsl(230_18%_15%)] rounded-2xl p-8 md:p-10 shadow-[0_4px_24px_rgba(28,31,46,0.2)]"
+    >
+      <div className="flex items-center gap-3 mb-3">
+        <h3 className="font-editorial text-2xl text-[hsl(30_40%_72%)]">
+          {FOUNDING.name}
+        </h3>
+        <Badge className="bg-[hsl(30_40%_72%)] text-[hsl(230_18%_15%)] text-[11px] tracking-[0.12em] uppercase px-2.5 py-0.5 rounded-full hover:bg-[hsl(30_40%_72%)]">
+          Invite Only
+        </Badge>
+      </div>
+      <p className="font-body text-sm leading-relaxed text-[hsl(240_6%_64%)] max-w-[540px] mb-6">
+        {FOUNDING.description}
+      </p>
+
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 max-w-md">
+        <input
+          ref={inputRef}
+          type="text"
+          value={inviteCode}
+          onChange={(e) => { setInviteCode(e.target.value); setCodeState("idle"); }}
+          onKeyDown={(e) => e.key === "Enter" && handleVerify()}
+          placeholder="Enter invite code"
+          className="flex-1 px-4 py-3 rounded-full bg-[hsl(230_18%_20%)] border border-[hsl(30_40%_72%/0.3)] text-[hsl(30_40%_85%)] placeholder:text-[hsl(240_6%_50%)] font-body text-sm tracking-wide focus:outline-none focus:border-[hsl(30_40%_72%)] transition-colors"
+        />
+        <button
+          onClick={handleVerify}
+          className="py-3 px-7 rounded-full border-[1.5px] border-[hsl(30_40%_72%)] bg-transparent text-[hsl(30_40%_72%)] font-body text-sm font-medium tracking-[0.12em] uppercase transition-all duration-300 hover:bg-[hsl(30_40%_72%/0.1)] whitespace-nowrap"
+        >
+          {FOUNDING.cta}
+        </button>
+      </div>
+
+      {/* Feedback messages */}
+      <motion.div
+        initial={false}
+        animate={{ height: codeState !== "idle" ? "auto" : 0, opacity: codeState !== "idle" ? 1 : 0 }}
+        className="overflow-hidden"
+      >
+        {codeState === "valid" && (
+          <p className="mt-4 text-sm font-body text-green-400 tracking-wide">
+            ✦ Welcome, Founding Member. Redirecting you now…
+          </p>
+        )}
+        {codeState === "invalid" && (
+          <p className="mt-4 text-sm font-body text-[hsl(30_40%_72%)] tracking-wide leading-relaxed">
+            This tier is by invitation only. <button onClick={() => onSelectPlan?.("Waitlist")} className="underline underline-offset-4 hover:text-white transition-colors">Join the waitlist</button> to be considered.
+          </p>
+        )}
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
 export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
