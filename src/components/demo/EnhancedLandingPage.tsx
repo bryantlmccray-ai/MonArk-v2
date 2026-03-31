@@ -196,7 +196,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             >
               <div>
                 <Button
-                  onClick={() => setShowWaitlistModal(true)}
+                  onClick={() => openWaitlist()}
                   variant="outline"
                   className="px-8 py-3 text-sm tracking-[0.08em] font-body"
                 >
