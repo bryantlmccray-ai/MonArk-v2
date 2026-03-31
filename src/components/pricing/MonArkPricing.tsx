@@ -250,6 +250,7 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
 
                 {/* CTA */}
                 <button
+                  onClick={() => onSelectPlan?.(tier.name)}
                   className={`w-full py-3.5 px-8 rounded-full font-body text-sm font-medium tracking-[0.12em] uppercase transition-all duration-300 ${
                     isAccent
                       ? "bg-primary text-primary-foreground hover:bg-primary/90"
