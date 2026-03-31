@@ -159,7 +159,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
             {user && <NotificationBell userId={user.id} />}
             <button onClick={() => handleTabChange('profile')} aria-label="Profile" className="group">
               <Avatar className="h-8 w-8 border-2 border-primary/30 group-hover:border-primary/60 transition-colors shadow-sm">
-                {avatarUrl ? <AvatarImage src={avatarUrl} alt={displayName} className="object-cover" /> : null}
+                {avatarUrl ? <AvatarImage src={avatarUrl} alt={firstName} className="object-cover" /> : null}
                 <AvatarFallback className="bg-muted text-primary font-caption text-xs tracking-wider">{initials}</AvatarFallback>
               </Avatar>
             </button>
@@ -168,7 +168,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
 
         <div className="pb-24 px-5 pt-3 space-y-5">
            {/* Premium greeting */}
-           {activeTab === 'weekly' && <PremiumGreeting displayName={displayName} />}
+           {activeTab === 'weekly' && <PremiumGreeting firstName={firstName} />}
            
            {/* RIF Beta Insights Card */}
            {activeTab === 'profile' && <RifInsightsCard />}
@@ -226,7 +226,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
           {/* Premium greeting for desktop */}
           {activeTab === 'weekly' && (
             <div className="px-6 mt-4">
-              <PremiumGreeting displayName={displayName} />
+              <PremiumGreeting firstName={firstName} />
             </div>
           )}
           {/* RIF Beta Insights Card for desktop */}
