@@ -25,6 +25,7 @@ const AdminWaitlist = lazy(() => import("./pages/AdminWaitlist"));
 const AdminAnalytics = lazy(() => import("./pages/AdminAnalytics"));
 const AdminMatchCuration = lazy(() => import("./pages/AdminMatchCuration"));
 const MilestoneCardShowcase = lazy(() => import("./components/social/MilestoneCardShowcase").then(m => ({ default: m.MilestoneCardShowcase })));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
