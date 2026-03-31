@@ -1,349 +1,143 @@
 /**
  * PaywallModal.tsx — MonArk Subscription Paywall
  *
- * Full MonArk brand system applied.
- * Integrates with RevenueCat for purchase flow and Supabase for tier state.
- *
- * Usage:
- *   <PaywallModal isOpen={showPaywall} onClose={() => setShowPaywall(false)} />
- *
- * Required env vars (set in Lovable project settings):
- *   VITE_REVENUECAT_API_KEY — RevenueCat public SDK key
- *   VITE_SUPABASE_URL — MonArk Supabase project URL
- *   VITE_SUPABASE_ANON_KEY — MonArk Supabase anon key
+ * Two paid tiers: The Ark and The Inner Ark, with monthly/quarterly toggle.
+ * Redirects to RevenueCat web billing for purchase.
  */
 
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Switch } from "@/components/ui/switch";
+import { motion, AnimatePresence } from "framer-motion";
 
-// ─── MonArk Brand Tokens ─────────────────────────────────────
-const tokens = {
-  background: "#E8DED4",
-  card: "#F2EDE8",
-  bone: "#EDE6DF",
-  sand: "#D9D0C5",
-  foreground: "#3D3428",
-  primary: "#A08C6E",
-  accent: "#7A5040",
-  dustyRose: "#C48880",
-  rosegold: "#A06050",
-  warmGlow: "#B89870",
-  olive: "#6B7040",
-  darkBg: "#1A1C24",
-  darkNavy: "#1C1F2E",
-  goldOnDark: "#D4B896",
-  whiteSoft: "#F0EBE3",
-};
-
-// ─── Tier Definitions ────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────
 type TierKey = "free" | "plus" | "monarch";
 
-interface TierConfig {
-  name: string;
-  tagline: string;
-  price: string;
-  period: string;
-  features: string[];
-  highlighted: boolean;
-  productId: string;
-}
-
-const tiers: Record<TierKey, TierConfig> = {
-  free: {
-    name: "Free",
-    tagline: "Begin with intention",
-    price: "$0",
-    period: "",
-    features: [
-      "3 curated matches per week",
-      "Basic RIF profile",
-      "Neighborhood discovery",
-      "Community safety features",
-    ],
-    highlighted: false,
-    productId: "",
-  },
-  plus: {
-    name: "Plus",
-    tagline: "Date with depth",
-    price: "$14.99",
-    period: "/mo",
-    features: [
-      "Everything in Free",
-      "Unlimited curated matches",
-      "Conversation tracker",
-      "AI date concierge",
-      "Weekly EQ insights",
-      "Priority match delivery",
-    ],
-    highlighted: true,
-    productId: "monark_plus_monthly",
-  },
-  monarch: {
-    name: "Monarch",
-    tagline: "The full experience",
-    price: "$29.99",
-    period: "/mo",
-    features: [
-      "Everything in Plus",
-      "Priority curation queue",
-      "Venue concierge",
-      "Relationship coaching",
-      "Advanced analytics",
-      "Early access to features",
-    ],
-    highlighted: false,
-    productId: "monark_monarch_monthly",
-  },
-};
-
-// ─── Styles ──────────────────────────────────────────────────
-const styles = {
-  overlay: {
-    position: "fixed" as const,
-    inset: 0,
-    backgroundColor: "rgba(26, 28, 36, 0.7)",
-    backdropFilter: "blur(8px)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 9999,
-    padding: "24px",
-  },
-  modal: {
-    backgroundColor: tokens.card,
-    borderRadius: "20px",
-    maxWidth: "920px",
-    width: "100%",
-    padding: "48px 40px",
-    position: "relative" as const,
-    boxShadow: "0 24px 80px rgba(61, 52, 40, 0.2)",
-    maxHeight: "90vh",
-    overflowY: "auto" as const,
-  },
-  closeButton: {
-    position: "absolute" as const,
-    top: "20px",
-    right: "20px",
-    background: "none",
-    border: "none",
-    color: tokens.sand,
-    fontSize: "24px",
-    cursor: "pointer",
-    padding: "8px",
-    lineHeight: 1,
-  },
-  header: {
-    textAlign: "center" as const,
-    marginBottom: "40px",
-  },
-  title: {
-    fontFamily: "'Playfair Display', serif",
-    fontSize: "36px",
-    fontWeight: 400,
-    color: tokens.foreground,
-    marginBottom: "8px",
-  },
-  subtitle: {
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: "16px",
-    fontWeight: 300,
-    color: tokens.accent,
-    letterSpacing: "0.02em",
-  },
-  tiersGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
-    gap: "20px",
-    marginBottom: "32px",
-  },
-  tierCard: (highlighted: boolean, isSelected: boolean) => ({
-    backgroundColor: highlighted ? tokens.foreground : tokens.background,
-    borderRadius: "16px",
-    padding: "32px 24px",
-    border: isSelected
-      ? `2px solid ${tokens.primary}`
-      : highlighted
-      ? "none"
-      : `1px solid ${tokens.bone}`,
-    cursor: "pointer",
-    transition: "all 0.25s ease",
-    position: "relative" as const,
-    transform: isSelected ? "scale(1.02)" : "none",
-  }),
-  tierBadge: {
-    position: "absolute" as const,
-    top: "-12px",
-    left: "50%",
-    transform: "translateX(-50%)",
-    backgroundColor: tokens.primary,
-    color: tokens.whiteSoft,
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: "11px",
-    fontWeight: 500,
-    letterSpacing: "0.2em",
-    textTransform: "uppercase" as const,
-    padding: "4px 16px",
-    borderRadius: "20px",
-  },
-  tierName: (highlighted: boolean) => ({
-    fontFamily: "'Playfair Display', serif",
-    fontSize: "24px",
-    fontWeight: 400,
-    color: highlighted ? tokens.whiteSoft : tokens.foreground,
-    marginBottom: "4px",
-  }),
-  tierTagline: (highlighted: boolean) => ({
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: "13px",
-    fontWeight: 300,
-    fontStyle: "italic" as const,
-    color: highlighted ? tokens.goldOnDark : tokens.accent,
-    marginBottom: "20px",
-  }),
-  tierPrice: (highlighted: boolean) => ({
-    fontFamily: "'Playfair Display', serif",
-    fontSize: "32px",
-    fontWeight: 700,
-    color: highlighted ? tokens.goldOnDark : tokens.primary,
-    marginBottom: "4px",
-  }),
-  tierPeriod: (highlighted: boolean) => ({
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: "14px",
-    fontWeight: 300,
-    color: highlighted ? tokens.sand : tokens.accent,
-    marginBottom: "24px",
-  }),
-  featureList: {
-    listStyle: "none",
-    padding: 0,
-    margin: 0,
-  },
-  featureItem: (highlighted: boolean) => ({
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: "14px",
-    fontWeight: 300,
-    color: highlighted ? tokens.sand : tokens.foreground,
-    padding: "6px 0",
-    display: "flex",
-    alignItems: "flex-start",
-    gap: "8px",
-  }),
-  featureCheck: (highlighted: boolean) => ({
-    color: highlighted ? tokens.goldOnDark : tokens.primary,
-    flexShrink: 0,
-    marginTop: "2px",
-    fontSize: "14px",
-  }),
-  ctaButton: (highlighted: boolean, loading: boolean) => ({
-    width: "100%",
-    padding: "14px 32px",
-    borderRadius: "40px",
-    border: highlighted ? "none" : `1.5px solid ${tokens.primary}`,
-    backgroundColor: highlighted ? tokens.primary : "transparent",
-    color: highlighted ? tokens.whiteSoft : tokens.primary,
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: "14px",
-    fontWeight: 500,
-    letterSpacing: "0.12em",
-    textTransform: "uppercase" as const,
-    cursor: loading ? "wait" : "pointer",
-    opacity: loading ? 0.6 : 1,
-    transition: "all 0.25s ease",
-    marginTop: "24px",
-  }),
-  footer: {
-    textAlign: "center" as const,
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: "12px",
-    color: tokens.sand,
-    lineHeight: 1.6,
-  },
-  // Mobile responsive override
-  mobileGrid: {
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: "16px",
-  },
-};
-
-// ─── Component ───────────────────────────────────────────────
 interface PaywallModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentTier?: TierKey;
 }
 
+// ─── Tier Config ─────────────────────────────────────────────
+const TIERS = [
+  {
+    key: "free" as TierKey,
+    name: "Free",
+    tagline: "Explore with intention",
+    monthly: 0,
+    quarterlyPerMonth: 0,
+    quarterlySavings: 0,
+    features: [
+      "3 curated matches per week",
+      "Basic RIF profile",
+      "Neighborhood discovery",
+      "Community safety features",
+    ],
+    productIdMonthly: "",
+    productIdQuarterly: "",
+    highlighted: false,
+  },
+  {
+    key: "plus" as TierKey,
+    name: "The Ark",
+    tagline: "The full MonArk experience",
+    monthly: 39.99,
+    quarterlyPerMonth: 33.99,
+    quarterlySavings: 18,
+    features: [
+      'Weekly "Your 3" curated matches',
+      "Access to Discovery Map",
+      "In-app messaging",
+      "Close the Loop anti-ghosting",
+      "Basic RIF compatibility insights",
+      "MonArk venue recommendations",
+    ],
+    productIdMonthly: "monark_ark_monthly",
+    productIdQuarterly: "monark_ark_quarterly",
+    highlighted: true,
+  },
+  {
+    key: "monarch" as TierKey,
+    name: "The Inner Ark",
+    tagline: "Deeper insights, wider reach",
+    monthly: 79.99,
+    quarterlyPerMonth: 67.99,
+    quarterlySavings: 36,
+    features: [
+      "Everything in The Ark",
+      "Priority match queue",
+      "5 curated matches instead of 3",
+      "Full RIF compatibility report",
+      "Concierge date planning",
+      "Early access to new features",
+      "Inner Ark badge",
+    ],
+    productIdMonthly: "monark_inner_ark_monthly",
+    productIdQuarterly: "monark_inner_ark_quarterly",
+    highlighted: false,
+  },
+];
+
+// ─── Brand Tokens ────────────────────────────────────────────
+const t = {
+  bg: "#E8DED4",
+  card: "#F2EDE8",
+  bone: "#EDE6DF",
+  sand: "#D9D0C5",
+  fg: "#3D3428",
+  primary: "#A08C6E",
+  accent: "#7A5040",
+  warmGlow: "#B89870",
+  darkBg: "#1A1C24",
+  darkNavy: "#1C1F2E",
+  goldOnDark: "#D4B896",
+  white: "#F0EBE3",
+};
+
 export default function PaywallModal({
   isOpen,
   onClose,
   currentTier = "free",
 }: PaywallModalProps) {
-  const [selectedTier, setSelectedTier] = useState<TierKey>(
-    currentTier === "free" ? "plus" : currentTier
-  );
-  const [loading, setLoading] = useState(false);
-  const [isMobile] = useState(
-    typeof window !== "undefined" && window.innerWidth < 768
-  );
+  const [isQuarterly, setIsQuarterly] = useState(false);
+  const [loading, setLoading] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const handlePurchase = async (tier: TierKey) => {
-    if (tier === "free" || tier === currentTier) {
+  const handlePurchase = async (tier: (typeof TIERS)[number]) => {
+    if (tier.key === "free" || tier.key === currentTier) {
       onClose();
       return;
     }
 
-    setLoading(true);
+    setLoading(tier.key);
 
     try {
-      // Get current user
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      const productId = tiers[tier].productId;
+      const productId = isQuarterly
+        ? tier.productIdQuarterly
+        : tier.productIdMonthly;
 
-      // RevenueCat purchase flow
-      // In production, this calls the RevenueCat SDK
-      // For web, we use the RevenueCat Billing API
       const rcApiKey = import.meta.env.VITE_REVENUECAT_API_KEY;
 
-      if (rcApiKey) {
-        // Production: RevenueCat Web SDK purchase
-        const response = await fetch(
-          `https://api.revenuecat.com/v1/subscribers/${user.id}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${rcApiKey}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (response.ok) {
-          // Trigger the purchase modal from RevenueCat
-          // The webhook will handle the rest via sync-subscription edge function
-          window.open(
-            `https://pay.rev.cat/${productId}?app_user_id=${user.id}`,
-            "_blank",
-            "width=500,height=700"
-          );
-        }
+      if (rcApiKey && productId) {
+        // RevenueCat web billing — redirect to hosted checkout
+        const billingUrl = `https://pay.rev.cat/${rcApiKey}?app_user_id=${encodeURIComponent(user.id)}&product=${encodeURIComponent(productId)}`;
+        window.open(billingUrl, "_blank", "noopener,noreferrer");
       } else {
-        // Development: directly update tier for testing
+        // Dev fallback: update tier directly for testing
         const { error } = await supabase
           .from("user_profiles")
           .update({
-            subscription_tier: tier,
+            subscription_tier: tier.key,
             subscription_status: "active",
           })
           .eq("user_id", user.id);
-
         if (error) throw error;
       }
 
@@ -351,76 +145,282 @@ export default function PaywallModal({
     } catch (err) {
       console.error("Purchase failed:", err);
     } finally {
-      setLoading(false);
+      setLoading(null);
     }
   };
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) onClose();
-  };
-
   return (
-    <div style={styles.overlay} onClick={handleOverlayClick}>
-      <div style={styles.modal}>
-        <button style={styles.closeButton} onClick={onClose}>
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        backgroundColor: "rgba(26,28,36,0.7)",
+        backdropFilter: "blur(8px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 9999,
+        padding: "24px",
+      }}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 12 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96 }}
+        transition={{ duration: 0.25 }}
+        style={{
+          backgroundColor: t.card,
+          borderRadius: "20px",
+          maxWidth: "960px",
+          width: "100%",
+          padding: "48px 40px",
+          position: "relative",
+          boxShadow: "0 24px 80px rgba(61,52,40,0.2)",
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
+      >
+        {/* Close */}
+        <button
+          onClick={onClose}
+          style={{
+            position: "absolute",
+            top: 20,
+            right: 20,
+            background: "none",
+            border: "none",
+            color: t.sand,
+            fontSize: 24,
+            cursor: "pointer",
+            padding: 8,
+            lineHeight: 1,
+          }}
+        >
           &times;
         </button>
 
         {/* Header */}
-        <div style={styles.header}>
-          <h2 style={styles.title}>Choose your path</h2>
-          <p style={styles.subtitle}>
-            Every tier is designed with intention. Upgrade when you're ready.
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <h2
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: 36,
+              fontWeight: 400,
+              color: t.fg,
+              marginBottom: 8,
+            }}
+          >
+            Choose your path
+          </h2>
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 16,
+              fontWeight: 300,
+              color: t.accent,
+            }}
+          >
+            Every tier is designed with intention.
           </p>
         </div>
 
+        {/* Billing Toggle */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 12,
+            marginBottom: 36,
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 14,
+              fontWeight: isQuarterly ? 300 : 500,
+              color: isQuarterly ? t.sand : t.fg,
+              transition: "all 0.2s",
+            }}
+          >
+            Monthly
+          </span>
+          <Switch
+            checked={isQuarterly}
+            onCheckedChange={setIsQuarterly}
+          />
+          <span
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 14,
+              fontWeight: isQuarterly ? 500 : 300,
+              color: isQuarterly ? t.fg : t.sand,
+              transition: "all 0.2s",
+            }}
+          >
+            Quarterly
+          </span>
+        </div>
+
         {/* Tier Cards */}
-        <div style={isMobile ? styles.mobileGrid : styles.tiersGrid}>
-          {(Object.keys(tiers) as TierKey[]).map((key) => {
-            const tier = tiers[key];
-            const isSelected = selectedTier === key;
-            const isCurrent = currentTier === key;
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              typeof window !== "undefined" && window.innerWidth < 768
+                ? "1fr"
+                : "repeat(3, 1fr)",
+            gap: 20,
+            marginBottom: 32,
+          }}
+        >
+          {TIERS.map((tier) => {
+            const isCurrent = currentTier === tier.key;
+            const price = isQuarterly ? tier.quarterlyPerMonth : tier.monthly;
+            const isHighlighted = tier.highlighted;
+            const isLoading = loading === tier.key;
 
             return (
               <div
-                key={key}
-                style={styles.tierCard(tier.highlighted, isSelected)}
-                onClick={() => setSelectedTier(key)}
+                key={tier.key}
+                style={{
+                  backgroundColor: isHighlighted ? t.fg : t.bg,
+                  borderRadius: 16,
+                  padding: "32px 24px",
+                  border: isHighlighted ? "none" : `1px solid ${t.bone}`,
+                  position: "relative",
+                  transition: "transform 0.2s, box-shadow 0.2s",
+                }}
                 onMouseEnter={(e) => {
-                  if (!isSelected) {
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                    e.currentTarget.style.boxShadow =
-                      "0 8px 32px rgba(61, 52, 40, 0.12)";
-                  }
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow =
+                    "0 8px 32px rgba(61,52,40,0.12)";
                 }}
                 onMouseLeave={(e) => {
-                  if (!isSelected) {
-                    e.currentTarget.style.transform = "none";
-                    e.currentTarget.style.boxShadow = "none";
-                  }
+                  e.currentTarget.style.transform = "none";
+                  e.currentTarget.style.boxShadow = "none";
                 }}
               >
-                {tier.highlighted && (
-                  <div style={styles.tierBadge}>Recommended</div>
+                {isHighlighted && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: -12,
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      backgroundColor: t.primary,
+                      color: t.white,
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 11,
+                      fontWeight: 500,
+                      letterSpacing: "0.2em",
+                      textTransform: "uppercase",
+                      padding: "4px 16px",
+                      borderRadius: 20,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Most Popular
+                  </div>
                 )}
 
-                <div style={styles.tierName(tier.highlighted)}>{tier.name}</div>
-                <div style={styles.tierTagline(tier.highlighted)}>
+                <div
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontSize: 24,
+                    fontWeight: 400,
+                    color: isHighlighted ? t.white : t.fg,
+                    marginBottom: 4,
+                  }}
+                >
+                  {tier.name}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 13,
+                    fontWeight: 300,
+                    fontStyle: "italic",
+                    color: isHighlighted ? t.goldOnDark : t.accent,
+                    marginBottom: 20,
+                  }}
+                >
                   {tier.tagline}
                 </div>
 
-                <div style={styles.tierPrice(tier.highlighted)}>
-                  {tier.price}
-                </div>
-                <div style={styles.tierPeriod(tier.highlighted)}>
-                  {tier.period || "\u00A0"}
-                </div>
+                {/* Price with animation */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={`${tier.key}-${isQuarterly}`}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    <div
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        fontSize: 32,
+                        fontWeight: 700,
+                        color: isHighlighted ? t.goldOnDark : t.primary,
+                        marginBottom: 4,
+                      }}
+                    >
+                      {price === 0 ? "$0" : `$${price.toFixed(2)}`}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 14,
+                        fontWeight: 300,
+                        color: isHighlighted ? t.sand : t.accent,
+                        marginBottom: isQuarterly && tier.quarterlySavings > 0 ? 4 : 24,
+                      }}
+                    >
+                      {price === 0 ? "\u00A0" : "/mo"}
+                    </div>
+                    {isQuarterly && tier.quarterlySavings > 0 && (
+                      <div
+                        style={{
+                          fontFamily: "'DM Sans', sans-serif",
+                          fontSize: 13,
+                          fontWeight: 500,
+                          color: isHighlighted ? "#8BC28B" : "#5A8A5A",
+                          marginBottom: 20,
+                        }}
+                      >
+                        Save ${tier.quarterlySavings} — billed $
+                        {(tier.quarterlyPerMonth * 3).toFixed(2)}/quarter
+                      </div>
+                    )}
+                  </motion.div>
+                </AnimatePresence>
 
-                <ul style={styles.featureList}>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                   {tier.features.map((feature, i) => (
-                    <li key={i} style={styles.featureItem(tier.highlighted)}>
-                      <span style={styles.featureCheck(tier.highlighted)}>
-                        &#10003;
+                    <li
+                      key={i}
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 14,
+                        fontWeight: 300,
+                        color: isHighlighted ? t.sand : t.fg,
+                        padding: "6px 0",
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: 8,
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: isHighlighted ? t.goldOnDark : t.primary,
+                          flexShrink: 0,
+                          marginTop: 2,
+                          fontSize: 14,
+                        }}
+                      >
+                        ✓
                       </span>
                       {feature}
                     </li>
@@ -428,32 +428,47 @@ export default function PaywallModal({
                 </ul>
 
                 <button
-                  style={styles.ctaButton(tier.highlighted, loading && isSelected)}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handlePurchase(key);
+                  onClick={() => handlePurchase(tier)}
+                  disabled={isLoading || isCurrent}
+                  style={{
+                    width: "100%",
+                    padding: "14px 32px",
+                    borderRadius: 40,
+                    border: isHighlighted
+                      ? "none"
+                      : `1.5px solid ${t.primary}`,
+                    backgroundColor: isHighlighted ? t.primary : "transparent",
+                    color: isHighlighted ? t.white : t.primary,
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 14,
+                    fontWeight: 500,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    cursor: isLoading ? "wait" : "pointer",
+                    opacity: isLoading ? 0.6 : 1,
+                    transition: "all 0.25s ease",
+                    marginTop: 24,
                   }}
-                  disabled={loading || isCurrent}
                   onMouseEnter={(e) => {
-                    if (tier.highlighted) {
-                      e.currentTarget.style.backgroundColor = tokens.warmGlow;
-                    } else {
-                      e.currentTarget.style.backgroundColor = tokens.sand;
+                    if (!isCurrent) {
+                      e.currentTarget.style.backgroundColor = isHighlighted
+                        ? t.warmGlow
+                        : t.sand;
                     }
                   }}
                   onMouseLeave={(e) => {
-                    if (tier.highlighted) {
-                      e.currentTarget.style.backgroundColor = tokens.primary;
-                    } else {
-                      e.currentTarget.style.backgroundColor = "transparent";
+                    if (!isCurrent) {
+                      e.currentTarget.style.backgroundColor = isHighlighted
+                        ? t.primary
+                        : "transparent";
                     }
                   }}
                 >
                   {isCurrent
                     ? "Current plan"
-                    : loading && isSelected
+                    : isLoading
                     ? "Processing..."
-                    : key === "free"
+                    : tier.key === "free"
                     ? "Stay on Free"
                     : `Upgrade to ${tier.name}`}
                 </button>
@@ -463,13 +478,21 @@ export default function PaywallModal({
         </div>
 
         {/* Footer */}
-        <div style={styles.footer}>
+        <div
+          style={{
+            textAlign: "center",
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 12,
+            color: t.sand,
+            lineHeight: 1.6,
+          }}
+        >
           <p>Cancel anytime. No questions asked.</p>
-          <p style={{ marginTop: "4px", opacity: 0.7 }}>
-            Subscriptions are managed securely through RevenueCat.
+          <p style={{ marginTop: 4, opacity: 0.7 }}>
+            Subscriptions managed securely through RevenueCat.
           </p>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
