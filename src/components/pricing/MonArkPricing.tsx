@@ -111,9 +111,9 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
             <motion.span
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-[11px] font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full tracking-wide"
+              className="text-[11px] font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full tracking-wide uppercase"
             >
-              Save up to $36
+              Save 20%
             </motion.span>
           )}
         </div>
