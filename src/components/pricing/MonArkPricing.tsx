@@ -63,7 +63,7 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
   const [isQuarterly, setIsQuarterly] = useState(false);
 
   return (
-    <section id="pricing" className="bg-background py-20 px-6">
+    <section id="pricing" className="bg-background py-20 px-6 scroll-mt-16">
       <div className="max-w-[1100px] mx-auto">
         {/* Section Header */}
         <motion.div
