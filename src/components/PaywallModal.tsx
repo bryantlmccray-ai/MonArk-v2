@@ -157,7 +157,7 @@ export default function PaywallModal({
         variant: "destructive",
       });
     } finally {
-      setLoading(null);
+      setLoading(false);
     }
   };
 
