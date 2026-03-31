@@ -53,6 +53,12 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
   const { demoData, setDemoMode } = useDemo();
   const [showFullDemo, setShowFullDemo] = useState(false);
   const [showWaitlistModal, setShowWaitlistModal] = useState(false);
+  const [waitlistPlan, setWaitlistPlan] = useState<string | undefined>();
+
+  const openWaitlist = (plan?: string) => {
+    setWaitlistPlan(plan);
+    setShowWaitlistModal(true);
+  };
 
   const startFullDemo = () => {
     if (onStartDemo) {
@@ -90,7 +96,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             </a>
           </div>
           <button
-            onClick={() => setShowWaitlistModal(true)}
+            onClick={() => openWaitlist()}
             className="text-sm font-body font-medium tracking-[0.08em] uppercase px-5 py-2 rounded-full border border-primary bg-transparent text-primary hover:bg-primary/10 transition-all duration-300"
           >
             Join the Waitlist
@@ -165,7 +171,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   <p className="text-sm text-muted-foreground font-body mb-6">Join 500+ intentional daters on the waitlist</p>
 
                   <Button
-                    onClick={() => setShowWaitlistModal(true)}
+                    onClick={() => openWaitlist()}
                     className="w-full py-5 text-sm tracking-[0.08em] font-body"
                     size="lg"
                   >
@@ -190,7 +196,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             >
               <div>
                 <Button
-                  onClick={() => setShowWaitlistModal(true)}
+                  onClick={() => openWaitlist()}
                   variant="outline"
                   className="px-8 py-3 text-sm tracking-[0.08em] font-body"
                 >
@@ -442,10 +448,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
       {/* ═══════════ PRICING ═══════════ */}
       <SectionDivider />
-      <MonArkPricing onSelectPlan={() => setShowWaitlistModal(true)} />
+      <MonArkPricing onSelectPlan={(planName) => openWaitlist(planName)} />
 
       {/* Waitlist Modal */}
-      <WaitlistModal isOpen={showWaitlistModal} onClose={() => setShowWaitlistModal(false)} sourcePage="enhanced-landing" />
+      <WaitlistModal isOpen={showWaitlistModal} onClose={() => { setShowWaitlistModal(false); setWaitlistPlan(undefined); }} sourcePage="enhanced-landing" selectedPlan={waitlistPlan} />
 
       {/* ═══════════ INSTAGRAM ═══════════ */}
       <section className="py-14 bg-secondary/30">
