@@ -28,12 +28,12 @@ const getContextLine = (): string => {
 const getScrollY = (): number => {
   if (typeof window === 'undefined') return 0;
 
-  return (
-    window.scrollY ??
-    window.pageYOffset ??
-    document.scrollingElement?.scrollTop ??
-    document.documentElement.scrollTop ??
-    0
+  return Math.max(
+    window.scrollY || 0,
+    window.pageYOffset || 0,
+    document.scrollingElement?.scrollTop || 0,
+    document.documentElement.scrollTop || 0,
+    document.body.scrollTop || 0,
   );
 };
 
