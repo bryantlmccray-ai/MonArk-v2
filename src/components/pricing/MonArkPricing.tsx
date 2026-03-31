@@ -269,34 +269,8 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
           })}
         </div>
 
-        {/* Founding Members Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: easeOut }}
-          className="bg-[hsl(230_18%_15%)] rounded-2xl p-8 md:p-10 flex items-center justify-between gap-8 flex-wrap shadow-[0_4px_24px_rgba(28,31,46,0.2)]"
-        >
-          <div className="flex-1 min-w-[280px]">
-            <div className="flex items-center gap-3 mb-3">
-              <h3 className="font-editorial text-2xl text-[hsl(30_40%_72%)]">
-                {FOUNDING.name}
-              </h3>
-              <Badge className="bg-[hsl(30_40%_72%)] text-[hsl(230_18%_15%)] text-[11px] tracking-[0.12em] uppercase px-2.5 py-0.5 rounded-full hover:bg-[hsl(30_40%_72%)]">
-                Invite Only
-              </Badge>
-            </div>
-            <p className="font-body text-sm leading-relaxed text-[hsl(240_6%_64%)] max-w-[540px]">
-              {FOUNDING.description}
-            </p>
-          </div>
-          <button
-            onClick={() => onSelectPlan?.("Founding Members")}
-            className="py-3.5 px-8 rounded-full border-[1.5px] border-[hsl(30_40%_72%)] bg-transparent text-[hsl(30_40%_72%)] font-body text-sm font-medium tracking-[0.12em] uppercase transition-all duration-300 hover:bg-[hsl(30_40%_72%/0.1)] whitespace-nowrap"
-          >
-            {FOUNDING.cta}
-          </button>
-        </motion.div>
+        {/* Founding Members Banner with Invite Code */}
+        <FoundingMembersBanner onSelectPlan={onSelectPlan} />
 
         {/* Bottom Note */}
         <p className="text-center text-[13px] text-muted-foreground mt-8 italic font-editorial">
