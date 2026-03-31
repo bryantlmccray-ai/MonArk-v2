@@ -147,7 +147,7 @@ export default function PaywallModal({
       }
 
       // RevenueCat web billing — redirect to hosted checkout
-      const billingUrl = `https://pay.rev.cat/${rcApiKey}?app_user_id=${encodeURIComponent(user.id)}&product=${encodeURIComponent(productId)}`;
+      const billingUrl = `https://pay.rev.cat/${productId}?app_user_id=${encodeURIComponent(user.id)}`;
       window.open(billingUrl, "_blank", "noopener,noreferrer");
 
       onClose();
