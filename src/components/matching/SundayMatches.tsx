@@ -165,11 +165,6 @@ export const SundayMatches = () => {
    
    // Abuse protection for like/pass actions
    const { protectedAction, isProcessing: isActionBlocked } = useActionProtection({ debounceMs: 800 });
-  
-  // Check if this is the user's first visit to show welcome tip - must be before any early returns
-  const [showWelcomeTip, setShowWelcomeTip] = useState(() => {
-    return !sessionStorage.getItem('monark-welcome-tip-dismissed');
-  });
 
   const loading = curatedLoading || poolLoading;
   const nextRefresh = getNextRefreshDate();
@@ -299,11 +294,6 @@ export const SundayMatches = () => {
   const isUsingDemoData = unifiedCurated.length === 0 && unifiedPool.length === 0;
 
   const totalMatches = displayCurated.length + displayPool.length;
-
-  const dismissWelcomeTip = () => {
-    sessionStorage.setItem('monark-welcome-tip-dismissed', 'true');
-    setShowWelcomeTip(false);
-  };
 
   return (
     <div className="min-h-screen bg-background">
