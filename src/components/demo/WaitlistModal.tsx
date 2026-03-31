@@ -165,7 +165,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
       setFormData({
         firstName: '', lastName: '', email: '',
         ageRange: '', city: '', genderIdentity: '', lookingFor: '', relationshipGoal: '',
-        whyMonark: '', heardAboutUs: '', willingToBeta: false, emailOptIn: true
+        whyMonark: '', heardAboutUs: '', willingToBeta: false, emailOptIn: true, agreeToTerms: false
       });
       setIsSubmitted(false);
       setCurrentStep(1);
