@@ -68,3 +68,6 @@ verify_jwt = false
 
 [functions.photo-moderation]
 verify_jwt = false
+
+[functions.sync-subscription]
+verify_jwt = false
