@@ -102,6 +102,11 @@ const Index = () => {
     );
   }
 
+  // Redirect authenticated users to /dashboard
+  if (user && !isDemoMode) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   // Show auth page if requested (and not in demo mode)
   if (showAuth && !isDemoMode) {
     return <AuthPage />;
