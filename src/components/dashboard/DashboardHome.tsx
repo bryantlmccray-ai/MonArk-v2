@@ -24,16 +24,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onStartRIF, onSign
 
   return (
     <div className="min-h-screen bg-[hsl(230_18%_14%)]">
-      {/* Header */}
-      <header className="px-6 pt-6 pb-4 flex items-center justify-between">
-        <MonArkLogo size="sm" />
-        <button
-          onClick={onSignOut}
-          className="text-xs font-caption text-[hsl(240_6%_55%)] tracking-[0.15em] uppercase hover:text-[hsl(30_40%_72%)] transition-colors"
-        >
-          Sign Out
-        </button>
-      </header>
+      <AuthenticatedNav onSignOut={onSignOut} onNavigate={onNavigate} />
 
       <div className="px-6 pb-12 max-w-2xl mx-auto space-y-6">
         {/* Welcome */}
