@@ -448,10 +448,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
       {/* ═══════════ PRICING ═══════════ */}
       <SectionDivider />
-      <MonArkPricing onSelectPlan={() => setShowWaitlistModal(true)} />
+      <MonArkPricing onSelectPlan={(planName) => openWaitlist(planName)} />
 
       {/* Waitlist Modal */}
-      <WaitlistModal isOpen={showWaitlistModal} onClose={() => setShowWaitlistModal(false)} sourcePage="enhanced-landing" />
+      <WaitlistModal isOpen={showWaitlistModal} onClose={() => { setShowWaitlistModal(false); setWaitlistPlan(undefined); }} sourcePage="enhanced-landing" selectedPlan={waitlistPlan} />
 
       {/* ═══════════ INSTAGRAM ═══════════ */}
       <section className="py-14 bg-secondary/30">
