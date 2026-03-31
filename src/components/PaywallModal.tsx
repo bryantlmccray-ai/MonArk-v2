@@ -125,21 +125,13 @@ export default function PaywallModal({
 
       const rcApiKey = import.meta.env.VITE_REVENUECAT_API_KEY;
 
-      if (rcApiKey && productId) {
-        // RevenueCat web billing — redirect to hosted checkout
-        const billingUrl = `https://pay.rev.cat/${rcApiKey}?app_user_id=${encodeURIComponent(user.id)}&product=${encodeURIComponent(productId)}`;
-        window.open(billingUrl, "_blank", "noopener,noreferrer");
-      } else {
-        // Dev fallback: update tier directly for testing
-        const { error } = await supabase
-          .from("user_profiles")
-          .update({
-            subscription_tier: tier.key,
-            subscription_status: "active",
-          })
-          .eq("user_id", user.id);
-        if (error) throw error;
+      if (!rcApiKey || !productId) {
+        throw new Error("Payment system not configured. Please contact support.");
       }
+
+      // RevenueCat web billing — redirect to hosted checkout
+      const billingUrl = `https://pay.rev.cat/${rcApiKey}?app_user_id=${encodeURIComponent(user.id)}&product=${encodeURIComponent(productId)}`;
+      window.open(billingUrl, "_blank", "noopener,noreferrer");
 
       onClose();
     } catch (err) {
