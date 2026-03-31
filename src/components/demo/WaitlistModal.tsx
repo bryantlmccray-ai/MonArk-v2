@@ -124,8 +124,9 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
           willing_to_beta: formData.willingToBeta,
           email_opt_in: formData.emailOptIn,
           user_agent: navigator.userAgent,
-          source_page: sourcePage
-        });
+           source_page: sourcePage,
+           selected_plan: selectedPlan || 'Early Access Waitlist',
+         });
 
       if (error) {
         console.error('Waitlist submission error:', error);
