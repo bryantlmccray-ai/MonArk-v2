@@ -245,7 +245,10 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
                       >
                         ✦
                       </span>
-                      {feature}
+                      <span className="inline">{feature}</span>
+                      {feature.includes('Inner Ark badge') && (
+                        <span className="inline-flex items-center gap-0.5 ml-1.5 px-1.5 py-0.5 rounded-full bg-primary/15 text-[10px] font-semibold text-primary whitespace-nowrap">✦ Inner Ark</span>
+                      )}
                     </li>
                   ))}
                 </ul>
