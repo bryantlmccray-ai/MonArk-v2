@@ -71,17 +71,11 @@ export const usePhotoUpload = () => {
         return null;
       }
 
-      // Generate a signed URL since the bucket is private
-      const { data: signedUrlData, error: signedUrlError } = await supabase.storage
+      const { data } = supabase.storage
         .from('profile-photos')
-        .createSignedUrl(filePath, 60 * 60); // 1 hour for moderation + initial display
+        .getPublicUrl(filePath);
 
-      if (signedUrlError || !signedUrlData?.signedUrl) {
-        toast({ title: 'Upload failed', description: 'Could not generate photo URL.', variant: 'destructive' });
-        return null;
-      }
-
-      const publicUrl = signedUrlData.signedUrl;
+      const publicUrl = data.publicUrl;
 
       // ---- Post-upload content moderation ----
       try {
