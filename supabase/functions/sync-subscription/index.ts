@@ -79,13 +79,9 @@ serve(async (req: Request) => {
     }
 
     // Determine subscription status based on event type
-    let newStatus = "active";
-    if (
-      eventType === "CANCELLATION" ||
-      eventType === "EXPIRATION" ||
-      eventType === "BILLING_ISSUE"
-    ) {
-      newStatus = "inactive";
+    const activeEvents = ["INITIAL_PURCHASE", "RENEWAL", "UNCANCELLATION", "SUBSCRIPTION_EXTENDED"];
+    const newStatus = activeEvents.includes(eventType) ? "active" : "inactive";
+    if (newStatus === "inactive") {
       newTier = "free";
     }
 
