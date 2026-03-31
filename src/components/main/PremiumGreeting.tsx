@@ -23,6 +23,7 @@ export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) =
       <p className="text-sm font-caption text-muted-foreground mt-0.5 tracking-wide">
         Date well. Date with intention.
       </p>
+      <div className="mt-3 h-px bg-primary/30" />
     </div>
   );
 };
