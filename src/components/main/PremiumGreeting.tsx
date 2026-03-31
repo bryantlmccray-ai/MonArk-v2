@@ -1,9 +1,14 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 
 interface PremiumGreetingProps {
   firstName: string;
 }
+
+const MOBILE_BREAKPOINT = 768;
+const MOBILE_FADE_DISTANCE = 120;
+const DESKTOP_FADE_DISTANCE = 120;
+const DESKTOP_SLIDE_DISTANCE = 180;
+const DESKTOP_SLIDE_OFFSET = 24;
 
 const getTimeGreeting = (): string => {
   const hour = new Date().getHours();
@@ -19,66 +24,105 @@ const getContextLine = (): string => {
   return 'Date well. Date with intention.';
 };
 
-export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) => {
+const getScrollY = (): number => {
+  if (typeof window === 'undefined') return 0;
+
+  return (
+    window.scrollY ??
+    window.pageYOffset ??
+    document.scrollingElement?.scrollTop ??
+    document.documentElement.scrollTop ??
+    0
+  );
+};
+
+const resetStyles = (element: HTMLDivElement) => {
+  element.style.opacity = '1';
+  element.style.transform = 'translateY(0px)';
+  element.style.willChange = 'auto';
+};
+
+const applyMobileStyles = (element: HTMLDivElement, scrollY: number) => {
+  element.style.willChange = 'opacity';
+
+  const fadeProgress = Math.min(1, scrollY / MOBILE_FADE_DISTANCE);
+  const easedFade = 1 - Math.pow(fadeProgress, 2);
+
+  element.style.opacity = String(easedFade);
+  element.style.transform = 'translateY(0px)';
+};
+
+const applyDesktopStyles = (element: HTMLDivElement, scrollY: number) => {
+  element.style.willChange = 'transform, opacity';
+
+  const slideProgress = Math.min(1, scrollY / DESKTOP_SLIDE_DISTANCE);
+  const fadeProgress = Math.min(1, scrollY / DESKTOP_FADE_DISTANCE);
+  const easedSlide = 1 - Math.pow(1 - slideProgress, 3);
+  const easedFade = 1 - Math.pow(fadeProgress, 2);
+  const translateY = easedSlide * DESKTOP_SLIDE_OFFSET;
+
+  element.style.transform = `translateY(-${translateY}px)`;
+  element.style.opacity = String(easedFade);
+};
+
+export const PremiumGreeting = ({ firstName }: PremiumGreetingProps) => {
   const greeting = getTimeGreeting();
   const contextLine = getContextLine();
   const ref = useRef<HTMLDivElement>(null);
-  const rafId = useRef<number>(0);
+  const rafId = useRef<number | null>(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    const onScroll = () => {
-      cancelAnimationFrame(rafId.current);
-      rafId.current = requestAnimationFrame(() => {
-        const scrollY = window.scrollY;
-        const isMobile = window.matchMedia('(max-width: 767px)').matches;
-
-        if (scrollY <= 0) {
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0px)';
-          el.style.willChange = 'auto';
-          return;
-        }
-
-        if (isMobile) {
-          el.style.willChange = 'opacity';
-          const fadeProgress = Math.min(1, scrollY / 120);
-          const easedFade = 1 - Math.pow(fadeProgress, 2);
-
-          el.style.opacity = String(easedFade);
-          el.style.transform = 'none';
-          return;
-        }
-
-        el.style.willChange = 'transform, opacity';
-        const slideProgress = Math.min(1, scrollY / 180);
-        const fadeProgress = Math.min(1, scrollY / 120);
-        const easedSlide = 1 - Math.pow(1 - slideProgress, 3);
-        const easedFade = 1 - Math.pow(fadeProgress, 2);
-        const translateY = easedSlide * 24;
-
-        el.style.transform = `translateY(-${translateY}px)`;
-        el.style.opacity = String(easedFade);
-      });
+    const cancelFrame = () => {
+      if (rafId.current !== null) {
+        cancelAnimationFrame(rafId.current);
+        rafId.current = null;
+      }
     };
 
+    const updateStyles = () => {
+      const scrollY = getScrollY();
+      const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
+
+      if (scrollY <= 0) {
+        resetStyles(el);
+        return;
+      }
+
+      if (isMobile) {
+        applyMobileStyles(el, scrollY);
+        return;
+      }
+
+      applyDesktopStyles(el, scrollY);
+    };
+
+    const onScroll = () => {
+      cancelFrame();
+      rafId.current = requestAnimationFrame(updateStyles);
+    };
+
+    resetStyles(el);
+    updateStyles();
     window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
 
     return () => {
       window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(rafId.current);
+      cancelFrame();
     };
   }, []);
 
   return (
-    <div ref={ref} className="py-2">
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
+    <div
+      ref={ref}
+      className="py-2"
+      style={{ opacity: 1, transform: 'translateY(0px)' }}
+    >
+      <div
+        className="animate-fade-in motion-reduce:animate-none"
+        style={{ animationDuration: '0.6s' }}
       >
         <h1 className="font-editorial text-2xl md:text-3xl tracking-tight text-foreground">
           {greeting}, <span className="text-primary">{firstName}</span>.
@@ -87,7 +131,7 @@ export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) =
           {contextLine}
         </p>
         <div className="mt-3 h-px bg-primary/30" />
-      </motion.div>
+      </div>
     </div>
   );
 };
