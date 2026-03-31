@@ -46,7 +46,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   const { user } = useAuth();
   const { profile } = useProfile();
   
-  const firstName = user?.user_metadata?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'there';
+  const firstName = profile?.first_name || user?.user_metadata?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'there';
   const avatarUrl = profile?.photos?.[0] || user?.user_metadata?.avatar_url || null;
   const initials = firstName.slice(0, 2).toUpperCase();
   

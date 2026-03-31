@@ -2225,6 +2225,7 @@ export type Database = {
           engagement_score: number | null
           exercise_habits: string | null
           financial_score: number | null
+          first_name: string | null
           flag_reason: string | null
           flag_timestamp: string | null
           flagged: boolean | null
@@ -2238,6 +2239,7 @@ export type Database = {
           is_profile_complete: boolean | null
           last_active_at: string | null
           last_login_days_ago: number | null
+          last_name: string | null
           last_preference_update: string | null
           location: string | null
           location_consent: boolean | null
@@ -2295,6 +2297,7 @@ export type Database = {
           engagement_score?: number | null
           exercise_habits?: string | null
           financial_score?: number | null
+          first_name?: string | null
           flag_reason?: string | null
           flag_timestamp?: string | null
           flagged?: boolean | null
@@ -2310,6 +2313,7 @@ export type Database = {
           is_profile_complete?: boolean | null
           last_active_at?: string | null
           last_login_days_ago?: number | null
+          last_name?: string | null
           last_preference_update?: string | null
           location?: string | null
           location_consent?: boolean | null
@@ -2367,6 +2371,7 @@ export type Database = {
           engagement_score?: number | null
           exercise_habits?: string | null
           financial_score?: number | null
+          first_name?: string | null
           flag_reason?: string | null
           flag_timestamp?: string | null
           flagged?: boolean | null
@@ -2382,6 +2387,7 @@ export type Database = {
           is_profile_complete?: boolean | null
           last_active_at?: string | null
           last_login_days_ago?: number | null
+          last_name?: string | null
           last_preference_update?: string | null
           location?: string | null
           location_consent?: boolean | null
@@ -3314,6 +3320,7 @@ export type Database = {
           engagement_score: number | null
           exercise_habits: string | null
           financial_score: number | null
+          first_name: string | null
           flag_reason: string | null
           flag_timestamp: string | null
           flagged: boolean | null
@@ -3327,6 +3334,7 @@ export type Database = {
           is_profile_complete: boolean | null
           last_active_at: string | null
           last_login_days_ago: number | null
+          last_name: string | null
           last_preference_update: string | null
           location: string | null
           location_consent: boolean | null

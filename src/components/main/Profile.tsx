@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { PhotoLightbox } from '@/components/ui/PhotoLightbox';
 import { Settings, ShieldCheck, Edit, LogOut, MapPin, TrendingUp, Calendar, Heart, Briefcase, GraduationCap, Ruler, Dumbbell, Cigarette, Wine, Sparkles, Camera, Palette, Clock, DollarSign, Eye } from 'lucide-react';
 import { ProfileCreation } from '../profile/ProfileCreation';
@@ -27,8 +27,11 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [editingName, setEditingName] = useState(false);
+  const [editFirstName, setEditFirstName] = useState('');
+  const [editLastName, setEditLastName] = useState('');
   const { user, signOut } = useAuth();
-  const { profile, loading } = useProfile();
+  const { profile, loading, updateProfile } = useProfile();
   const { clearLocation } = useLocation();
   const { analyticsEnabled } = useMonthlyAnalytics();
   const { toast } = useToast();
@@ -64,6 +67,28 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
 
   const locationDisplay = getLocationDisplay();
 
+  const hasCompleteProfile = profile?.is_profile_complete;
+  const userName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || user?.user_metadata?.name || 'User';
+  const firstName = profile?.first_name || user?.user_metadata?.name?.split(' ')[0] || 'User';
+
+  const handleStartEditName = useCallback(() => {
+    setEditFirstName(profile?.first_name || user?.user_metadata?.name?.split(' ')[0] || '');
+    setEditLastName(profile?.last_name || user?.user_metadata?.name?.split(' ').slice(1).join(' ') || '');
+    setEditingName(true);
+  }, [profile, user]);
+
+  const handleSaveName = useCallback(async () => {
+    const trimmedFirst = editFirstName.trim();
+    const trimmedLast = editLastName.trim();
+    if (!trimmedFirst) {
+      toast({ title: 'First name is required', variant: 'destructive' });
+      return;
+    }
+    await updateProfile({ first_name: trimmedFirst, last_name: trimmedLast || null });
+    setEditingName(false);
+    toast({ title: 'Name updated' });
+  }, [editFirstName, editLastName, updateProfile, toast]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background p-6 flex items-center justify-center">
@@ -80,10 +105,6 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
       />
     );
   }
-
-  const hasCompleteProfile = profile?.is_profile_complete;
-  const userName = user?.user_metadata?.name || 'User';
-  const firstName = userName.split(' ')[0];
 
   // Height conversion helper
   const formatHeight = (cm: number) => {
@@ -233,7 +254,74 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               )}
             </motion.div>
 
-            {/* Bio — Pull Quote Style */}
+            {/* Name Edit Section */}
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              custom={0.5}
+              variants={fadeUp}
+              className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-foreground font-serif text-lg">Name</h3>
+                {!editingName && (
+                  <button
+                    onClick={handleStartEditName}
+                    className="text-xs text-primary hover:text-primary/80 transition-colors font-caption tracking-wide uppercase"
+                  >
+                    Edit
+                  </button>
+                )}
+              </div>
+              {editingName ? (
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1 block font-caption">First Name</label>
+                      <input
+                        type="text"
+                        value={editFirstName}
+                        onChange={(e) => setEditFirstName(e.target.value)}
+                        maxLength={50}
+                        className="w-full px-3 py-2 text-sm bg-secondary/50 border border-border/60 rounded-xl text-foreground font-body focus:outline-none focus:border-primary/40 transition-colors"
+                        placeholder="First name"
+                        autoFocus
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1 block font-caption">Last Name</label>
+                      <input
+                        type="text"
+                        value={editLastName}
+                        onChange={(e) => setEditLastName(e.target.value)}
+                        maxLength={50}
+                        className="w-full px-3 py-2 text-sm bg-secondary/50 border border-border/60 rounded-xl text-foreground font-body focus:outline-none focus:border-primary/40 transition-colors"
+                        placeholder="Last name"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleSaveName}
+                      className="flex-1 py-2 text-sm bg-primary text-primary-foreground font-medium rounded-xl transition-all hover:bg-primary/90 active:scale-[0.98]"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => setEditingName(false)}
+                      className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground rounded-xl transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-foreground font-body text-[15px]">
+                  {userName}
+                </p>
+              )}
+            </motion.div>
+
             {profile?.bio && (
               <motion.div
                 initial="hidden"

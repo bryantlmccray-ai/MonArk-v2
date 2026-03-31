@@ -13,6 +13,8 @@ type SexualOrientation = Database['public']['Enums']['sexual_orientation'];
 export interface UserProfile {
   id: string;
   user_id: string;
+  first_name: string | null;
+  last_name: string | null;
   bio: string | null;
   age: number | null;
   location: string | null;
@@ -52,6 +54,8 @@ export interface UserProfile {
 const createDemoProfile = (userId: string): UserProfile => ({
   id: 'demo-profile-id',
   user_id: userId,
+  first_name: null,
+  last_name: null,
   bio: null,
   age: null,
   location: null,
