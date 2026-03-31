@@ -41,6 +41,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   const [showPostDateReflection, setShowPostDateReflection] = useState(false);
   const [reflectionPartnerName, setReflectionPartnerName] = useState('');
   const isMobile = useIsMobile();
+  const { showPaywall, setShowPaywall, tier } = useSubscription();
   const { user } = useAuth();
   const { profile } = useProfile();
   
