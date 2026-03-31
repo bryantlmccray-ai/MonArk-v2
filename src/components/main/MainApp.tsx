@@ -26,6 +26,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { MonArkLogo } from '@/components/MonArkLogo';
 import NotificationBell from '@/components/NotificationBell';
+import { PremiumGreeting } from './PremiumGreeting';
 
 interface MainAppProps {
   initialTab?: string;
@@ -166,10 +167,13 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
         </header>
 
         <div className="pb-24 px-5 pt-3 space-y-5">
+           {/* Premium greeting */}
+           {activeTab === 'weekly' && <PremiumGreeting displayName={displayName} />}
+           
            {/* RIF Beta Insights Card */}
            {activeTab === 'profile' && <RifInsightsCard />}
           
-          {renderActiveScreen()}
+           {renderActiveScreen()}
         </div>
 
         <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
@@ -219,6 +223,12 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
         <SidebarNavigation activeTab={activeTab} onTabChange={handleTabChange} onArkNavigation={handleJournalNavigation} onUpgrade={() => setShowPaywall(true)} />
 
         <main className="flex-1 pt-12">
+          {/* Premium greeting for desktop */}
+          {activeTab === 'weekly' && (
+            <div className="px-6 mt-4">
+              <PremiumGreeting displayName={displayName} />
+            </div>
+          )}
           {/* RIF Beta Insights Card for desktop */}
           {activeTab === 'profile' && (
             <div className="px-6 mb-4">
