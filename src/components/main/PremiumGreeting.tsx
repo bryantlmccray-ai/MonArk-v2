@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 
 interface PremiumGreetingProps {
   firstName: string;
@@ -120,9 +121,10 @@ export const PremiumGreeting = ({ firstName }: PremiumGreetingProps) => {
       className="py-2"
       style={{ opacity: 1, transform: 'translateY(0px)' }}
     >
-      <div
-        className="animate-fade-in motion-reduce:animate-none"
-        style={{ animationDuration: '0.6s' }}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
       >
         <h1 className="font-editorial text-2xl md:text-3xl tracking-tight text-foreground">
           {greeting}, <span className="text-primary">{firstName}</span>.
@@ -131,7 +133,7 @@ export const PremiumGreeting = ({ firstName }: PremiumGreetingProps) => {
           {contextLine}
         </p>
         <div className="mt-3 h-px bg-primary/30" />
-      </div>
+      </motion.div>
     </div>
   );
 };
