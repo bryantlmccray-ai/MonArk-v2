@@ -21,9 +21,19 @@ interface PaywallModalProps {
 }
 
 // ─── Tier Config ─────────────────────────────────────────────
-const TIERS = [
-  {
-    key: "free" as TierKey,
+interface TierConfig {
+  name: string;
+  tagline: string;
+  monthly: number;
+  quarterlyPerMonth: number;
+  quarterlySavings: number;
+  features: string[];
+  productId: string;
+  highlighted: boolean;
+}
+
+const tiers: Record<TierKey, TierConfig> = {
+  free: {
     name: "Free",
     tagline: "Explore with intention",
     monthly: 0,
@@ -35,12 +45,10 @@ const TIERS = [
       "Neighborhood discovery",
       "Community safety features",
     ],
-    productIdMonthly: "",
-    productIdQuarterly: "",
+    productId: "",
     highlighted: false,
   },
-  {
-    key: "plus" as TierKey,
+  plus: {
     name: "The Ark",
     tagline: "The full MonArk experience",
     monthly: 39.99,
@@ -54,12 +62,10 @@ const TIERS = [
       "Basic RIF compatibility insights",
       "MonArk venue recommendations",
     ],
-    productIdMonthly: "monark_ark_monthly",
-    productIdQuarterly: "monark_ark_quarterly",
+    productId: "monark_ark",
     highlighted: true,
   },
-  {
-    key: "monarch" as TierKey,
+  monarch: {
     name: "The Inner Ark",
     tagline: "Deeper insights, wider reach",
     monthly: 79.99,
@@ -74,11 +80,10 @@ const TIERS = [
       "Early access to new features",
       "Inner Ark badge",
     ],
-    productIdMonthly: "monark_inner_ark_monthly",
-    productIdQuarterly: "monark_inner_ark_quarterly",
+    productId: "monark_inner_ark",
     highlighted: false,
   },
-];
+};
 
 // ─── Brand Tokens ────────────────────────────────────────────
 const t = {
@@ -112,8 +117,8 @@ export default function PaywallModal({
       return;
     }
 
-    const tier = TIERS.find((t) => t.key === tierKey);
-    if (!tier) return;
+    const tierConfig = tiers[tierKey];
+    if (!tierConfig) return;
 
     setLoading(true);
 
@@ -135,9 +140,7 @@ export default function PaywallModal({
       } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      const productId = isQuarterly
-        ? tier.productIdQuarterly
-        : tier.productIdMonthly;
+      const productId = tierConfig.productId;
 
       if (!productId) {
         throw new Error("Product not configured. Please contact support.");
@@ -287,15 +290,16 @@ export default function PaywallModal({
             marginBottom: 32,
           }}
         >
-          {TIERS.map((tier) => {
-            const isCurrent = currentTier === tier.key;
+          {(Object.keys(tiers) as TierKey[]).map((tierKey) => {
+            const tier = tiers[tierKey];
+            const isCurrent = currentTier === tierKey;
             const price = isQuarterly ? tier.quarterlyPerMonth : tier.monthly;
             const isHighlighted = tier.highlighted;
             const isLoading = loading;
 
             return (
               <div
-                key={tier.key}
+                key={tierKey}
                 style={{
                   backgroundColor: isHighlighted ? t.fg : t.bg,
                   borderRadius: 16,
@@ -364,7 +368,7 @@ export default function PaywallModal({
                 {/* Price with animation */}
                 <AnimatePresence mode="wait">
                   <motion.div
-                    key={`${tier.key}-${isQuarterly}`}
+                    key={`${tierKey}-${isQuarterly}`}
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
@@ -440,7 +444,7 @@ export default function PaywallModal({
                 </ul>
 
                 <button
-                  onClick={() => handlePurchase(tier.key)}
+                  onClick={() => handlePurchase(tierKey)}
                   disabled={isLoading || isCurrent}
                   style={{
                     width: "100%",
@@ -480,7 +484,7 @@ export default function PaywallModal({
                     ? "Current plan"
                     : isLoading
                     ? "Processing..."
-                    : tier.key === "free"
+                    : tierKey === "free"
                     ? "Stay on Free"
                     : `Upgrade to ${tier.name}`}
                 </button>
