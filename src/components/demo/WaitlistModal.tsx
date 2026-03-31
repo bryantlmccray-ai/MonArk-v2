@@ -15,6 +15,7 @@ interface WaitlistModalProps {
   isOpen: boolean;
   onClose: () => void;
   sourcePage?: string;
+  selectedPlan?: string;
 }
 
 export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, sourcePage = 'demo-landing' }) => {
