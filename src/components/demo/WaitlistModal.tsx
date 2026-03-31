@@ -180,6 +180,11 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
       case 1:
         return (
           <div className="space-y-4">
+            {selectedPlan && (
+              <div className="bg-primary/10 border border-primary/20 rounded-xl px-4 py-2.5 text-sm font-medium text-foreground">
+                Selected plan: <span className="font-semibold text-primary">{selectedPlan}</span>
+              </div>
+            )}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firstName" className="text-foreground text-sm font-semibold">First Name *</Label>
