@@ -82,28 +82,55 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           <div className="flex items-center gap-2">
             <img src={monarkLogoHorizontal} alt="MonArk" className="h-7 object-contain" />
           </div>
-          <div className="hidden sm:flex items-center gap-8">
-            <a
-              href="#how-it-works"
-              className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide"
-            >
-              How It Works
-            </a>
-            <a
-              href="#pricing"
-              className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide"
-            >
-              Pricing
-            </a>
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#how-it-works" className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide">How It Works</a>
+            <a href="#pricing" className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide">Pricing</a>
           </div>
           <button
             onClick={() => openWaitlist()}
-            className="text-sm font-body font-medium tracking-[0.08em] uppercase px-5 py-2 rounded-full border border-primary bg-transparent text-primary hover:bg-primary/10 transition-all duration-300"
+            className="hidden md:block text-sm font-body font-medium tracking-[0.08em] uppercase px-5 py-2 rounded-full border border-primary bg-transparent text-primary hover:bg-primary/10 transition-all duration-300"
           >
             Join the Waitlist
           </button>
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            className="md:hidden p-2 text-foreground"
+            aria-label="Open menu"
+          >
+            <Menu className="h-6 w-6" />
+          </button>
         </div>
       </nav>
+
+      {/* Mobile menu overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-[60] md:hidden">
+          <div className="absolute inset-0 bg-foreground/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
+          <motion.div
+            className="absolute inset-y-0 right-0 w-full max-w-xs bg-card border-l border-border shadow-[var(--shadow-elevated)] flex flex-col"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="flex items-center justify-between p-5 border-b border-border">
+              <img src={monarkLogoHorizontal} alt="MonArk" className="h-6 object-contain" />
+              <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-foreground" aria-label="Close menu">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="flex-1 flex flex-col gap-2 p-5">
+              <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-base font-body font-medium text-foreground py-3 border-b border-border/50 transition-colors hover:text-primary">How It Works</a>
+              <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="text-base font-body font-medium text-foreground py-3 border-b border-border/50 transition-colors hover:text-primary">Pricing</a>
+            </div>
+            <div className="p-5 border-t border-border">
+              <Button onClick={() => { setMobileMenuOpen(false); openWaitlist(); }} className="w-full py-3 text-sm tracking-[0.08em] font-body">
+                JOIN THE WAITLIST
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      )}
 
       {/* Subtle warm texture overlay */}
       <div className="fixed inset-0 opacity-[0.015] pointer-events-none z-0" style={{
