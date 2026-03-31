@@ -254,7 +254,74 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               )}
             </motion.div>
 
-            {/* Bio — Pull Quote Style */}
+            {/* Name Edit Section */}
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              custom={0.5}
+              variants={fadeUp}
+              className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-foreground font-serif text-lg">Name</h3>
+                {!editingName && (
+                  <button
+                    onClick={handleStartEditName}
+                    className="text-xs text-primary hover:text-primary/80 transition-colors font-caption tracking-wide uppercase"
+                  >
+                    Edit
+                  </button>
+                )}
+              </div>
+              {editingName ? (
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1 block font-caption">First Name</label>
+                      <input
+                        type="text"
+                        value={editFirstName}
+                        onChange={(e) => setEditFirstName(e.target.value)}
+                        maxLength={50}
+                        className="w-full px-3 py-2 text-sm bg-secondary/50 border border-border/60 rounded-xl text-foreground font-body focus:outline-none focus:border-primary/40 transition-colors"
+                        placeholder="First name"
+                        autoFocus
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1 block font-caption">Last Name</label>
+                      <input
+                        type="text"
+                        value={editLastName}
+                        onChange={(e) => setEditLastName(e.target.value)}
+                        maxLength={50}
+                        className="w-full px-3 py-2 text-sm bg-secondary/50 border border-border/60 rounded-xl text-foreground font-body focus:outline-none focus:border-primary/40 transition-colors"
+                        placeholder="Last name"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleSaveName}
+                      className="flex-1 py-2 text-sm bg-primary text-primary-foreground font-medium rounded-xl transition-all hover:bg-primary/90 active:scale-[0.98]"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => setEditingName(false)}
+                      className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground rounded-xl transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-foreground font-body text-[15px]">
+                  {userName}
+                </p>
+              )}
+            </motion.div>
+
             {profile?.bio && (
               <motion.div
                 initial="hidden"
