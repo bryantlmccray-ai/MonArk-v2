@@ -12,6 +12,12 @@ const getTimeGreeting = (): string => {
   return 'Good night';
 };
 
+const getContextLine = (): string => {
+  const day = new Date().getDay();
+  if (day === 0) return 'Your weekly matches are here for you.';
+  return 'Date well. Date with intention.';
+};
+
 export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) => {
   const greeting = getTimeGreeting();
 
