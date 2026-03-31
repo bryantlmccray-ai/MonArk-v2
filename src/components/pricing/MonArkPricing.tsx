@@ -228,7 +228,6 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
                       That's less than one bad date
                     </p>
                   )}
-                  </p>
                 </div>
 
                 {/* Divider */}
