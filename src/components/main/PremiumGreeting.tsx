@@ -119,7 +119,6 @@ export const PremiumGreeting = ({ firstName }: PremiumGreetingProps) => {
     <div
       ref={ref}
       className="py-2"
-      style={{ opacity: 1, transform: 'translateY(0px)' }}
     >
       <motion.div
         initial={{ opacity: 0, y: 12 }}
