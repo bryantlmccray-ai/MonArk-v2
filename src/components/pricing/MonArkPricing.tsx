@@ -216,6 +216,13 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
                       </span>
                     </motion.div>
                   )}
+                  <p
+                    className={`text-xs italic font-editorial mt-2 ${
+                      isAccent ? "text-[hsl(30_40%_72%/0.7)]" : "text-primary/70"
+                    }`}
+                  >
+                    {isAccent ? "Only 8 spots remaining this month" : "Only 12 spots remaining this month"}
+                  </p>
                 </div>
 
                 {/* Divider */}
