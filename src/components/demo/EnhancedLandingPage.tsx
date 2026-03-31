@@ -47,6 +47,7 @@ const SectionDivider = () => (
 interface EnhancedLandingPageProps {
   onExitToApp?: () => void;
   onStartDemo?: () => void;
+  onSignIn?: () => void;
 }
 
 export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExitToApp, onStartDemo }) => {
