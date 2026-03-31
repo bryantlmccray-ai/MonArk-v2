@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface PremiumGreetingProps {
-  displayName: string;
+  firstName: string;
 }
 
 const getTimeGreeting = (): string => {
