@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -25,6 +26,7 @@ export const AuthPage: React.FC = () => {
   const [signupData, setSignupData] = useState<{email: string; password: string; name: string} | null>(null);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(() => localStorage.getItem('monark-remember-me') === 'true');
   const [resetEmail, setResetEmail] = useState('');
   const [resetSent, setResetSent] = useState(false);
@@ -304,16 +306,26 @@ export const AuthPage: React.FC = () => {
               <Label htmlFor="password" className="text-sm font-medium text-foreground">
                 Password
               </Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                className="rounded-xl h-11"
-                required
-                maxLength={128}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  className="rounded-xl h-11 pr-10"
+                  required
+                  maxLength={128}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
               {!isLogin && (
                 <p className="text-xs text-muted-foreground">Must be at least 6 characters</p>
               )}
@@ -410,14 +422,6 @@ export const AuthPage: React.FC = () => {
               {isLogin ? 'Continue with Google' : 'Sign up with Google'}
             </Button>
 
-            <Button
-              onClick={enterDemoMode}
-              disabled={loading}
-              variant="outline"
-              className="w-full h-11 font-medium rounded-xl border-dashed border-primary/30 text-primary hover:bg-primary/5 transition-all duration-200"
-            >
-              🧪 Continue as Guest (Demo Mode)
-            </Button>
           </div>
         </div>
 
