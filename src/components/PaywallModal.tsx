@@ -102,7 +102,7 @@ export default function PaywallModal({
   currentTier = "free",
 }: PaywallModalProps) {
   const [isQuarterly, setIsQuarterly] = useState(false);
-  const [loading, setLoading] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
@@ -115,7 +115,7 @@ export default function PaywallModal({
     const tier = TIERS.find((t) => t.key === tierKey);
     if (!tier) return;
 
-    setLoading(tierKey);
+    setLoading(true);
 
     try {
       const rcApiKey = import.meta.env.VITE_REVENUECAT_API_KEY;
@@ -126,7 +126,7 @@ export default function PaywallModal({
           description: "Subscription system is not configured yet. Please contact support.",
           variant: "destructive",
         });
-        setLoading(null);
+        setLoading(false);
         return;
       }
 
@@ -157,7 +157,7 @@ export default function PaywallModal({
         variant: "destructive",
       });
     } finally {
-      setLoading(null);
+      setLoading(false);
     }
   };
 
@@ -291,7 +291,7 @@ export default function PaywallModal({
             const isCurrent = currentTier === tier.key;
             const price = isQuarterly ? tier.quarterlyPerMonth : tier.monthly;
             const isHighlighted = tier.highlighted;
-            const isLoading = loading === tier.key;
+            const isLoading = loading;
 
             return (
               <div
