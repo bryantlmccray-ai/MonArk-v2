@@ -25,7 +25,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { MonArkLogo } from '@/components/MonArkLogo';
-import { NotificationBell } from '@/components/NotificationBell';
+import NotificationBell from '@/components/NotificationBell';
 
 interface MainAppProps {
   initialTab?: string;
