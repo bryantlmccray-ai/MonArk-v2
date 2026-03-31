@@ -74,20 +74,20 @@ export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) =
   }, []);
 
   return (
-    <motion.div
-      ref={ref}
-      className="py-2"
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
-    >
-      <h1 className="font-editorial text-2xl md:text-3xl tracking-tight text-foreground">
-        {greeting}, <span className="text-primary">{firstName}</span>.
-      </h1>
-      <p className="text-sm font-caption text-muted-foreground mt-0.5 tracking-wide">
-        {contextLine}
-      </p>
-      <div className="mt-3 h-px bg-primary/30" />
-    </motion.div>
+    <div ref={ref} className="py-2">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+      >
+        <h1 className="font-editorial text-2xl md:text-3xl tracking-tight text-foreground">
+          {greeting}, <span className="text-primary">{firstName}</span>.
+        </h1>
+        <p className="text-sm font-caption text-muted-foreground mt-0.5 tracking-wide">
+          {contextLine}
+        </p>
+        <div className="mt-3 h-px bg-primary/30" />
+      </motion.div>
+    </div>
   );
 };
