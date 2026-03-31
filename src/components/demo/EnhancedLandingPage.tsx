@@ -293,6 +293,37 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           >
             No swipes. No chaos. Just connection that feels like alignment.
           </motion.p>
+
+          {/* Sample RIF Question Preview */}
+          <motion.div
+            className="mt-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+          >
+            <p className="text-center text-xs font-caption text-primary tracking-[0.2em] uppercase mb-6">Preview: Sample Questions</p>
+            <div className="flex flex-col gap-4 max-w-2xl mx-auto">
+              {[
+                { num: "Q3", text: "How do you typically show up in conflict — do you go quiet or speak up immediately?" },
+                { num: "Q7", text: "What does emotional safety look like to you in a relationship?" },
+                { num: "Q12", text: "Are you looking for something to build slowly, or do you know quickly when someone is right?" },
+              ].map((q, i) => (
+                <motion.div
+                  key={i}
+                  className="relative bg-card border border-border rounded-2xl p-5 sm:p-6 shadow-[var(--shadow-editorial)] hover:border-primary/30 transition-all duration-300"
+                  initial={{ opacity: 0, x: i % 2 === 0 ? -16 : 16 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.1 * i }}
+                >
+                  <span className="absolute top-4 right-5 text-[10px] font-caption text-primary/50 tracking-[0.15em] uppercase">{q.num}</span>
+                  <p className="font-editorial-headline text-base sm:text-lg text-foreground leading-relaxed pr-8 italic">"{q.text}"</p>
+                </motion.div>
+              ))}
+            </div>
+            <p className="text-center mt-5 text-xs text-muted-foreground font-body">15 thoughtful questions. 5 minutes. That's all it takes to unlock smarter matches.</p>
+          </motion.div>
         </div>
       </section>
 
