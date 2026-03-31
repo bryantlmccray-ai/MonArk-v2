@@ -207,7 +207,7 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
                         Billed ${quarterlyTotal.toFixed(2)} every 3 months
                       </p>
                       <span className="text-[11px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                        Save ${tier.quarterlySavings}
+                        Save 25%
                       </span>
                     </motion.div>
                   )}
