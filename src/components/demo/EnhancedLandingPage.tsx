@@ -407,19 +407,19 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
               {
-                quote: "MonArk felt like having a matchmaker in my pocket. Three matches a week, and every single one was someone I'd actually want to meet.",
-                name: "Marcus T.",
-                city: "Atlanta",
-              },
-              {
-                quote: "I deleted every other app the first week. The RIF compatibility insight before my date? Game changer. I finally felt prepared, not just hopeful.",
-                name: "Jasmine L.",
+                quote: "MonArk matched me with someone who actually gets me. Three dates in and I already feel more connection than a year of swiping.",
+                name: "DeShawn M.",
                 city: "Chicago",
               },
               {
-                quote: "The intentionality here is real. No ghosting culture, no games. I went on the best first date of my life within two weeks.",
-                name: "David R.",
-                city: "New York",
+                quote: "I deleted Hinge the same week I joined. The RIF compatibility insight before my date? Game changer.",
+                name: "Aaliyah R.",
+                city: "Chicago",
+              },
+              {
+                quote: "No more guessing games. MonArk introduced me to someone I actually want to call back.",
+                name: "Jordan P.",
+                city: "Chicago",
               },
             ].map((testimonial, idx) => (
               <motion.div
