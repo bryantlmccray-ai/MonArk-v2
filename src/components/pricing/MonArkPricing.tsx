@@ -79,55 +79,90 @@ const FoundingMembersBanner = ({ onSelectPlan }: { onSelectPlan?: (plan: string)
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7, ease: easeOut }}
-      className="bg-[hsl(230_18%_15%)] rounded-2xl p-8 md:p-10 shadow-[0_4px_24px_rgba(28,31,46,0.2)]"
+      className="relative bg-[hsl(230_18%_12%)] rounded-2xl p-8 md:p-12 shadow-[0_8px_40px_rgba(28,31,46,0.4)] border border-[hsl(30_40%_72%/0.15)] overflow-hidden"
     >
-      <div className="flex items-center gap-3 mb-3">
-        <h3 className="font-editorial text-2xl text-[hsl(30_40%_72%)]">
-          {FOUNDING.name}
-        </h3>
-        <Badge className="bg-[hsl(30_40%_72%)] text-[hsl(230_18%_15%)] text-[11px] tracking-[0.12em] uppercase px-2.5 py-0.5 rounded-full hover:bg-[hsl(30_40%_72%)]">
-          Invite Only
-        </Badge>
-      </div>
-      <p className="font-body text-sm leading-relaxed text-[hsl(240_6%_64%)] max-w-[540px] mb-6">
-        {FOUNDING.description}
-      </p>
+      {/* Decorative corner flourishes */}
+      <div className="absolute top-0 left-0 w-20 h-20 border-t border-l border-[hsl(30_40%_72%/0.2)] rounded-tl-2xl pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-20 h-20 border-b border-r border-[hsl(30_40%_72%/0.2)] rounded-br-2xl pointer-events-none" />
 
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 max-w-md">
-        <input
-          ref={inputRef}
-          type="text"
-          value={inviteCode}
-          onChange={(e) => { setInviteCode(e.target.value); setCodeState("idle"); }}
-          onKeyDown={(e) => e.key === "Enter" && handleVerify()}
-          placeholder="Enter invite code"
-          className="flex-1 px-4 py-3 rounded-full bg-[hsl(230_18%_20%)] border border-[hsl(30_40%_72%/0.3)] text-[hsl(30_40%_85%)] placeholder:text-[hsl(240_6%_50%)] font-body text-sm tracking-wide focus:outline-none focus:border-[hsl(30_40%_72%)] transition-colors"
-        />
-        <button
-          onClick={handleVerify}
-          className="py-3 px-7 rounded-full border-[1.5px] border-[hsl(30_40%_72%)] bg-transparent text-[hsl(30_40%_72%)] font-body text-sm font-medium tracking-[0.12em] uppercase transition-all duration-300 hover:bg-[hsl(30_40%_72%/0.1)] whitespace-nowrap"
+      {/* Subtle gold gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[hsl(30_40%_72%/0.04)] via-transparent to-[hsl(30_40%_72%/0.02)] pointer-events-none rounded-2xl" />
+
+      <div className="relative z-10">
+        {/* Exclusive label */}
+        <div className="flex items-center gap-2 mb-5">
+          <div className="h-px flex-1 max-w-[40px] bg-[hsl(30_40%_72%/0.3)]" />
+          <span className="text-[10px] font-caption text-[hsl(30_40%_72%/0.6)] tracking-[0.3em] uppercase">By Invitation Only</span>
+          <div className="h-px flex-1 max-w-[40px] bg-[hsl(30_40%_72%/0.3)]" />
+        </div>
+
+        <div className="flex items-center gap-3 mb-2">
+          <h3 className="font-editorial text-2xl sm:text-3xl text-[hsl(30_40%_82%)]">
+            {FOUNDING.name}
+          </h3>
+          <Badge className="bg-[hsl(30_40%_72%)] text-[hsl(230_18%_12%)] text-[10px] tracking-[0.15em] uppercase px-3 py-1 rounded-full hover:bg-[hsl(30_40%_72%)] font-medium">
+            ★ {FOUNDING.tagline}
+          </Badge>
+        </div>
+
+        <div className="flex items-baseline gap-2 mb-4">
+          <span className="font-editorial text-3xl text-[hsl(30_40%_72%)]">$35</span>
+          <span className="text-sm font-body text-[hsl(240_6%_55%)]">/mo — locked for life</span>
+        </div>
+
+        <p className="font-body text-sm leading-relaxed text-[hsl(240_6%_58%)] max-w-[520px] mb-8">
+          {FOUNDING.description}
+        </p>
+
+        {/* Divider */}
+        <div className="h-px bg-gradient-to-r from-transparent via-[hsl(30_40%_72%/0.2)] to-transparent mb-8" />
+
+        {/* Invite code input */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 max-w-md">
+          <input
+            ref={inputRef}
+            type="text"
+            value={inviteCode}
+            onChange={(e) => { setInviteCode(e.target.value); setCodeState("idle"); }}
+            onKeyDown={(e) => e.key === "Enter" && handleVerify()}
+            placeholder="Enter invite code"
+            className="flex-1 px-5 py-3.5 rounded-full bg-[hsl(230_18%_17%)] border border-[hsl(30_40%_72%/0.25)] text-[hsl(30_40%_85%)] placeholder:text-[hsl(240_6%_40%)] font-body text-sm tracking-[0.05em] focus:outline-none focus:border-[hsl(30_40%_72%/0.6)] focus:shadow-[0_0_20px_hsl(30_40%_72%/0.1)] transition-all duration-300"
+          />
+          <button
+            onClick={handleVerify}
+            className="py-3.5 px-8 rounded-full bg-[hsl(30_40%_72%/0.12)] border border-[hsl(30_40%_72%/0.5)] text-[hsl(30_40%_72%)] font-body text-xs font-medium tracking-[0.15em] uppercase transition-all duration-300 hover:bg-[hsl(30_40%_72%/0.2)] hover:border-[hsl(30_40%_72%)] hover:shadow-[0_0_24px_hsl(30_40%_72%/0.15)] whitespace-nowrap"
+          >
+            {FOUNDING.cta}
+          </button>
+        </div>
+
+        {/* Feedback messages */}
+        <motion.div
+          initial={false}
+          animate={{ height: codeState !== "idle" ? "auto" : 0, opacity: codeState !== "idle" ? 1 : 0 }}
+          className="overflow-hidden"
         >
-          {FOUNDING.cta}
-        </button>
+          {codeState === "valid" && (
+            <div className="mt-5 flex items-center gap-3 bg-[hsl(140_40%_20%/0.2)] border border-[hsl(140_40%_50%/0.2)] rounded-xl px-5 py-3.5">
+              <span className="text-[hsl(30_40%_72%)]">★</span>
+              <p className="text-sm font-editorial text-[hsl(140_40%_70%)] italic">
+                Welcome, Founding Member. Redirecting you now...
+              </p>
+            </div>
+          )}
+          {codeState === "invalid" && (
+            <div className="mt-5 bg-[hsl(230_18%_17%)] border border-[hsl(30_40%_72%/0.15)] rounded-xl px-5 py-3.5">
+              <p className="text-sm font-body text-[hsl(240_6%_62%)] leading-relaxed">
+                This tier is by invitation only.{' '}
+                <button onClick={() => onSelectPlan?.("Waitlist")} className="text-[hsl(30_40%_72%)] underline underline-offset-4 decoration-[hsl(30_40%_72%/0.4)] hover:decoration-[hsl(30_40%_72%)] hover:text-[hsl(30_40%_85%)] transition-all">
+                  Join the waitlist
+                </button>{' '}
+                to be considered.
+              </p>
+            </div>
+          )}
+        </motion.div>
       </div>
-
-      {/* Feedback messages */}
-      <motion.div
-        initial={false}
-        animate={{ height: codeState !== "idle" ? "auto" : 0, opacity: codeState !== "idle" ? 1 : 0 }}
-        className="overflow-hidden"
-      >
-        {codeState === "valid" && (
-          <p className="mt-4 text-sm font-body text-green-400 tracking-wide">
-            ✦ Welcome, Founding Member. Redirecting you now…
-          </p>
-        )}
-        {codeState === "invalid" && (
-          <p className="mt-4 text-sm font-body text-[hsl(30_40%_72%)] tracking-wide leading-relaxed">
-            This tier is by invitation only. <button onClick={() => onSelectPlan?.("Waitlist")} className="underline underline-offset-4 hover:text-white transition-colors">Join the waitlist</button> to be considered.
-          </p>
-        )}
-      </motion.div>
     </motion.div>
   );
 };
