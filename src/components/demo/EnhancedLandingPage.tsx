@@ -235,7 +235,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       </section>
 
       {/* ═══════════ HOW IT WORKS ═══════════ */}
-      <section className="py-16 bg-background">
+      <section id="how-it-works" className="py-16 bg-background scroll-mt-16">
         <div className="max-w-4xl mx-auto px-5">
           <motion.div
             className="text-center mb-10"
