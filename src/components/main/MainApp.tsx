@@ -46,9 +46,9 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   const { user } = useAuth();
   const { profile } = useProfile();
   
-  const displayName = profile?.bio?.split(' ')[0] || user?.user_metadata?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'Member';
+  const firstName = user?.user_metadata?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'there';
   const avatarUrl = profile?.photos?.[0] || user?.user_metadata?.avatar_url || null;
-  const initials = displayName.slice(0, 2).toUpperCase();
+  const initials = firstName.slice(0, 2).toUpperCase();
   
   
   // Email notification triggers
