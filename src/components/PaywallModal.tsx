@@ -115,7 +115,7 @@ export default function PaywallModal({
     const tier = TIERS.find((t) => t.key === tierKey);
     if (!tier) return;
 
-    setLoading(tierKey);
+    setLoading(true);
 
     try {
       const rcApiKey = import.meta.env.VITE_REVENUECAT_API_KEY;
