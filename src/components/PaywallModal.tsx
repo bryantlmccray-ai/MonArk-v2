@@ -117,8 +117,8 @@ export default function PaywallModal({
       return;
     }
 
-    const tier = TIERS.find((t) => t.key === tierKey);
-    if (!tier) return;
+    const tierConfig = tiers[tierKey];
+    if (!tierConfig) return;
 
     setLoading(true);
 
@@ -140,9 +140,7 @@ export default function PaywallModal({
       } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      const productId = isQuarterly
-        ? tier.productIdQuarterly
-        : tier.productIdMonthly;
+      const productId = tierConfig.productId;
 
       if (!productId) {
         throw new Error("Product not configured. Please contact support.");
