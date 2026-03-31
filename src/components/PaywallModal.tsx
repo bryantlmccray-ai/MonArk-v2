@@ -444,7 +444,7 @@ export default function PaywallModal({
                 </ul>
 
                 <button
-                  onClick={() => handlePurchase(tier.key)}
+                  onClick={() => handlePurchase(tierKey)}
                   disabled={isLoading || isCurrent}
                   style={{
                     width: "100%",
