@@ -126,7 +126,7 @@ export default function PaywallModal({
           description: "Subscription system is not configured yet. Please contact support.",
           variant: "destructive",
         });
-        setLoading(null);
+        setLoading(false);
         return;
       }
 
