@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface PremiumGreetingProps {
-  displayName: string;
+  firstName: string;
 }
 
 const getTimeGreeting = (): string => {
@@ -12,13 +12,13 @@ const getTimeGreeting = (): string => {
   return 'Good night';
 };
 
-export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ displayName }) => {
+export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) => {
   const greeting = getTimeGreeting();
 
   return (
     <div className="py-2">
       <h1 className="font-editorial text-2xl md:text-3xl tracking-tight text-foreground">
-        {greeting}, <span className="text-primary">{displayName}</span>
+        {greeting}, <span className="text-primary">{firstName}</span>.
       </h1>
       <p className="text-sm font-caption text-muted-foreground mt-0.5 tracking-wide">
         Date well. Date with intention.
