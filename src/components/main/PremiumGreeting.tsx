@@ -29,55 +29,42 @@ export const PremiumGreeting: React.FC<PremiumGreetingProps> = ({ firstName }) =
     const el = ref.current;
     if (!el) return;
 
-    const getScrollY = () =>
-      Math.max(
-        window.scrollY || 0,
-        window.pageYOffset || 0,
-        document.scrollingElement?.scrollTop || 0,
-        document.documentElement.scrollTop || 0,
-        document.body.scrollTop || 0,
-      );
-
-    const applyScrollStyles = () => {
-      const scrollY = getScrollY();
-      const isMobile = window.matchMedia('(max-width: 767px)').matches;
-
-      if (scrollY <= 0) {
-        el.style.opacity = '1';
-        el.style.transform = 'none';
-        el.style.willChange = 'auto';
-        return;
-      }
-
-      const fadeDistance = isMobile ? 120 : 180;
-      const fadeProgress = Math.min(1, scrollY / fadeDistance);
-      const easedFade = 1 - Math.pow(1 - fadeProgress, 2);
-
-      if (isMobile) {
-        el.style.opacity = String(1 - easedFade);
-        el.style.transform = 'none';
-        el.style.willChange = 'opacity';
-        return;
-      }
-
-      const slideProgress = Math.min(1, scrollY / 180);
-      const easedSlide = 1 - Math.pow(1 - slideProgress, 3);
-
-      el.style.opacity = String(1 - easedFade);
-      el.style.transform = `translateY(${-easedSlide * 24}px)`;
-      el.style.willChange = 'transform, opacity';
-    };
-
     const onScroll = () => {
       cancelAnimationFrame(rafId.current);
-      rafId.current = requestAnimationFrame(applyScrollStyles);
+      rafId.current = requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
+        const isMobile = window.matchMedia('(max-width: 767px)').matches;
+
+        if (scrollY <= 0) {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+          el.style.willChange = 'auto';
+          return;
+        }
+
+        if (isMobile) {
+          const fadeProgress = Math.min(1, scrollY / 120);
+          const easedFade = 1 - Math.pow(1 - fadeProgress, 2);
+
+          el.style.opacity = String(1 - easedFade);
+          el.style.transform = 'none';
+          el.style.willChange = 'opacity';
+          return;
+        }
+
+        const slideProgress = Math.min(1, scrollY / 180);
+        const fadeProgress = Math.min(1, scrollY / 180);
+        const easedSlide = 1 - Math.pow(1 - slideProgress, 3);
+        const easedFade = 1 - Math.pow(1 - fadeProgress, 2);
+
+        el.style.opacity = String(1 - easedFade);
+        el.style.transform = `translateY(${-easedSlide * 24}px)`;
+        el.style.willChange = 'transform, opacity';
+      });
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
-
-    if (getScrollY() > 0) {
-      applyScrollStyles();
-    }
+    onScroll();
 
     return () => {
       window.removeEventListener('scroll', onScroll);
