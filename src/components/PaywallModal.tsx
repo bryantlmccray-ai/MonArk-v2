@@ -128,7 +128,7 @@ export default function PaywallModal({
       if (!rcApiKey) {
         toast({
           title: "Payment not available",
-          description: "Subscription system is not configured yet. Please contact support.",
+          description: "API key not set. Configure it in Lovable project settings.",
           variant: "destructive",
         });
         setLoading(false);
