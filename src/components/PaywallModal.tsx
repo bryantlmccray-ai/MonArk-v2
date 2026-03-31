@@ -368,7 +368,7 @@ export default function PaywallModal({
                 {/* Price with animation */}
                 <AnimatePresence mode="wait">
                   <motion.div
-                    key={`${tier.key}-${isQuarterly}`}
+                    key={`${tierKey}-${isQuarterly}`}
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
