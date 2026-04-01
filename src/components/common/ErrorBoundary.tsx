@@ -26,25 +26,23 @@ export class ErrorBoundary extends Component<Props, State> {
     };
   }
 
-  static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError(error: Error): Partial<State> {
     return {
       hasError: true,
-      error,
-      retryCount: 0
+      error
     };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
     
-    this.setState({
-      error,
-      errorInfo
-    });
+    this.setState({ errorInfo });
 
-    // Auto-retry for network errors
-    if (this.isNetworkError(error) && this.state.retryCount < 3) {
-      this.scheduleRetry();
+    // For chunk/dynamic-import errors, auto-retry with page reload
+    if (this.isChunkLoadError(error) && this.state.retryCount < 3) {
+      this.scheduleRetry(true);
+    } else if (this.isNetworkError(error) && this.state.retryCount < 3) {
+      this.scheduleRetry(false);
     }
   }
 
@@ -54,22 +52,37 @@ export class ErrorBoundary extends Component<Props, State> {
     }
   }
 
-  private isNetworkError = (error: Error): boolean => {
-    return error.message?.includes('Failed to fetch') ||
-           error.message?.includes('NetworkError') ||
-           error.message?.includes('fetch');
+  private isChunkLoadError = (error: Error): boolean => {
+    const msg = error.message || '';
+    return msg.includes('Failed to fetch dynamically imported module') ||
+           msg.includes('Loading chunk') ||
+           msg.includes('Loading CSS chunk') ||
+           msg.includes('ChunkLoadError');
   };
 
-  private scheduleRetry = () => {
+  private isNetworkError = (error: Error): boolean => {
+    const msg = error.message || '';
+    return this.isChunkLoadError(error) ||
+           msg.includes('Failed to fetch') ||
+           msg.includes('NetworkError') ||
+           msg.includes('fetch');
+  };
+
+  private scheduleRetry = (isChunkError: boolean = false) => {
     const delay = Math.min(1000 * Math.pow(2, this.state.retryCount), 10000);
     
     this.retryTimeoutId = setTimeout(() => {
-      this.setState(prevState => ({
-        hasError: false,
-        retryCount: prevState.retryCount + 1,
-        error: undefined,
-        errorInfo: undefined
-      }));
+      if (isChunkError) {
+        // For dynamic import failures, a full reload is the reliable fix
+        window.location.reload();
+      } else {
+        this.setState(prevState => ({
+          hasError: false,
+          retryCount: prevState.retryCount + 1,
+          error: undefined,
+          errorInfo: undefined
+        }));
+      }
     }, delay);
   };
 
