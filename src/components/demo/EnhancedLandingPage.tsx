@@ -220,7 +220,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                     className="w-full py-5 text-sm tracking-[0.08em] font-body"
                     size="lg"
                   >
-                    REQUEST EARLY ACCESS
+                    JOIN THE WAITLIST
                   </Button>
 
                   <div className="mt-5 pt-4 border-t border-border">
