@@ -154,7 +154,11 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
       <div className="min-h-screen bg-background relative">
         {/* Mobile header with logo + avatar */}
         <header className="sticky top-0 z-40 flex items-center justify-between px-5 py-3 bg-card/98 backdrop-blur-2xl border-b border-border/50" style={{ boxShadow: '0 1px 12px rgba(90, 70, 50, 0.06)' }}>
-          <MonArkLogo size="sm" />
+          <img 
+            src="/lovable-uploads/e11ccc80-2237-4aac-b579-dccb89f8d727.png" 
+            alt="MonArk" 
+            className="h-8 w-8 rounded-full object-contain"
+          />
           <div className="flex items-center gap-3">
             {user && <NotificationBell userId={user.id} />}
             <button onClick={() => handleTabChange('profile')} aria-label="Profile" className="group">
