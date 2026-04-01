@@ -305,9 +305,9 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <p className="text-center text-xs font-caption text-primary tracking-[0.2em] uppercase mb-8">What your weekly matches look like</p>
             <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
               {[
-                { initials: "J", name: "Jordan", age: 28, location: "Brooklyn, NY", score: 92, reason: "You both value slow-building trust and direct communication.", interests: ["Live Jazz", "Cooking", "Hiking"] },
-                { initials: "M", name: "Marcus", age: 31, location: "Manhattan, NY", score: 85, reason: "Complementary conflict styles—he speaks up, you reflect first.", interests: ["Poetry", "Yoga", "Art Museums"] },
-                { initials: "P", name: "Priya", age: 27, location: "Park Slope, NY", score: 78, reason: "Shared pacing preference and aligned relationship goals.", interests: ["Film", "Running", "Travel"] },
+                { initials: "J", name: "Jordan", age: 28, location: "Brooklyn, NY", score: 92, tagline: "Strong communicator · Values depth", reason: "You both value slow-building trust and direct communication.", interests: ["Live Jazz", "Cooking", "Hiking"] },
+                { initials: "M", name: "Marcus", age: 31, location: "Manhattan, NY", score: 85, tagline: "Intentional dater · Emotionally present", reason: "Complementary conflict styles—he speaks up, you reflect first.", interests: ["Poetry", "Yoga", "Art Museums"] },
+                { initials: "P", name: "Priya", age: 27, location: "Park Slope, NY", score: 78, tagline: "Curious spirit · Steady pacing", reason: "Shared pacing preference and aligned relationship goals.", interests: ["Film", "Running", "Travel"] },
               ].map((card, i) => (
                 <motion.div
                   key={i}
@@ -328,6 +328,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                         <MapPin className="w-3 h-3" />
                         {card.location}
                       </span>
+                      <span className="text-[11px] text-primary/80 mt-0.5 block">{card.tagline}</span>
                     </div>
                   </div>
 
