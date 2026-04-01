@@ -26,11 +26,7 @@ import igTestimonials from '@/assets/instagram/ig-testimonials.png';
 const instagramImages = [
   igWomanPortrait,
   igArtOfDating,
-  igManSuit,
-  igOurPromise,
-  igWelcomeCircle,
   igChampagne,
-  igSunglasses,
   igTestimonials,
 ];
 
