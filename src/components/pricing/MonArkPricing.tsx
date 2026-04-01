@@ -54,7 +54,7 @@ const FOUNDING = {
   tagline: "First 200 Signups",
   description:
     "Lock in lifetime pricing and get full access to every Inner Ark feature as we roll them out. Founding Members shape the platform from day one — with a direct line to the team building MonArk.",
-  cta: "Claim Founding Access",
+  cta: "JOIN THE WAITLIST",
 };
 
 const VALID_INVITE_CODE = "MONARK2026";
