@@ -420,20 +420,18 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
-      {/* ═══════════ TEAM ═══════════ */}
+      {/* ═══════════ BUILT WITH CARE ═══════════ */}
       <section className="py-16 bg-background">
-        <div className="max-w-4xl mx-auto px-5">
+        <div className="max-w-3xl mx-auto px-5">
           <motion.div className="text-center mb-10" initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
-            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-2">Meet the Team</h2>
-            <p className="text-xs sm:text-sm font-caption text-muted-foreground tracking-[0.15em] uppercase">The people behind intentional dating</p>
+            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-2">Built with Care</h2>
             <SectionDivider />
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-10">
             {[
-              { img: sheezaPortrait, name: "Sheeza Anwar", role: "Internal Systems & Automation Engineer", bio: "Focused on building reliable tools that help teams work better." },
-              { img: suryaPortrait, name: "Surya Teja Nulu", role: "Founding Mobile & AI Engineer", bio: "AI engineer and computer science graduate student. Focused on building practical, scalable AI systems." },
-              { img: gracePortrait, name: "Grace O'Malley", role: "Relationship Therapist & Clinical Advisor", bio: "Relationship therapist and licensed clinical social worker. Advises on emotional health and relationship dynamics." },
+              { img: founderPortrait, name: "Bryant McCray", role: "CEO & Founder", bio: "" },
+              { img: gracePortrait, name: "Grace O'Malley", role: "Relationship Therapist & Clinical Advisor", bio: "Licensed clinical social worker advising on emotional health and relationship dynamics." },
             ].map((member, i) => (
               <motion.div
                 key={member.name}
@@ -462,9 +460,11 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   <h3 className="font-editorial-headline text-lg text-foreground">{member.name}</h3>
                   <p className="text-xs text-primary font-caption tracking-[0.1em] uppercase mt-0.5">{member.role}</p>
                 </div>
-                <p className="text-sm text-muted-foreground font-body leading-relaxed px-2">
-                  {member.bio}
-                </p>
+                {member.bio && (
+                  <p className="text-sm text-muted-foreground font-body leading-relaxed px-2">
+                    {member.bio}
+                  </p>
+                )}
               </motion.div>
             ))}
           </div>
