@@ -632,6 +632,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           </div>
         </div>
       </footer>
+      </div>
     </div>
   );
 };
