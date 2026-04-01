@@ -68,16 +68,21 @@ export class ErrorBoundary extends Component<Props, State> {
            msg.includes('fetch');
   };
 
-  private scheduleRetry = () => {
+  private scheduleRetry = (isChunkError: boolean = false) => {
     const delay = Math.min(1000 * Math.pow(2, this.state.retryCount), 10000);
     
     this.retryTimeoutId = setTimeout(() => {
-      this.setState(prevState => ({
-        hasError: false,
-        retryCount: prevState.retryCount + 1,
-        error: undefined,
-        errorInfo: undefined
-      }));
+      if (isChunkError) {
+        // For dynamic import failures, a full reload is the reliable fix
+        window.location.reload();
+      } else {
+        this.setState(prevState => ({
+          hasError: false,
+          retryCount: prevState.retryCount + 1,
+          error: undefined,
+          errorInfo: undefined
+        }));
+      }
     }, delay);
   };
 
