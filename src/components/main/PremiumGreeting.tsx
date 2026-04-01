@@ -46,6 +46,14 @@ export const PremiumGreeting = ({ firstName }: PremiumGreetingProps) => {
           .
         </motion.span>
       </motion.h1>
+      <motion.p
+        className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground/70 font-body mt-1"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.4, delay: 1.6, ease: 'easeOut' }}
+      >
+        Date well. Date with intention.
+      </motion.p>
     </motion.div>
   );
 };
