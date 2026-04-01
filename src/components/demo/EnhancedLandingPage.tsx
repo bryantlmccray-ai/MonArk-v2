@@ -328,6 +328,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                         <MapPin className="w-3 h-3" />
                         {card.location}
                       </span>
+                      <span className="text-[11px] text-primary/80 mt-0.5 block">{card.tagline}</span>
                     </div>
                   </div>
 
