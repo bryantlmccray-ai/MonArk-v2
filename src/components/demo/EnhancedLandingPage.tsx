@@ -77,6 +77,19 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
   return (
     <div className="min-h-screen bg-background relative">
+      {/* ═══════════ FIXED VIDEO BACKGROUND ═══════════ */}
+      <div className="fixed inset-0 z-0 overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+          src="/videos/hero-loop.mov"
+        />
+        <div className="absolute inset-0 bg-background/85 backdrop-blur-[2px]" />
+      </div>
+      <div className="relative z-10">
       {/* ═══════════ STICKY NAV ═══════════ */}
       <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
         <div className="max-w-5xl mx-auto px-5 sm:px-8 flex items-center justify-between h-14">
