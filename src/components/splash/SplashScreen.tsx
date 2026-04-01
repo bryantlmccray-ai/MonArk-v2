@@ -111,6 +111,13 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                     The art of intentional dating
                   </p>
 
+                  <p
+                    className="font-body text-sm tracking-[0.22em] uppercase"
+                    style={{ color: "rgba(255,255,255,0.55)", fontWeight: 300 }}
+                  >
+                    By invitation only. Join the waitlist.
+                  </p>
+
                   <motion.p
                     className="font-body text-xs tracking-[0.15em] uppercase"
                     style={{ color: "rgba(255,255,255,0.4)", fontWeight: 300 }}
