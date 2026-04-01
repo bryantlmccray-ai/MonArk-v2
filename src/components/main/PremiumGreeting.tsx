@@ -17,14 +17,35 @@ export const PremiumGreeting = ({ firstName }: PremiumGreetingProps) => {
 
   return (
     <motion.div
-      className="py-2"
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
+      className="sticky top-[53px] md:top-12 z-30 bg-background/95 backdrop-blur-xl border-b border-border/30 px-5 md:px-6 py-3"
+      initial={{ opacity: 0, y: -8, filter: 'blur(6px)' }}
+      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
     >
-      <h1 className="font-editorial text-2xl md:text-3xl tracking-tight text-foreground">
-        {greeting}, <span className="text-primary">{firstName}</span>.
-      </h1>
+      <motion.h1
+        className="font-editorial text-xl md:text-2xl tracking-tight text-foreground"
+        initial={{ opacity: 0, letterSpacing: '0.08em' }}
+        animate={{ opacity: 1, letterSpacing: '-0.01em' }}
+        transition={{ duration: 1.2, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {greeting},{' '}
+        <motion.span
+          className="text-primary"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.5, ease: 'easeOut' }}
+        >
+          {firstName}
+        </motion.span>
+        <motion.span
+          className="text-primary/60"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.9 }}
+        >
+          .
+        </motion.span>
+      </motion.h1>
     </motion.div>
   );
 };
