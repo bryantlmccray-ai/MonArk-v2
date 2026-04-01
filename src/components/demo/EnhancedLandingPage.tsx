@@ -305,9 +305,9 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <p className="text-center text-xs font-caption text-primary tracking-[0.2em] uppercase mb-8">What your weekly matches look like</p>
             <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
               {[
-                { initials: "AK", name: "Amara K.", age: 28, location: "Brooklyn, NY", score: 92, reason: "You both value slow-building trust and direct communication.", interests: ["Live Jazz", "Cooking", "Hiking"] },
-                { initials: "JL", name: "Jordan L.", age: 31, location: "Manhattan, NY", score: 85, reason: "Complementary conflict styles—she speaks up, you reflect first.", interests: ["Poetry", "Yoga", "Art Museums"] },
-                { initials: "SW", name: "Sofia W.", age: 27, location: "Park Slope, NY", score: 78, reason: "Shared pacing preference and aligned relationship goals.", interests: ["Film", "Running", "Travel"] },
+                { initials: "J", name: "Jordan", age: 28, location: "Brooklyn, NY", score: 92, reason: "You both value slow-building trust and direct communication.", interests: ["Live Jazz", "Cooking", "Hiking"] },
+                { initials: "M", name: "Marcus", age: 31, location: "Manhattan, NY", score: 85, reason: "Complementary conflict styles—he speaks up, you reflect first.", interests: ["Poetry", "Yoga", "Art Museums"] },
+                { initials: "P", name: "Priya", age: 27, location: "Park Slope, NY", score: 78, reason: "Shared pacing preference and aligned relationship goals.", interests: ["Film", "Running", "Travel"] },
               ].map((card, i) => (
                 <motion.div
                   key={i}
