@@ -555,7 +555,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             transition={{ duration: 0.5 }}
           >
             <p className="text-xs font-caption text-primary tracking-[0.2em] uppercase mb-2">What Members Are Saying</p>
-            <p className="text-sm text-muted-foreground font-body mb-3">Join 100+ intentional daters already finding connection</p>
+            <p className="text-sm text-muted-foreground font-body mb-3">Voices from the waitlist.</p>
             <SectionDivider />
           </motion.div>
 
