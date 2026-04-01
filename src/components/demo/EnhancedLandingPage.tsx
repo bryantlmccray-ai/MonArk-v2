@@ -294,6 +294,76 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             No swipes. No chaos. Just connection that feels like alignment.
           </motion.p>
 
+          {/* Match Profile Card Mockups */}
+          <motion.div
+            className="mt-14 mb-14"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <p className="text-center text-xs font-caption text-primary tracking-[0.2em] uppercase mb-8">What your weekly matches look like</p>
+            <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+              {[
+                { initials: "AK", name: "Amara K.", age: 28, location: "Brooklyn, NY", score: 92, reason: "You both value slow-building trust and direct communication.", interests: ["Live Jazz", "Cooking", "Hiking"] },
+                { initials: "JL", name: "Jordan L.", age: 31, location: "Manhattan, NY", score: 85, reason: "Complementary conflict styles—she speaks up, you reflect first.", interests: ["Poetry", "Yoga", "Art Museums"] },
+                { initials: "SW", name: "Sofia W.", age: 27, location: "Park Slope, NY", score: 78, reason: "Shared pacing preference and aligned relationship goals.", interests: ["Film", "Running", "Travel"] },
+              ].map((card, i) => (
+                <motion.div
+                  key={i}
+                  className="bg-[hsl(230_18%_15%)] border border-[hsl(30_40%_72%/0.15)] rounded-2xl p-5 shadow-[0_4px_24px_rgba(28,31,46,0.3)] hover:border-[hsl(30_40%_72%/0.35)] transition-all duration-300"
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.12 * i }}
+                >
+                  {/* Avatar + Name */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-primary-foreground font-serif text-sm font-semibold shrink-0">
+                      {card.initials}
+                    </div>
+                    <div>
+                      <h4 className="font-serif text-lg text-[hsl(40_30%_88%)] leading-tight">{card.name}, {card.age}</h4>
+                      <span className="text-[11px] text-[hsl(30_40%_72%/0.7)] flex items-center gap-1">
+                        <MapPin className="w-3 h-3" />
+                        {card.location}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* RIF Bar */}
+                  <div className="mb-4">
+                    <div className="flex justify-between mb-1.5">
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-[hsl(30_40%_72%/0.5)]">RIF Compatibility</span>
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-primary">{card.score}%</span>
+                    </div>
+                    <div className="h-1 rounded-full bg-[hsl(230_18%_22%)]">
+                      <div
+                        className="h-1 rounded-full bg-gradient-to-r from-primary to-accent"
+                        style={{ width: `${card.score}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Interests */}
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {card.interests.map((interest, idx) => (
+                      <span key={idx} className="text-[11px] px-2.5 py-1 rounded-full border border-[hsl(30_40%_72%/0.2)] text-[hsl(30_40%_72%/0.8)] bg-[hsl(30_40%_72%/0.05)]">
+                        {interest}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Match Reason */}
+                  <div className="bg-[hsl(230_18%_12%)] rounded-xl p-3 border-l-[3px] border-primary">
+                    <div className="text-[9px] uppercase tracking-[0.2em] text-[hsl(30_40%_72%/0.4)] mb-1">Why we curated this match</div>
+                    <p className="text-[12px] text-[hsl(40_30%_88%/0.85)] leading-relaxed italic font-light">"{card.reason}"</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
           {/* Sample RIF Question Preview */}
           <motion.div
             className="mt-12"
