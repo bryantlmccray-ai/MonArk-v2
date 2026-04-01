@@ -317,6 +317,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.12 * i }}
                 >
+                  {/* Badge */}
+                  <div className="mb-3">
+                    <span className="inline-block text-[10px] uppercase tracking-[0.2em] text-primary bg-primary/10 border border-primary/20 rounded-full px-3 py-1">✦ Your Match</span>
+                  </div>
                   {/* Avatar + Name */}
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-primary-foreground font-serif text-sm font-semibold shrink-0">
