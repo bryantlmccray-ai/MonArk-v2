@@ -302,7 +302,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <p className="text-center text-xs font-caption text-primary tracking-[0.2em] uppercase mb-8">What your weekly matches look like</p>
+            <p className="text-center text-xs font-caption text-primary tracking-[0.2em] uppercase mb-8">Every Sunday morning, your 3 arrive.</p>
             <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
               {[
                 { initials: "J", name: "Jordan", age: 28, location: "Brooklyn, NY", score: 92, tagline: "Strong communicator · Values depth", reason: "You both value slow-building trust and direct communication.", interests: ["Live Jazz", "Cooking", "Hiking"] },
