@@ -53,10 +53,20 @@ export class ErrorBoundary extends Component<Props, State> {
     }
   }
 
+  private isChunkLoadError = (error: Error): boolean => {
+    const msg = error.message || '';
+    return msg.includes('Failed to fetch dynamically imported module') ||
+           msg.includes('Loading chunk') ||
+           msg.includes('Loading CSS chunk') ||
+           msg.includes('ChunkLoadError');
+  };
+
   private isNetworkError = (error: Error): boolean => {
-    return error.message?.includes('Failed to fetch') ||
-           error.message?.includes('NetworkError') ||
-           error.message?.includes('fetch');
+    const msg = error.message || '';
+    return this.isChunkLoadError(error) ||
+           msg.includes('Failed to fetch') ||
+           msg.includes('NetworkError') ||
+           msg.includes('fetch');
   };
 
   private scheduleRetry = () => {
