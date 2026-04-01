@@ -36,14 +36,13 @@ export class ErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
     
-    this.setState({
-      error,
-      errorInfo
-    });
+    this.setState({ errorInfo });
 
-    // Auto-retry for network errors
-    if (this.isNetworkError(error) && this.state.retryCount < 3) {
-      this.scheduleRetry();
+    // For chunk/dynamic-import errors, auto-retry with page reload
+    if (this.isChunkLoadError(error) && this.state.retryCount < 3) {
+      this.scheduleRetry(true);
+    } else if (this.isNetworkError(error) && this.state.retryCount < 3) {
+      this.scheduleRetry(false);
     }
   }
 
