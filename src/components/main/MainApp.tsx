@@ -170,9 +170,10 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
           </div>
         </header>
 
+        {/* Sticky greeting below header */}
+        {activeTab === 'weekly' && <PremiumGreeting firstName={firstName} />}
+
         <div className="pb-24 px-5 pt-3 space-y-5">
-           {/* Time-based greeting */}
-           {activeTab === 'weekly' && <PremiumGreeting firstName={firstName} />}
 
            
            {/* RIF Beta Insights Card */}
