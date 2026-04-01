@@ -89,7 +89,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           <source src="/videos/hero-loop.mp4" type="video/mp4" />
           <source src="/videos/hero-loop.mov" type="video/quicktime" />
         </video>
-        <div className="absolute inset-0 bg-background/85 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-background/65" />
       </div>
       <div className="relative z-10">
       {/* ═══════════ STICKY NAV ═══════════ */}
