@@ -561,22 +561,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
-              {
-                quote: "MonArk matched me with someone who actually gets me. Three dates in and I already feel more connection than a year of swiping.",
-                name: "DeShawn M.",
-                city: "Chicago",
-              },
-              {
-                quote: "I deleted Hinge the same week I joined. The RIF compatibility insight before my date? Game changer.",
-                name: "Aaliyah R.",
-                city: "Chicago",
-              },
-              {
-                quote: "No more guessing games. MonArk introduced me to someone I actually want to call back.",
-                name: "Jordan P.",
-                city: "Chicago",
-              },
-            ].map((testimonial, idx) => (
+              "MonArk feels like comfort.",
+              "You're doing my investigation for me.",
+              "If someone is putting in the work versus checking a few boxes, that shows their intent.",
+            ].map((quote, idx) => (
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 20 }}
@@ -586,10 +574,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 className="bg-[hsl(230_18%_15%)] rounded-2xl p-7 flex flex-col justify-between shadow-[0_8px_32px_rgba(28,31,46,0.25)]"
               >
                 <p className="text-[hsl(240_6%_78%)] font-body text-sm leading-relaxed mb-6 italic">
-                  "{testimonial.quote}"
+                  "{quote}"
                 </p>
                 <p className="text-[hsl(30_40%_72%)] font-caption text-xs tracking-[0.12em] uppercase">
-                  — {testimonial.name}, {testimonial.city}
+                  — MonArk Waitlist Member
                 </p>
               </motion.div>
             ))}
