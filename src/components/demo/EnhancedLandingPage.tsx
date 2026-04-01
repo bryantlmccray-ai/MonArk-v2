@@ -85,10 +85,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           muted
           playsInline
           className="w-full h-full object-cover"
-          src="/videos/hero-loop.mp4"
         >
           <source src="/videos/hero-loop.mp4" type="video/mp4" />
           <source src="/videos/hero-loop.mov" type="video/quicktime" />
+        </video>
         <div className="absolute inset-0 bg-background/85 backdrop-blur-[2px]" />
       </div>
       <div className="relative z-10">
