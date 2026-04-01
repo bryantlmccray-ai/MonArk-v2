@@ -39,9 +39,11 @@ export const SafetySettingsModal: React.FC<SafetySettingsModalProps> = ({
       });
       
       try {
-        const contacts = Array.isArray(safetySettings.emergency_contacts) 
+        const raw = Array.isArray(safetySettings.emergency_contacts) 
           ? safetySettings.emergency_contacts as string[]
           : [];
+        // Filter out system/analytics flags that were stored in this field
+        const contacts = raw.filter(c => c && !c.startsWith('analytics_'));
         setEmergencyContacts(contacts);
       } catch (error) {
         console.error('Error parsing emergency contacts:', error);
