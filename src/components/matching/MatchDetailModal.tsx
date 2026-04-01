@@ -255,7 +255,7 @@ export const MatchDetailModal = ({
             </Button>
             <Button
               size="lg"
-              className="flex-1 h-14 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600"
+              className="flex-1 h-14"
               onClick={onLike}
               disabled={isProcessing}
             >
