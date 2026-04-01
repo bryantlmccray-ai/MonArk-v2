@@ -24,7 +24,7 @@ const TIERS = {
       "Basic RIF compatibility insights",
       "MonArk venue recommendations with matches",
     ],
-    cta: "Join The Ark",
+    cta: "JOIN THE WAITLIST",
     accent: false,
   },
   innerArk: {
@@ -44,7 +44,7 @@ const TIERS = {
       "Early access to new features",
       "Inner Ark badge — visible signal of seriousness",
     ],
-    cta: "Go Deeper",
+    cta: "JOIN THE WAITLIST",
     accent: true,
   },
 };
@@ -54,7 +54,7 @@ const FOUNDING = {
   tagline: "First 200 Signups",
   description:
     "Lock in lifetime pricing and get full access to every Inner Ark feature as we roll them out. Founding Members shape the platform from day one — with a direct line to the team building MonArk.",
-  cta: "Claim Founding Access",
+  cta: "JOIN THE WAITLIST",
 };
 
 const VALID_INVITE_CODE = "MONARK2026";
