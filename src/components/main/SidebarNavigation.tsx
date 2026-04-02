@@ -1,5 +1,6 @@
 import React from 'react';
 import { User, MessageCircle, BookOpen, Calendar, Share2, Crown } from 'lucide-react';
+import { useProfile } from '@/hooks/useProfile';
 import {
   Sidebar,
   SidebarContent,
@@ -19,6 +20,9 @@ interface SidebarNavigationProps {
 }
 
 export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab, onTabChange, onArkNavigation, onUpgrade }) => {
+  const { profile } = useProfile();
+  const displayName = profile?.first_name || 'Member';
+
   const tabs = [
     { id: 'weekly', icon: Calendar, label: 'Your 3 Options' },
     { id: 'matches', icon: MessageCircle, label: 'Connections' },
@@ -30,13 +34,14 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
   return (
     <Sidebar className="border-r border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border p-6">
-        <div className="flex items-center justify-center">
+        <div className="flex flex-col items-center gap-2">
           <img 
             src="/lovable-uploads/e11ccc80-2237-4aac-b579-dccb89f8d727.png" 
             alt="MonArk — Date well."
             className="h-12 w-12 object-contain rounded-full cursor-pointer hover:opacity-80 transition-opacity duration-300"
             onClick={() => onTabChange('profile')}
           />
+          <span className="text-xs font-medium text-sidebar-foreground/80 tracking-wide">{displayName}</span>
         </div>
       </SidebarHeader>
       
