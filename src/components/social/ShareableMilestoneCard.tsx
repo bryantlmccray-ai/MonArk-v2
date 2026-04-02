@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import monarkLogoHorizontal from '@/assets/monark-logo-horizontal.png';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Share2, Download, Check, Loader2 } from 'lucide-react';
+import { Share2, Download, Check, Loader2, Copy } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import html2canvas from 'html2canvas';
 
@@ -59,16 +60,32 @@ export const ShareableMilestoneCard: React.FC<ShareableMilestoneCardProps> = ({
   // Milestone-specific icons/symbols
   const getMilestoneSymbol = () => {
     switch (milestoneType) {
-      case 'first-match':
-        return '◇';
-      case 'first-date':
-        return '◈';
-      case 'connection':
-        return '◆';
-      case 'weekly-insight':
-        return '○';
-      default:
-        return '◇';
+      case 'first-match': return { symbol: '◇', label: 'First Match milestone' };
+      case 'first-date': return { symbol: '◈', label: 'First Date milestone' };
+      case 'connection': return { symbol: '◆', label: 'New Connection milestone' };
+      case 'weekly-insight': return { symbol: '○', label: 'Weekly Insight milestone' };
+      default: return { symbol: '◇', label: 'Milestone' };
+    }
+  };
+
+  // Copy image to clipboard
+  const handleCopyImage = async () => {
+    setIsSharing(true);
+    try {
+      const imageBlob = await generateImage();
+      if (!imageBlob) {
+        toast.error('Failed to generate image');
+        return;
+      }
+      await navigator.clipboard.write([
+        new ClipboardItem({ 'image/png': imageBlob })
+      ]);
+      toast.success('Image copied to clipboard!');
+    } catch (error) {
+      console.error('Copy error:', error);
+      toast.error('Copy not supported in this browser. Try downloading instead.');
+    } finally {
+      setIsSharing(false);
     }
   };
 
@@ -286,12 +303,21 @@ export const ShareableMilestoneCard: React.FC<ShareableMilestoneCardProps> = ({
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            <div 
-              className="text-3xl opacity-20"
-              style={{ color: colors.accent }}
-            >
-              {getMilestoneSymbol()}
-            </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div 
+                  className="text-3xl opacity-20 cursor-help"
+                  style={{ color: colors.accent }}
+                >
+                  {getMilestoneSymbol().symbol}
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="left" className="text-xs">
+                {getMilestoneSymbol().label}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           </motion.div>
 
           {/* Middle section - main content */}
@@ -414,6 +440,16 @@ export const ShareableMilestoneCard: React.FC<ShareableMilestoneCardProps> = ({
           >
             <Download className="h-4 w-4" />
             Download
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={handleCopyImage}
+            disabled={isSharing}
+            className="gap-2"
+          >
+            <Copy className="h-4 w-4" />
+            Copy Image
           </Button>
         </div>
       )}
