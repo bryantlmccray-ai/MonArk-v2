@@ -35,13 +35,20 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
     <Sidebar className="border-r border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border p-6">
         <div className="flex flex-col items-center gap-2">
-          <img 
-            src="/lovable-uploads/e11ccc80-2237-4aac-b579-dccb89f8d727.png" 
-            alt="MonArk — Date well."
-            className="h-12 w-12 object-contain rounded-full cursor-pointer hover:opacity-80 transition-opacity duration-300"
+          <div 
+            className="h-14 w-14 rounded-full ring-2 ring-primary cursor-pointer hover:opacity-80 transition-opacity duration-300 flex items-center justify-center"
             onClick={() => onTabChange('profile')}
-          />
+          >
+            <img 
+              src="/lovable-uploads/e11ccc80-2237-4aac-b579-dccb89f8d727.png" 
+              alt="MonArk — Date well."
+              className="h-12 w-12 object-contain rounded-full"
+            />
+          </div>
           <span className="text-xs font-medium text-sidebar-foreground/80 tracking-wide">{displayName}</span>
+          <span className="text-[10px] font-caption tracking-[0.12em] text-primary/70 bg-primary/10 px-2.5 py-0.5 rounded-full">
+            Free
+          </span>
         </div>
       </SidebarHeader>
       
