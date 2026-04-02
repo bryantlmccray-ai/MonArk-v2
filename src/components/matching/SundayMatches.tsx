@@ -489,8 +489,8 @@ export const SundayMatches = () => {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                         
                         {match.compatibility_score && (
-                          <span className="absolute top-2.5 right-2.5 bg-primary/85 text-primary-foreground px-2 py-0.5 rounded-full text-[9px] font-caption tracking-wider uppercase shadow-md">
-                            {Math.round(match.compatibility_score * 100)}%
+                          <span className="absolute top-2.5 right-2.5 bg-foreground/80 text-white backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-medium tracking-wide shadow-md">
+                            {Math.round(match.compatibility_score * 100)}% Match
                           </span>
                         )}
                         
