@@ -498,6 +498,7 @@ export const SundayMatches = () => {
                   </motion.div>
                 ))}
               </div>
+              </MatchRevealCeremony>
             </TabsContent>
 
             {/* Rhythm Plans Tab */}
