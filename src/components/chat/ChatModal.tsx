@@ -23,7 +23,7 @@ export const ChatModal: React.FC<ChatModalProps> = ({
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md h-[600px] p-0 bg-jet-black border-gray-800">
+      <DialogContent className="max-w-md h-[600px] p-0 bg-card border-border">
         <VisuallyHidden>
           <DialogTitle>Chat with {matchName}</DialogTitle>
           <DialogDescription>Real-time conversation with your match</DialogDescription>
