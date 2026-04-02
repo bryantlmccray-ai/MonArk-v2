@@ -217,41 +217,38 @@ export const WeeklyRhythmPlans = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background">
       {/* Hero Section */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="relative px-6 pt-8 pb-12"
+        className="relative px-6 pt-3 pb-4"
       >
-        {/* Ambient gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none" />
-        
-        <div className="relative max-w-2xl mx-auto text-center space-y-4">
+        <div className="relative max-w-2xl mx-auto text-center space-y-2">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wider uppercase mb-4"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wider uppercase"
           >
             <Calendar className="w-3 h-3" />
             Your Weekly Rhythm
           </motion.div>
 
           <motion.h1 
-            initial={{ y: 20, opacity: 0 }}
+            initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-3xl md:text-4xl font-bold text-foreground"
+            className="text-2xl font-bold text-foreground"
           >
             How are you feeling?
           </motion.h1>
           
           <motion.p 
-            initial={{ y: 20, opacity: 0 }}
+            initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-muted-foreground text-lg"
+            className="text-muted-foreground text-sm"
           >
             Pick your rhythm. We'll match you with people on the same wavelength.
           </motion.p>
@@ -259,7 +256,7 @@ export const WeeklyRhythmPlans = () => {
       </motion.div>
 
       {/* Rhythm Selector */}
-      <div className="px-6 pb-8">
+      <div className="px-6 pb-4">
         <div className="max-w-4xl mx-auto grid grid-cols-3 gap-4">
           {(['reset', 'spark', 'stretch'] as const).map((rhythm, idx) => {
             const config = rhythmConfig[rhythm];
