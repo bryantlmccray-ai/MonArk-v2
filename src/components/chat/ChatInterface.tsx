@@ -450,8 +450,21 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
+      {/* Plan a Date suggestion bar */}
+      <div className="px-4 pt-3 pb-0">
+        <button
+          onClick={() => {
+            onClose?.();
+            window.dispatchEvent(new CustomEvent('monark-navigate', { detail: { tab: 'dates' } }));
+          }}
+          className="w-full flex items-center justify-center gap-2 py-2 rounded-full border border-primary/20 bg-primary/[0.05] hover:bg-primary/10 transition-colors"
+        >
+          <span className="text-sm text-primary font-medium">💫 Plan a Date Together</span>
+        </button>
+      </div>
+
       {/* Message Input */}
-      <div className="p-4 border-t border-border bg-card">
+      <div className="p-4 border-t-0 bg-card">
         <div className="flex items-end space-x-2">
           <Textarea
             ref={textareaRef}
