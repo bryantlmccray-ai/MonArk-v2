@@ -96,6 +96,35 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
     toast({ title: 'Name updated' });
   }, [editFirstName, editLastName, updateProfile, toast]);
 
+  const genderOptions = ['Man', 'Woman', 'Nonbinary', 'Genderfluid', 'Agender', 'Demigender', 'Two-Spirit', 'Questioning', 'Custom'] as const;
+  const orientationOptions = ['Straight', 'Gay', 'Lesbian', 'Bisexual', 'Pansexual', 'Queer', 'Asexual', 'Demisexual', 'Questioning', 'Custom'] as const;
+  const prefOptions = ['Men', 'Women', 'Nonbinary', 'Everyone'];
+
+  const handleStartEditDetails = useCallback(() => {
+    setEditGender(profile?.gender_identity || '');
+    setEditGenderCustom(profile?.gender_identity_custom || '');
+    setEditOrientation(profile?.sexual_orientation || '');
+    setEditOrientationCustom(profile?.sexual_orientation_custom || '');
+    setEditPrefToSee(profile?.preference_to_see || []);
+    setEditingDetails(true);
+  }, [profile]);
+
+  const handleSaveDetails = useCallback(async () => {
+    await updateProfile({
+      gender_identity: (editGender || null) as any,
+      gender_identity_custom: editGender === 'Custom' ? editGenderCustom : null,
+      sexual_orientation: (editOrientation || null) as any,
+      sexual_orientation_custom: editOrientation === 'Custom' ? editOrientationCustom : null,
+      preference_to_see: editPrefToSee,
+    });
+    setEditingDetails(false);
+    toast({ title: 'Details updated' });
+  }, [editGender, editGenderCustom, editOrientation, editOrientationCustom, editPrefToSee, updateProfile, toast]);
+
+  const togglePref = useCallback((pref: string) => {
+    setEditPrefToSee(prev => prev.includes(pref) ? prev.filter(p => p !== pref) : [...prev, pref]);
+  }, []);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background p-6 flex items-center justify-center">
