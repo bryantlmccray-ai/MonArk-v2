@@ -82,7 +82,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
         <div className="max-w-5xl mx-auto px-5 sm:px-8 flex items-center justify-between h-14">
           <div className="flex items-center gap-2">
-            <img src={monarkLogoHorizontal} alt="MonArk" className="h-7 object-contain" />
+            <img src={monarkLogoHorizontal} alt="MonArk" className="h-10 object-contain" />
           </div>
           <div className="hidden md:flex items-center gap-8">
             <a href="#how-it-works" className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide">How It Works</a>
