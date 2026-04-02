@@ -1,19 +1,54 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCuratedMatches } from '@/hooks/useCuratedMatches';
 import { MatchProfileCard } from './MatchProfileCard';
 import { MutualMatchModal } from './MutualMatchModal';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
-import { Calendar, Sparkles } from 'lucide-react';
-import { formatDistanceToNow, format } from 'date-fns';
+import { Sparkles } from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const CountdownRing = ({ daysUntil, totalDays = 7 }: { daysUntil: number; totalDays?: number }) => {
+  const radius = 38;
+  const circumference = 2 * Math.PI * radius;
+  const progress = Math.max(0, Math.min(1, 1 - daysUntil / totalDays));
+  const strokeDashoffset = circumference * (1 - progress);
+
+  return (
+    <div className="relative w-24 h-24 mx-auto">
+      <svg className="w-24 h-24 -rotate-90" viewBox="0 0 88 88">
+        <circle cx="44" cy="44" r={radius} fill="none" stroke="hsl(var(--border))" strokeWidth="3" opacity="0.3" />
+        <circle
+          cx="44" cy="44" r={radius} fill="none"
+          stroke="hsl(var(--primary))" strokeWidth="3" strokeLinecap="round"
+          strokeDasharray={circumference} strokeDashoffset={strokeDashoffset}
+          className="transition-all duration-1000 ease-out"
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="font-serif text-2xl text-foreground leading-none">{daysUntil}</span>
+        <span className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground mt-0.5">
+          {daysUntil === 1 ? 'day' : 'days'}
+        </span>
+      </div>
+    </div>
+  );
+};
 
 export const CuratedMatches = () => {
   const { matches, loading, acceptMatch, passMatch, getNextRefreshDate, pendingCount } = useCuratedMatches();
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [showReveal, setShowReveal] = useState(false);
   const [mutualMatch, setMutualMatch] = useState<{
     matchName?: string;
     matchPhoto?: string;
     conversationId?: string;
   } | null>(null);
+
+  useEffect(() => {
+    if (matches.length > 0 && !showReveal) {
+      setShowReveal(true);
+    }
+  }, [matches.length]);
 
   const handleAccept = async (matchId: string) => {
     setProcessingId(matchId);
@@ -73,43 +108,65 @@ export const CuratedMatches = () => {
       {/* Matches or Empty State */}
       {matches.length === 0 ? (
         <div className="text-center py-12">
-          <div className="w-20 h-20 rounded-full border-2 border-primary/20 flex items-center justify-center mx-auto mb-6 bg-gradient-to-br from-primary/5 to-transparent animate-[gentle-pulse_2s_ease-in-out_infinite]">
-            <span className="font-serif text-3xl text-primary italic">3</span>
-          </div>
-          <h3 className="font-serif text-2xl text-foreground font-normal mb-2.5">
+          <CountdownRing daysUntil={daysUntil} />
+          <h3 className="font-serif text-2xl text-foreground font-normal mb-2.5 mt-6">
             {daysUntil <= 1 ? "Your 3 are being curated." : "Your next drop is coming."}
           </h3>
-          <p className="text-sm text-muted-foreground font-light leading-relaxed max-w-[280px] mx-auto mb-4">
+          <p className="text-sm text-muted-foreground font-light leading-relaxed max-w-[280px] mx-auto">
             {daysUntil <= 1
               ? "Hand-selected matches arrive tomorrow morning."
               : "Hand-selected just for you, every Sunday."}
           </p>
-          <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-card border border-border/60 shadow-sm">
-            <Calendar className="w-4 h-4 text-primary" />
-            <span className="font-serif text-lg text-foreground">{daysUntil}</span>
-            <span className="text-xs uppercase tracking-widest text-muted-foreground">{daysUntil === 1 ? 'day' : 'days'} to go</span>
-          </div>
         </div>
       ) : (
         <div className="flex flex-col gap-5">
-          {matches.map((match) => (
-            <MatchProfileCard
+          {/* Reveal banner */}
+          <AnimatePresence>
+            {showReveal && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+                className="text-center py-3 px-4 rounded-xl bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 border border-primary/15"
+              >
+                <p className="font-serif text-sm text-primary italic tracking-wide">
+                  ✦ Your new Ark has arrived
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Staggered card reveal */}
+          {matches.map((match, index) => (
+            <motion.div
               key={match.id}
-              match={match}
-              onAccept={() => handleAccept(match.id)}
-              onPass={() => handlePass(match.id)}
-              isProcessing={processingId === match.id}
-            />
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 + index * 0.15, ease: 'easeOut' }}
+            >
+              <MatchProfileCard
+                match={match}
+                onAccept={() => handleAccept(match.id)}
+                onPass={() => handlePass(match.id)}
+                isProcessing={processingId === match.id}
+              />
+            </motion.div>
           ))}
         </div>
       )}
 
       {/* Footer */}
       {matches.length > 0 && (
-        <p className="text-xs text-muted-foreground text-center leading-relaxed">
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.8 }}
+          className="text-xs text-muted-foreground text-center leading-relaxed"
+        >
           Three matches. One week. No inbox to sort.<br />
           <em className="text-primary">Date well.</em>
-        </p>
+        </motion.p>
       )}
 
       {/* Progress */}

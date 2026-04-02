@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { useCuratedMatches, CuratedMatch } from '@/hooks/useCuratedMatches';
 import { useDatingPool, DatingPoolMatch } from '@/hooks/useDatingPool';
 import { MatchDetailModal } from './MatchDetailModal';
@@ -400,9 +401,28 @@ export const SundayMatches = () => {
 
             {/* Curated Matches Tab */}
             <TabsContent value="curated" className="space-y-5">
+              {/* "Your new Ark" reveal banner */}
+              {displayCurated.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, ease: 'easeOut' }}
+                  className="text-center py-3 px-4 rounded-xl bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 border border-primary/15"
+                >
+                  <p className="font-serif text-sm text-primary italic tracking-wide">
+                    ✦ Your new Ark has arrived
+                  </p>
+                </motion.div>
+              )}
+
               {/* Featured Match - First one gets spotlight */}
               {displayCurated[0] && (
-                <div className="relative">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2, ease: 'easeOut' }}
+                  className="relative"
+                >
                   <Card 
                     className="relative overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-300 border-primary/15 bg-card group"
                     onClick={() => setSelectedMatch(displayCurated[0])}
@@ -444,43 +464,49 @@ export const SundayMatches = () => {
                       </div>
                     </div>
                   </Card>
-                </div>
+                </motion.div>
               )}
               
               {/* Other curated matches */}
               <div className="grid grid-cols-2 gap-3">
-                {displayCurated.slice(1).map((match) => (
-                  <Card 
+                {displayCurated.slice(1).map((match, index) => (
+                  <motion.div
                     key={match.id}
-                    className="overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-300 group"
-                    onClick={() => setSelectedMatch(match)}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.35 + index * 0.15, ease: 'easeOut' }}
                   >
-                    <div className="aspect-[3/4] relative">
-                      <ImageWithFallback
-                        src={match.photos?.[0] || '/placeholder.svg'}
-                        alt={match.name || 'Match'}
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-                      
-                      {match.compatibility_score && (
-                        <Badge className="absolute top-2.5 right-2.5 bg-primary/90 text-primary-foreground border-none text-xs shadow-lg">
-                          {Math.round(match.compatibility_score * 100)}%
-                        </Badge>
-                      )}
-                      
-                      <div className="absolute bottom-0 left-0 right-0 p-3.5">
-                        <p className="font-semibold text-white text-lg">
-                          {match.name}, {match.age}
-                        </p>
-                        <p className="text-white/70 text-xs flex items-center gap-1 mt-0.5">
-                          <MapPin className="w-3 h-3" />
-                          {match.location}
-                        </p>
+                    <Card 
+                      className="overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-300 group"
+                      onClick={() => setSelectedMatch(match)}
+                    >
+                      <div className="aspect-[3/4] relative">
+                        <ImageWithFallback
+                          src={match.photos?.[0] || '/placeholder.svg'}
+                          alt={match.name || 'Match'}
+                          loading="lazy"
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+                        
+                        {match.compatibility_score && (
+                          <Badge className="absolute top-2.5 right-2.5 bg-primary/90 text-primary-foreground border-none text-xs shadow-lg">
+                            {Math.round(match.compatibility_score * 100)}%
+                          </Badge>
+                        )}
+                        
+                        <div className="absolute bottom-0 left-0 right-0 p-3.5">
+                          <p className="font-semibold text-white text-lg">
+                            {match.name}, {match.age}
+                          </p>
+                          <p className="text-white/70 text-xs flex items-center gap-1 mt-0.5">
+                            <MapPin className="w-3 h-3" />
+                            {match.location}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </Card>
+                    </Card>
+                  </motion.div>
                 ))}
               </div>
             </TabsContent>
