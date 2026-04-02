@@ -44,6 +44,7 @@ export interface UserProfile {
   smoking_status: string | null;
   drinking_status: string | null;
   height_cm: number | null;
+  weight_lbs: number | null;
   onboarding_step: number | null;
   rif_quiz_answers: any | null;
   created_at: string;
