@@ -60,16 +60,32 @@ export const ShareableMilestoneCard: React.FC<ShareableMilestoneCardProps> = ({
   // Milestone-specific icons/symbols
   const getMilestoneSymbol = () => {
     switch (milestoneType) {
-      case 'first-match':
-        return '◇';
-      case 'first-date':
-        return '◈';
-      case 'connection':
-        return '◆';
-      case 'weekly-insight':
-        return '○';
-      default:
-        return '◇';
+      case 'first-match': return { symbol: '◇', label: 'First Match milestone' };
+      case 'first-date': return { symbol: '◈', label: 'First Date milestone' };
+      case 'connection': return { symbol: '◆', label: 'New Connection milestone' };
+      case 'weekly-insight': return { symbol: '○', label: 'Weekly Insight milestone' };
+      default: return { symbol: '◇', label: 'Milestone' };
+    }
+  };
+
+  // Copy image to clipboard
+  const handleCopyImage = async () => {
+    setIsSharing(true);
+    try {
+      const imageBlob = await generateImage();
+      if (!imageBlob) {
+        toast.error('Failed to generate image');
+        return;
+      }
+      await navigator.clipboard.write([
+        new ClipboardItem({ 'image/png': imageBlob })
+      ]);
+      toast.success('Image copied to clipboard!');
+    } catch (error) {
+      console.error('Copy error:', error);
+      toast.error('Copy not supported in this browser. Try downloading instead.');
+    } finally {
+      setIsSharing(false);
     }
   };
 
