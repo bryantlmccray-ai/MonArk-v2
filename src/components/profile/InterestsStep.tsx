@@ -15,7 +15,7 @@ interface InterestsStepProps {
   onCancelEdit?: () => void;
 }
 
-export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, stepRequirement, onSaveAndReturn }) => {
+export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, stepRequirement, onSaveAndReturn, onCancelEdit }) => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>(profileData.interests);
 
   const interestCategories = {
