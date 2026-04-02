@@ -84,12 +84,15 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
             </motion.div>
           ))}
 
-          {/* Bottom gradient for text legibility */}
+          {/* Uniform dark scrim for text legibility on ALL images */}
+          <div className="absolute inset-0 pointer-events-none bg-black/40" />
+
+          {/* Bottom gradient for extra text legibility */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.15) 100%)",
+                "linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 40%, transparent 100%)",
             }}
           />
 
