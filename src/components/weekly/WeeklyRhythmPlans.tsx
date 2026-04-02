@@ -542,7 +542,7 @@ export const WeeklyRhythmPlans = () => {
             </CardContent>
           </Card>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };
