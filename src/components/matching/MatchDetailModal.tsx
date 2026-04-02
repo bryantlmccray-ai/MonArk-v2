@@ -250,8 +250,11 @@ export const MatchDetailModal = ({
           </div>
         </ScrollArea>
 
+        {/* Scroll fade indicator */}
+        <div className="pointer-events-none h-6 -mt-6 relative z-10 bg-gradient-to-t from-card to-transparent flex-shrink-0" />
+
         {/* Action buttons - sticky footer */}
-        <div className="p-4 border-t border-border bg-card space-y-2">
+        <div className="flex-shrink-0 p-4 border-t border-border bg-card space-y-2">
           <div className="flex gap-3">
             <Button
               variant="outline"
