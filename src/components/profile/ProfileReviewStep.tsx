@@ -73,7 +73,9 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
                 ))}
               </div>
             ) : (
-              <div className="text-muted-foreground text-sm italic">No photos added yet</div>
+              <button onClick={() => onEdit(2)} className="text-primary text-sm flex items-center gap-1 hover:underline">
+                Add photos to stand out <ArrowRight size={14} />
+              </button>
             )}
           </div>
 
