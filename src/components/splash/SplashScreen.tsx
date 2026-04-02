@@ -24,7 +24,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   };
 
   useEffect(() => {
-    if (sessionStorage.getItem("monark-splash-seen-v8")) {
+    if (sessionStorage.getItem("monark-splash-seen-v9")) {
       onComplete();
       return;
     }
