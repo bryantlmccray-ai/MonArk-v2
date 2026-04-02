@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { X, Save } from 'lucide-react';
 import { ProfileData } from './ProfileCreation';
@@ -17,6 +17,26 @@ interface BioStepProps {
 
 export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, onCancel, stepRequirement, onSaveAndReturn }) => {
   const [bio, setBio] = useState(profileData.bio);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Escape key closes/goes back
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        if (onSaveAndReturn) {
+          onCancel?.();
+        } else if (onBack) {
+          onBack();
+        } else {
+          onCancel?.();
+        }
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown, true);
+    return () => document.removeEventListener('keydown', handleKeyDown, true);
+  }, [onCancel, onBack, onSaveAndReturn]);
 
   const prompts = [
     "I get most excited talking about...",
@@ -26,7 +46,8 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
   ];
 
   const handlePromptClick = (prompt: string) => {
-    const newBio = bio + (bio ? ' ' : '') + prompt;
+    // Replace existing content if bio already has text, otherwise set it
+    const newBio = bio.trim() ? prompt : prompt;
     setBio(newBio);
     updateData({ bio: newBio });
   };
@@ -37,7 +58,7 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
   };
 
   return (
-    <div className="relative bg-background p-6 flex flex-col pb-32">
+    <div ref={containerRef} className="relative bg-background p-6 flex flex-col pb-32">
       {onCancel && !onSaveAndReturn && (
         <div className="absolute top-6 right-6 z-10">
           <button
