@@ -213,7 +213,7 @@ export const MatchProfileCard = ({ match, onAccept, onPass, isProcessing }: Matc
         compatibility_score: compatibility_score,
         match_reason: match_reason,
       }}
-      onAccept={() => { onAccept(); setShowDetail(false); }}
+      onLike={() => { onAccept(); setShowDetail(false); }}
       onPass={() => { onPass(); setShowDetail(false); }}
     />
     </>
