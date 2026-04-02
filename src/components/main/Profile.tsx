@@ -39,6 +39,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
   const [editPrefToSee, setEditPrefToSee] = useState<string[]>([]);
   const [editAge, setEditAge] = useState('');
   const [editHeightText, setEditHeightText] = useState('');
+  const [editWeight, setEditWeight] = useState('');
   const { user, signOut } = useAuth();
   const { profile, loading, updateProfile } = useProfile();
   const { clearLocation } = useLocation();

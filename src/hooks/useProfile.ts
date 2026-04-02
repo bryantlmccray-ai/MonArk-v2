@@ -86,6 +86,7 @@ const createDemoProfile = (userId: string): UserProfile => ({
   smoking_status: null,
   drinking_status: null,
   height_cm: null,
+  weight_lbs: null,
   onboarding_step: 0,
   rif_quiz_answers: null,
   created_at: new Date().toISOString(),
