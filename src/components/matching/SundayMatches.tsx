@@ -540,7 +540,7 @@ const MatchCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => voi
     >
       <div className="flex">
         <div className="w-32 h-40 flex-shrink-0 overflow-hidden">
-          <img
+          <ImageWithFallback
             src={match.photos?.[0] || '/placeholder.svg'}
             alt={match.name || 'Match'}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
