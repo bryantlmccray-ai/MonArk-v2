@@ -407,6 +407,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
               markStepCompleted('lifestyle', data);
               saveAndReturn(data);
             } : undefined}
+            onCancelEdit={editingFromReview ? cancelEditAndReturn : undefined}
           />
         );
       case 4:
