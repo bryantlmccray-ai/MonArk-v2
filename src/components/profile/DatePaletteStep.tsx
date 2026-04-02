@@ -21,7 +21,12 @@ export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, u
   const [activityType, setActivityType] = useState<string[]>(profileData.activityType);
 
   const vibeOptions = ['Romantic', 'Casual', 'Adventurous', 'Intellectual', 'Lively', 'Cozy'];
-  const budgetOptions = ['$', '$$', '$$$', '$$$$'];
+  const budgetOptions = [
+    { value: '$', label: '$', description: 'Under $50' },
+    { value: '$$', label: '$$', description: '$50 – $100' },
+    { value: '$$$', label: '$$$', description: '$100 – $250' },
+    { value: '$$$$', label: '$$$$', description: '$250+' },
+  ];
   
   const timeOptions = [
     { value: 'Morning', icon: Coffee, label: 'Morning' },
@@ -84,8 +89,9 @@ export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, u
           <h3 className="text-lg font-medium text-foreground">Budget</h3>
           <div className="flex gap-2">
             {budgetOptions.map((option) => (
-              <button key={option} onClick={() => setBudget(option)} className={`px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 ${budget === option ? selectedClass : unselectedClass}`}>
-                {option}
+              <button key={option.value} onClick={() => setBudget(option.value)} className={`px-5 py-3 rounded-lg text-center transition-all duration-200 ${budget === option.value ? selectedClass : unselectedClass}`}>
+                <span className="text-lg font-medium">{option.label}</span>
+                <span className="block text-xs mt-0.5 opacity-70">{option.description}</span>
               </button>
             ))}
           </div>
