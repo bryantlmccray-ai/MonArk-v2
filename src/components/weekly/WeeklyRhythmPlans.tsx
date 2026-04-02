@@ -256,7 +256,7 @@ export const WeeklyRhythmPlans = () => {
       </motion.div>
 
       {/* Rhythm Selector */}
-      <div className="px-6 pb-8">
+      <div className="px-6 pb-4">
         <div className="max-w-4xl mx-auto grid grid-cols-3 gap-4">
           {(['reset', 'spark', 'stretch'] as const).map((rhythm, idx) => {
             const config = rhythmConfig[rhythm];
