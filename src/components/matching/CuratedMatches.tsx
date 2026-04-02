@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useCuratedMatches } from '@/hooks/useCuratedMatches';
 import { MatchProfileCard } from './MatchProfileCard';
 import { MutualMatchModal } from './MutualMatchModal';
+import { MatchRevealCeremony } from './MatchRevealCeremony';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { Sparkles } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
