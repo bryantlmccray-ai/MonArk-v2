@@ -171,7 +171,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
         </header>
 
         {/* Sticky greeting below header */}
-        {activeTab === 'weekly' && <PremiumGreeting firstName={firstName} />}
+        <PremiumGreeting firstName={firstName} />
 
         <div className="flex-1 overflow-y-auto pb-24 px-5 pt-3 space-y-5">
 
