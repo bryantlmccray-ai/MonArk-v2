@@ -2280,6 +2280,7 @@ export type Database = {
           trial_started_at: string | null
           updated_at: string
           user_id: string
+          weight_lbs: number | null
         }
         Insert: {
           admin_notes?: string | null
@@ -2354,6 +2355,7 @@ export type Database = {
           trial_started_at?: string | null
           updated_at?: string
           user_id: string
+          weight_lbs?: number | null
         }
         Update: {
           admin_notes?: string | null
@@ -2428,6 +2430,7 @@ export type Database = {
           trial_started_at?: string | null
           updated_at?: string
           user_id?: string
+          weight_lbs?: number | null
         }
         Relationships: []
       }
@@ -3375,6 +3378,7 @@ export type Database = {
           trial_started_at: string | null
           updated_at: string
           user_id: string
+          weight_lbs: number | null
         }[]
         SetofOptions: {
           from: "*"
