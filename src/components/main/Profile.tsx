@@ -136,6 +136,11 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
       toast({ title: 'Enter height like 5\'10" or 6\'1"', variant: 'destructive' });
       return;
     }
+    const weightNum = editWeight.trim() ? parseInt(editWeight, 10) : null;
+    if (weightNum !== null && (isNaN(weightNum) || weightNum < 50 || weightNum > 800)) {
+      toast({ title: 'Please enter a valid weight (50–800 lbs)', variant: 'destructive' });
+      return;
+    }
     await updateProfile({
       gender_identity: (editGender || null) as any,
       gender_identity_custom: editGender === 'Custom' ? editGenderCustom : null,
@@ -144,10 +149,11 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
       preference_to_see: editPrefToSee,
       ...(ageNum !== null ? { age: ageNum } : {}),
       ...(heightCm !== null ? { height_cm: heightCm } : {}),
+      ...(weightNum !== null ? { weight_lbs: weightNum } : {}),
     });
     setEditingDetails(false);
     toast({ title: 'Details updated' });
-  }, [editGender, editGenderCustom, editOrientation, editOrientationCustom, editPrefToSee, editAge, editHeightText, updateProfile, toast]);
+  }, [editGender, editGenderCustom, editOrientation, editOrientationCustom, editPrefToSee, editAge, editHeightText, editWeight, updateProfile, toast]);
 
   const togglePref = useCallback((pref: string) => {
     setEditPrefToSee(prev => prev.includes(pref) ? prev.filter(p => p !== pref) : [...prev, pref]);
