@@ -652,8 +652,8 @@ const PoolCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => void
         </div>
 
         {match.compatibility_score && (
-          <span className="absolute top-2.5 right-2.5 bg-black/40 text-white/90 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-caption tracking-wider">
-            {Math.round(match.compatibility_score * 100)}%
+          <span className="absolute top-2.5 right-2.5 bg-foreground/80 text-white backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-medium tracking-wide">
+            {Math.round(match.compatibility_score * 100)}% Match
           </span>
         )}
 
