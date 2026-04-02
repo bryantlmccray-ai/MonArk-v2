@@ -219,41 +219,22 @@ export const WeeklyRhythmPlans = () => {
   return (
     <div className="bg-background">
       {/* Hero Section */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="relative px-6 pt-3 pb-4"
-      >
+      <div className="relative px-6 pt-3 pb-4">
         <div className="relative max-w-2xl mx-auto text-center space-y-2">
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.1 }}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wider uppercase"
-          >
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wider uppercase">
             <Calendar className="w-3 h-3" />
             Your Weekly Rhythm
-          </motion.div>
+          </div>
 
-          <motion.h1 
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-2xl font-bold text-foreground"
-          >
+          <h1 className="text-2xl font-bold text-foreground">
             How are you feeling?
-          </motion.h1>
+          </h1>
           
-          <motion.p 
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="text-muted-foreground text-sm"
-          >
+          <p className="text-muted-foreground text-sm">
             Pick your rhythm. We'll match you with people on the same wavelength.
-          </motion.p>
+          </p>
         </div>
-      </motion.div>
+      </div>
 
       {/* Rhythm Selector */}
       <div className="px-6 pb-4">
