@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useCuratedMatches, CuratedMatch } from '@/hooks/useCuratedMatches';
 import { useDatingPool, DatingPoolMatch } from '@/hooks/useDatingPool';
 import { MatchDetailModal } from './MatchDetailModal';
+import { MatchRevealCeremony } from './MatchRevealCeremony';
 import { MutualMatchModal } from './MutualMatchModal';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { Card, CardContent } from '@/components/ui/card';
