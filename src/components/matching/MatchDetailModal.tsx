@@ -139,8 +139,7 @@ export const MatchDetailModal = ({
             {/* Compatibility score */}
             {match.compatibility_score && (
               <div className="absolute top-4 right-4">
-                <Badge variant="secondary" className="bg-black/60 text-white border-none">
-                  <Target className="w-3 h-3 mr-1" />
+                <Badge variant="secondary" className="bg-foreground/80 text-white border-none backdrop-blur-md text-xs font-medium">
                   {Math.round(match.compatibility_score * 100)}% Match
                 </Badge>
               </div>
