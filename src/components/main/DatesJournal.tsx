@@ -61,7 +61,7 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                     ))}
                   </div>
                 </div>
-                {!date.hasReflection && onDateCompleted && (
+                {!date.hasReflection && onDateCompleted ? (
                   <Button
                     variant="outline"
                     size="sm"
@@ -71,7 +71,17 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                     <Sparkles className="w-3.5 h-3.5 mr-1.5" />
                     Add Reflection
                   </Button>
-                )}
+                ) : date.hasReflection ? (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onStartDebrief()}
+                    className="mt-3 w-full text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all h-9 text-xs"
+                  >
+                    <BookOpen className="w-3.5 h-3.5 mr-1.5" />
+                    View Reflection
+                  </Button>
+                ) : null}
               </div>
             ))
           ) : (
