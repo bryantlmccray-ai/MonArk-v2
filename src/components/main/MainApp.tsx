@@ -170,10 +170,12 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
           </div>
         </header>
 
-        {/* Sticky greeting below header */}
-        <PremiumGreeting firstName={firstName} />
-
-        <div className="flex-1 overflow-y-auto pb-24 px-5 pt-3 space-y-5">
+        <div className="flex-1 overflow-y-auto pb-24">
+          {/* Greeting pinned inside scroll area */}
+          <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-xl border-b border-border/30">
+            <PremiumGreeting firstName={firstName} />
+          </div>
+          <div className="px-5 pt-3 space-y-5">
 
            
            {/* RIF Beta Insights Card */}
