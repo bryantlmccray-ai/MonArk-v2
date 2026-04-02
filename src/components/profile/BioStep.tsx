@@ -58,7 +58,7 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
   };
 
   return (
-    <div className="relative bg-background p-6 flex flex-col pb-32">
+    <div ref={containerRef} className="relative bg-background p-6 flex flex-col pb-32">
       {onCancel && !onSaveAndReturn && (
         <div className="absolute top-6 right-6 z-10">
           <button
