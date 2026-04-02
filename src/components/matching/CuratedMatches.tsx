@@ -39,6 +39,10 @@ export const CuratedMatches = () => {
   const { matches, loading, acceptMatch, passMatch, getNextRefreshDate, pendingCount } = useCuratedMatches();
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [mutualMatch, setMutualMatch] = useState<{
+    matchName?: string;
+    matchPhoto?: string;
+    conversationId?: string;
+  } | null>(null);
 
   const handleAccept = async (matchId: string) => {
     setProcessingId(matchId);
