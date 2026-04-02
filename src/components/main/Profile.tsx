@@ -2,6 +2,7 @@
 import React, { useState, useCallback } from 'react';
 import { PhotoLightbox } from '@/components/ui/PhotoLightbox';
 import { Settings, ShieldCheck, Edit, LogOut, MapPin, TrendingUp, Calendar, Heart, Briefcase, GraduationCap, Ruler, Dumbbell, Cigarette, Wine, Sparkles, Camera, Palette, Clock, DollarSign, Eye } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ProfileCreation } from '../profile/ProfileCreation';
 import { LocationConsentModal } from '../location/LocationConsentModal';
 import { AnalyticsConsentModal } from '../analytics/AnalyticsConsentModal';
