@@ -1,9 +1,10 @@
-import React from 'react';
-import { Heart, X, MapPin, Briefcase, GraduationCap, Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Heart, X, MapPin, Briefcase, GraduationCap, Loader2, ChevronRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { MatchDetailModal } from './MatchDetailModal';
 
 interface MatchProfile {
   id: string;
@@ -56,13 +57,18 @@ function getInitials(name?: string) {
 }
 
 export const MatchProfileCard = ({ match, onAccept, onPass, isProcessing }: MatchProfileCardProps) => {
+  const [showDetail, setShowDetail] = useState(false);
   const { profile, compatibility_score, match_reason } = match;
   const mainPhoto = profile.photos?.[0];
   const name = profile.name || 'Your match';
   const status = match.status || 'pending';
 
   return (
-    <Card className="overflow-hidden border-border/40 bg-card shadow-sm hover:shadow-md transition-all duration-300">
+    <>
+    <Card
+      className="overflow-hidden border-border/40 bg-card shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-300 cursor-pointer group"
+      onClick={() => setShowDetail(true)}
+    >
       <CardContent className="p-6 space-y-4">
         {/* Header: avatar + name */}
         <div className="flex gap-3.5 items-center">
@@ -142,7 +148,7 @@ export const MatchProfileCard = ({ match, onAccept, onPass, isProcessing }: Matc
 
         {/* Action buttons — only for pending */}
         {status === 'pending' && (
-          <div className="flex gap-2.5 pt-1">
+          <div className="flex gap-2.5 pt-1" onClick={(e) => e.stopPropagation()}>
             <Button
               variant="outline"
               onClick={onPass}
@@ -183,7 +189,33 @@ export const MatchProfileCard = ({ match, onAccept, onPass, isProcessing }: Matc
             Passed this week
           </div>
         )}
+
+        {/* "See full profile" affordance */}
+        <div className="flex items-center justify-center gap-1 pt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span className="text-[11px] text-primary/70 tracking-wide">See full profile</span>
+          <ChevronRight className="w-3 h-3 text-primary/70" />
+        </div>
       </CardContent>
     </Card>
+
+    {/* Detail modal */}
+    <MatchDetailModal
+      isOpen={showDetail}
+      onClose={() => setShowDetail(false)}
+      match={{
+        id: match.id,
+        name: name,
+        age: profile.age,
+        location: profile.location,
+        bio: profile.bio,
+        photos: profile.photos || [],
+        interests: profile.interests || [],
+        compatibility_score: compatibility_score,
+        match_reason: match_reason,
+      }}
+      onLike={() => { onAccept(); setShowDetail(false); }}
+      onPass={() => { onPass(); setShowDetail(false); }}
+    />
+    </>
   );
 };
