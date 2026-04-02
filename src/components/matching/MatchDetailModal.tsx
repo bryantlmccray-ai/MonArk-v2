@@ -82,6 +82,15 @@ export const MatchDetailModal = ({
             alt={`${match.name}'s photo`}
             className="w-full h-full object-cover cursor-pointer hover:brightness-95 transition-all duration-200"
             onClick={() => setLightboxOpen(true)}
+            onError={(e) => {
+              const target = e.currentTarget;
+              target.style.display = 'none';
+              const fallback = document.createElement('div');
+              fallback.className = 'w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/80 to-accent/60';
+              fallback.innerHTML = `<span class="text-primary-foreground font-serif text-5xl opacity-90">${(match.name || 'M').split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()}</span>`;
+              target.parentNode?.insertBefore(fallback, target);
+            }}
+            crossOrigin="anonymous"
           />
           
           {/* Photo navigation */}
