@@ -21,7 +21,7 @@ interface SidebarNavigationProps {
 
 export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab, onTabChange, onArkNavigation, onUpgrade }) => {
   const { profile } = useProfile();
-  const displayName = profile?.first_name || profile?.name?.split(' ')[0] || 'Member';
+  const displayName = profile?.first_name || 'Member';
 
   const tabs = [
     { id: 'weekly', icon: Calendar, label: 'Your 3 Options' },
