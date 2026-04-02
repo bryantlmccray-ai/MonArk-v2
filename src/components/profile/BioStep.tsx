@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { X, Save } from 'lucide-react';
 import { ProfileData } from './ProfileCreation';
