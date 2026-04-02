@@ -441,6 +441,16 @@ export const ShareableMilestoneCard: React.FC<ShareableMilestoneCardProps> = ({
             <Download className="h-4 w-4" />
             Download
           </Button>
+
+          <Button
+            variant="outline"
+            onClick={handleCopyImage}
+            disabled={isSharing}
+            className="gap-2"
+          >
+            <Copy className="h-4 w-4" />
+            Copy Image
+          </Button>
         </div>
       )}
     </div>
