@@ -248,6 +248,19 @@ export const WeeklyRhythmPlans = () => {
   const [selectedPlan, setSelectedPlan] = useState<DatePlan | null>(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
+  const [savedPlans, setSavedPlans] = useState<string[]>([]);
+
+  const handleSavePlan = (id: string) => {
+    setSavedPlans(prev => {
+      if (prev.includes(id)) {
+        toast('Plan removed from saved');
+        return prev.filter(p => p !== id);
+      }
+      toast.success('Plan saved!');
+      return [...prev, id];
+    });
+  };
+
   const handleSelectPlan = (plan: DatePlan) => {
     setSelectedPlan(plan);
     setShowConfirmation(true);
