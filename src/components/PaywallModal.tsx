@@ -469,8 +469,6 @@ export default function PaywallModal({
                     ? "Current plan"
                     : isLoading
                     ? "Processing..."
-                    : tierKey === "free"
-                    ? "Stay on Free"
                     : "Join Now"}
                 </button>
               </div>
