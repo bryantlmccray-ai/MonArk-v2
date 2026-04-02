@@ -388,15 +388,15 @@ export const SundayMatches = () => {
       <div className="max-w-2xl mx-auto px-4 py-5">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="grid w-full grid-cols-3 bg-muted/40 border border-border/30 rounded-xl h-11">
-              <TabsTrigger value="curated" className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.12em] font-caption data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-lg transition-all">
+              <TabsTrigger value="curated" className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.12em] font-caption data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md rounded-lg transition-all">
                 <Sparkles className="w-3 h-3" />
                 Your 3
               </TabsTrigger>
-              <TabsTrigger value="plans" className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.12em] font-caption data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-lg transition-all">
+              <TabsTrigger value="plans" className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.12em] font-caption data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md rounded-lg transition-all">
                 <Moon className="w-3 h-3" />
                 Plans
               </TabsTrigger>
-              <TabsTrigger value="pool" className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.12em] font-caption data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-lg transition-all">
+              <TabsTrigger value="pool" className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.12em] font-caption data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md rounded-lg transition-all">
                 <Users className="w-3 h-3" />
                 Explore
               </TabsTrigger>
