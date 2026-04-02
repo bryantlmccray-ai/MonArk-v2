@@ -1,0 +1,1 @@
+ALTER TABLE public.user_profiles ADD COLUMN weight_lbs integer;

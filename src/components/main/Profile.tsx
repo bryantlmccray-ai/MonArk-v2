@@ -39,6 +39,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
   const [editPrefToSee, setEditPrefToSee] = useState<string[]>([]);
   const [editAge, setEditAge] = useState('');
   const [editHeightText, setEditHeightText] = useState('');
+  const [editWeight, setEditWeight] = useState('');
   const { user, signOut } = useAuth();
   const { profile, loading, updateProfile } = useProfile();
   const { clearLocation } = useLocation();
@@ -110,6 +111,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
     setEditPrefToSee(profile?.preference_to_see || []);
     setEditAge(profile?.age ? String(profile.age) : '');
     setEditHeightText(profile?.height_cm ? formatHeight(profile.height_cm) : '');
+    setEditWeight(profile?.weight_lbs ? String(profile.weight_lbs) : '');
     setEditingDetails(true);
   }, [profile]);
 
@@ -134,6 +136,11 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
       toast({ title: 'Enter height like 5\'10" or 6\'1"', variant: 'destructive' });
       return;
     }
+    const weightNum = editWeight.trim() ? parseInt(editWeight, 10) : null;
+    if (weightNum !== null && (isNaN(weightNum) || weightNum < 50 || weightNum > 800)) {
+      toast({ title: 'Please enter a valid weight (50–800 lbs)', variant: 'destructive' });
+      return;
+    }
     await updateProfile({
       gender_identity: (editGender || null) as any,
       gender_identity_custom: editGender === 'Custom' ? editGenderCustom : null,
@@ -142,10 +149,11 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
       preference_to_see: editPrefToSee,
       ...(ageNum !== null ? { age: ageNum } : {}),
       ...(heightCm !== null ? { height_cm: heightCm } : {}),
+      ...(weightNum !== null ? { weight_lbs: weightNum } : {}),
     });
     setEditingDetails(false);
     toast({ title: 'Details updated' });
-  }, [editGender, editGenderCustom, editOrientation, editOrientationCustom, editPrefToSee, editAge, editHeightText, updateProfile, toast]);
+  }, [editGender, editGenderCustom, editOrientation, editOrientationCustom, editPrefToSee, editAge, editHeightText, editWeight, updateProfile, toast]);
 
   const togglePref = useCallback((pref: string) => {
     setEditPrefToSee(prev => prev.includes(pref) ? prev.filter(p => p !== pref) : [...prev, pref]);
@@ -496,8 +504,8 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                     </div>
                   </div>
 
-                  {/* Age & Height */}
-                  <div className="grid grid-cols-2 gap-3">
+                  {/* Age, Height & Weight */}
+                  <div className="grid grid-cols-3 gap-3">
                     <div>
                       <label className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5 block font-caption">Age</label>
                       <input
@@ -516,8 +524,20 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                         type="text"
                         value={editHeightText}
                         onChange={e => setEditHeightText(e.target.value)}
-                        placeholder={`e.g. 5'10"`}
+                        placeholder={`5'10"`}
                         maxLength={6}
+                        className="w-full h-10 px-3 text-sm bg-card border border-border/70 rounded-xl text-foreground font-body placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary/40 transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5 block font-caption">Weight</label>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={editWeight}
+                        onChange={e => setEditWeight(e.target.value.replace(/\D/g, '').slice(0, 3))}
+                        placeholder="185 lbs"
+                        maxLength={3}
                         className="w-full h-10 px-3 text-sm bg-card border border-border/70 rounded-xl text-foreground font-body placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary/40 transition-all"
                       />
                     </div>
@@ -570,6 +590,12 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                     <div>
                       <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Height</p>
                       <p className="text-foreground text-sm font-body">{formatHeight(profile.height_cm)}</p>
+                    </div>
+                  )}
+                  {profile?.weight_lbs && (
+                    <div>
+                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Weight</p>
+                      <p className="text-foreground text-sm font-body">{profile.weight_lbs} lbs</p>
                     </div>
                   )}
                   {profile?.preference_to_see && profile.preference_to_see.length > 0 && (

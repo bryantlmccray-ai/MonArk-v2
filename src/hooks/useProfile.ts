@@ -44,6 +44,7 @@ export interface UserProfile {
   smoking_status: string | null;
   drinking_status: string | null;
   height_cm: number | null;
+  weight_lbs: number | null;
   onboarding_step: number | null;
   rif_quiz_answers: any | null;
   created_at: string;
@@ -85,6 +86,7 @@ const createDemoProfile = (userId: string): UserProfile => ({
   smoking_status: null,
   drinking_status: null,
   height_cm: null,
+  weight_lbs: null,
   onboarding_step: 0,
   rif_quiz_answers: null,
   created_at: new Date().toISOString(),
