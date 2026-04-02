@@ -434,8 +434,8 @@ export const SundayMatches = () => {
                           Top Match
                         </span>
                         {displayCurated[0].compatibility_score && (
-                          <span className="bg-black/40 text-white/90 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-caption tracking-wide">
-                            {Math.round(displayCurated[0].compatibility_score * 100)}%
+                          <span className="bg-foreground/80 text-white backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-medium tracking-wide">
+                            {Math.round(displayCurated[0].compatibility_score * 100)}% Match
                           </span>
                         )}
                       </div>
