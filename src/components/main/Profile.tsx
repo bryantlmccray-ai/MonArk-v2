@@ -559,53 +559,53 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                <div className="space-y-0 divide-y divide-border/40">
                   {profile?.gender_identity && (
-                    <div>
-                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Identity</p>
-                      <p className="text-foreground text-sm font-body">
+                    <div className="flex items-center justify-between py-3 first:pt-0">
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] font-caption">Identity</span>
+                      <span className="text-foreground text-sm font-body">
                         {profile.gender_identity === 'Custom' && profile.gender_identity_custom
                           ? profile.gender_identity_custom
                           : profile.gender_identity}
-                      </p>
+                      </span>
                     </div>
                   )}
                   {profile?.sexual_orientation && (
-                    <div>
-                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Orientation</p>
-                      <p className="text-foreground text-sm font-body">
+                    <div className="flex items-center justify-between py-3">
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] font-caption">Orientation</span>
+                      <span className="text-foreground text-sm font-body">
                         {profile.sexual_orientation === 'Custom' && profile.sexual_orientation_custom
                           ? profile.sexual_orientation_custom
                           : profile.sexual_orientation}
-                      </p>
+                      </span>
                     </div>
                   )}
                   {profile?.age && (
-                    <div>
-                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Age</p>
-                      <p className="text-foreground text-sm font-body">{profile.age}</p>
+                    <div className="flex items-center justify-between py-3">
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] font-caption">Age</span>
+                      <span className="text-foreground text-sm font-body">{profile.age}</span>
                     </div>
                   )}
                   {profile?.height_cm && (
-                    <div>
-                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Height</p>
-                      <p className="text-foreground text-sm font-body">{formatHeight(profile.height_cm)}</p>
+                    <div className="flex items-center justify-between py-3">
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] font-caption">Height</span>
+                      <span className="text-foreground text-sm font-body">{formatHeight(profile.height_cm)}</span>
                     </div>
                   )}
                   {profile?.weight_lbs && (
-                    <div>
-                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Weight</p>
-                      <p className="text-foreground text-sm font-body">{profile.weight_lbs} lbs</p>
+                    <div className="flex items-center justify-between py-3">
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] font-caption">Weight</span>
+                      <span className="text-foreground text-sm font-body">{profile.weight_lbs} lbs</span>
                     </div>
                   )}
                   {profile?.preference_to_see && profile.preference_to_see.length > 0 && (
-                    <div>
-                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Looking for</p>
-                      <p className="text-foreground text-sm font-body">{profile.preference_to_see.join(', ')}</p>
+                    <div className="flex items-center justify-between py-3 last:pb-0">
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] font-caption">Looking for</span>
+                      <span className="text-foreground text-sm font-body">{profile.preference_to_see.join(', ')}</span>
                     </div>
                   )}
-                  {!profile?.gender_identity && !profile?.sexual_orientation && !profile?.date_of_birth && !(profile?.preference_to_see && profile.preference_to_see.length > 0) && (
-                    <p className="text-muted-foreground text-sm col-span-2 italic">Tap Edit to add your details</p>
+                  {!profile?.gender_identity && !profile?.sexual_orientation && !profile?.age && !profile?.height_cm && !profile?.weight_lbs && !(profile?.preference_to_see && profile.preference_to_see.length > 0) && (
+                    <p className="text-muted-foreground text-sm italic py-2">Tap Edit to add your details</p>
                   )}
                 </div>
               )}
