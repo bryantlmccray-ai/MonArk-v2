@@ -180,7 +180,9 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
                 <p><span className="text-primary">Relationship Goals:</span> {profileData.relationship_goals?.join(', ') || 'Not specified'}</p>
               </div>
             ) : (
-              <div className="text-muted-foreground text-sm italic">Lifestyle details not completed yet</div>
+              <button onClick={() => onEdit(3)} className="text-primary text-sm flex items-center gap-1 hover:underline">
+                Complete this to improve your matches <ArrowRight size={14} />
+              </button>
             )}
           </div>
           
