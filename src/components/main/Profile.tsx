@@ -108,16 +108,40 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
     setEditOrientation(profile?.sexual_orientation || '');
     setEditOrientationCustom(profile?.sexual_orientation_custom || '');
     setEditPrefToSee(profile?.preference_to_see || []);
+    setEditAge(profile?.age ? String(profile.age) : '');
+    setEditHeightText(profile?.height_cm ? formatHeight(profile.height_cm) : '');
     setEditingDetails(true);
   }, [profile]);
 
+  // Parse height text like 6'1" or 5'10 into cm
+  const parseHeightToCm = (text: string): number | null => {
+    const match = text.match(/(\d+)'?\s*(\d+)?/);
+    if (!match) return null;
+    const feet = parseInt(match[1], 10);
+    const inches = match[2] ? parseInt(match[2], 10) : 0;
+    if (feet < 3 || feet > 8 || inches < 0 || inches > 11) return null;
+    return Math.round((feet * 12 + inches) * 2.54);
+  };
+
   const handleSaveDetails = useCallback(async () => {
+    const ageNum = editAge ? parseInt(editAge, 10) : null;
+    if (ageNum !== null && (isNaN(ageNum) || ageNum < 18 || ageNum > 120)) {
+      toast({ title: 'Please enter a valid age (18+)', variant: 'destructive' });
+      return;
+    }
+    const heightCm = editHeightText.trim() ? parseHeightToCm(editHeightText) : null;
+    if (editHeightText.trim() && heightCm === null) {
+      toast({ title: 'Enter height like 5\'10" or 6\'1"', variant: 'destructive' });
+      return;
+    }
     await updateProfile({
       gender_identity: (editGender || null) as any,
       gender_identity_custom: editGender === 'Custom' ? editGenderCustom : null,
       sexual_orientation: (editOrientation || null) as any,
       sexual_orientation_custom: editOrientation === 'Custom' ? editOrientationCustom : null,
       preference_to_see: editPrefToSee,
+      ...(ageNum !== null ? { age: ageNum } : {}),
+      ...(heightCm !== null ? { height_cm: heightCm } : {}),
     });
     setEditingDetails(false);
     toast({ title: 'Details updated' });
