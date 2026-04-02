@@ -248,6 +248,11 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
     setCurrentStep(6);
   };
 
+  const cancelEditAndReturn = () => {
+    setEditingFromReview(false);
+    setCurrentStep(6);
+  };
+
   const handleComplete = async () => {
     try {
       console.log('[ProfileCreation] Starting profile save...');
