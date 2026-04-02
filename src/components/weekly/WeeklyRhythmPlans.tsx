@@ -307,6 +307,22 @@ export const WeeklyRhythmPlans = () => {
             );
           })}
         </div>
+
+        {/* Clear CTA after mood selection */}
+        <AnimatePresence>
+          {selectedRhythm && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="mt-6 text-center"
+            >
+              <p className="text-sm text-muted-foreground mb-2">
+                Showing <span className="font-medium text-foreground">{rhythmConfig[selectedRhythm].label}</span> date plans ↓
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Plans Display */}
