@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   Sparkles, Users, Calendar, Heart, MapPin, 
-  ChevronRight, Target, Sun, Coffee, Wine, Palette, Music, Compass,
+  ChevronRight, Target, Coffee, Wine, Palette, Music, Compass,
   Moon
 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -336,13 +336,14 @@ export const SundayMatches = () => {
 
       {/* Welcome Tip Banner */}
       {showWelcomeTip && (
-        <div className="bg-primary/10 border-b border-primary/15 px-4 py-3">
+        <div className="bg-primary/5 border-b border-primary/10 px-4 py-3">
           <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
-            <p className="text-sm text-foreground">
-              ✨ <span className="font-medium">Welcome to MonArk!</span> View and edit your profile anytime in the Profile tab below.
+            <p className="text-sm font-body text-foreground/80">
+              <span className="font-medium text-foreground">Welcome to MonArk.</span>{' '}
+              Your profile lives in the tab below — refine it anytime.
             </p>
-            <Button variant="ghost" size="sm" onClick={dismissWelcomeTip} className="shrink-0 text-xs">
-              Got it
+            <Button variant="ghost" size="sm" onClick={dismissWelcomeTip} className="shrink-0 text-[10px] uppercase tracking-[0.15em] text-primary hover:text-primary/80 font-caption">
+              Dismiss
             </Button>
           </div>
         </div>
@@ -350,28 +351,28 @@ export const SundayMatches = () => {
 
       {/* Demo Mode Banner */}
       {isUsingDemoData && (
-        <div className="bg-card border-b border-border px-4 py-3">
+        <div className="border-b border-border/30 px-4 py-2.5">
           <div className="max-w-2xl mx-auto text-center">
-            <p className="text-sm text-muted-foreground">
-              <span className="font-medium text-foreground">Preview Mode</span> — These are example matches to show you what to expect
+            <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground font-caption">
+              Preview Mode — sample profiles
             </p>
           </div>
         </div>
       )}
 
-      {/* Hero Header */}
-      <div className="border-b border-border/40 px-4 py-3">
+      {/* Status Bar */}
+      <div className="border-b border-border/30 px-4 py-3">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Sun className="w-3.5 h-3.5 text-primary" />
-            <span>{displayCurated.length} curated matches</span>
-          </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/15">
-            <span className="relative flex h-2 w-2">
+          <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-caption flex items-center gap-1.5">
+            <Sparkles className="w-3 h-3 text-primary/70" />
+            {displayCurated.length} curated this week
+          </p>
+          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/5 border border-primary/10">
+            <span className="relative flex h-1.5 w-1.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/40 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary/60"></span>
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary/50"></span>
             </span>
-            <span className="text-xs font-medium text-primary tracking-wide">
+            <span className="text-[10px] font-caption text-primary/80 tracking-[0.12em] uppercase">
               Next drop {formatDistanceToNow(nextRefresh, { addSuffix: true })}
             </span>
           </div>
@@ -380,98 +381,97 @@ export const SundayMatches = () => {
 
       {/* Content */}
       <div className="max-w-2xl mx-auto px-4 py-5">
-        {/* This section removed - we always show demo data now */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-5">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="curated" className="flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Your 3</span>
-                <span className="sm:hidden">Matches</span>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            <TabsList className="grid w-full grid-cols-3 bg-muted/40 border border-border/30 rounded-xl h-11">
+              <TabsTrigger value="curated" className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.12em] font-caption data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-lg transition-all">
+                <Sparkles className="w-3 h-3" />
+                Your 3
               </TabsTrigger>
-              <TabsTrigger value="plans" className="flex items-center gap-1.5">
-                <Moon className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Date Plans</span>
-                <span className="sm:hidden">Plans</span>
+              <TabsTrigger value="plans" className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.12em] font-caption data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-lg transition-all">
+                <Moon className="w-3 h-3" />
+                Plans
               </TabsTrigger>
-              <TabsTrigger value="pool" className="flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Explore</span>
-                <span className="sm:hidden">Pool</span>
+              <TabsTrigger value="pool" className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.12em] font-caption data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-lg transition-all">
+                <Users className="w-3 h-3" />
+                Explore
               </TabsTrigger>
             </TabsList>
 
             {/* Curated Matches Tab */}
-            <TabsContent value="curated" className="space-y-5">
+            <TabsContent value="curated" className="space-y-4">
               <MatchRevealCeremony matchCount={displayCurated.length} storageKey="monark-sunday-reveal">
 
-              {/* Featured Match - First one gets spotlight */}
+              {/* Featured Match — spotlight card */}
               {displayCurated[0] && (
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2, ease: 'easeOut' }}
-                  className="relative cursor-pointer"
+                  transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                  className="relative cursor-pointer group"
                   onClick={() => setSelectedMatch(displayCurated[0])}
                 >
-                  <Card 
-                    className="relative overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-300 border-primary/15 bg-card group"
-                    onClick={() => setSelectedMatch(displayCurated[0])}
-                  >
+                  <Card className="relative overflow-hidden border-primary/10 bg-card shadow-[0_2px_20px_rgba(90,70,50,0.08)] hover:shadow-[0_8px_32px_rgba(90,70,50,0.14)] transition-shadow duration-500">
                     <div className="aspect-[4/5] relative">
                       <ImageWithFallback
                         src={displayCurated[0].photos?.[0] || '/placeholder.svg'}
                         alt={displayCurated[0].name || 'Match'}
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                        loading="eager"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
                       
+                      {/* Top badges */}
                       <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
-                        <Badge className="bg-primary text-primary-foreground px-3 py-1 shadow-lg">
-                          <Sparkles className="w-3 h-3 mr-1" />
+                        <span className="bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-[10px] uppercase tracking-[0.15em] font-caption shadow-lg flex items-center gap-1">
+                          <Sparkles className="w-2.5 h-2.5" />
                           Top Match
-                        </Badge>
+                        </span>
                         {displayCurated[0].compatibility_score && (
-                          <Badge className="bg-black/50 text-white border-none backdrop-blur-sm">
-                            {Math.round(displayCurated[0].compatibility_score * 100)}% Match
-                          </Badge>
+                          <span className="bg-black/40 text-white/90 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-caption tracking-wide">
+                            {Math.round(displayCurated[0].compatibility_score * 100)}%
+                          </span>
                         )}
                       </div>
                       
-                      <div className="absolute bottom-0 left-0 right-0 p-6">
-                        <h3 className="text-3xl font-serif text-white mb-1">
+                      {/* Bottom info */}
+                      <div className="absolute bottom-0 left-0 right-0 p-5">
+                        <h3 className="text-2xl font-editorial text-white tracking-tight mb-0.5">
                           {displayCurated[0].name}, {displayCurated[0].age}
                         </h3>
-                        <p className="text-white/80 flex items-center gap-1 mb-3">
-                          <MapPin className="w-4 h-4" />
+                        <p className="text-white/70 text-sm font-body flex items-center gap-1 mb-3">
+                          <MapPin className="w-3 h-3" />
                           {displayCurated[0].location}
                         </p>
                         {displayCurated[0].match_reason && (
-                          <p className="text-white/90 text-sm bg-primary/70 backdrop-blur-sm px-4 py-2 rounded-xl inline-block">
+                          <p className="text-white/80 text-xs font-body bg-white/10 backdrop-blur-md px-3.5 py-2 rounded-lg inline-block border border-white/10">
                             {displayCurated[0].match_reason}
                           </p>
                         )}
+                      </div>
+
+                      {/* Hover label */}
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                        <span className="bg-card/95 backdrop-blur-sm text-foreground text-[10px] uppercase tracking-[0.2em] font-caption px-4 py-2 rounded-full shadow-lg border border-border/50">
+                          See full profile
+                        </span>
                       </div>
                     </div>
                   </Card>
                 </motion.div>
               )}
               
-              {/* Other curated matches */}
-              <div className="grid grid-cols-2 gap-3">
+              {/* Secondary curated matches */}
+              <div className="grid grid-cols-2 gap-3 mt-4">
                 {displayCurated.slice(1).map((match, index) => (
                   <motion.div
                     key={match.id}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.35 + index * 0.15, ease: 'easeOut' }}
-                    className="cursor-pointer"
+                    transition={{ duration: 0.5, delay: 0.3 + index * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                    className="cursor-pointer group"
                     onClick={() => setSelectedMatch(match)}
                   >
-                    <Card 
-                      className="overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-300 group"
-                      onClick={() => setSelectedMatch(match)}
-                    >
+                    <Card className="overflow-hidden border-border/30 bg-card shadow-[0_2px_12px_rgba(90,70,50,0.06)] hover:shadow-[0_6px_24px_rgba(90,70,50,0.12)] transition-shadow duration-500">
                       <div className="aspect-[3/4] relative">
                         <ImageWithFallback
                           src={match.photos?.[0] || '/placeholder.svg'}
@@ -479,22 +479,29 @@ export const SundayMatches = () => {
                           loading="lazy"
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                         
                         {match.compatibility_score && (
-                          <Badge className="absolute top-2.5 right-2.5 bg-primary/90 text-primary-foreground border-none text-xs shadow-lg">
+                          <span className="absolute top-2.5 right-2.5 bg-primary/85 text-primary-foreground px-2 py-0.5 rounded-full text-[9px] font-caption tracking-wider uppercase shadow-md">
                             {Math.round(match.compatibility_score * 100)}%
-                          </Badge>
+                          </span>
                         )}
                         
                         <div className="absolute bottom-0 left-0 right-0 p-3.5">
-                          <p className="font-semibold text-white text-lg">
+                          <p className="font-editorial text-white text-lg tracking-tight">
                             {match.name}, {match.age}
                           </p>
-                          <p className="text-white/70 text-xs flex items-center gap-1 mt-0.5">
-                            <MapPin className="w-3 h-3" />
+                          <p className="text-white/60 text-[11px] font-body flex items-center gap-1 mt-0.5">
+                            <MapPin className="w-2.5 h-2.5" />
                             {match.location}
                           </p>
+                        </div>
+
+                        {/* Hover label */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                          <span className="bg-card/95 backdrop-blur-sm text-foreground text-[9px] uppercase tracking-[0.2em] font-caption px-3 py-1.5 rounded-full shadow-md border border-border/50">
+                            See profile
+                          </span>
                         </div>
                       </div>
                     </Card>
@@ -511,9 +518,9 @@ export const SundayMatches = () => {
 
             {/* Pool Tab */}
             <TabsContent value="pool" className="space-y-4">
-              <div className="text-center pb-2">
-                <p className="text-sm text-muted-foreground">
-                  More compatible people to explore this week
+              <div className="text-center pb-1">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-caption">
+                  More compatible people this week
                 </p>
               </div>
               
@@ -619,7 +626,7 @@ const MatchCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => voi
 const PoolCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => void }) => {
   return (
     <Card 
-      className="overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-500 group"
+      className="overflow-hidden cursor-pointer border-border/30 bg-card shadow-[0_2px_12px_rgba(90,70,50,0.06)] hover:shadow-[0_6px_24px_rgba(90,70,50,0.12)] transition-shadow duration-500 group"
       onClick={onClick}
     >
       <div className="relative aspect-[3/4]">
@@ -628,21 +635,21 @@ const PoolCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => void
           alt={match.name || 'Match'}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
         
         {match.compatibility_score && (
-          <Badge className="absolute top-2.5 right-2.5 bg-black/50 text-white border-none text-xs backdrop-blur-sm">
+          <span className="absolute top-2.5 right-2.5 bg-black/40 text-white/90 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-caption tracking-wider">
             {Math.round(match.compatibility_score * 100)}%
-          </Badge>
+          </span>
         )}
 
         <div className="absolute bottom-0 left-0 right-0 p-3.5">
-          <p className="font-semibold text-white text-sm">
+          <p className="font-editorial text-white text-sm tracking-tight">
             {match.name}, {match.age}
           </p>
           {match.location && (
-            <p className="text-white/80 text-xs flex items-center gap-1 mt-0.5">
-              <MapPin className="w-3 h-3" />
+            <p className="text-white/60 text-[11px] font-body flex items-center gap-1 mt-0.5">
+              <MapPin className="w-2.5 h-2.5" />
               {match.location}
             </p>
           )}
