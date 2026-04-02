@@ -130,20 +130,23 @@ export const MonthlyRecapModal: React.FC<MonthlyRecapModalProps> = ({
         </div>
 
         {/* Slide Content */}
-        <div className="flex-1 relative">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-full h-full transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
-              <div className="flex">
-                {slides.map((slide) => (
-                  <div key={slide.id} className="w-full h-full flex-shrink-0 p-6 flex flex-col justify-center" style={{ minWidth: '100%' }}>
-                    <div className="text-center mb-6">
-                      <h2 className="text-2xl font-light text-foreground mb-2">{slide.title}</h2>
-                    </div>
-                    {slide.content}
-                  </div>
-                ))}
+        <div className="flex-1 overflow-hidden relative">
+          <div
+            className="flex h-full transition-transform duration-500 ease-in-out"
+            style={{ width: `${slides.length * 100}%`, transform: `translateX(-${currentSlide * (100 / slides.length)}%)` }}
+          >
+            {slides.map((slide) => (
+              <div
+                key={slide.id}
+                className="h-full flex-shrink-0 p-6 flex flex-col justify-center overflow-y-auto"
+                style={{ width: `${100 / slides.length}%` }}
+              >
+                <div className="text-center mb-6">
+                  <h2 className="text-2xl font-light text-foreground mb-2">{slide.title}</h2>
+                </div>
+                {slide.content}
               </div>
-            </div>
+            ))}
           </div>
         </div>
 
