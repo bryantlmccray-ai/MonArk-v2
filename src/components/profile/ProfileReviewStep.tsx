@@ -125,7 +125,9 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
                 ))}
               </div>
             ) : (
-              <div className="text-muted-foreground text-sm italic">No interests selected yet</div>
+              <button onClick={() => onEdit(1)} className="text-primary text-sm flex items-center gap-1 hover:underline">
+                Pick your interests to improve match quality <ArrowRight size={14} />
+              </button>
             )}
           </div>
 
