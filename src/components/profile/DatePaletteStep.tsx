@@ -21,7 +21,12 @@ export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, u
   const [activityType, setActivityType] = useState<string[]>(profileData.activityType);
 
   const vibeOptions = ['Romantic', 'Casual', 'Adventurous', 'Intellectual', 'Lively', 'Cozy'];
-  const budgetOptions = ['$', '$$', '$$$', '$$$$'];
+  const budgetOptions = [
+    { value: '$', label: '$', description: 'Under $50' },
+    { value: '$$', label: '$$', description: '$50 – $100' },
+    { value: '$$$', label: '$$$', description: '$100 – $250' },
+    { value: '$$$$', label: '$$$$', description: '$250+' },
+  ];
   
   const timeOptions = [
     { value: 'Morning', icon: Coffee, label: 'Morning' },
