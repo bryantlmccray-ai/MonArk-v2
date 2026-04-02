@@ -828,7 +828,13 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                         <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5 flex items-center gap-1">
                           <DollarSign className="h-3 w-3" /> Budget
                         </p>
-                        <p className="text-foreground text-sm font-medium">{profile.date_preferences.budget}</p>
+<p className="text-foreground text-sm font-medium">
+                          {profile.date_preferences.budget === '$' ? '$ — Budget-friendly' :
+                           profile.date_preferences.budget === '$$' ? '$$ — Moderate' :
+                           profile.date_preferences.budget === '$$$' ? '$$$ — Upscale' :
+                           profile.date_preferences.budget === '$$$$' ? '$$$$ — Luxury' :
+                           profile.date_preferences.budget}
+                        </p>
                       </div>
                     )}
                   </div>
