@@ -518,9 +518,9 @@ export const SundayMatches = () => {
 
             {/* Pool Tab */}
             <TabsContent value="pool" className="space-y-4">
-              <div className="text-center pb-2">
-                <p className="text-sm text-muted-foreground">
-                  More compatible people to explore this week
+              <div className="text-center pb-1">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-caption">
+                  More compatible people this week
                 </p>
               </div>
               
