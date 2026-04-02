@@ -12,12 +12,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
 
 // ─── Types ───────────────────────────────────────────────────
-type TierKey = "free" | "plus" | "monarch";
+type TierKey = "plus" | "monarch";
 
 interface PaywallModalProps {
   isOpen: boolean;
   onClose: () => void;
-  currentTier?: TierKey;
+  currentTier?: string;
 }
 
 // ─── Tier Config ─────────────────────────────────────────────
@@ -33,21 +33,6 @@ interface TierConfig {
 }
 
 const tiers: Record<TierKey, TierConfig> = {
-  free: {
-    name: "Free",
-    tagline: "Explore with intention",
-    monthly: 0,
-    quarterlyPerMonth: 0,
-    quarterlySavings: 0,
-    features: [
-      "3 curated matches per week",
-      "Basic RIF profile",
-      "Neighborhood discovery",
-      "Community safety features",
-    ],
-    productId: "",
-    highlighted: false,
-  },
   plus: {
     name: "The Ark",
     tagline: "The full MonArk experience",
