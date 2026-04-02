@@ -74,8 +74,7 @@ export const MatchDetailModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg p-0 overflow-hidden bg-card h-[100dvh] sm:h-auto sm:max-h-[90vh] !grid-rows-none !block rounded-none sm:rounded-lg">
-        <div className="flex flex-col h-full sm:max-h-[90vh]">
+      <DialogContent className="max-w-lg p-0 overflow-hidden bg-card h-[100dvh] sm:h-auto sm:max-h-[90vh] flex flex-col rounded-none sm:rounded-lg [&>button]:z-20">
         {/* Scrollable body: photo + content */}
         <ScrollArea className="flex-1 min-h-0">
           {/* Photo carousel */}
