@@ -3,13 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Moon, Sparkles, Compass, Clock, MapPin, Shield, 
   Heart, Users, Check, ArrowRight, Calendar, 
-  MessageCircle, AlertTriangle, Ghost, Zap, Coffee, X
+  MessageCircle, AlertTriangle, Ghost, Zap, Coffee, X,
+  Bookmark, BookmarkCheck, Star
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
+import { toast } from 'sonner';
 
 interface MatchedPerson {
   id: string;
