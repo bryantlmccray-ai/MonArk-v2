@@ -17,6 +17,26 @@ interface BioStepProps {
 
 export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, onCancel, stepRequirement, onSaveAndReturn }) => {
   const [bio, setBio] = useState(profileData.bio);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Escape key closes/goes back
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        if (onSaveAndReturn) {
+          onCancel?.();
+        } else if (onBack) {
+          onBack();
+        } else {
+          onCancel?.();
+        }
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown, true);
+    return () => document.removeEventListener('keydown', handleKeyDown, true);
+  }, [onCancel, onBack, onSaveAndReturn]);
 
   const prompts = [
     "I get most excited talking about...",
@@ -26,7 +46,8 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
   ];
 
   const handlePromptClick = (prompt: string) => {
-    const newBio = bio + (bio ? ' ' : '') + prompt;
+    // Replace existing content if bio already has text, otherwise set it
+    const newBio = bio.trim() ? prompt : prompt;
     setBio(newBio);
     updateData({ bio: newBio });
   };
