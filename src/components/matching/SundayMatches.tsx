@@ -465,6 +465,8 @@ export const SundayMatches = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.35 + index * 0.15, ease: 'easeOut' }}
+                    className="cursor-pointer"
+                    onClick={() => setSelectedMatch(match)}
                   >
                     <Card 
                       className="overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-300 group"
