@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   Sparkles, Users, Calendar, Heart, MapPin, 
-  ChevronRight, Target, Sun, Coffee, Wine, Palette, Music, Compass,
+  ChevronRight, Target, Coffee, Wine, Palette, Music, Compass,
   Moon
 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
