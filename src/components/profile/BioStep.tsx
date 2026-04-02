@@ -89,13 +89,23 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
 
       <div className="pt-6 max-w-2xl mx-auto w-full space-y-3">
         {onSaveAndReturn && (
-          <button
-            onClick={() => onSaveAndReturn(bio)}
-            className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 flex items-center justify-center gap-2"
-          >
-            <Save size={18} />
-            Save & Return to Profile
-          </button>
+          <div className="space-y-3">
+            <button
+              onClick={() => onSaveAndReturn(bio)}
+              className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 flex items-center justify-center gap-2"
+            >
+              <Save size={18} />
+              Save & Return to Profile
+            </button>
+            {onCancel && (
+              <button
+                onClick={onCancel}
+                className="w-full py-3 text-muted-foreground hover:text-foreground transition-colors border border-border hover:border-primary/50 rounded-xl"
+              >
+                Cancel
+              </button>
+            )}
+          </div>
         )}
 
         {!onSaveAndReturn && (
