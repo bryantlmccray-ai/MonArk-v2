@@ -335,6 +335,58 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               )}
             </motion.div>
 
+            {/* Demographics Section */}
+            {(profile?.gender_identity || profile?.sexual_orientation || profile?.date_of_birth) && (
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                custom={0.7}
+                variants={fadeUp}
+                className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+              >
+                <div className="flex items-center gap-2.5 mb-4">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <User className="h-4 w-4 text-primary" />
+                  </div>
+                  <h3 className="text-foreground font-serif text-lg">Demographics</h3>
+                </div>
+                <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                  {profile?.gender_identity && (
+                    <div>
+                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Identity</p>
+                      <p className="text-foreground text-sm font-body">
+                        {profile.gender_identity === 'Custom' && profile.gender_identity_custom
+                          ? profile.gender_identity_custom
+                          : profile.gender_identity}
+                      </p>
+                    </div>
+                  )}
+                  {profile?.sexual_orientation && (
+                    <div>
+                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Orientation</p>
+                      <p className="text-foreground text-sm font-body">
+                        {profile.sexual_orientation === 'Custom' && profile.sexual_orientation_custom
+                          ? profile.sexual_orientation_custom
+                          : profile.sexual_orientation}
+                      </p>
+                    </div>
+                  )}
+                  {profile?.date_of_birth && (
+                    <div>
+                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Age</p>
+                      <p className="text-foreground text-sm font-body">{profile.age || '—'}</p>
+                    </div>
+                  )}
+                  {(profile?.preference_to_see && profile.preference_to_see.length > 0) && (
+                    <div>
+                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Looking for</p>
+                      <p className="text-foreground text-sm font-body">{profile.preference_to_see.join(', ')}</p>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+
             {profile?.bio && (
               <motion.div
                 initial="hidden"
