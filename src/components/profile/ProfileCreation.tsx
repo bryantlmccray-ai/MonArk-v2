@@ -423,6 +423,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
               markStepCompleted('datePalette', data);
               saveAndReturn(data);
             } : undefined}
+            onCancelEdit={editingFromReview ? cancelEditAndReturn : undefined}
           />
         );
       case 5:
