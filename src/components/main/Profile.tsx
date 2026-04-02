@@ -651,11 +651,19 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                 variants={fadeUp}
                 className="bg-card rounded-2xl p-6 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
               >
-                <div className="flex items-center gap-2.5 mb-4">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Sparkles className="h-4 w-4 text-primary" />
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Sparkles className="h-4 w-4 text-primary" />
+                    </div>
+                    <h3 className="text-foreground font-serif text-lg">Passions</h3>
                   </div>
-                  <h3 className="text-foreground font-serif text-lg">Passions</h3>
+                  <button
+                    onClick={() => setShowProfileCreation(true)}
+                    className="text-xs text-primary hover:text-primary/80 transition-colors font-caption tracking-wide uppercase"
+                  >
+                    Edit
+                  </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {profile.interests.map((interest, index) => (
