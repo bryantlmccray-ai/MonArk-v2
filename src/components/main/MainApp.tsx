@@ -232,7 +232,9 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
         <SidebarNavigation activeTab={activeTab} onTabChange={handleTabChange} onArkNavigation={handleJournalNavigation} onUpgrade={() => setShowPaywall(true)} />
 
         <main className="flex-1 pt-12 overflow-y-auto">
-          <PremiumGreeting firstName={firstName} />
+          <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-xl border-b border-border/30">
+            <PremiumGreeting firstName={firstName} />
+          </div>
 
           {/* RIF Beta Insights Card for desktop */}
           {activeTab === 'profile' && (
