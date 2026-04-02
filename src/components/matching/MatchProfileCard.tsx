@@ -1,9 +1,10 @@
-import React from 'react';
-import { Heart, X, MapPin, Briefcase, GraduationCap, Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Heart, X, MapPin, Briefcase, GraduationCap, Loader2, ChevronRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { MatchDetailModal } from './MatchDetailModal';
 
 interface MatchProfile {
   id: string;
