@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useCuratedMatches, CuratedMatch } from '@/hooks/useCuratedMatches';
 import { useDatingPool, DatingPoolMatch } from '@/hooks/useDatingPool';
 import { MatchDetailModal } from './MatchDetailModal';
@@ -19,6 +19,31 @@ import { useNavigate } from 'react-router-dom';
 import { WeeklyRhythmPlans } from '@/components/weekly/WeeklyRhythmPlans';
  import { ApiErrorFallback } from '@/components/common/ApiErrorFallback';
  import { useActionProtection } from '@/hooks/useActionProtection';
+
+// Fallback gradient placeholder when external images fail to load
+const ImageWithFallback = ({ src, alt, className, loading }: { src: string; alt: string; className?: string; loading?: 'lazy' | 'eager' }) => {
+  const [failed, setFailed] = useState(false);
+  const initials = (alt || 'M').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+
+  if (failed || !src || src === '/placeholder.svg') {
+    return (
+      <div className={`${className} flex items-center justify-center bg-gradient-to-br from-primary/80 to-accent/60`}>
+        <span className="text-primary-foreground font-serif text-4xl opacity-90">{initials}</span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading={loading}
+      className={className}
+      onError={() => setFailed(true)}
+      crossOrigin="anonymous"
+    />
+  );
+};
 
 interface UnifiedMatch {
   id: string;
