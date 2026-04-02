@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Save } from 'lucide-react';
 import { ProfileData } from './ProfileCreation';
+import { EditBackButton } from './EditBackButton';
 
 interface InterestsStepProps {
   profileData: ProfileData;
@@ -11,6 +12,7 @@ interface InterestsStepProps {
   onBack?: () => void;
   stepRequirement: 'critical' | 'important' | 'optional';
   onSaveAndReturn?: () => void;
+  onCancelEdit?: () => void;
 }
 
 export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, stepRequirement, onSaveAndReturn }) => {
