@@ -62,15 +62,20 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                   </div>
                 </div>
                 {!date.hasReflection && onDateCompleted ? (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onDateCompleted(date.name)}
-                    className="mt-3 w-full border-primary/20 text-primary hover:bg-primary/10 hover:border-primary/30 transition-all h-9 text-xs"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 mr-1.5" />
-                    Add Reflection
-                  </Button>
+                  <div className="mt-3 space-y-1.5">
+                    <p className="text-xs text-muted-foreground italic font-body pl-0.5">
+                      How did {date.venue.toLowerCase()} with {date.name} go?
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onDateCompleted(date.name)}
+                      className="w-full border-primary/20 text-primary hover:bg-primary/10 hover:border-primary/30 transition-all h-9 text-xs"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+                      Add Reflection
+                    </Button>
+                  </div>
                 ) : date.hasReflection ? (
                   <Button
                     variant="ghost"
