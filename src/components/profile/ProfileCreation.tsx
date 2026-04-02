@@ -372,6 +372,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
               markStepCompleted('photos', { photos: profileData.photos });
               saveAndReturn({ photos: profileData.photos });
             } : undefined}
+            onCancelEdit={editingFromReview ? cancelEditAndReturn : undefined}
           />
         );
       case 3:
