@@ -245,14 +245,11 @@ export const WeeklyRhythmPlans = () => {
             const isSelected = selectedRhythm === rhythm;
             
             return (
-              <motion.button
+              <button
                 key={rhythm}
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4 + idx * 0.1 }}
                 onClick={() => setSelectedRhythm(isSelected ? null : rhythm)}
                 className={`
-                  relative p-6 rounded-2xl border-2 transition-all duration-300
+                  relative p-4 sm:p-6 rounded-2xl border-2 transition-all duration-300
                   ${isSelected 
                     ? `${config.border} bg-gradient-to-br ${config.gradient}` 
                     : 'border-border/50 hover:border-border bg-card/50'
@@ -260,15 +257,15 @@ export const WeeklyRhythmPlans = () => {
                 `}
               >
                 <div className={`
-                  w-12 h-12 mx-auto mb-3 rounded-xl flex items-center justify-center
+                  w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 sm:mb-3 rounded-xl flex items-center justify-center
                   ${isSelected ? config.bg : 'bg-muted/50'}
                 `}>
-                  <Icon className={`w-6 h-6 ${isSelected ? config.accent : 'text-muted-foreground'}`} />
+                  <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${isSelected ? config.accent : 'text-muted-foreground'}`} />
                 </div>
-                <div className={`font-semibold text-lg ${isSelected ? 'text-foreground' : 'text-muted-foreground'}`}>
+                <div className={`font-semibold text-base sm:text-lg ${isSelected ? 'text-foreground' : 'text-muted-foreground'}`}>
                   {config.label}
                 </div>
-                <div className="text-sm text-muted-foreground mt-1">
+                <div className="text-xs sm:text-sm text-muted-foreground mt-1">
                   {config.description}
                 </div>
                 
@@ -280,7 +277,7 @@ export const WeeklyRhythmPlans = () => {
                     <Check className={`w-4 h-4 ${config.accent}`} />
                   </motion.div>
                 )}
-              </motion.button>
+              </button>
             );
           })}
         </div>
