@@ -305,6 +305,7 @@ export const MatchDetailModal = ({
           onClose={() => setLightboxOpen(false)}
           name={match.name}
         />
+        </div>
       </DialogContent>
     </Dialog>
   );
