@@ -315,9 +315,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   </div>
                   {/* Avatar + Name */}
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-primary-foreground font-serif text-sm font-semibold shrink-0">
-                      {card.initials}
-                    </div>
+                    <img src={card.photo} alt={card.name} className="w-12 h-12 rounded-full object-cover shrink-0 border border-primary/20" />
                     <div>
                       <h4 className="font-serif text-lg text-[hsl(40_30%_88%)] leading-tight">{card.name}, {card.age}</h4>
                       <span className="text-[11px] text-[hsl(30_40%_72%/0.7)] flex items-center gap-1">
