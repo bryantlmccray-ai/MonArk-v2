@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Edit, CheckCircle, Clock, X } from 'lucide-react';
+import { Edit, CheckCircle, Clock, X, ArrowRight } from 'lucide-react';
 import { ProfileData, StepCompletionStatus, StepRequirements } from './ProfileCreation';
 
 interface ProfileReviewStepProps {
