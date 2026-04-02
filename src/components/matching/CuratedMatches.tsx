@@ -38,18 +38,7 @@ const CountdownRing = ({ daysUntil, totalDays = 7 }: { daysUntil: number; totalD
 export const CuratedMatches = () => {
   const { matches, loading, acceptMatch, passMatch, getNextRefreshDate, pendingCount } = useCuratedMatches();
   const [processingId, setProcessingId] = useState<string | null>(null);
-  const [showReveal, setShowReveal] = useState(false);
   const [mutualMatch, setMutualMatch] = useState<{
-    matchName?: string;
-    matchPhoto?: string;
-    conversationId?: string;
-  } | null>(null);
-
-  useEffect(() => {
-    if (matches.length > 0 && !showReveal) {
-      setShowReveal(true);
-    }
-  }, [matches.length]);
 
   const handleAccept = async (matchId: string) => {
     setProcessingId(matchId);
