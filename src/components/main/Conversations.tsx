@@ -9,6 +9,7 @@ import { ChatModal } from '../chat/ChatModal';
 import { useDateConcierge } from '@/hooks/useDateConcierge';
 import { useAuth } from '@/hooks/useAuth';
 import { useAfterDateFeedback } from '@/hooks/useAfterDateFeedback';
+import { useConversations } from '@/hooks/useConversations';
 
 export const Conversations: React.FC = () => {
   const { user } = useAuth();
