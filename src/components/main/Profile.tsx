@@ -111,6 +111,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
     setEditPrefToSee(profile?.preference_to_see || []);
     setEditAge(profile?.age ? String(profile.age) : '');
     setEditHeightText(profile?.height_cm ? formatHeight(profile.height_cm) : '');
+    setEditWeight(profile?.weight_lbs ? String(profile.weight_lbs) : '');
     setEditingDetails(true);
   }, [profile]);
 
