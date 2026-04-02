@@ -71,7 +71,12 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
                           : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'
                       }`}
                     >
-                      <Icon className={`h-5 w-5 transition-all duration-300 ${isActive ? 'stroke-[2.5px]' : 'stroke-[1.5px]'}`} />
+                      <div className="relative">
+                        <Icon className={`h-5 w-5 transition-all duration-300 ${isActive ? 'stroke-[2.5px]' : 'stroke-[1.5px]'}`} />
+                        {tab.hasNotification && !isActive && (
+                          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full border-2 border-sidebar-background" />
+                        )}
+                      </div>
                       <span className="tracking-wide">{tab.label}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
