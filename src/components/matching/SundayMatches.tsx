@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   Sparkles, Users, Calendar, Heart, MapPin, 
-  ChevronRight, Target, Coffee, Wine, Palette, Music, Compass,
+  ChevronRight, Coffee, Wine, Palette, Music, Compass,
   Moon
 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -434,8 +434,8 @@ export const SundayMatches = () => {
                           Top Match
                         </span>
                         {displayCurated[0].compatibility_score && (
-                          <span className="bg-black/40 text-white/90 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-caption tracking-wide">
-                            {Math.round(displayCurated[0].compatibility_score * 100)}%
+                          <span className="bg-foreground/80 text-white backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-medium tracking-wide">
+                            {Math.round(displayCurated[0].compatibility_score * 100)}% Match
                           </span>
                         )}
                       </div>
@@ -489,8 +489,8 @@ export const SundayMatches = () => {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                         
                         {match.compatibility_score && (
-                          <span className="absolute top-2.5 right-2.5 bg-primary/85 text-primary-foreground px-2 py-0.5 rounded-full text-[9px] font-caption tracking-wider uppercase shadow-md">
-                            {Math.round(match.compatibility_score * 100)}%
+                          <span className="absolute top-2.5 right-2.5 bg-foreground/80 text-white backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-medium tracking-wide shadow-md">
+                            {Math.round(match.compatibility_score * 100)}% Match
                           </span>
                         )}
                         
@@ -598,9 +598,8 @@ const MatchCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => voi
               )}
             </div>
             {match.compatibility_score && (
-              <Badge className="bg-primary/15 text-primary border-none">
-                <Target className="w-3 h-3 mr-1" />
-                {Math.round(match.compatibility_score * 100)}%
+              <Badge className="bg-foreground/80 text-white border-none text-xs font-medium">
+                {Math.round(match.compatibility_score * 100)}% Match
               </Badge>
             )}
           </div>
@@ -653,8 +652,8 @@ const PoolCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => void
         </div>
 
         {match.compatibility_score && (
-          <span className="absolute top-2.5 right-2.5 bg-black/40 text-white/90 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-caption tracking-wider">
-            {Math.round(match.compatibility_score * 100)}%
+          <span className="absolute top-2.5 right-2.5 bg-foreground/80 text-white backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-medium tracking-wide">
+            {Math.round(match.compatibility_score * 100)}% Match
           </span>
         )}
 
