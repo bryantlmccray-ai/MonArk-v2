@@ -102,9 +102,9 @@ export const DatingPool = () => {
                 {/* Compatibility badge */}
                 {match.compatibility_score && (
                   <Badge 
-                    className="absolute top-2 right-2 bg-black/50 text-white border-none text-xs"
+                    className="absolute top-2 right-2 bg-foreground/80 text-white border-none text-xs font-medium backdrop-blur-md"
                   >
-                    {Math.round(match.compatibility_score * 100)}%
+                    {Math.round(match.compatibility_score * 100)}% Match
                   </Badge>
                 )}
               </div>
