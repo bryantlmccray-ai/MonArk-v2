@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Coffee, Sun, Moon, Martini, Landmark, Save } from 'lucide-react';
 import { ProfileData } from './ProfileCreation';
+import { EditBackButton } from './EditBackButton';
 
 interface DatePaletteStepProps {
   profileData: ProfileData;
@@ -10,9 +11,10 @@ interface DatePaletteStepProps {
   onSkip: () => void;
   stepRequirement: 'critical' | 'important' | 'optional';
   onSaveAndReturn?: (data: Partial<ProfileData>) => void;
+  onCancelEdit?: () => void;
 }
 
-export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, updateData, onNext, onSkip, stepRequirement, onSaveAndReturn }) => {
+export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, updateData, onNext, onSkip, stepRequirement, onSaveAndReturn, onCancelEdit }) => {
   const [vibe, setVibe] = useState<string[]>(profileData.vibe);
   const [budget, setBudget] = useState<string>(profileData.budget);
   const [timeOfDay, setTimeOfDay] = useState<string[]>(profileData.timeOfDay);

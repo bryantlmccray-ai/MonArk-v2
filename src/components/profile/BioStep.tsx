@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { X, Save } from 'lucide-react';
+import { EditBackButton } from './EditBackButton';
 import { ProfileData } from './ProfileCreation';
 
 interface BioStepProps {

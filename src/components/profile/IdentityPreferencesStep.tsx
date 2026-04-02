@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Check, Save } from 'lucide-react';
 import { ProfileData } from './ProfileCreation';
+import { EditBackButton } from './EditBackButton';
 
 interface IdentityPreferencesStepProps {
   profileData: ProfileData;
@@ -10,6 +11,7 @@ interface IdentityPreferencesStepProps {
   onSkip?: () => void;
   stepRequirement: 'optional' | 'important';
   onSaveAndReturn?: (data: Partial<ProfileData>) => void;
+  onCancelEdit?: () => void;
 }
 
 interface IdentityData {

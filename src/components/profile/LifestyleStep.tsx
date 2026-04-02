@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Briefcase, GraduationCap, Dumbbell, Cigarette, Wine, Ruler, Save } from 'lucide-react';
+import { EditBackButton } from './EditBackButton';
 
 interface LifestyleStepProps {
   data: {
@@ -21,10 +22,11 @@ interface LifestyleStepProps {
   onBack: () => void;
   stepRequirement: 'critical' | 'important' | 'optional';
   onSaveAndReturn?: () => void;
+  onCancelEdit?: () => void;
 }
 
 export const LifestyleStep: React.FC<LifestyleStepProps> = ({
-  data, onUpdate, onNext, onSkip, onBack, stepRequirement, onSaveAndReturn,
+  data, onUpdate, onNext, onSkip, onBack, stepRequirement, onSaveAndReturn, onCancelEdit,
 }) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
