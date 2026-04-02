@@ -89,7 +89,7 @@ const t = {
 export default function PaywallModal({
   isOpen,
   onClose,
-  currentTier = "free",
+  currentTier = "plus",
 }: PaywallModalProps) {
   const [isQuarterly, setIsQuarterly] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -97,7 +97,7 @@ export default function PaywallModal({
   if (!isOpen) return null;
 
   const handlePurchase = async (tierKey: TierKey) => {
-    if (tierKey === "free" || tierKey === currentTier) {
+    if (tierKey === currentTier) {
       onClose();
       return;
     }
