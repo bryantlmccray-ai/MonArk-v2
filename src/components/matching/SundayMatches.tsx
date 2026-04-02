@@ -644,6 +644,14 @@ const PoolCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => void
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
         
+        {/* Hover overlay with tap hint */}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1.5 text-white text-xs font-medium bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
+            <Heart className="w-3 h-3" />
+            Tap to view
+          </span>
+        </div>
+
         {match.compatibility_score && (
           <span className="absolute top-2.5 right-2.5 bg-black/40 text-white/90 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-caption tracking-wider">
             {Math.round(match.compatibility_score * 100)}%
