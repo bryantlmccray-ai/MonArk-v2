@@ -182,6 +182,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
            {activeTab === 'profile' && <RifInsightsCard />}
           
            {renderActiveScreen()}
+          </div>
         </div>
 
         <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
