@@ -141,7 +141,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
         bio: !!(loadedData.bio || loadedData.occupation),
         interests: loadedData.interests.length >= 3,
         photos: loadedData.photos.length > 0,
-        lifestyle: !!(loadedData.occupation && loadedData.relationship_goals.length > 0),
+        lifestyle: !!(loadedData.occupation || loadedData.relationship_goals.length > 0 || loadedData.smoking_status || loadedData.drinking_status || loadedData.exercise_habits || loadedData.education_level),
         datePalette: loadedData.vibe.length > 0 || loadedData.activityType.length > 0,
         identityPreferences: !!(loadedData.identityPreferences.genderIdentity && loadedData.identityPreferences.sexualOrientation),
       };
