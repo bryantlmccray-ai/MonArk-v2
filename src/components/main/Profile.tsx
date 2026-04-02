@@ -646,7 +646,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               className="w-full py-3 bg-secondary border border-border text-foreground rounded-xl transition-all hover:border-primary/30 hover:bg-secondary/80"
               disabled={isSigningOut}
             >
-              Edit Profile
+              View Profile
             </button>
 
             {/* Sign Out */}
