@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useCuratedMatches } from '@/hooks/useCuratedMatches';
 import { MatchProfileCard } from './MatchProfileCard';
 import { MutualMatchModal } from './MutualMatchModal';
@@ -6,7 +6,7 @@ import { MatchRevealCeremony } from './MatchRevealCeremony';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { Sparkles } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const CountdownRing = ({ daysUntil, totalDays = 7 }: { daysUntil: number; totalDays?: number }) => {
   const radius = 38;
