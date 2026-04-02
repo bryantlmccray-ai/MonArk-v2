@@ -228,6 +228,9 @@ export const Conversations: React.FC = () => {
                     loading="lazy"
                     className="w-12 h-12 rounded-full ring-2 ring-border/80 group-hover:ring-primary/25 transition-all object-cover"
                   />
+                  {conversation.isNewMatch && (
+                    <div className="absolute top-0 -left-0.5 w-3 h-3 bg-primary rounded-full border-2 border-card" />
+                  )}
                   {conversation.mutualEngagement > 0.7 && conversation.messageCount > 15 && (
                     <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-primary rounded-full border-2 border-card flex items-center justify-center">
                       <Calendar className="h-2 w-2 text-primary-foreground" />
@@ -237,7 +240,7 @@ export const Conversations: React.FC = () => {
                 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-foreground font-semibold text-[15px]">
+                    <h3 className={`text-foreground text-[15px] ${conversation.isNewMatch ? 'font-bold' : 'font-semibold'}`}>
                       {conversation.name}
                     </h3>
                     {conversation.hadDate && (
@@ -257,7 +260,7 @@ export const Conversations: React.FC = () => {
                   </div>
                   <p className={`text-sm truncate mt-0.5 ${
                     conversation.isNewMatch 
-                      ? 'text-primary font-medium' 
+                      ? 'text-primary font-semibold' 
                       : 'text-muted-foreground'
                   }`}>
                     {conversation.lastMessage}
