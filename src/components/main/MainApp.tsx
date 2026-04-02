@@ -151,9 +151,9 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
 
   if (isMobile) {
     return (
-      <div className="min-h-screen bg-background relative">
+      <div className="h-screen bg-background relative flex flex-col overflow-hidden">
         {/* Mobile header with logo + avatar */}
-        <header className="sticky top-0 z-40 flex items-center justify-between px-5 py-3 bg-card/98 backdrop-blur-2xl border-b border-border/50" style={{ boxShadow: '0 1px 12px rgba(90, 70, 50, 0.06)' }}>
+        <header className="flex-shrink-0 z-40 flex items-center justify-between px-5 py-3 bg-card/98 backdrop-blur-2xl border-b border-border/50" style={{ boxShadow: '0 1px 12px rgba(90, 70, 50, 0.06)' }}>
           <img 
             src="/lovable-uploads/e11ccc80-2237-4aac-b579-dccb89f8d727.png" 
             alt="MonArk" 
@@ -173,7 +173,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
         {/* Sticky greeting below header */}
         {activeTab === 'weekly' && <PremiumGreeting firstName={firstName} />}
 
-        <div className="pb-24 px-5 pt-3 space-y-5">
+        <div className="flex-1 overflow-y-auto pb-24 px-5 pt-3 space-y-5">
 
            
            {/* RIF Beta Insights Card */}
@@ -221,14 +221,14 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
+      <div className="h-screen flex w-full bg-background overflow-hidden">
         <header className="fixed top-0 left-0 right-0 h-12 flex items-center justify-between bg-card/98 backdrop-blur-2xl border-b border-border/50 z-40" style={{ boxShadow: '0 1px 12px rgba(90, 70, 50, 0.06)' }}>
           <SidebarTrigger className="ml-4 text-muted-foreground hover:text-primary transition-colors" />
         </header>
 
         <SidebarNavigation activeTab={activeTab} onTabChange={handleTabChange} onArkNavigation={handleJournalNavigation} onUpgrade={() => setShowPaywall(true)} />
 
-        <main className="flex-1 pt-12">
+        <main className="flex-1 pt-12 overflow-y-auto">
           {activeTab === 'weekly' && <PremiumGreeting firstName={firstName} />}
 
           {/* RIF Beta Insights Card for desktop */}
