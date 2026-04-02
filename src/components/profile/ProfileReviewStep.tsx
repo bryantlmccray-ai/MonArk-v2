@@ -206,7 +206,9 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
                 <p><span className="text-primary">Sexual Orientation:</span> {profileData.identityPreferences?.sexualOrientation || 'Not specified'}</p>
               </div>
             ) : (
-              <div className="text-muted-foreground text-sm italic">Identity preferences not completed yet</div>
+              <button onClick={() => onEdit(5)} className="text-primary text-sm flex items-center gap-1 hover:underline">
+                Add identity details for more relevant matches <ArrowRight size={14} />
+              </button>
             )}
           </div>
         </div>
