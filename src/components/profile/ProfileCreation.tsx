@@ -248,6 +248,11 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
     setCurrentStep(6);
   };
 
+  const cancelEditAndReturn = () => {
+    setEditingFromReview(false);
+    setCurrentStep(6);
+  };
+
   const handleComplete = async () => {
     try {
       console.log('[ProfileCreation] Starting profile save...');
@@ -329,7 +334,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
               nextStep(); 
             }}
             onSkip={() => { markStepSkipped('bio'); nextStep(); }}
-            onCancel={onCancel}
+            onCancel={editingFromReview ? cancelEditAndReturn : onCancel}
             stepRequirement={stepRequirements.bio}
             onSaveAndReturn={editingFromReview ? (bio: string) => {
               updateProfileData({ bio });
@@ -351,6 +356,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
               markStepCompleted('interests', { interests: profileData.interests });
               saveAndReturn({ interests: profileData.interests });
             } : undefined}
+            onCancelEdit={editingFromReview ? cancelEditAndReturn : undefined}
           />
         );
       case 2:
@@ -366,6 +372,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
               markStepCompleted('photos', { photos: profileData.photos });
               saveAndReturn({ photos: profileData.photos });
             } : undefined}
+            onCancelEdit={editingFromReview ? cancelEditAndReturn : undefined}
           />
         );
       case 3:
@@ -400,6 +407,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
               markStepCompleted('lifestyle', data);
               saveAndReturn(data);
             } : undefined}
+            onCancelEdit={editingFromReview ? cancelEditAndReturn : undefined}
           />
         );
       case 4:
@@ -415,6 +423,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
               markStepCompleted('datePalette', data);
               saveAndReturn(data);
             } : undefined}
+            onCancelEdit={editingFromReview ? cancelEditAndReturn : undefined}
           />
         );
       case 5:
@@ -430,6 +439,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
               markStepCompleted('identityPreferences', data);
               saveAndReturn(data);
             } : undefined}
+            onCancelEdit={editingFromReview ? cancelEditAndReturn : undefined}
           />
         );
       case 6:

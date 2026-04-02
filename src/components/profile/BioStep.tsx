@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { X, Save } from 'lucide-react';
+import { EditBackButton } from './EditBackButton';
 import { ProfileData } from './ProfileCreation';
 
 interface BioStepProps {
@@ -59,6 +60,9 @@ export const BioStep: React.FC<BioStepProps> = ({ profileData, updateData, onNex
 
   return (
     <div ref={containerRef} className="relative bg-background p-6 flex flex-col pb-32">
+      {onSaveAndReturn && onCancel && (
+        <EditBackButton onClick={onCancel} />
+      )}
       {onCancel && !onSaveAndReturn && (
         <div className="absolute top-6 right-6 z-10">
           <button

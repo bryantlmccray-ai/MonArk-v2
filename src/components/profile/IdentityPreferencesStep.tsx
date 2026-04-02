@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Check, Save } from 'lucide-react';
 import { ProfileData } from './ProfileCreation';
+import { EditBackButton } from './EditBackButton';
 
 interface IdentityPreferencesStepProps {
   profileData: ProfileData;
@@ -10,6 +11,7 @@ interface IdentityPreferencesStepProps {
   onSkip?: () => void;
   stepRequirement: 'optional' | 'important';
   onSaveAndReturn?: (data: Partial<ProfileData>) => void;
+  onCancelEdit?: () => void;
 }
 
 interface IdentityData {
@@ -40,7 +42,7 @@ const DISCOVERY_PREFERENCES = [
 ];
 
 export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = ({
-  profileData, updateData, onNext, onSkip, onSaveAndReturn,
+  profileData, updateData, onNext, onSkip, onSaveAndReturn, onCancelEdit,
 }) => {
   // Initialize from existing profileData instead of empty defaults
   const [identityData, setIdentityData] = useState<IdentityData>({
@@ -299,6 +301,11 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
 
   return (
     <div className="bg-background p-6 pb-32">
+      {onSaveAndReturn && onCancelEdit && (
+        <div className="max-w-2xl mx-auto w-full">
+          <EditBackButton onClick={onCancelEdit} />
+        </div>
+      )}
       <div className="w-full max-w-2xl mx-auto">
         {currentStep === 0 ? renderStep0() : renderStep1()}
       </div>

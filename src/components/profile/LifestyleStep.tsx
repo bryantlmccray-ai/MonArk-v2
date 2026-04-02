@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Briefcase, GraduationCap, Dumbbell, Cigarette, Wine, Ruler, Save } from 'lucide-react';
+import { EditBackButton } from './EditBackButton';
 
 interface LifestyleStepProps {
   data: {
@@ -21,10 +22,11 @@ interface LifestyleStepProps {
   onBack: () => void;
   stepRequirement: 'critical' | 'important' | 'optional';
   onSaveAndReturn?: () => void;
+  onCancelEdit?: () => void;
 }
 
 export const LifestyleStep: React.FC<LifestyleStepProps> = ({
-  data, onUpdate, onNext, onSkip, onBack, stepRequirement, onSaveAndReturn,
+  data, onUpdate, onNext, onSkip, onBack, stepRequirement, onSaveAndReturn, onCancelEdit,
 }) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -68,6 +70,11 @@ export const LifestyleStep: React.FC<LifestyleStepProps> = ({
 
   return (
     <div className="bg-background p-6 pb-32">
+      {onSaveAndReturn && onCancelEdit && (
+        <div className="max-w-2xl mx-auto w-full">
+          <EditBackButton onClick={onCancelEdit} />
+        </div>
+      )}
       <div className="max-w-2xl mx-auto w-full space-y-8">
         <div className="text-center space-y-2 pt-8">
           <h2 className="text-3xl font-light text-foreground">Lifestyle & Compatibility</h2>

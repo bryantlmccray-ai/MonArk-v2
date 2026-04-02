@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Save } from 'lucide-react';
 import { ProfileData } from './ProfileCreation';
+import { EditBackButton } from './EditBackButton';
 
 interface InterestsStepProps {
   profileData: ProfileData;
@@ -11,9 +12,10 @@ interface InterestsStepProps {
   onBack?: () => void;
   stepRequirement: 'critical' | 'important' | 'optional';
   onSaveAndReturn?: () => void;
+  onCancelEdit?: () => void;
 }
 
-export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, stepRequirement, onSaveAndReturn }) => {
+export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, stepRequirement, onSaveAndReturn, onCancelEdit }) => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>(profileData.interests);
 
   const interestCategories = {
@@ -38,6 +40,11 @@ export const InterestsStep: React.FC<InterestsStepProps> = ({ profileData, updat
 
   return (
     <div className="bg-background p-6 pb-32">
+      {onSaveAndReturn && onCancelEdit && (
+        <div className="max-w-2xl mx-auto w-full">
+          <EditBackButton onClick={onCancelEdit} />
+        </div>
+      )}
       <div className="max-w-2xl mx-auto w-full space-y-6">
         <div className="text-center space-y-2 pt-8">
           <h1 className="text-3xl font-light text-foreground">What are your passions?</h1>

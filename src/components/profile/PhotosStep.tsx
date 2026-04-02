@@ -3,6 +3,7 @@ import { Plus, X, Upload, Save } from 'lucide-react';
 import { ProfileData } from './ProfileCreation';
 import { usePhotoUpload } from '@/hooks/usePhotoUpload';
 import { useToast } from '@/hooks/use-toast';
+import { EditBackButton } from './EditBackButton';
 
 interface PhotosStepProps {
   profileData: ProfileData;
@@ -12,9 +13,10 @@ interface PhotosStepProps {
   onBack?: () => void;
   stepRequirement: 'critical' | 'important' | 'optional';
   onSaveAndReturn?: () => void;
+  onCancelEdit?: () => void;
 }
 
-export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, stepRequirement, onSaveAndReturn }) => {
+export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData, onNext, onSkip, onBack, stepRequirement, onSaveAndReturn, onCancelEdit }) => {
   const [photos, setPhotos] = useState<string[]>(profileData.photos);
   const { uploadPhoto, deletePhoto, uploading } = usePhotoUpload();
   const { toast } = useToast();
@@ -87,6 +89,11 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
 
   return (
     <div className="bg-background p-6 pb-32">
+      {onSaveAndReturn && onCancelEdit && (
+        <div className="max-w-2xl mx-auto w-full">
+          <EditBackButton onClick={onCancelEdit} />
+        </div>
+      )}
       <div className="max-w-2xl mx-auto w-full space-y-6">
         <div className="text-center space-y-2 pt-8">
           <h1 className="text-3xl font-light text-foreground">Curate Your Photos</h1>

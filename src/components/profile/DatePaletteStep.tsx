@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Coffee, Sun, Moon, Martini, Landmark, Save } from 'lucide-react';
 import { ProfileData } from './ProfileCreation';
+import { EditBackButton } from './EditBackButton';
 
 interface DatePaletteStepProps {
   profileData: ProfileData;
@@ -10,9 +11,10 @@ interface DatePaletteStepProps {
   onSkip: () => void;
   stepRequirement: 'critical' | 'important' | 'optional';
   onSaveAndReturn?: (data: Partial<ProfileData>) => void;
+  onCancelEdit?: () => void;
 }
 
-export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, updateData, onNext, onSkip, stepRequirement, onSaveAndReturn }) => {
+export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, updateData, onNext, onSkip, stepRequirement, onSaveAndReturn, onCancelEdit }) => {
   const [vibe, setVibe] = useState<string[]>(profileData.vibe);
   const [budget, setBudget] = useState<string>(profileData.budget);
   const [timeOfDay, setTimeOfDay] = useState<string[]>(profileData.timeOfDay);
@@ -56,6 +58,11 @@ export const DatePaletteStep: React.FC<DatePaletteStepProps> = ({ profileData, u
 
   return (
     <div className="bg-background p-6 pb-32">
+      {onSaveAndReturn && onCancelEdit && (
+        <div className="max-w-2xl mx-auto w-full">
+          <EditBackButton onClick={onCancelEdit} />
+        </div>
+      )}
       <div className="max-w-2xl mx-auto w-full space-y-8">
         <div className="text-center space-y-2 pt-8">
           <h1 className="text-3xl font-light text-foreground">Design Your Perfect Date</h1>
