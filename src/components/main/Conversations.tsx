@@ -13,6 +13,7 @@ import { useConversations } from '@/hooks/useConversations';
 
 export const Conversations: React.FC = () => {
   const { user } = useAuth();
+  const { conversations: realConversations, loading: conversationsLoading } = useConversations();
   const { proposals, updateConversationEngagement, dismissProposal, restoreProposal } = useDateConcierge();
   const { pendingFeedback, showFeedback, setShowFeedback, dismissFeedback } = useAfterDateFeedback();
   
