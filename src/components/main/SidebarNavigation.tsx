@@ -35,7 +35,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
             src="/lovable-uploads/e11ccc80-2237-4aac-b579-dccb89f8d727.png" 
             alt="MonArk — Date well."
             className="h-12 w-12 object-contain rounded-full cursor-pointer hover:opacity-80 transition-opacity duration-300"
-            onClick={onArkNavigation || (() => onTabChange('dates'))}
+            onClick={() => onTabChange('profile')}
           />
         </div>
       </SidebarHeader>
