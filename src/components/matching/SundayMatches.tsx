@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { useCuratedMatches, CuratedMatch } from '@/hooks/useCuratedMatches';
 import { useDatingPool, DatingPoolMatch } from '@/hooks/useDatingPool';
 import { MatchDetailModal } from './MatchDetailModal';
