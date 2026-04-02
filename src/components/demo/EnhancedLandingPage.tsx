@@ -71,19 +71,11 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
   return (
     <div className="min-h-screen bg-background relative">
-      {/* ═══════════ FIXED VIDEO BACKGROUND ═══════════ */}
-      <div className="fixed inset-0 z-0 overflow-hidden">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-        >
-          <source src="/videos/hero-loop.mp4" type="video/mp4" />
-          <source src="/videos/hero-loop.mov" type="video/quicktime" />
-        </video>
-        <div className="absolute inset-0 bg-background/65" />
+      {/* ═══════════ FIXED ATMOSPHERIC BACKGROUND ═══════════ */}
+      <div className="fixed inset-0 z-0 overflow-hidden bg-[radial-gradient(ellipse_at_top,hsl(220_20%_18%)_0%,hsl(225_22%_12%)_40%,hsl(230_20%_8%)_100%)]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,hsl(20_18%_20%/0.25)_0%,transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,hsl(30_25%_22%/0.15)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-background/55" />
       </div>
       <div className="relative z-10">
       {/* ═══════════ STICKY NAV ═══════════ */}
@@ -305,9 +297,9 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <p className="text-center text-xs font-caption text-primary tracking-[0.2em] uppercase mb-8">Every Sunday morning, your 3 arrive.</p>
             <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
               {[
-                { initials: "J", name: "Jordan", age: 28, location: "Brooklyn, NY", score: 92, tagline: "Strong communicator · Values depth", reason: "You both value slow-building trust and direct communication.", interests: ["Live Jazz", "Cooking", "Hiking"] },
-                { initials: "M", name: "Marcus", age: 31, location: "Manhattan, NY", score: 85, tagline: "Intentional dater · Emotionally present", reason: "Complementary conflict styles—he speaks up, you reflect first.", interests: ["Poetry", "Yoga", "Art Museums"] },
-                { initials: "P", name: "Priya", age: 27, location: "Park Slope, NY", score: 78, tagline: "Curious spirit · Steady pacing", reason: "Shared pacing preference and aligned relationship goals.", interests: ["Film", "Running", "Travel"] },
+                { photo: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=400&fit=crop", name: "Jordan", age: 28, location: "Brooklyn, NY", score: 92, tagline: "Strong communicator · Values depth", reason: "You both value slow-building trust and direct communication.", interests: ["Live Jazz", "Cooking", "Hiking"] },
+                { photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop", name: "Marcus", age: 31, location: "Manhattan, NY", score: 85, tagline: "Intentional dater · Emotionally present", reason: "Complementary conflict styles—he speaks up, you reflect first.", interests: ["Poetry", "Yoga", "Art Museums"] },
+                { photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop", name: "Priya", age: 27, location: "Park Slope, NY", score: 78, tagline: "Curious spirit · Steady pacing", reason: "Shared pacing preference and aligned relationship goals.", interests: ["Film", "Running", "Travel"] },
               ].map((card, i) => (
                 <motion.div
                   key={i}
@@ -323,9 +315,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   </div>
                   {/* Avatar + Name */}
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-primary-foreground font-serif text-sm font-semibold shrink-0">
-                      {card.initials}
-                    </div>
+                    <img src={card.photo} alt={card.name} className="w-12 h-12 rounded-full object-cover shrink-0 border border-primary/20" />
                     <div>
                       <h4 className="font-serif text-lg text-[hsl(40_30%_88%)] leading-tight">{card.name}, {card.age}</h4>
                       <span className="text-[11px] text-[hsl(30_40%_72%/0.7)] flex items-center gap-1">
