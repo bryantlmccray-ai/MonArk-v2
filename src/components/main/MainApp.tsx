@@ -72,6 +72,16 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Listen for cross-component navigation events
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.tab) setActiveTab(detail.tab);
+    };
+    window.addEventListener('monark-navigate', handler);
+    return () => window.removeEventListener('monark-navigate', handler);
+  }, []);
+
   // Track weekly options view when tab changes
   useEffect(() => {
     if (activeTab === 'weekly') {
