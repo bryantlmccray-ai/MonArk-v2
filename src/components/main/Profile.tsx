@@ -604,9 +604,6 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                       <span className="text-foreground text-sm font-body">{profile.preference_to_see.join(', ')}</span>
                     </div>
                   )}
-                  {!profile?.gender_identity && !profile?.sexual_orientation && !profile?.age && !profile?.height_cm && !profile?.weight_lbs && !(profile?.preference_to_see && profile.preference_to_see.length > 0) && (
-                    <p className="text-muted-foreground text-sm italic py-2">Tap Edit to add your details</p>
-                  )}
                 </div>
               )}
             </motion.div>
