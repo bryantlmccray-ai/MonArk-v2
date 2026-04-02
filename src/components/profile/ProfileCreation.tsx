@@ -439,6 +439,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
               markStepCompleted('identityPreferences', data);
               saveAndReturn(data);
             } : undefined}
+            onCancelEdit={editingFromReview ? cancelEditAndReturn : undefined}
           />
         );
       case 6:
