@@ -78,15 +78,11 @@ export const CuratedMatches = () => {
   return (
     <div className="space-y-6 p-4 md:p-6 max-w-lg mx-auto">
       {/* Header */}
-      <div className="space-y-1">
-        <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-1.5">
-          <Sparkles className="w-3 h-3" />
-          MonArk
-        </div>
-        <h2 className="font-serif text-3xl text-foreground font-normal tracking-tight">
-          Your 3 This Week
+      <div className="space-y-2">
+        <h2 className="font-serif text-3xl text-foreground font-normal tracking-tight flex items-center gap-2">
+          Your 3 <Sparkles className="w-4 h-4 text-primary" />
         </h2>
-        <div className="flex items-center gap-2 mt-2">
+        <div className="flex items-center gap-2">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/15">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/40 opacity-75"></span>
