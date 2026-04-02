@@ -378,19 +378,133 @@ export const WeeklyRhythmPlans = () => {
         )}
       </AnimatePresence>
 
-      {/* All Plans Preview (when nothing selected) */}
+      {/* ═══ SUGGESTED THIS WEEK ═══ */}
       {!selectedRhythm && (
-        <div className="px-6 pb-12">
-          <div className="max-w-4xl mx-auto space-y-6">
-            <h2 className="text-xl font-semibold text-center text-muted-foreground">
-              Your three plans for the week
-            </h2>
-            
-            <div className="grid gap-6">
-              {DEMO_PLANS.map((plan) => (
-                <PlanCard key={plan.id} plan={plan} onSelect={() => handleSelectPlan(plan)} />
-              ))}
+        <div className="px-6 pb-6">
+          <div className="max-w-4xl mx-auto space-y-4">
+            <div className="flex items-center gap-2">
+              <Star className="w-4 h-4 text-primary" />
+              <h2 className="text-lg font-semibold text-foreground">Suggested This Week</h2>
             </div>
+            <p className="text-sm text-muted-foreground -mt-2">
+              Hand-picked date ideas matched to your 3.
+            </p>
+            
+            <div className="grid gap-4">
+              {SUGGESTED_DATES.map((date) => {
+                const isSaved = savedPlans.includes(date.id);
+                return (
+                  <Card key={date.id} className="overflow-hidden border border-border/60">
+                    <CardContent className="p-5 space-y-3">
+                      {/* Venue + Neighborhood */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-foreground text-base">{date.venueName}</h3>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <MapPin className="w-3 h-3 text-muted-foreground" />
+                            <span className="text-xs text-muted-foreground">{date.neighborhood}</span>
+                            <span className="text-muted-foreground/40 mx-1">·</span>
+                            <Clock className="w-3 h-3 text-muted-foreground" />
+                            <span className="text-xs text-muted-foreground">{date.timeHint}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Vibe Tags */}
+                      <div className="flex flex-wrap gap-1.5">
+                        {date.vibeTags.map((tag) => (
+                          <Badge key={tag} variant="outline" className="text-[11px] px-2 py-0.5 bg-secondary/50 border-border/40">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+
+                      {/* Description */}
+                      <p className="text-sm text-muted-foreground leading-relaxed">{date.description}</p>
+
+                      {/* Perfect For + Save */}
+                      <div className="flex items-center justify-between pt-1">
+                        <div className="flex items-center gap-2">
+                          <Avatar className="h-7 w-7 ring-2 ring-primary/20">
+                            <AvatarImage src={date.perfectFor.photo} alt={date.perfectFor.name} />
+                            <AvatarFallback>{date.perfectFor.name[0]}</AvatarFallback>
+                          </Avatar>
+                          <span className="text-xs font-medium text-primary">
+                            Perfect for {date.perfectFor.name}
+                          </span>
+                        </div>
+                        <Button
+                          variant={isSaved ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => handleSavePlan(date.id)}
+                          className="gap-1.5"
+                        >
+                          {isSaved ? (
+                            <><BookmarkCheck className="w-3.5 h-3.5" /> Saved</>
+                          ) : (
+                            <><Bookmark className="w-3.5 h-3.5" /> Save Plan</>
+                          )}
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ YOUR SAVED PLANS ═══ */}
+      {!selectedRhythm && (
+        <div className="px-6 pb-10">
+          <div className="max-w-4xl mx-auto space-y-4">
+            <div className="flex items-center gap-2">
+              <BookmarkCheck className="w-4 h-4 text-primary" />
+              <h2 className="text-lg font-semibold text-foreground">Your Saved Plans</h2>
+            </div>
+
+            {savedPlans.length === 0 ? (
+              <Card className="border border-dashed border-border/60">
+                <CardContent className="p-6 text-center">
+                  <Bookmark className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground">
+                    No saved plans yet. Tap <span className="font-medium text-foreground">Save Plan</span> on any suggestion above.
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid gap-3">
+                {SUGGESTED_DATES.filter(d => savedPlans.includes(d.id)).map((date) => (
+                  <Card key={date.id} className="border border-primary/20 bg-primary/[0.03]">
+                    <CardContent className="p-4 flex items-center gap-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-foreground text-sm">{date.venueName}</div>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span className="text-xs text-muted-foreground">{date.neighborhood}</span>
+                          <span className="text-muted-foreground/40">·</span>
+                          <span className="text-xs text-muted-foreground">{date.vibeTags.join(' / ')}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-6 w-6">
+                          <AvatarImage src={date.perfectFor.photo} alt={date.perfectFor.name} />
+                          <AvatarFallback className="text-[10px]">{date.perfectFor.name[0]}</AvatarFallback>
+                        </Avatar>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                          onClick={() => handleSavePlan(date.id)}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
