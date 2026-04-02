@@ -162,14 +162,16 @@ export const MatchDetailModal = ({
 
           {/* Profile content — inside same scroll container */}
           <div className="p-6 space-y-6">
-            {/* Match reason (if curated) */}
+            {/* Compatibility insight — gold-bordered highlight */}
             {match.match_reason && (
-              <div className="p-4 rounded-lg bg-primary/10 border border-primary/20">
-                <p className="text-sm font-medium text-primary flex items-center gap-2">
-                  <Sparkles className="w-4 h-4" />
-                  Why we matched you
-                </p>
-                <p className="text-sm text-foreground mt-1">{match.match_reason}</p>
+              <div className="relative p-4 rounded-xl border border-[hsl(var(--primary))] bg-gradient-to-r from-[hsl(var(--primary)/0.08)] to-[hsl(var(--primary)/0.03)] shadow-[0_2px_12px_-4px_hsl(var(--primary)/0.2)]">
+                <div className="flex items-start gap-3">
+                  <span className="text-[hsl(var(--primary))] text-lg leading-none mt-0.5 flex-shrink-0">✦</span>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-[hsl(var(--primary))] font-medium mb-1">Why we matched you</p>
+                    <p className="text-sm text-foreground leading-relaxed italic font-light">"{match.match_reason}"</p>
+                  </div>
+                </div>
               </div>
             )}
 
