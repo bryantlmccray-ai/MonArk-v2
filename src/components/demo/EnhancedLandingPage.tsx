@@ -250,7 +250,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-4xl mx-auto px-5">
           <motion.div
             className="text-center mb-10"
-            initial={false}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
@@ -269,7 +269,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               <motion.div
                 key={i}
                 className="text-center p-6 rounded-2xl border border-transparent bg-card/0 hover:bg-card hover:border-border hover:shadow-[var(--shadow-editorial)] transition-all duration-400 group"
-                initial={false}
+                initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
@@ -286,7 +286,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
           <motion.p
             className="text-center mt-10 text-sm font-caption text-muted-foreground tracking-[0.12em] uppercase"
-            initial={false}
+            initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
@@ -297,7 +297,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           {/* Match Profile Card Mockups */}
           <motion.div
             className="mt-14 mb-14"
-            initial={false}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -312,7 +312,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <motion.div
                   key={i}
                   className="bg-[hsl(230_18%_15%)] border border-[hsl(30_40%_72%/0.15)] rounded-2xl p-5 shadow-[0_4px_24px_rgba(28,31,46,0.3)] hover:border-[hsl(30_40%_72%/0.35)] transition-all duration-300"
-                  initial={false}
+                  initial={{ opacity: 0, y: 28 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.12 * i }}
@@ -372,7 +372,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           {/* Sample RIF Question Preview */}
           <motion.div
             className="mt-12"
-            initial={false}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.15 }}
@@ -388,7 +388,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <motion.div
                   key={i}
                   className="relative bg-[hsl(230_18%_15%)] border border-[hsl(30_40%_72%/0.2)] rounded-2xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(28,31,46,0.25)] hover:border-[hsl(30_40%_72%/0.4)] transition-all duration-300"
-                  initial={false}
+                  initial={{ opacity: 0, x: -24 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.1 * i }}
@@ -415,7 +415,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-4xl mx-auto px-5">
           <motion.div
             className="text-center mb-10"
-            initial={false}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
@@ -429,7 +429,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             {/* Founder Image */}
             <motion.div
               className="relative order-2 md:order-1"
-              initial={false}
+              initial={{ opacity: 0, x: -32 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.8, ease: easeOut }}
@@ -448,7 +448,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 />
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-tr from-transparent via-card/8 to-transparent"
-                  initial={false}
+                  initial={{ x: "-100%" }}
                   whileInView={{ x: "100%" }}
                   viewport={{ once: true }}
                   transition={{ duration: 1.2, delay: 0.6, ease: "easeInOut" }}
@@ -459,7 +459,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             {/* Text */}
             <motion.div
               className="space-y-5 order-1 md:order-2"
-              initial={false}
+              initial={{ opacity: 0, x: 32 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.8, delay: 0.15, ease: easeOut }}
@@ -498,7 +498,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-3xl mx-auto px-5">
           <motion.div
             className="text-center mb-10"
-            initial={false}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
@@ -515,7 +515,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               <motion.div
                 key={member.name}
                 className="text-center space-y-3 group"
-                initial={false}
+                initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.6, ease: easeOut, delay: i * 0.08 }}
@@ -555,7 +555,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           <motion.div
             className="text-center mb-10"
-            initial={false}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
@@ -573,7 +573,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             ].map((quote, idx) => (
               <motion.div
                 key={idx}
-                initial={false}
+                initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.12, ease: easeOut }}
