@@ -298,7 +298,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
               {[
                 { photo: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=400&fit=crop", name: "Jordan", age: 28, location: "Brooklyn, NY", score: 92, tagline: "Strong communicator · Values depth", reason: "You both value slow-building trust and direct communication.", interests: ["Live Jazz", "Cooking", "Hiking"] },
-                { photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop", name: "Marcus", age: 31, location: "Manhattan, NY", score: 85, tagline: "Intentional dater · Emotionally present", reason: "Complementary conflict styles—he speaks up, you reflect first.", interests: ["Poetry", "Yoga", "Art Museums"] },
+                { photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop", name: "Marcus", age: 31, location: "Manhattan, NY", score: 85, tagline: "Intentional dater · Emotionally present", reason: "Complementary conflict styles—he speaks up, you reflect first.", interests: ["Poetry", "Yoga", "Art Museums"] },
                 { photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop", name: "Priya", age: 27, location: "Park Slope, NY", score: 78, tagline: "Curious spirit · Steady pacing", reason: "Shared pacing preference and aligned relationship goals.", interests: ["Film", "Running", "Travel"] },
               ].map((card, i) => (
                 <motion.div
