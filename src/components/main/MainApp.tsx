@@ -151,9 +151,9 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
 
   if (isMobile) {
     return (
-      <div className="min-h-screen bg-background relative">
+      <div className="h-screen bg-background relative flex flex-col overflow-hidden">
         {/* Mobile header with logo + avatar */}
-        <header className="sticky top-0 z-40 flex items-center justify-between px-5 py-3 bg-card/98 backdrop-blur-2xl border-b border-border/50" style={{ boxShadow: '0 1px 12px rgba(90, 70, 50, 0.06)' }}>
+        <header className="flex-shrink-0 z-40 flex items-center justify-between px-5 py-3 bg-card/98 backdrop-blur-2xl border-b border-border/50" style={{ boxShadow: '0 1px 12px rgba(90, 70, 50, 0.06)' }}>
           <img 
             src="/lovable-uploads/e11ccc80-2237-4aac-b579-dccb89f8d727.png" 
             alt="MonArk" 
