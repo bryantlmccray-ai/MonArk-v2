@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, MoreVertical, Shield, Check, CheckCheck, UserX, Phone, PhoneCall } from 'lucide-react';
+import { Send, MoreVertical, Shield, Check, CheckCheck, UserX, Phone, PhoneCall, CalendarHeart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -269,6 +269,24 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           <span className="text-xs text-muted-foreground px-2">Contact shared ✓</span>
         ) : null}
         
+        <Button
+          variant="outline"
+          size="sm"
+          className="text-primary border-primary/30 hover:bg-primary/10 hover:text-primary"
+          onClick={() => {
+            const suggestionsArea = document.querySelector('[data-date-suggestion]');
+            if (suggestionsArea) {
+              suggestionsArea.scrollIntoView({ behavior: 'smooth' });
+            } else {
+              setMessageText(`Hey ${matchName}, want to plan a date? 😊`);
+              textareaRef.current?.focus();
+            }
+          }}
+        >
+          <CalendarHeart className="h-4 w-4 mr-1" />
+          Plan a Date
+        </Button>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm">
@@ -320,11 +338,13 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {/* Curated Date Suggestion - shows at top of conversation */}
-        <MatchDateSuggestionCard
-          conversationId={conversationId}
-          matchUserId={matchUserId}
-          matchName={matchName}
-        />
+        <div data-date-suggestion>
+          <MatchDateSuggestionCard
+            conversationId={conversationId}
+            matchUserId={matchUserId}
+            matchName={matchName}
+          />
+        </div>
 
         {messages.length === 0 ? (
           <div className="text-center text-muted-foreground py-8">
