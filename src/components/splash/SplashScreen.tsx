@@ -72,14 +72,14 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 src={src}
                 alt=""
                 className="absolute inset-0 h-full w-full object-cover object-[center_20%] md:scale-110 md:blur-2xl"
-                style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.72)" }}
+                style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.52)" }}
               />
 
               <img
                 src={src}
                 alt=""
                 className="absolute inset-0 hidden h-full w-full object-contain px-8 py-8 md:block lg:px-14 lg:py-12"
-                style={{ filter: "grayscale(100%) contrast(1.08)" }}
+                style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.7)" }}
               />
             </motion.div>
           ))}
@@ -89,7 +89,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                "linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 40%, transparent 100%)",
+                "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.15) 100%)",
             }}
           />
 
