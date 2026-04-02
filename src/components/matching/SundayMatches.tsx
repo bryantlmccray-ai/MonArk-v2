@@ -516,6 +516,33 @@ export const SundayMatches = () => {
                 ))}
               </div>
               </MatchRevealCeremony>
+
+              {/* All Reviewed Empty State */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="bg-card rounded-2xl border border-border/60 p-8 text-center shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+              >
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="w-5 h-5 text-primary/70" />
+                </div>
+                <h3 className="font-serif text-lg text-foreground mb-1.5">
+                  You've reviewed your 3 for this week
+                </h3>
+                <p className="text-sm text-muted-foreground font-body mb-4">
+                  Take a breath. Your next curated connections are on the way.
+                </p>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/[0.06] border border-primary/15">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-primary/30 animate-[pulse_2.5s_cubic-bezier(0.4,0,0.6,1)_infinite]"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary/70"></span>
+                  </span>
+                  <span className="text-[10px] font-caption text-primary/80 tracking-[0.12em] uppercase">
+                    ✦ Next drop {formatDistanceToNow(nextRefresh, { addSuffix: true })}
+                  </span>
+                </div>
+              </motion.div>
             </TabsContent>
 
             {/* Rhythm Plans Tab */}
