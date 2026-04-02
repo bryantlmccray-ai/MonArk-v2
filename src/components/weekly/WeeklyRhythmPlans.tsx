@@ -430,12 +430,7 @@ export const WeeklyRhythmPlans = () => {
       </AnimatePresence>
 
       {/* Anti-Ghosting Feature Showcase */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9 }}
-        className="px-6 pb-12"
-      >
+      <div className="px-6 pb-12">
         <div className="max-w-4xl mx-auto">
           <Card className="overflow-hidden border-2 border-border bg-card shadow-elevated rounded-2xl">
             <CardContent className="p-6">
