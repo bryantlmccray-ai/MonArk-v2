@@ -37,6 +37,8 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
   const [editOrientation, setEditOrientation] = useState<string>('');
   const [editOrientationCustom, setEditOrientationCustom] = useState('');
   const [editPrefToSee, setEditPrefToSee] = useState<string[]>([]);
+  const [editAge, setEditAge] = useState('');
+  const [editHeightText, setEditHeightText] = useState('');
   const { user, signOut } = useAuth();
   const { profile, loading, updateProfile } = useProfile();
   const { clearLocation } = useLocation();
@@ -106,20 +108,44 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
     setEditOrientation(profile?.sexual_orientation || '');
     setEditOrientationCustom(profile?.sexual_orientation_custom || '');
     setEditPrefToSee(profile?.preference_to_see || []);
+    setEditAge(profile?.age ? String(profile.age) : '');
+    setEditHeightText(profile?.height_cm ? formatHeight(profile.height_cm) : '');
     setEditingDetails(true);
   }, [profile]);
 
+  // Parse height text like 6'1" or 5'10 into cm
+  const parseHeightToCm = (text: string): number | null => {
+    const match = text.match(/(\d+)'?\s*(\d+)?/);
+    if (!match) return null;
+    const feet = parseInt(match[1], 10);
+    const inches = match[2] ? parseInt(match[2], 10) : 0;
+    if (feet < 3 || feet > 8 || inches < 0 || inches > 11) return null;
+    return Math.round((feet * 12 + inches) * 2.54);
+  };
+
   const handleSaveDetails = useCallback(async () => {
+    const ageNum = editAge ? parseInt(editAge, 10) : null;
+    if (ageNum !== null && (isNaN(ageNum) || ageNum < 18 || ageNum > 120)) {
+      toast({ title: 'Please enter a valid age (18+)', variant: 'destructive' });
+      return;
+    }
+    const heightCm = editHeightText.trim() ? parseHeightToCm(editHeightText) : null;
+    if (editHeightText.trim() && heightCm === null) {
+      toast({ title: 'Enter height like 5\'10" or 6\'1"', variant: 'destructive' });
+      return;
+    }
     await updateProfile({
       gender_identity: (editGender || null) as any,
       gender_identity_custom: editGender === 'Custom' ? editGenderCustom : null,
       sexual_orientation: (editOrientation || null) as any,
       sexual_orientation_custom: editOrientation === 'Custom' ? editOrientationCustom : null,
       preference_to_see: editPrefToSee,
+      ...(ageNum !== null ? { age: ageNum } : {}),
+      ...(heightCm !== null ? { height_cm: heightCm } : {}),
     });
     setEditingDetails(false);
     toast({ title: 'Details updated' });
-  }, [editGender, editGenderCustom, editOrientation, editOrientationCustom, editPrefToSee, updateProfile, toast]);
+  }, [editGender, editGenderCustom, editOrientation, editOrientationCustom, editPrefToSee, editAge, editHeightText, updateProfile, toast]);
 
   const togglePref = useCallback((pref: string) => {
     setEditPrefToSee(prev => prev.includes(pref) ? prev.filter(p => p !== pref) : [...prev, pref]);
@@ -470,6 +496,33 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                     </div>
                   </div>
 
+                  {/* Age & Height */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5 block font-caption">Age</label>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={editAge}
+                        onChange={e => setEditAge(e.target.value.replace(/\D/g, '').slice(0, 3))}
+                        placeholder="e.g. 25"
+                        maxLength={3}
+                        className="w-full h-10 px-3 text-sm bg-card border border-border/70 rounded-xl text-foreground font-body placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary/40 transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5 block font-caption">Height</label>
+                      <input
+                        type="text"
+                        value={editHeightText}
+                        onChange={e => setEditHeightText(e.target.value)}
+                        placeholder={`e.g. 5'10"`}
+                        maxLength={6}
+                        className="w-full h-10 px-3 text-sm bg-card border border-border/70 rounded-xl text-foreground font-body placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary/40 transition-all"
+                      />
+                    </div>
+                  </div>
+
                   <div className="flex gap-2 pt-1">
                     <button
                       onClick={handleSaveDetails}
@@ -507,10 +560,16 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                       </p>
                     </div>
                   )}
-                  {profile?.date_of_birth && (
+                  {profile?.age && (
                     <div>
                       <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Age</p>
-                      <p className="text-foreground text-sm font-body">{profile.age || '—'}</p>
+                      <p className="text-foreground text-sm font-body">{profile.age}</p>
+                    </div>
+                  )}
+                  {profile?.height_cm && (
+                    <div>
+                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Height</p>
+                      <p className="text-foreground text-sm font-body">{formatHeight(profile.height_cm)}</p>
                     </div>
                   )}
                   {profile?.preference_to_see && profile.preference_to_see.length > 0 && (
