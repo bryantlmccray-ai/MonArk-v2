@@ -244,9 +244,31 @@ export const Conversations: React.FC = () => {
                       {conversation.name}
                     </h3>
                     {conversation.hadDate && (
-                      <span className="px-2 py-0.5 bg-primary/10 text-primary text-[11px] font-medium rounded-full">
-                        Date completed
+                      <span className="flex items-center gap-1.5">
+                        <span className="px-2 py-0.5 bg-primary/10 text-primary text-[11px] font-medium rounded-full">
+                          Date completed
+                        </span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.dispatchEvent(new CustomEvent('monark-navigate', { detail: { tab: 'shareables', milestone: 'date_completed', matchName: conversation.name } }));
+                          }}
+                          className="text-[11px] text-primary/70 hover:text-primary font-medium transition-colors whitespace-nowrap"
+                        >
+                          Share this moment →
+                        </button>
                       </span>
+                    )}
+                    {conversation.isNewMatch && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.dispatchEvent(new CustomEvent('monark-navigate', { detail: { tab: 'shareables', milestone: 'new_match', matchName: conversation.name } }));
+                        }}
+                        className="text-[11px] text-primary/70 hover:text-primary font-medium transition-colors whitespace-nowrap"
+                      >
+                        Share this moment →
+                      </button>
                     )}
                     {conversation.mutualEngagement > 0.7 && conversation.messageCount > 15 && !conversation.hadDate && (
                       <Badge 
