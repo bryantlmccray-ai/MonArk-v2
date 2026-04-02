@@ -357,7 +357,7 @@ export const SundayMatches = () => {
                  style={{ boxShadow: '0 0 12px rgba(139,105,20,0.06)' }}>
               <span className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
               <p className="text-[10px] uppercase tracking-[0.25em] text-primary/70 font-caption whitespace-nowrap">
-                Preview Mode
+                ✦ This is a preview of your curated experience
               </p>
               <span className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
             </div>
