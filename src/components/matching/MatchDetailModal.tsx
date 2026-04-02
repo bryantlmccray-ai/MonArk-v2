@@ -74,92 +74,93 @@ export const MatchDetailModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg p-0 overflow-hidden bg-card max-h-[90vh]">
-        {/* Photo carousel */}
-        <div className="relative aspect-[4/5] bg-muted">
-          <img
-            src={photos[currentPhotoIndex]}
-            alt={`${match.name}'s photo`}
-            className="w-full h-full object-cover cursor-pointer hover:brightness-95 transition-all duration-200"
-            onClick={() => setLightboxOpen(true)}
-            onError={(e) => {
-              const target = e.currentTarget;
-              target.style.display = 'none';
-              const fallback = document.createElement('div');
-              fallback.className = 'w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/80 to-accent/60';
-              fallback.innerHTML = `<span class="text-primary-foreground font-serif text-5xl opacity-90">${(match.name || 'M').split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()}</span>`;
-              target.parentNode?.insertBefore(fallback, target);
-            }}
-            crossOrigin="anonymous"
-          />
-          
-          {/* Photo navigation */}
-          {photos.length > 1 && (
-            <>
-              <button
-                onClick={prevPhoto}
-                className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 flex items-center justify-center text-white hover:bg-black/70 transition-colors"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              <button
-                onClick={nextPhoto}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 flex items-center justify-center text-white hover:bg-black/70 transition-colors"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
-              
-              {/* Photo indicators */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
-                {photos.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCurrentPhotoIndex(idx)}
-                    className={`w-2 h-2 rounded-full transition-colors ${
-                      idx === currentPhotoIndex ? 'bg-white' : 'bg-white/50'
-                    }`}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-
-          {/* Curated badge */}
-          {isCurated && (
-            <div className="absolute top-4 left-4">
-              <Badge className="bg-primary/90 text-primary-foreground">
-                <Sparkles className="w-3 h-3 mr-1" />
-                Curated for You
-              </Badge>
-            </div>
-          )}
-
-          {/* Compatibility score */}
-          {match.compatibility_score && (
-            <div className="absolute top-4 right-4">
-              <Badge variant="secondary" className="bg-black/60 text-white border-none">
-                <Target className="w-3 h-3 mr-1" />
-                {Math.round(match.compatibility_score * 100)}% Match
-              </Badge>
-            </div>
-          )}
-
-          {/* Name overlay */}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 pt-16">
-            <h2 className="text-2xl font-bold text-white">
-              {match.name}, {match.age}
-            </h2>
-            {match.location && (
-              <p className="text-white/80 flex items-center gap-1 mt-1">
-                <MapPin className="w-4 h-4" />
-                {match.location}
-              </p>
+      <DialogContent className="max-w-lg p-0 overflow-hidden bg-card h-[100dvh] sm:h-auto sm:max-h-[90vh] flex flex-col rounded-none sm:rounded-lg">
+        {/* Scrollable body: photo + content */}
+        <ScrollArea className="flex-1 min-h-0">
+          {/* Photo carousel */}
+          <div className="relative aspect-[4/5] sm:aspect-[4/4] bg-muted">
+            <img
+              src={photos[currentPhotoIndex]}
+              alt={`${match.name}'s photo`}
+              className="w-full h-full object-cover cursor-pointer hover:brightness-95 transition-all duration-200"
+              onClick={() => setLightboxOpen(true)}
+              onError={(e) => {
+                const target = e.currentTarget;
+                target.style.display = 'none';
+                const fallback = document.createElement('div');
+                fallback.className = 'w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/80 to-accent/60';
+                fallback.innerHTML = `<span class="text-primary-foreground font-serif text-5xl opacity-90">${(match.name || 'M').split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()}</span>`;
+                target.parentNode?.insertBefore(fallback, target);
+              }}
+              crossOrigin="anonymous"
+            />
+            
+            {/* Photo navigation */}
+            {photos.length > 1 && (
+              <>
+                <button
+                  onClick={prevPhoto}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={nextPhoto}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+                
+                {/* Photo indicators */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
+                  {photos.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentPhotoIndex(idx)}
+                      className={`w-2 h-2 rounded-full transition-colors ${
+                        idx === currentPhotoIndex ? 'bg-white' : 'bg-white/50'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </>
             )}
-          </div>
-        </div>
 
-        {/* Profile content */}
-        <ScrollArea className="max-h-[40vh]">
+            {/* Curated badge */}
+            {isCurated && (
+              <div className="absolute top-4 left-4">
+                <Badge className="bg-primary/90 text-primary-foreground">
+                  <Sparkles className="w-3 h-3 mr-1" />
+                  Curated for You
+                </Badge>
+              </div>
+            )}
+
+            {/* Compatibility score */}
+            {match.compatibility_score && (
+              <div className="absolute top-4 right-4">
+                <Badge variant="secondary" className="bg-black/60 text-white border-none">
+                  <Target className="w-3 h-3 mr-1" />
+                  {Math.round(match.compatibility_score * 100)}% Match
+                </Badge>
+              </div>
+            )}
+
+            {/* Name overlay */}
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 pt-16">
+              <h2 className="text-2xl font-bold text-white">
+                {match.name}, {match.age}
+              </h2>
+              {match.location && (
+                <p className="text-white/80 flex items-center gap-1 mt-1">
+                  <MapPin className="w-4 h-4" />
+                  {match.location}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Profile content — inside same scroll container */}
           <div className="p-6 space-y-6">
             {/* Match reason (if curated) */}
             {match.match_reason && (
@@ -249,8 +250,11 @@ export const MatchDetailModal = ({
           </div>
         </ScrollArea>
 
+        {/* Scroll fade indicator */}
+        <div className="pointer-events-none h-6 -mt-6 relative z-10 bg-gradient-to-t from-card to-transparent flex-shrink-0" />
+
         {/* Action buttons - sticky footer */}
-        <div className="p-4 border-t border-border bg-card space-y-2">
+        <div className="flex-shrink-0 p-4 border-t border-border bg-card space-y-2">
           <div className="flex gap-3">
             <Button
               variant="outline"
