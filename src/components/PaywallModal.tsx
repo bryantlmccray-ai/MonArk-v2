@@ -270,7 +270,7 @@ export default function PaywallModal({
             gridTemplateColumns:
               typeof window !== "undefined" && window.innerWidth < 768
                 ? "1fr"
-                : "repeat(3, 1fr)",
+                : "repeat(2, 1fr)",
             gap: 20,
             marginBottom: 32,
           }}
