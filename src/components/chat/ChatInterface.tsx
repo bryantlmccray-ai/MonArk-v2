@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, MoreVertical, Shield, Check, CheckCheck, UserX, Phone, PhoneCall } from 'lucide-react';
+import { Send, MoreVertical, Shield, Check, CheckCheck, UserX, Phone, PhoneCall, CalendarHeart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
