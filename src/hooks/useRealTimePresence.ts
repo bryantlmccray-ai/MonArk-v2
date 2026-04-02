@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -13,15 +13,14 @@ export const useRealTimePresence = () => {
   const [onlineUsers, setOnlineUsers] = useState<UserPresence[]>([]);
   const [userPresence, setUserPresence] = useState<UserPresence | null>(null);
   const { user } = useAuth();
+  const presenceRef = useRef<UserPresence | null>(null);
 
   useEffect(() => {
     if (!user) return;
 
-    // Use a user-specific channel name to prevent conflicts
     const channelName = `user_presence_${user.id}`;
     const channel = supabase.channel(channelName);
 
-    // Track current user's presence
     const trackPresence = async () => {
       try {
         const presence: UserPresence = {
@@ -29,7 +28,7 @@ export const useRealTimePresence = () => {
           online_at: new Date().toISOString(),
           last_seen: new Date().toISOString()
         };
-
+        presenceRef.current = presence;
         setUserPresence(presence);
         await channel.track(presence);
       } catch (error) {
@@ -37,22 +36,19 @@ export const useRealTimePresence = () => {
       }
     };
 
-    // Listen for presence changes
     channel
       .on('presence', { event: 'sync' }, () => {
         try {
           const presenceState = channel.presenceState();
           const users: UserPresence[] = [];
-          
           Object.keys(presenceState).forEach(key => {
             const presences = presenceState[key] as any[];
-            presences.forEach(presence => {
-              if (presence.user_id && presence.online_at && presence.last_seen) {
-                users.push(presence as UserPresence);
+            presences.forEach(p => {
+              if (p.user_id && p.online_at && p.last_seen) {
+                users.push(p as UserPresence);
               }
             });
           });
-          
           setOnlineUsers(users);
         } catch (error) {
           console.error('Error handling presence sync:', error);
@@ -65,19 +61,18 @@ export const useRealTimePresence = () => {
         console.log('User left:', key, leftPresences);
       });
 
-    // Subscribe and track presence
     channel.subscribe(async (status) => {
       if (status === 'SUBSCRIBED') {
         await trackPresence();
       }
     });
 
-    // Update presence every 30 seconds
+    // Use ref so the interval always reads the latest presence
     const presenceInterval = setInterval(() => {
-      if (userPresence) {
+      if (presenceRef.current) {
         try {
           channel.track({
-            ...userPresence,
+            ...presenceRef.current,
             last_seen: new Date().toISOString()
           });
         } catch (error) {
@@ -87,25 +82,20 @@ export const useRealTimePresence = () => {
     }, 30000);
 
     return () => {
-      try {
-        clearInterval(presenceInterval);
-        supabase.removeChannel(channel);
-      } catch (error) {
-        console.error('Error cleaning up presence:', error);
-      }
+      clearInterval(presenceInterval);
+      presenceRef.current = null;
+      supabase.removeChannel(channel);
     };
-  }, [user?.id]); // Use user.id instead of user object
+  }, [user?.id]);
 
-  const isUserOnline = (userId: string): boolean => {
-    const userPresence = onlineUsers.find(u => u.user_id === userId);
-    if (!userPresence) return false;
-    
-    const lastSeen = new Date(userPresence.last_seen);
+  const isUserOnline = useCallback((userId: string): boolean => {
+    const found = onlineUsers.find(u => u.user_id === userId);
+    if (!found) return false;
+    const lastSeen = new Date(found.last_seen);
     const now = new Date();
     const diffMinutes = (now.getTime() - lastSeen.getTime()) / (1000 * 60);
-    
-    return diffMinutes < 5; // Consider online if seen within 5 minutes
-  };
+    return diffMinutes < 5;
+  }, [onlineUsers]);
 
   return {
     onlineUsers,

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -12,15 +12,16 @@ export const useTypingIndicator = (conversationId: string) => {
   const [typingUsers, setTypingUsers] = useState<TypingUser[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const { user } = useAuth();
+  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
 
   // Set up real-time subscription for typing indicators
   useEffect(() => {
     if (!conversationId || !user) return;
 
-    const channelName = `typing:${conversationId}`;
+    const channelName = `typing:${conversationId}:${user.id}`;
     const channel = supabase.channel(channelName);
+    channelRef.current = channel;
 
-    // Listen for typing events
     channel
       .on('broadcast', { event: 'typing_start' }, (payload) => {
         const typingUser = payload.payload as TypingUser;
@@ -28,8 +29,8 @@ export const useTypingIndicator = (conversationId: string) => {
           setTypingUsers(prev => {
             const existing = prev.find(u => u.user_id === typingUser.user_id);
             if (existing) {
-              return prev.map(u => 
-                u.user_id === typingUser.user_id 
+              return prev.map(u =>
+                u.user_id === typingUser.user_id
                   ? { ...u, started_typing: typingUser.started_typing }
                   : u
               );
@@ -50,8 +51,8 @@ export const useTypingIndicator = (conversationId: string) => {
     const cleanupInterval = setInterval(() => {
       setTypingUsers(prev => {
         const now = new Date();
-        return prev.filter(user => {
-          const typingTime = new Date(user.started_typing);
+        return prev.filter(u => {
+          const typingTime = new Date(u.started_typing);
           const diffSeconds = (now.getTime() - typingTime.getTime()) / 1000;
           return diffSeconds < 5;
         });
@@ -60,18 +61,17 @@ export const useTypingIndicator = (conversationId: string) => {
 
     return () => {
       clearInterval(cleanupInterval);
+      channelRef.current = null;
       supabase.removeChannel(channel);
     };
   }, [conversationId, user?.id]);
 
-  // Start typing indicator
+  // Start typing indicator — reuse the existing channel
   const startTyping = useCallback(async (userName: string) => {
-    if (!user || !conversationId || isTyping) return;
+    if (!user || !conversationId || isTyping || !channelRef.current) return;
 
     setIsTyping(true);
-    const channel = supabase.channel(`typing:${conversationId}`);
-    
-    await channel.send({
+    await channelRef.current.send({
       type: 'broadcast',
       event: 'typing_start',
       payload: {
@@ -82,14 +82,12 @@ export const useTypingIndicator = (conversationId: string) => {
     });
   }, [user, conversationId, isTyping]);
 
-  // Stop typing indicator
+  // Stop typing indicator — reuse the existing channel
   const stopTyping = useCallback(async () => {
-    if (!user || !conversationId || !isTyping) return;
+    if (!user || !conversationId || !isTyping || !channelRef.current) return;
 
     setIsTyping(false);
-    const channel = supabase.channel(`typing:${conversationId}`);
-    
-    await channel.send({
+    await channelRef.current.send({
       type: 'broadcast',
       event: 'typing_stop',
       payload: {
