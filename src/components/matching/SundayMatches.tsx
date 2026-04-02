@@ -332,7 +332,7 @@ export const SundayMatches = () => {
   const totalMatches = displayCurated.length + displayPool.length;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background">
 
       {/* Welcome Tip Banner */}
       {showWelcomeTip && (
