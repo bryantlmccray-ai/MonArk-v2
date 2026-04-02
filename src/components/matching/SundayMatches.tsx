@@ -402,19 +402,7 @@ export const SundayMatches = () => {
 
             {/* Curated Matches Tab */}
             <TabsContent value="curated" className="space-y-5">
-              {/* "Your new Ark" reveal banner */}
-              {displayCurated.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, ease: 'easeOut' }}
-                  className="text-center py-3 px-4 rounded-xl bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 border border-primary/15"
-                >
-                  <p className="font-serif text-sm text-primary italic tracking-wide">
-                    ✦ Your new Ark has arrived
-                  </p>
-                </motion.div>
-              )}
+              <MatchRevealCeremony matchCount={displayCurated.length} storageKey="monark-sunday-reveal">
 
               {/* Featured Match - First one gets spotlight */}
               {displayCurated[0] && (
