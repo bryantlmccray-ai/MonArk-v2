@@ -604,43 +604,36 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                       <span className="text-foreground text-sm font-body">{profile.preference_to_see.join(', ')}</span>
                     </div>
                   )}
-                  {!profile?.gender_identity && !profile?.sexual_orientation && !profile?.age && !profile?.height_cm && !profile?.weight_lbs && !(profile?.preference_to_see && profile.preference_to_see.length > 0) && (
-                    <p className="text-muted-foreground text-sm italic py-2">Tap Edit to add your details</p>
-                  )}
                 </div>
               )}
             </motion.div>
 
-            {profile?.bio && (
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                custom={1}
-                variants={fadeUp}
-                className="relative bg-card rounded-2xl p-6 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
-              >
-                <div className="absolute top-4 left-5 text-5xl font-serif text-primary/20 leading-none select-none">"</div>
-                <p className="text-foreground/90 text-[15px] leading-relaxed font-body pl-6 pr-2 pt-4 italic">
-                  {(() => {
-                    const raw = profile.bio || '';
-                    // Strip all repeated prompt fragments and leftover prompt text
-                    let cleaned = raw
-                      .replace(/(I get most excited talking about\.{0,3}\s*)+/gi, '')
-                      .replace(/(I'm looking for someone who values\.{0,3}\s*)+/gi, '')
-                      .replace(/(A perfect Saturday for me is\.{0,3}\s*)+/gi, '')
-                      .trim();
-                    // If nothing meaningful remains, show a natural placeholder
-                    if (!cleaned || cleaned.length < 10) {
-                      cleaned = "I'm a creative at heart — always chasing good conversations, new experiences, and the kind of connection that actually means something.";
-                    }
-                    return cleaned;
-                  })()}
-                </p>
-                <div className="mt-3 pl-6">
-                  <div className="w-10 h-0.5 bg-primary/30 rounded-full" />
-                </div>
-              </motion.div>
-            )}
+            {profile?.bio && (() => {
+              const raw = profile.bio || '';
+              let cleaned = raw
+                .replace(/(I get most excited talking about\.{0,3}\s*)+/gi, '')
+                .replace(/(I'm looking for someone who values\.{0,3}\s*)+/gi, '')
+                .replace(/(A perfect Saturday for me is\.{0,3}\s*)+/gi, '')
+                .trim();
+              if (!cleaned || cleaned.length < 10) return null;
+              return (
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  custom={1}
+                  variants={fadeUp}
+                  className="relative bg-card rounded-2xl p-6 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+                >
+                  <div className="absolute top-4 left-5 text-5xl font-serif text-primary/20 leading-none select-none">"</div>
+                  <p className="text-foreground/90 text-[15px] leading-relaxed font-body pl-6 pr-2 pt-4 italic">
+                    {cleaned}
+                  </p>
+                  <div className="mt-3 pl-6">
+                    <div className="w-10 h-0.5 bg-primary/30 rounded-full" />
+                  </div>
+                </motion.div>
+              );
+            })()}
 
             {/* Passions & Interests */}
             {profile?.interests && profile.interests.length > 0 && (
