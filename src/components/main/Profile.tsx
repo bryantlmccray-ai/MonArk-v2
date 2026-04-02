@@ -560,10 +560,16 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                       </p>
                     </div>
                   )}
-                  {profile?.date_of_birth && (
+                  {profile?.age && (
                     <div>
                       <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Age</p>
-                      <p className="text-foreground text-sm font-body">{profile.age || '—'}</p>
+                      <p className="text-foreground text-sm font-body">{profile.age}</p>
+                    </div>
+                  )}
+                  {profile?.height_cm && (
+                    <div>
+                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Height</p>
+                      <p className="text-foreground text-sm font-body">{formatHeight(profile.height_cm)}</p>
                     </div>
                   )}
                   {profile?.preference_to_see && profile.preference_to_see.length > 0 && (
