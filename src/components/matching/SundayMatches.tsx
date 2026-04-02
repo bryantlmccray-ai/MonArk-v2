@@ -598,9 +598,8 @@ const MatchCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => voi
               )}
             </div>
             {match.compatibility_score && (
-              <Badge className="bg-primary/15 text-primary border-none">
-                <Target className="w-3 h-3 mr-1" />
-                {Math.round(match.compatibility_score * 100)}%
+              <Badge className="bg-foreground/80 text-white border-none text-xs font-medium">
+                {Math.round(match.compatibility_score * 100)}% Match
               </Badge>
             )}
           </div>
