@@ -303,12 +303,21 @@ export const ShareableMilestoneCard: React.FC<ShareableMilestoneCardProps> = ({
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            <div 
-              className="text-3xl opacity-20"
-              style={{ color: colors.accent }}
-            >
-              {getMilestoneSymbol()}
-            </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div 
+                  className="text-3xl opacity-20 cursor-help"
+                  style={{ color: colors.accent }}
+                >
+                  {getMilestoneSymbol().symbol}
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="left" className="text-xs">
+                {getMilestoneSymbol().label}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           </motion.div>
 
           {/* Middle section - main content */}
