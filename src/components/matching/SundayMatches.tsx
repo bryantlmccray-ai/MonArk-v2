@@ -626,7 +626,7 @@ const MatchCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => voi
 const PoolCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => void }) => {
   return (
     <Card 
-      className="overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-500 group"
+      className="overflow-hidden cursor-pointer border-border/30 bg-card shadow-[0_2px_12px_rgba(90,70,50,0.06)] hover:shadow-[0_6px_24px_rgba(90,70,50,0.12)] transition-shadow duration-500 group"
       onClick={onClick}
     >
       <div className="relative aspect-[3/4]">
@@ -635,21 +635,21 @@ const PoolCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => void
           alt={match.name || 'Match'}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
         
         {match.compatibility_score && (
-          <Badge className="absolute top-2.5 right-2.5 bg-black/50 text-white border-none text-xs backdrop-blur-sm">
+          <span className="absolute top-2.5 right-2.5 bg-black/40 text-white/90 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-caption tracking-wider">
             {Math.round(match.compatibility_score * 100)}%
-          </Badge>
+          </span>
         )}
 
         <div className="absolute bottom-0 left-0 right-0 p-3.5">
-          <p className="font-semibold text-white text-sm">
+          <p className="font-editorial text-white text-sm tracking-tight">
             {match.name}, {match.age}
           </p>
           {match.location && (
-            <p className="text-white/80 text-xs flex items-center gap-1 mt-0.5">
-              <MapPin className="w-3 h-3" />
+            <p className="text-white/60 text-[11px] font-body flex items-center gap-1 mt-0.5">
+              <MapPin className="w-2.5 h-2.5" />
               {match.location}
             </p>
           )}
