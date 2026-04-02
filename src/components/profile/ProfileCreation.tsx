@@ -334,7 +334,7 @@ export const ProfileCreation: React.FC<ProfileCreationProps> = ({ onComplete, on
               nextStep(); 
             }}
             onSkip={() => { markStepSkipped('bio'); nextStep(); }}
-            onCancel={onCancel}
+            onCancel={editingFromReview ? cancelEditAndReturn : onCancel}
             stepRequirement={stepRequirements.bio}
             onSaveAndReturn={editingFromReview ? (bio: string) => {
               updateProfileData({ bio });
