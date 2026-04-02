@@ -145,7 +145,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
     });
     setEditingDetails(false);
     toast({ title: 'Details updated' });
-  }, [editGender, editGenderCustom, editOrientation, editOrientationCustom, editPrefToSee, updateProfile, toast]);
+  }, [editGender, editGenderCustom, editOrientation, editOrientationCustom, editPrefToSee, editAge, editHeightText, updateProfile, toast]);
 
   const togglePref = useCallback((pref: string) => {
     setEditPrefToSee(prev => prev.includes(pref) ? prev.filter(p => p !== pref) : [...prev, pref]);
