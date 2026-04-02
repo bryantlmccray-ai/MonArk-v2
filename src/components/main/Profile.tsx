@@ -333,7 +333,12 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               >
                 <div className="absolute top-4 left-5 text-5xl font-serif text-primary/20 leading-none select-none">"</div>
                 <p className="text-foreground/90 text-[15px] leading-relaxed font-body pl-6 pr-2 pt-4 italic">
-                  {profile.bio}
+                  {(() => {
+                    const raw = profile.bio || '';
+                    // Remove duplicated prompt fragments like "I get most excited talking about..."
+                    const cleaned = raw.replace(/(I get most excited talking about\.{3}\s*){2,}/gi, 'I get most excited talking about... ').trim();
+                    return cleaned || 'Tell your story…';
+                  })()}
                 </p>
                 <div className="mt-3 pl-6">
                   <div className="w-10 h-0.5 bg-primary/30 rounded-full" />
