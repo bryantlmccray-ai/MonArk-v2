@@ -33,20 +33,50 @@ export const RifInsightsCard: React.FC = () => {
             <Sparkles className="h-5 w-5 text-goldenrod" />
             <h3 className="font-medium text-card-foreground">MonArk Insights</h3>
           </div>
-          <p className="text-sm text-muted-foreground">
-            Complete {3 - reflections.length} more date reflection{3 - reflections.length !== 1 ? 's' : ''} to unlock personalized insights.
-          </p>
-          <div className="mt-3 flex gap-1">
-            {[1, 2, 3].map(i => (
-              <div 
-                key={i}
-                className={cn(
-                  "h-2 flex-1 rounded-full",
-                  i <= reflections.length ? "bg-goldenrod" : "bg-muted"
-                )}
-              />
-            ))}
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm text-muted-foreground">
+              Complete {3 - reflections.length} more date reflection{3 - reflections.length !== 1 ? 's' : ''} to unlock personalized insights.
+            </p>
+            <span className="text-xs font-medium text-primary whitespace-nowrap ml-3">
+              {reflections.length} / 3 reflections
+            </span>
           </div>
+          <div className="relative mt-3">
+            <div className="flex gap-1 relative">
+              {[1, 2, 3].map(i => (
+                <div 
+                  key={i}
+                  className="h-2 flex-1 rounded-full bg-muted overflow-hidden"
+                >
+                  {i <= reflections.length && (
+                    <div 
+                      className="h-full rounded-full bg-primary"
+                      style={{
+                        animation: `rifBarFill 600ms ease-out ${i * 150}ms both`,
+                      }}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+            {/* Milestone markers */}
+            <div className="flex justify-between mt-1.5 px-0.5">
+              {[1, 2, 3].map(i => (
+                <span key={i} className={cn(
+                  "text-[9px] tracking-wider uppercase",
+                  i <= reflections.length ? "text-primary font-medium" : "text-muted-foreground/50"
+                )}>
+                  {i === 3 ? '✦ Unlock' : `${i}`}
+                </span>
+              ))}
+            </div>
+          </div>
+          <style>{`
+            @keyframes rifBarFill {
+              from { width: 0; }
+              to { width: 100%; }
+            }
+          `}</style>
         </CardContent>
       </Card>
     );
