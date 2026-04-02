@@ -42,7 +42,7 @@ const DISCOVERY_PREFERENCES = [
 ];
 
 export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = ({
-  profileData, updateData, onNext, onSkip, onSaveAndReturn,
+  profileData, updateData, onNext, onSkip, onSaveAndReturn, onCancelEdit,
 }) => {
   // Initialize from existing profileData instead of empty defaults
   const [identityData, setIdentityData] = useState<IdentityData>({
