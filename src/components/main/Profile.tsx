@@ -187,7 +187,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               animate="visible"
               custom={0}
               variants={fadeUp}
-              className="relative rounded-2xl overflow-hidden bg-card border border-border/60 shadow-[0_4px_24px_rgba(100,80,60,0.08)]"
+              className="relative rounded-2xl overflow-hidden bg-card border border-border/60 shadow-[0_4px_24px_rgba(100,80,60,0.08)] isolate"
             >
               {/* Cover Photo Area */}
               {profile?.photos?.[0] ? (
