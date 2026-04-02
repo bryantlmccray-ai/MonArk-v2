@@ -113,6 +113,9 @@ export const Conversations: React.FC = () => {
     );
   }
 
+  // Show empty state when user has no real conversations
+  const hasNoRealConversations = !conversationsLoading && realConversations.length === 0;
+
   return (
     <div className="bg-background">
       <div className="max-w-2xl mx-auto space-y-6">
@@ -121,6 +124,23 @@ export const Conversations: React.FC = () => {
           <h1 className="text-2xl font-serif font-bold text-foreground tracking-tight">Conversations</h1>
           <p className="text-muted-foreground text-sm mt-0.5">Meaningful connections await</p>
         </div>
+
+        {/* Empty state for new users */}
+        {hasNoRealConversations && (
+          <div className="text-center py-12 space-y-4">
+            <div className="w-20 h-20 rounded-full bg-primary/10 mx-auto flex items-center justify-center">
+              <MessageCircle className="h-9 w-9 text-primary/60" />
+            </div>
+            <div className="space-y-1.5">
+              <h2 className="text-xl font-serif font-semibold text-foreground">Your first connection is one match away</h2>
+              <p className="text-muted-foreground text-sm max-w-xs mx-auto">
+                When you and a match both say "yes," your conversation will appear here.
+              </p>
+            </div>
+            <p className="text-xs text-muted-foreground/60 pt-2">Below is a preview of what conversations look like</p>
+            <div className="h-px w-16 bg-border mx-auto" />
+          </div>
+        )}
 
         {/* Date Proposals Section */}
         {(relevantProposals.length > 0 || dismissedProposals.length > 0) && (
