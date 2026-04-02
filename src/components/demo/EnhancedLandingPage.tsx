@@ -122,7 +122,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="flex items-center justify-between p-5 border-b border-border">
-              <img src={monarkLogoHorizontal} alt="MonArk" className="h-6 object-contain" />
+              <img src={monarkLogoHorizontal} alt="MonArk" className="h-8 object-contain" />
               <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-foreground" aria-label="Close menu">
                 <X className="h-5 w-5" />
               </button>
