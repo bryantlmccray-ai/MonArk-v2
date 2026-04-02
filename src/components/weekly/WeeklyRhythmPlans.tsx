@@ -219,41 +219,22 @@ export const WeeklyRhythmPlans = () => {
   return (
     <div className="bg-background">
       {/* Hero Section */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="relative px-6 pt-3 pb-4"
-      >
+      <div className="relative px-6 pt-3 pb-4">
         <div className="relative max-w-2xl mx-auto text-center space-y-2">
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.1 }}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wider uppercase"
-          >
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wider uppercase">
             <Calendar className="w-3 h-3" />
             Your Weekly Rhythm
-          </motion.div>
+          </div>
 
-          <motion.h1 
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-2xl font-bold text-foreground"
-          >
+          <h1 className="text-2xl font-bold text-foreground">
             How are you feeling?
-          </motion.h1>
+          </h1>
           
-          <motion.p 
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="text-muted-foreground text-sm"
-          >
+          <p className="text-muted-foreground text-sm">
             Pick your rhythm. We'll match you with people on the same wavelength.
-          </motion.p>
+          </p>
         </div>
-      </motion.div>
+      </div>
 
       {/* Rhythm Selector */}
       <div className="px-6 pb-4">
@@ -264,14 +245,11 @@ export const WeeklyRhythmPlans = () => {
             const isSelected = selectedRhythm === rhythm;
             
             return (
-              <motion.button
+              <button
                 key={rhythm}
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4 + idx * 0.1 }}
                 onClick={() => setSelectedRhythm(isSelected ? null : rhythm)}
                 className={`
-                  relative p-6 rounded-2xl border-2 transition-all duration-300
+                  relative p-4 sm:p-6 rounded-2xl border-2 transition-all duration-300
                   ${isSelected 
                     ? `${config.border} bg-gradient-to-br ${config.gradient}` 
                     : 'border-border/50 hover:border-border bg-card/50'
@@ -279,15 +257,15 @@ export const WeeklyRhythmPlans = () => {
                 `}
               >
                 <div className={`
-                  w-12 h-12 mx-auto mb-3 rounded-xl flex items-center justify-center
+                  w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 sm:mb-3 rounded-xl flex items-center justify-center
                   ${isSelected ? config.bg : 'bg-muted/50'}
                 `}>
-                  <Icon className={`w-6 h-6 ${isSelected ? config.accent : 'text-muted-foreground'}`} />
+                  <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${isSelected ? config.accent : 'text-muted-foreground'}`} />
                 </div>
-                <div className={`font-semibold text-lg ${isSelected ? 'text-foreground' : 'text-muted-foreground'}`}>
+                <div className={`font-semibold text-base sm:text-lg ${isSelected ? 'text-foreground' : 'text-muted-foreground'}`}>
                   {config.label}
                 </div>
-                <div className="text-sm text-muted-foreground mt-1">
+                <div className="text-xs sm:text-sm text-muted-foreground mt-1">
                   {config.description}
                 </div>
                 
@@ -299,7 +277,7 @@ export const WeeklyRhythmPlans = () => {
                     <Check className={`w-4 h-4 ${config.accent}`} />
                   </motion.div>
                 )}
-              </motion.button>
+              </button>
             );
           })}
         </div>
@@ -346,31 +324,19 @@ export const WeeklyRhythmPlans = () => {
 
       {/* All Plans Preview (when nothing selected) */}
       {!selectedRhythm && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="px-6 pb-12"
-        >
+        <div className="px-6 pb-12">
           <div className="max-w-4xl mx-auto space-y-6">
             <h2 className="text-xl font-semibold text-center text-muted-foreground">
               Your three plans for the week
             </h2>
             
             <div className="grid gap-6">
-              {DEMO_PLANS.map((plan, idx) => (
-                <motion.div
-                  key={plan.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.7 + idx * 0.15 }}
-                >
-                  <PlanCard plan={plan} onSelect={() => handleSelectPlan(plan)} />
-                </motion.div>
+              {DEMO_PLANS.map((plan) => (
+                <PlanCard key={plan.id} plan={plan} onSelect={() => handleSelectPlan(plan)} />
               ))}
             </div>
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* Confirmation Modal */}
@@ -464,12 +430,7 @@ export const WeeklyRhythmPlans = () => {
       </AnimatePresence>
 
       {/* Anti-Ghosting Feature Showcase */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9 }}
-        className="px-6 pb-12"
-      >
+      <div className="px-6 pb-12">
         <div className="max-w-4xl mx-auto">
           <Card className="overflow-hidden border-2 border-border bg-card shadow-elevated rounded-2xl">
             <CardContent className="p-6">
@@ -581,7 +542,7 @@ export const WeeklyRhythmPlans = () => {
             </CardContent>
           </Card>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };
