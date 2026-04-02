@@ -600,7 +600,7 @@ const PoolCard = ({ match, onClick }: { match: UnifiedMatch; onClick: () => void
       onClick={onClick}
     >
       <div className="relative aspect-[3/4]">
-        <img
+        <ImageWithFallback
           src={match.photos?.[0] || '/placeholder.svg'}
           alt={match.name || 'Match'}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
