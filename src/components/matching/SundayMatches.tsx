@@ -404,7 +404,7 @@ export const SundayMatches = () => {
                     onClick={() => setSelectedMatch(displayCurated[0])}
                   >
                     <div className="aspect-[4/5] relative">
-                      <img
+                      <ImageWithFallback
                         src={displayCurated[0].photos?.[0] || '/placeholder.svg'}
                         alt={displayCurated[0].name || 'Match'}
                         loading="lazy"
