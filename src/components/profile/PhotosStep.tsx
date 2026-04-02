@@ -89,6 +89,11 @@ export const PhotosStep: React.FC<PhotosStepProps> = ({ profileData, updateData,
 
   return (
     <div className="bg-background p-6 pb-32">
+      {onSaveAndReturn && onCancelEdit && (
+        <div className="max-w-2xl mx-auto w-full">
+          <EditBackButton onClick={onCancelEdit} />
+        </div>
+      )}
       <div className="max-w-2xl mx-auto w-full space-y-6">
         <div className="text-center space-y-2 pt-8">
           <h1 className="text-3xl font-light text-foreground">Curate Your Photos</h1>

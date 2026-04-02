@@ -301,6 +301,11 @@ export const IdentityPreferencesStep: React.FC<IdentityPreferencesStepProps> = (
 
   return (
     <div className="bg-background p-6 pb-32">
+      {onSaveAndReturn && onCancelEdit && (
+        <div className="max-w-2xl mx-auto w-full">
+          <EditBackButton onClick={onCancelEdit} />
+        </div>
+      )}
       <div className="w-full max-w-2xl mx-auto">
         {currentStep === 0 ? renderStep0() : renderStep1()}
       </div>
