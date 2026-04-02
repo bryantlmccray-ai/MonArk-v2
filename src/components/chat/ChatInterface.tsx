@@ -222,9 +222,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       {/* Chat Header */}
       <div className="flex items-center justify-between p-4 border-b border-border bg-card">
         <div className="flex items-center space-x-3">
-          <Avatar className="h-10 w-10">
-            <AvatarImage src={matchImage} alt={matchName} />
-            <AvatarFallback className="bg-primary text-primary-foreground">
+          <Avatar className="h-10 w-10 ring-2 ring-primary/20">
+            <AvatarImage src={matchImage} alt={matchName} className="object-cover" />
+            <AvatarFallback className="bg-gradient-to-br from-primary/80 to-accent/60 text-primary-foreground font-serif">
               {matchName.charAt(0)}
             </AvatarFallback>
           </Avatar>
