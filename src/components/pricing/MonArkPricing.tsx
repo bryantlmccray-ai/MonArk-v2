@@ -75,7 +75,7 @@ const FoundingMembersBanner = ({ onSelectPlan }: { onSelectPlan?: (plan: string)
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={false}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7, ease: easeOut }}
@@ -178,7 +178,7 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
         {/* Section Header */}
         <motion.div
           className="text-center mb-12"
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: easeOut }}
@@ -232,7 +232,7 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
             return (
               <motion.div
                 key={tier.name}
-                initial={{ opacity: 0, y: 24 }}
+                initial={false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.15, ease: easeOut }}
