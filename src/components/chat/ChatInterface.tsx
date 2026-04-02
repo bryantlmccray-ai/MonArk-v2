@@ -269,6 +269,24 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           <span className="text-xs text-muted-foreground px-2">Contact shared ✓</span>
         ) : null}
         
+        <Button
+          variant="outline"
+          size="sm"
+          className="text-primary border-primary/30 hover:bg-primary/10 hover:text-primary"
+          onClick={() => {
+            const suggestionsArea = document.querySelector('[data-date-suggestion]');
+            if (suggestionsArea) {
+              suggestionsArea.scrollIntoView({ behavior: 'smooth' });
+            } else {
+              setMessageText(`Hey ${matchName}, want to plan a date? 😊`);
+              textareaRef.current?.focus();
+            }
+          }}
+        >
+          <CalendarHeart className="h-4 w-4 mr-1" />
+          Plan a Date
+        </Button>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm">
