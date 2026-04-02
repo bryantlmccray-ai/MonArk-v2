@@ -232,11 +232,10 @@ export const WeeklyRhythmPlans = () => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.1 }}
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wider uppercase mb-4"
           >
-            <Badge variant="outline" className="mb-4 px-4 py-1.5 border-primary/30 bg-primary/5">
-              <Calendar className="w-3 h-3 mr-2" />
-              This Week's Plans
-            </Badge>
+            <Calendar className="w-3 h-3" />
+            Your Weekly Rhythm
           </motion.div>
 
           <motion.h1 
