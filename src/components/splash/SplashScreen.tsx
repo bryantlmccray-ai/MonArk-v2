@@ -79,7 +79,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 src={src}
                 alt=""
                 className="absolute inset-0 hidden h-full w-full object-contain px-8 py-8 md:block lg:px-14 lg:py-12"
-                style={{ filter: "grayscale(100%) contrast(1.08)" }}
+                style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.7)" }}
               />
             </motion.div>
           ))}
