@@ -57,13 +57,18 @@ function getInitials(name?: string) {
 }
 
 export const MatchProfileCard = ({ match, onAccept, onPass, isProcessing }: MatchProfileCardProps) => {
+  const [showDetail, setShowDetail] = useState(false);
   const { profile, compatibility_score, match_reason } = match;
   const mainPhoto = profile.photos?.[0];
   const name = profile.name || 'Your match';
   const status = match.status || 'pending';
 
   return (
-    <Card className="overflow-hidden border-border/40 bg-card shadow-sm hover:shadow-md transition-all duration-300">
+    <>
+    <Card
+      className="overflow-hidden border-border/40 bg-card shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-300 cursor-pointer group"
+      onClick={() => setShowDetail(true)}
+    >
       <CardContent className="p-6 space-y-4">
         {/* Header: avatar + name */}
         <div className="flex gap-3.5 items-center">
