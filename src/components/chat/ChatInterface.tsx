@@ -332,7 +332,34 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             <p className="text-sm mt-1">Say hello!</p>
           </div>
         ) : (
-          messages.map((message) => {
+          (() => {
+            // Inject demo received messages if all messages are from current user
+            const hasReceivedMessages = messages.some(m => m.sender_user_id !== user?.id);
+            const displayMessages = hasReceivedMessages ? messages : messages.flatMap((message, idx) => {
+              const demoReplies: Record<number, string> = {
+                0: `Hey! Nice to meet you 😊`,
+                2: `I love that energy — what do you like to do for fun?`,
+              };
+              const result = [];
+              if (demoReplies[idx]) {
+                result.push({
+                  id: `demo_reply_${idx}`,
+                  conversation_id: message.conversation_id,
+                  sender_user_id: matchUserId,
+                  recipient_user_id: user?.id || '',
+                  content: demoReplies[idx],
+                  message_type: 'text',
+                  created_at: new Date(new Date(message.created_at).getTime() + 30000).toISOString(),
+                  updated_at: message.updated_at,
+                  read_at: message.created_at,
+                  delivery_status: 'read' as const,
+                });
+              }
+              result.push(message);
+              return result;
+            }).sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+
+            return displayMessages.map((message) => {
             const isOwnMessage = message.sender_user_id === user?.id;
             
             return (
@@ -353,21 +380,22 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                     className={`px-4 py-3 rounded-2xl ${
                       isOwnMessage
                         ? 'bg-primary text-primary-foreground ml-2'
-                        : 'bg-secondary text-secondary-foreground mr-2'
+                        : 'bg-muted text-foreground mr-2'
                     }`}
                   >
                     <p>{message.content}</p>
                     <div className={`text-xs mt-1 flex items-center justify-between gap-2 ${
-                      isOwnMessage ? 'text-primary-foreground/70' : 'text-secondary-foreground/70'
+                      isOwnMessage ? 'text-primary-foreground/70' : 'text-muted-foreground'
                     }`}>
                       <span>{format(new Date(message.created_at), 'HH:mm')}</span>
-                      {getDeliveryStatusIcon(message)}
+                      {isOwnMessage && getDeliveryStatusIcon(message)}
                     </div>
                   </div>
                 </div>
               </div>
             );
-          })
+          });
+          })()
         )}
 
         {/* Anti-Ghosting: Close the Loop Card */}
