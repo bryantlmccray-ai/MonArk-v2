@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Edit, CheckCircle, Clock, X } from 'lucide-react';
+import { Edit, CheckCircle, Clock, X, ArrowRight } from 'lucide-react';
 import { ProfileData, StepCompletionStatus, StepRequirements } from './ProfileCreation';
 
 interface ProfileReviewStepProps {
@@ -73,7 +73,9 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
                 ))}
               </div>
             ) : (
-              <div className="text-muted-foreground text-sm italic">No photos added yet</div>
+              <button onClick={() => onEdit(2)} className="text-primary text-sm flex items-center gap-1 hover:underline">
+                Add photos to stand out <ArrowRight size={14} />
+              </button>
             )}
           </div>
 
@@ -92,7 +94,11 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
               </button>
             </div>
             <p className="text-secondary-foreground">
-              {stepCompletion.bio ? profileData.bio : 'No bio added yet'}
+              {stepCompletion.bio ? profileData.bio : (
+                <button onClick={() => onEdit(0)} className="text-primary text-sm flex items-center gap-1 hover:underline">
+                  Add a bio to help matches get to know you <ArrowRight size={14} />
+                </button>
+              )}
             </p>
           </div>
 
@@ -119,7 +125,9 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
                 ))}
               </div>
             ) : (
-              <div className="text-muted-foreground text-sm italic">No interests selected yet</div>
+              <button onClick={() => onEdit(1)} className="text-primary text-sm flex items-center gap-1 hover:underline">
+                Pick your interests to improve match quality <ArrowRight size={14} />
+              </button>
             )}
           </div>
 
@@ -145,7 +153,9 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
                 <p><span className="text-primary">Activities:</span> {profileData.activityType.join(', ') || 'None selected'}</p>
               </div>
             ) : (
-              <div className="text-muted-foreground text-sm italic">Date preferences not set yet</div>
+              <button onClick={() => onEdit(4)} className="text-primary text-sm flex items-center gap-1 hover:underline">
+                Set your date preferences for better suggestions <ArrowRight size={14} />
+              </button>
             )}
           </div>
           
@@ -170,7 +180,9 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
                 <p><span className="text-primary">Relationship Goals:</span> {profileData.relationship_goals?.join(', ') || 'Not specified'}</p>
               </div>
             ) : (
-              <div className="text-muted-foreground text-sm italic">Lifestyle details not completed yet</div>
+              <button onClick={() => onEdit(3)} className="text-primary text-sm flex items-center gap-1 hover:underline">
+                Complete this to improve your matches <ArrowRight size={14} />
+              </button>
             )}
           </div>
           
@@ -194,7 +206,9 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
                 <p><span className="text-primary">Sexual Orientation:</span> {profileData.identityPreferences?.sexualOrientation || 'Not specified'}</p>
               </div>
             ) : (
-              <div className="text-muted-foreground text-sm italic">Identity preferences not completed yet</div>
+              <button onClick={() => onEdit(5)} className="text-primary text-sm flex items-center gap-1 hover:underline">
+                Add identity details for more relevant matches <ArrowRight size={14} />
+              </button>
             )}
           </div>
         </div>
