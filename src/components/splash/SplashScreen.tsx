@@ -19,7 +19,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
 
   const handleEnter = () => {
     setIsExiting(true);
-    sessionStorage.setItem("monark-splash-seen-v8", "true");
+    sessionStorage.setItem("monark-splash-seen-v9", "true");
     window.setTimeout(onComplete, 800);
   };
 
