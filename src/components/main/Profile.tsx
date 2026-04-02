@@ -370,21 +370,122 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               )}
             </motion.div>
 
-            {/* Demographics Section */}
-            {(profile?.gender_identity || profile?.sexual_orientation || profile?.date_of_birth) && (
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                custom={0.7}
-                variants={fadeUp}
-                className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
-              >
-                <div className="flex items-center gap-2.5 mb-4">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <User className="h-4 w-4 text-primary" />
+            {/* My Details Section — Editable */}
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              custom={0.7}
+              variants={fadeUp}
+              className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-foreground font-serif text-lg">My Details</h3>
+                {!editingDetails && (
+                  <button
+                    onClick={handleStartEditDetails}
+                    className="text-xs text-primary hover:text-primary/80 transition-colors font-caption tracking-wide uppercase"
+                  >
+                    Edit
+                  </button>
+                )}
+              </div>
+
+              {editingDetails ? (
+                <div className="space-y-4">
+                  {/* Gender Identity */}
+                  <div>
+                    <label className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5 block font-caption">Identity</label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {genderOptions.map(opt => (
+                        <button
+                          key={opt}
+                          onClick={() => setEditGender(opt)}
+                          className={`px-3 py-1.5 text-xs rounded-full border transition-all ${
+                            editGender === opt
+                              ? 'bg-primary/15 border-primary/40 text-primary font-medium'
+                              : 'border-border/60 text-muted-foreground hover:border-primary/30 hover:text-foreground'
+                          }`}
+                        >
+                          {opt}
+                        </button>
+                      ))}
+                    </div>
+                    {editGender === 'Custom' && (
+                      <input
+                        type="text"
+                        value={editGenderCustom}
+                        onChange={e => setEditGenderCustom(e.target.value)}
+                        placeholder="How do you identify?"
+                        className="mt-2 w-full h-10 px-3 text-sm bg-card border border-border/70 rounded-xl text-foreground font-body placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary/40 transition-all"
+                      />
+                    )}
                   </div>
-                  <h3 className="text-foreground font-serif text-lg">Demographics</h3>
+
+                  {/* Sexual Orientation */}
+                  <div>
+                    <label className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5 block font-caption">Orientation</label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {orientationOptions.map(opt => (
+                        <button
+                          key={opt}
+                          onClick={() => setEditOrientation(opt)}
+                          className={`px-3 py-1.5 text-xs rounded-full border transition-all ${
+                            editOrientation === opt
+                              ? 'bg-primary/15 border-primary/40 text-primary font-medium'
+                              : 'border-border/60 text-muted-foreground hover:border-primary/30 hover:text-foreground'
+                          }`}
+                        >
+                          {opt}
+                        </button>
+                      ))}
+                    </div>
+                    {editOrientation === 'Custom' && (
+                      <input
+                        type="text"
+                        value={editOrientationCustom}
+                        onChange={e => setEditOrientationCustom(e.target.value)}
+                        placeholder="Describe your orientation"
+                        className="mt-2 w-full h-10 px-3 text-sm bg-card border border-border/70 rounded-xl text-foreground font-body placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary/40 transition-all"
+                      />
+                    )}
+                  </div>
+
+                  {/* Preference to See */}
+                  <div>
+                    <label className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5 block font-caption">I want to see</label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {prefOptions.map(opt => (
+                        <button
+                          key={opt}
+                          onClick={() => togglePref(opt)}
+                          className={`px-3 py-1.5 text-xs rounded-full border transition-all ${
+                            editPrefToSee.includes(opt)
+                              ? 'bg-primary/15 border-primary/40 text-primary font-medium'
+                              : 'border-border/60 text-muted-foreground hover:border-primary/30 hover:text-foreground'
+                          }`}
+                        >
+                          {opt}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2 pt-1">
+                    <button
+                      onClick={handleSaveDetails}
+                      className="flex-1 py-2 text-sm bg-primary text-primary-foreground font-medium rounded-xl transition-all hover:bg-primary/90 active:scale-[0.98]"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => setEditingDetails(false)}
+                      className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground rounded-xl transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </div>
+              ) : (
                 <div className="grid grid-cols-2 gap-x-6 gap-y-3">
                   {profile?.gender_identity && (
                     <div>
@@ -412,15 +513,18 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                       <p className="text-foreground text-sm font-body">{profile.age || '—'}</p>
                     </div>
                   )}
-                  {(profile?.preference_to_see && profile.preference_to_see.length > 0) && (
+                  {profile?.preference_to_see && profile.preference_to_see.length > 0 && (
                     <div>
                       <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-caption mb-0.5">Looking for</p>
                       <p className="text-foreground text-sm font-body">{profile.preference_to_see.join(', ')}</p>
                     </div>
                   )}
+                  {!profile?.gender_identity && !profile?.sexual_orientation && !profile?.date_of_birth && !(profile?.preference_to_see && profile.preference_to_see.length > 0) && (
+                    <p className="text-muted-foreground text-sm col-span-2 italic">Tap Edit to add your details</p>
+                  )}
                 </div>
-              </motion.div>
-            )}
+              )}
+            </motion.div>
 
             {profile?.bio && (
               <motion.div
