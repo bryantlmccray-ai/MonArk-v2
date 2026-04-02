@@ -324,31 +324,19 @@ export const WeeklyRhythmPlans = () => {
 
       {/* All Plans Preview (when nothing selected) */}
       {!selectedRhythm && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="px-6 pb-12"
-        >
+        <div className="px-6 pb-12">
           <div className="max-w-4xl mx-auto space-y-6">
             <h2 className="text-xl font-semibold text-center text-muted-foreground">
               Your three plans for the week
             </h2>
             
             <div className="grid gap-6">
-              {DEMO_PLANS.map((plan, idx) => (
-                <motion.div
-                  key={plan.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.7 + idx * 0.15 }}
-                >
-                  <PlanCard plan={plan} onSelect={() => handleSelectPlan(plan)} />
-                </motion.div>
+              {DEMO_PLANS.map((plan) => (
+                <PlanCard key={plan.id} plan={plan} onSelect={() => handleSelectPlan(plan)} />
               ))}
             </div>
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* Confirmation Modal */}
