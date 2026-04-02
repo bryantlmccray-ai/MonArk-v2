@@ -1,6 +1,13 @@
 
 import React from 'react';
 import { X, ShieldCheck, CheckCircle } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 
 interface TrustScoreOverlayProps {
   onClose: () => void;
@@ -8,18 +15,14 @@ interface TrustScoreOverlayProps {
 
 export const TrustScoreOverlay: React.FC<TrustScoreOverlayProps> = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-foreground/60 backdrop-blur-sm" onClick={onClose} />
-      
-      <div className="relative bg-card rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border border-border animate-slide-up shadow-lg">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-medium text-foreground">MonArk Trust Score</h2>
-          <button onClick={onClose} className="p-2 text-muted-foreground hover:text-foreground transition-colors">
-            <X className="h-5 w-5" />
-          </button>
-        </div>
+    <Dialog open={true} onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent className="max-w-md rounded-2xl border-border bg-card p-0 overflow-hidden">
+        <div className="p-6 space-y-6">
+          <DialogHeader className="space-y-1">
+            <DialogTitle className="text-xl font-medium text-foreground">MonArk Trust Score</DialogTitle>
+            <DialogDescription className="sr-only">Verification options to build trust on your profile</DialogDescription>
+          </DialogHeader>
 
-        <div className="space-y-6">
           <div className="text-center">
             <ShieldCheck className="h-16 w-16 text-primary mx-auto mb-4" />
             <h3 className="text-foreground font-medium text-lg mb-2">Build Trust & Safety</h3>
@@ -56,11 +59,14 @@ export const TrustScoreOverlay: React.FC<TrustScoreOverlayProps> = ({ onClose })
             </ul>
           </div>
 
-          <button className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90">
+          <button
+            onClick={() => { /* Future: launch verification flow */ }}
+            className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90"
+          >
             Start Verification - $9.99
           </button>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
