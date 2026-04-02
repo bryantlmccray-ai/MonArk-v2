@@ -120,41 +120,26 @@ export const CuratedMatches = () => {
           </p>
         </div>
       ) : (
-        <div className="flex flex-col gap-5">
-          {/* Reveal banner */}
-          <AnimatePresence>
-            {showReveal && (
+        <MatchRevealCeremony matchCount={matches.length} storageKey="monark-curated-reveal">
+          <div className="flex flex-col gap-5">
+            {/* Staggered card reveal */}
+            {matches.map((match, index) => (
               <motion.div
-                initial={{ opacity: 0, y: -10 }}
+                key={match.id}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                className="text-center py-3 px-4 rounded-xl bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 border border-primary/15"
+                transition={{ duration: 0.5, delay: 0.2 + index * 0.15, ease: 'easeOut' }}
               >
-                <p className="font-serif text-sm text-primary italic tracking-wide">
-                  ✦ Your new Ark has arrived
-                </p>
+                <MatchProfileCard
+                  match={match}
+                  onAccept={() => handleAccept(match.id)}
+                  onPass={() => handlePass(match.id)}
+                  isProcessing={processingId === match.id}
+                />
               </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Staggered card reveal */}
-          {matches.map((match, index) => (
-            <motion.div
-              key={match.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 + index * 0.15, ease: 'easeOut' }}
-            >
-              <MatchProfileCard
-                match={match}
-                onAccept={() => handleAccept(match.id)}
-                onPass={() => handlePass(match.id)}
-                isProcessing={processingId === match.id}
-              />
-            </motion.div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </MatchRevealCeremony>
       )}
 
       {/* Footer */}
