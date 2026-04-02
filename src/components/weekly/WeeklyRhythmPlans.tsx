@@ -172,6 +172,47 @@ const DEMO_PLANS: DatePlan[] = [
   }
 ];
 
+// Suggested date ideas curated by MonArk
+interface SuggestedDate {
+  id: string;
+  venueName: string;
+  neighborhood: string;
+  vibeTags: string[];
+  description: string;
+  perfectFor: { name: string; photo: string };
+  timeHint: string;
+}
+
+const SUGGESTED_DATES: SuggestedDate[] = [
+  {
+    id: 'sug-1',
+    venueName: 'The Alcove Coffee House',
+    neighborhood: 'Arts District',
+    vibeTags: ['Romantic', 'Arts & Culture'],
+    description: 'Intimate corner café with rotating local art, natural light, and house-roasted blends.',
+    perfectFor: { name: 'Sophia', photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400' },
+    timeHint: 'Saturday morning',
+  },
+  {
+    id: 'sug-2',
+    venueName: 'Ember & Vine Wine Bar',
+    neighborhood: 'Downtown',
+    vibeTags: ['Social', 'Food & Drink'],
+    description: 'Candlelit tasting room with small plates. Perfect energy for getting-to-know-you conversation.',
+    perfectFor: { name: 'Jordan', photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400' },
+    timeHint: 'Friday evening',
+  },
+  {
+    id: 'sug-3',
+    venueName: 'Harborview Botanical Walk',
+    neighborhood: 'Marina',
+    vibeTags: ['Outdoors', 'Low-Key'],
+    description: 'A guided sunset stroll through sculpted gardens overlooking the harbor. Easy, natural, beautiful.',
+    perfectFor: { name: 'Ava', photo: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400' },
+    timeHint: 'Sunday afternoon',
+  },
+];
+
 const rhythmConfig = {
   reset: {
     icon: Moon,
