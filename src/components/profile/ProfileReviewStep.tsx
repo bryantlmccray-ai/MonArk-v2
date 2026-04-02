@@ -94,7 +94,11 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
               </button>
             </div>
             <p className="text-secondary-foreground">
-              {stepCompletion.bio ? profileData.bio : 'No bio added yet'}
+              {stepCompletion.bio ? profileData.bio : (
+                <button onClick={() => onEdit(0)} className="text-primary text-sm flex items-center gap-1 hover:underline">
+                  Add a bio to help matches get to know you <ArrowRight size={14} />
+                </button>
+              )}
             </p>
           </div>
 
