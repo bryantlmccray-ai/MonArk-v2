@@ -486,7 +486,7 @@ export default function PaywallModal({
                     ? "Processing..."
                     : tierKey === "free"
                     ? "Stay on Free"
-                    : `Upgrade to ${tier.name}`}
+                    : "Join Now"}
                 </button>
               </div>
             );
