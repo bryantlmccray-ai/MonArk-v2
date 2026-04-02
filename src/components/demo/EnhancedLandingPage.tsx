@@ -71,19 +71,11 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
   return (
     <div className="min-h-screen bg-background relative">
-      {/* ═══════════ FIXED VIDEO BACKGROUND ═══════════ */}
-      <div className="fixed inset-0 z-0 overflow-hidden">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-        >
-          <source src="/videos/hero-loop.mp4" type="video/mp4" />
-          <source src="/videos/hero-loop.mov" type="video/quicktime" />
-        </video>
-        <div className="absolute inset-0 bg-background/65" />
+      {/* ═══════════ FIXED ATMOSPHERIC BACKGROUND ═══════════ */}
+      <div className="fixed inset-0 z-0 overflow-hidden bg-[radial-gradient(ellipse_at_top,hsl(220_20%_18%)_0%,hsl(225_22%_12%)_40%,hsl(230_20%_8%)_100%)]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,hsl(20_18%_20%/0.25)_0%,transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,hsl(30_25%_22%/0.15)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-background/55" />
       </div>
       <div className="relative z-10">
       {/* ═══════════ STICKY NAV ═══════════ */}
