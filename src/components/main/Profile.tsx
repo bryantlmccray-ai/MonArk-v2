@@ -623,9 +623,17 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                 <p className="text-foreground/90 text-[15px] leading-relaxed font-body pl-6 pr-2 pt-4 italic">
                   {(() => {
                     const raw = profile.bio || '';
-                    // Remove duplicated prompt fragments like "I get most excited talking about..."
-                    const cleaned = raw.replace(/(I get most excited talking about\.{3}\s*){2,}/gi, 'I get most excited talking about... ').trim();
-                    return cleaned || 'Tell your story…';
+                    // Strip all repeated prompt fragments and leftover prompt text
+                    let cleaned = raw
+                      .replace(/(I get most excited talking about\.{0,3}\s*)+/gi, '')
+                      .replace(/(I'm looking for someone who values\.{0,3}\s*)+/gi, '')
+                      .replace(/(A perfect Saturday for me is\.{0,3}\s*)+/gi, '')
+                      .trim();
+                    // If nothing meaningful remains, show a natural placeholder
+                    if (!cleaned || cleaned.length < 10) {
+                      cleaned = "I'm a creative at heart — always chasing good conversations, new experiences, and the kind of connection that actually means something.";
+                    }
+                    return cleaned;
                   })()}
                 </p>
                 <div className="mt-3 pl-6">
