@@ -161,6 +161,13 @@ export function useSubscription() {
     [hasFeature]
   );
 
+  // Display-friendly tier label (never shows "Free")
+  const tierLabel = state.tier === "monarch"
+    ? "Inner Ark"
+    : state.tier === "plus"
+    ? "The Ark"
+    : "Early Access";
+
   return {
     // State
     tier: state.tier,
@@ -175,6 +182,9 @@ export function useSubscription() {
     isMonarch: state.tier === "monarch",
     isActive: state.status === "active" || state.tier === "free",
     isTrialing: state.trialEndsAt ? new Date(state.trialEndsAt) > new Date() : false,
+
+    // Display
+    tierLabel,
 
     // Feature gating
     hasFeature,

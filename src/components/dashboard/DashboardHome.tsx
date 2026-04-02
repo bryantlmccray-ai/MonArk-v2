@@ -20,7 +20,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onStartRIF, onSign
 
   const rifComplete = !!(profile?.rif_quiz_answers && Object.keys(profile.rif_quiz_answers).length > 0);
   const displayName = profile?.bio?.split(' ')[0] || user?.email?.split('@')[0] || 'there';
-  const tierLabel = tier === 'monarch' ? 'The Inner Ark' : tier === 'plus' ? 'The Ark' : 'Free';
+  const tierLabel = tier === 'monarch' ? 'The Inner Ark' : tier === 'plus' ? 'The Ark' : 'Early Access';
 
   return (
     <div className="min-h-screen bg-[hsl(230_18%_14%)]">

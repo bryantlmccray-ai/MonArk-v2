@@ -1,6 +1,7 @@
 import React from 'react';
 import { User, MessageCircle, BookOpen, Calendar, Share2, Crown } from 'lucide-react';
 import { useProfile } from '@/hooks/useProfile';
+import { useSubscription } from '@/hooks/useSubscription';
 import {
   Sidebar,
   SidebarContent,
@@ -21,6 +22,7 @@ interface SidebarNavigationProps {
 
 export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab, onTabChange, onArkNavigation, onUpgrade }) => {
   const { profile } = useProfile();
+  const { tierLabel } = useSubscription();
   const displayName = profile?.first_name || 'Member';
 
   const tabs = [
@@ -47,7 +49,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
           </div>
           <span className="text-xs font-medium text-sidebar-foreground/80 tracking-wide">{displayName}</span>
           <span className="text-[10px] font-caption tracking-[0.12em] text-primary/70 bg-primary/10 px-2.5 py-0.5 rounded-full">
-            Free
+            {tierLabel}
           </span>
         </div>
       </SidebarHeader>
