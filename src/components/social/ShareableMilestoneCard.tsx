@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import monarkLogoHorizontal from '@/assets/monark-logo-horizontal.png';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Share2, Download, Check, Loader2 } from 'lucide-react';
+import { Share2, Download, Check, Loader2, Copy } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import html2canvas from 'html2canvas';
 
