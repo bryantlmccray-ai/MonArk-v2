@@ -153,7 +153,9 @@ export const ProfileReviewStep: React.FC<ProfileReviewStepProps> = ({ profileDat
                 <p><span className="text-primary">Activities:</span> {profileData.activityType.join(', ') || 'None selected'}</p>
               </div>
             ) : (
-              <div className="text-muted-foreground text-sm italic">Date preferences not set yet</div>
+              <button onClick={() => onEdit(4)} className="text-primary text-sm flex items-center gap-1 hover:underline">
+                Set your date preferences for better suggestions <ArrowRight size={14} />
+              </button>
             )}
           </div>
           
