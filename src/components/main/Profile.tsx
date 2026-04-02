@@ -129,7 +129,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
   };
 
   return (
-    <div className="bg-background">
+    <div className="bg-background isolate relative z-0">
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Header Bar */}
         <div className="flex justify-between items-start">
@@ -187,7 +187,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               animate="visible"
               custom={0}
               variants={fadeUp}
-              className="relative rounded-2xl overflow-hidden bg-card border border-border/60 shadow-[0_4px_24px_rgba(100,80,60,0.08)]"
+              className="relative rounded-2xl overflow-hidden bg-card border border-border/60 shadow-[0_4px_24px_rgba(100,80,60,0.08)] isolate"
             >
               {/* Cover Photo Area */}
               {profile?.photos?.[0] ? (
@@ -198,7 +198,8 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                     loading="lazy"
                     className="w-full h-full object-cover hover:brightness-95 transition-all duration-200"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent pointer-events-none" />
+                  {/* Solid gradient overlay to prevent any background bleed-through */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent pointer-events-none" />
                   
                   {/* Name overlay on photo */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 pb-8">
