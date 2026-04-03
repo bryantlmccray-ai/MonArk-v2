@@ -190,8 +190,8 @@ export const Conversations: React.FC = () => {
           </div>
         )}
 
-        {/* Conversations List */}
-        <div className="space-y-2.5">
+        {/* Conversations List — only show when real conversations exist */}
+        {!hasNoRealConversations && conversations.length > 0 && (
           <h2 className="text-base font-semibold text-foreground">Messages</h2>
           
           {conversations.map((conversation) => (
