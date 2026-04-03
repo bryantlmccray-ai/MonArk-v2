@@ -476,6 +476,55 @@ export default function PaywallModal({
           })}
         </div>
 
+        {/* Conversion Elements */}
+        <div style={{ textAlign: "center", marginBottom: 24 }}>
+          {/* Free trial line */}
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 13,
+            color: t.fg,
+            marginBottom: 12,
+          }}>
+            Start free for 7 days. Cancel anytime before your trial ends — no charge.
+          </p>
+
+          {/* Money-back guarantee badge */}
+          <div style={{
+            display: "inline-block",
+            backgroundColor: t.bone,
+            color: t.primary,
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 12,
+            fontWeight: 500,
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            padding: "6px 16px",
+            borderRadius: 40,
+            marginBottom: 16,
+          }}>
+            30-day satisfaction guarantee — we'll make it right
+          </div>
+
+          {/* Social proof */}
+          <p style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 14,
+            fontStyle: "italic",
+            color: t.primary,
+            marginBottom: 8,
+          }}>
+            "The most thoughtful approach to dating I've encountered."
+          </p>
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 11,
+            color: t.sand,
+            letterSpacing: "0.1em",
+          }}>
+            — Early MonArk member, Chicago
+          </p>
+        </div>
+
         {/* Footer */}
         <div
           style={{

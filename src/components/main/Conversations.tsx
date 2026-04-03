@@ -127,18 +127,16 @@ export const Conversations: React.FC = () => {
 
         {/* Empty state for new users */}
         {hasNoRealConversations && (
-          <div className="text-center py-12 space-y-4">
-            <div className="w-20 h-20 rounded-full bg-primary/10 mx-auto flex items-center justify-center">
-              <MessageCircle className="h-9 w-9 text-primary/60" />
+          <div className="text-center py-16 space-y-5">
+            <div className="w-20 h-20 rounded-full bg-[#EDE6DF] mx-auto flex items-center justify-center">
+              <span className="font-editorial-headline text-[#A08C6E] text-2xl tracking-tight">MA</span>
             </div>
-            <div className="space-y-1.5">
-              <h2 className="text-xl font-serif font-semibold text-foreground">Your first connection is one match away</h2>
-              <p className="text-muted-foreground text-sm max-w-xs mx-auto">
-                When you and a match both say "yes," your conversation will appear here.
+            <div className="space-y-2">
+              <h2 className="font-editorial italic text-xl text-foreground">Your connections will appear here.</h2>
+              <p className="font-body text-sm text-muted-foreground max-w-xs mx-auto">
+                When you and an introduction are both ready, the conversation begins.
               </p>
             </div>
-            <p className="text-xs text-muted-foreground/60 pt-2">Below is a preview of what conversations look like</p>
-            <div className="h-px w-16 bg-border mx-auto" />
           </div>
         )}
 
@@ -244,31 +242,14 @@ export const Conversations: React.FC = () => {
                       {conversation.name}
                     </h3>
                     {conversation.hadDate && (
-                      <span className="flex items-center gap-1.5">
-                        <span className="px-2 py-0.5 bg-primary/10 text-primary text-[11px] font-medium rounded-full">
-                          Date completed
-                        </span>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            window.dispatchEvent(new CustomEvent('monark-navigate', { detail: { tab: 'shareables', milestone: 'date_completed', matchName: conversation.name } }));
-                          }}
-                          className="text-[11px] text-primary/70 hover:text-primary font-medium transition-colors whitespace-nowrap"
-                        >
-                          Share this moment →
-                        </button>
+                      <span className="px-2 py-0.5 bg-primary/10 text-primary text-[11px] font-medium rounded-full">
+                        Date completed
                       </span>
                     )}
                     {conversation.isNewMatch && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          window.dispatchEvent(new CustomEvent('monark-navigate', { detail: { tab: 'shareables', milestone: 'new_match', matchName: conversation.name } }));
-                        }}
-                        className="text-[11px] text-primary/70 hover:text-primary font-medium transition-colors whitespace-nowrap"
-                      >
-                        Share this moment →
-                      </button>
+                      <span className="px-2 py-0.5 bg-primary/10 text-primary text-[11px] font-medium rounded-full">
+                        New match
+                      </span>
                     )}
                     {conversation.mutualEngagement > 0.7 && conversation.messageCount > 15 && !conversation.hadDate && (
                       <Badge 
