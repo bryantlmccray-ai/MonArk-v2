@@ -73,7 +73,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
     <div className="min-h-screen bg-background relative">
       <div className="relative">
       {/* ═══════════ STICKY NAV ═══════════ */}
-      <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
+      <nav className="sticky top-0 z-50 bg-background/95 border-b border-border/50" style={{ backdropFilter: 'none' }}>
         <div className="max-w-5xl mx-auto px-5 sm:px-8 flex items-center justify-between h-14">
           <div className="flex items-center gap-2">
             <img src={monarkLogoHorizontal} alt="MonArk" className="h-10 object-contain" />
