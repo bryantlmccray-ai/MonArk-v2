@@ -587,7 +587,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       <MonArkPricing onSelectPlan={(planName) => openWaitlist(planName)} />
 
       {/* Waitlist Modal */}
-      <WaitlistModal isOpen={showWaitlistModal} onClose={() => { setShowWaitlistModal(false); setWaitlistPlan(undefined); }} sourcePage="enhanced-landing" selectedPlan={waitlistPlan} />
+      <WaitlistModal isOpen={showWaitlistModal} onClose={() => { setShowWaitlistModal(false); setWaitlistPlan(undefined); setWaitlistEmail(undefined); }} sourcePage="enhanced-landing" selectedPlan={waitlistPlan} initialEmail={waitlistEmail} />
 
       {/* ═══════════ INSTAGRAM ═══════════ */}
       <section className="py-14 bg-secondary/30">
