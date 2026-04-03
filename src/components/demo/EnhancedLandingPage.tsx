@@ -255,7 +255,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
           <div className="grid md:grid-cols-3 gap-5">
             {[
-              { icon: PenLine, num: "01", title: "Take the RIF", desc: "10 questions about how you communicate, connect, and date. Takes 5 minutes." },
+              { icon: PenLine, num: "01", title: "Take the RIF", desc: "15 questions about how you communicate, connect, and date. Takes 5 minutes." },
               { icon: Heart, num: "02", title: "Get Your 3", desc: "Every Sunday, receive 3 matches who fit your style—not just your type." },
               { icon: MapPin, num: "03", title: "Date With Intention", desc: "We suggest premium first dates at vetted venues. No awkward coffee shop roulette." },
             ].map((item, i) => (
