@@ -19,12 +19,12 @@ interface WaitlistModalProps {
   initialEmail?: string;
 }
 
-export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, sourcePage = 'demo-landing', selectedPlan }) => {
+export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, sourcePage = 'demo-landing', selectedPlan, initialEmail }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    email: '',
+    email: initialEmail || '',
     ageRange: '',
     city: '',
     genderIdentity: '',
