@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Sparkles, Calendar, MessageCircle, Heart, Zap, RotateCcw, Archive } from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
+
+const formatTimeAgo = (dateStr: string) => {
+  try {
+    return formatDistanceToNow(new Date(dateStr), { addSuffix: false });
+  } catch {
+    return '';
+  }
+};
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -21,48 +30,21 @@ export const Conversations: React.FC = () => {
   const [activeChatConversation, setActiveChatConversation] = useState<any>(null);
   const [feedbackConversation, setFeedbackConversation] = useState<{id: string; name: string; itineraryId: string} | null>(null);
 
-  const conversations = [
-    {
-      id: 1,
-      name: 'Maya',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b047?w=150&h=150&fit=crop&crop=face',
-      lastMessage: 'That sounds like an amazing experience!',
-      time: '2h',
-      isNewMatch: false,
-      lastActivity: new Date(Date.now() - 2 * 60 * 60 * 1000),
-      messageCount: 24,
-      mutualEngagement: 0.8,
-      conversationId: 'conv_maya_001',
-      userId: user?.id || '76cc75e6-3228-4b19-97b5-f455639f6109'
-    },
-    {
-      id: 2,
-      name: 'Alex',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-      lastMessage: 'New Match! Ready to start the chat?',
-      time: '1d',
-      isNewMatch: true,
-      lastActivity: new Date(Date.now() - 24 * 60 * 60 * 1000),
-      messageCount: 1,
-      mutualEngagement: 0.3,
-      conversationId: 'conv_alex_001',
-      userId: user?.id || '76cc75e6-3228-4b19-97b5-f455639f6109'
-    },
-    {
-      id: 3,
-      name: 'Jordan',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-      lastMessage: 'I love that idea for our first date',
-      time: '3d',
-      isNewMatch: false,
-      lastActivity: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-      messageCount: 18,
-      mutualEngagement: 0.9,
-      hadDate: true,
-      conversationId: 'conv_jordan_001',
-      userId: user?.id || '76cc75e6-3228-4b19-97b5-f455639f6109'
-    },
-  ];
+  // Use real conversations from Supabase, no hardcoded demo data
+  const conversations = realConversations.map((conv: any) => ({
+    id: conv.id,
+    name: conv.match_name || conv.name || 'Connection',
+    image: conv.match_photo || conv.image || '',
+    lastMessage: conv.last_message || 'Start the conversation',
+    time: conv.last_activity ? formatTimeAgo(conv.last_activity) : '',
+    isNewMatch: (conv.message_count || 0) <= 1,
+    lastActivity: conv.last_activity ? new Date(conv.last_activity) : new Date(),
+    messageCount: conv.message_count || 0,
+    mutualEngagement: conv.mutual_engagement_score || 0,
+    conversationId: conv.conversation_id,
+    userId: user?.id || '',
+    hadDate: false,
+  }));
 
   useEffect(() => {
     if (!user) return;
@@ -208,112 +190,81 @@ export const Conversations: React.FC = () => {
           </div>
         )}
 
-        {/* Conversations List */}
-        <div className="space-y-2.5">
-          <h2 className="text-base font-semibold text-foreground">Messages</h2>
-          
-          {conversations.map((conversation) => (
-            <div
-              key={conversation.id}
-              onClick={() => handleConversationClick(conversation)}
-              className="bg-card rounded-2xl p-4 border border-border/60 hover:border-primary/20 transition-all duration-200 cursor-pointer group shadow-[0_1px_3px_rgba(100,80,60,0.04)] hover:shadow-[0_2px_8px_rgba(100,80,60,0.08)] active:scale-[0.99]"
-            >
-              <div className="flex items-center gap-3.5">
-                <div className="relative flex-shrink-0">
-                  <img
-                    src={conversation.image}
-                    alt={conversation.name}
-                    loading="lazy"
-                    className="w-12 h-12 rounded-full ring-2 ring-border/80 group-hover:ring-primary/25 transition-all object-cover"
-                  />
-                  {conversation.isNewMatch && (
-                    <div className="absolute top-0 -left-0.5 w-3 h-3 bg-primary rounded-full border-2 border-card" />
-                  )}
-                  {conversation.mutualEngagement > 0.7 && conversation.messageCount > 15 && (
-                    <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-primary rounded-full border-2 border-card flex items-center justify-center">
-                      <Calendar className="h-2 w-2 text-primary-foreground" />
-                    </div>
-                  )}
-                </div>
-                
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h3 className={`text-foreground text-[15px] ${conversation.isNewMatch ? 'font-bold' : 'font-semibold'}`}>
-                      {conversation.name}
-                    </h3>
-                    {conversation.hadDate && (
-                      <span className="px-2 py-0.5 bg-primary/10 text-primary text-[11px] font-medium rounded-full">
-                        Date completed
-                      </span>
+        {/* Conversations List — only show when real conversations exist */}
+        {!hasNoRealConversations && conversations.length > 0 && (
+          <div className="space-y-2.5">
+            <h2 className="text-base font-semibold text-foreground">Messages</h2>
+            
+            {conversations.map((conversation) => (
+              <div
+                key={conversation.id}
+                onClick={() => handleConversationClick(conversation)}
+                className="bg-card rounded-2xl p-4 border border-border/60 hover:border-primary/20 transition-all duration-200 cursor-pointer group shadow-[0_1px_3px_rgba(100,80,60,0.04)] hover:shadow-[0_2px_8px_rgba(100,80,60,0.08)] active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="relative flex-shrink-0">
+                    {conversation.image ? (
+                      <img
+                        src={conversation.image}
+                        alt={conversation.name}
+                        loading="lazy"
+                        className="w-12 h-12 rounded-full ring-2 ring-border/80 group-hover:ring-primary/25 transition-all object-cover"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full ring-2 ring-border/80 bg-[#EDE6DF] flex items-center justify-center">
+                        <span className="font-serif text-[#A08C6E] text-lg">{conversation.name?.[0] || 'M'}</span>
+                      </div>
                     )}
                     {conversation.isNewMatch && (
-                      <span className="px-2 py-0.5 bg-primary/10 text-primary text-[11px] font-medium rounded-full">
-                        New match
-                      </span>
-                    )}
-                    {conversation.mutualEngagement > 0.7 && conversation.messageCount > 15 && !conversation.hadDate && (
-                      <Badge 
-                        variant="secondary" 
-                        className="px-2 py-0.5 bg-primary/10 text-primary text-[11px] rounded-full border-none flex items-center gap-1 animate-pulse"
-                      >
-                        <Zap className="h-3 w-3" />
-                        <span>Ready for date!</span>
-                      </Badge>
+                      <div className="absolute top-0 -left-0.5 w-3 h-3 bg-primary rounded-full border-2 border-card" />
                     )}
                   </div>
-                  <p className={`text-sm truncate mt-0.5 ${
-                    conversation.isNewMatch 
-                      ? 'text-primary font-semibold' 
-                      : 'text-muted-foreground'
-                  }`}>
-                    {conversation.lastMessage}
-                  </p>
-                </div>
-                
-                <div className="flex items-center gap-1.5 flex-shrink-0">
-                  <Button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleConversationClick(conversation);
-                    }}
-                    size="sm"
-                    variant="outline"
-                    className="h-8 px-3 text-xs border-primary/20 text-primary hover:bg-primary/10 rounded-lg"
-                  >
-                    <MessageCircle className="h-3.5 w-3.5 mr-1" />
-                    Chat
-                  </Button>
                   
-                  {conversation.hadDate && (
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h3 className={`text-foreground text-[15px] ${conversation.isNewMatch ? 'font-bold' : 'font-semibold'}`}>
+                        {conversation.name}
+                      </h3>
+                      {conversation.isNewMatch && (
+                        <span className="px-2 py-0.5 bg-primary/10 text-primary text-[11px] font-medium rounded-full">
+                          New match
+                        </span>
+                      )}
+                    </div>
+                    <p className={`text-sm truncate mt-0.5 ${
+                      conversation.isNewMatch 
+                        ? 'text-primary font-semibold' 
+                        : 'text-muted-foreground'
+                    }`}>
+                      {conversation.lastMessage}
+                    </p>
+                  </div>
+                  
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        setFeedbackConversation({
-                          id: conversation.conversationId,
-                          name: conversation.name,
-                          itineraryId: ''
-                        });
+                        handleConversationClick(conversation);
                       }}
                       size="sm"
-                      variant="ghost"
-                      className="h-8 w-8 p-0 text-primary hover:bg-primary/10 rounded-lg"
-                      title="Rate Date"
+                      variant="outline"
+                      className="h-8 px-3 text-xs border-primary/20 text-primary hover:bg-primary/10 rounded-lg"
                     >
-                      <Heart className="h-3.5 w-3.5" />
+                      <MessageCircle className="h-3.5 w-3.5 mr-1" />
+                      Chat
                     </Button>
-                  )}
-                  
-                  {conversation.isNewMatch && (
-                    <Sparkles className="h-4 w-4 text-primary" />
-                  )}
-                  <span className="text-muted-foreground text-xs ml-1">
-                    {conversation.time}
-                  </span>
+                    {conversation.isNewMatch && (
+                      <Sparkles className="h-4 w-4 text-primary" />
+                    )}
+                    <span className="text-muted-foreground text-xs ml-1">
+                      {conversation.time}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {showChatModal && activeChatConversation && (

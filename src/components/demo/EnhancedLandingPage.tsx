@@ -611,6 +611,111 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
+      {/* ═══════════ RIF SECTION ═══════════ */}
+      <section className="py-16 bg-background">
+        <div className="max-w-4xl mx-auto px-5 sm:px-8">
+          <motion.div
+            className="text-center mb-10"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: easeOut }}
+          >
+            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+              The Relational Intelligence Framework
+            </h2>
+            <p className="font-body font-medium text-base text-[#A08C6E] tracking-wide mb-6">
+              The intelligence behind your introductions.
+            </p>
+            <div className="max-w-[520px] mx-auto">
+              <p className="font-body text-sm text-foreground leading-relaxed mb-8">
+                Most platforms sort by photos and proximity. MonArk sorts by emotional readiness, relational values, and behavioral compatibility — a proprietary framework we call RIF. Your 3 weekly introductions aren't random. They're the result of a system designed to surface alignment, not just attraction.
+              </p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-3">
+              {['Emotional Readiness', 'Relational Values', 'Behavioral Compatibility'].map((pill) => (
+                <span
+                  key={pill}
+                  className="font-body text-xs font-medium uppercase tracking-[0.15em] text-[#A08C6E] bg-[#EDE6DF] px-5 py-2 rounded-full"
+                >
+                  {pill}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══════════ SKEPTIC COMPARISON ═══════════ */}
+      <section className="py-16 bg-secondary/30">
+        <div className="max-w-4xl mx-auto px-5 sm:px-8">
+          <motion.div
+            className="text-center mb-10"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: easeOut }}
+          >
+            <h2 className="font-editorial-headline italic text-3xl sm:text-[32px] text-foreground mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+              You've tried the apps.
+            </h2>
+            <p className="font-body font-medium text-base text-[#A08C6E]">
+              Here's what's different.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-5 max-w-3xl mx-auto">
+            {/* The Apps column */}
+            <motion.div
+              className="bg-[#EDE6DF] rounded-xl border border-[#EDE6DF] p-6 sm:p-8"
+              initial={{ opacity: 0, x: -16 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: easeOut }}
+            >
+              <h3 className="font-editorial-headline text-lg text-foreground/70 mb-5">The apps</h3>
+              <ul className="space-y-4">
+                {[
+                  'Infinite scroll, infinite ghosting',
+                  'Optimized for engagement, not connection',
+                  'You decide everything alone',
+                  'Photos first, person second',
+                ].map((item, i) => (
+                  <li key={i} className="font-body text-sm text-foreground/70 leading-relaxed flex items-start gap-2.5">
+                    <span className="text-foreground/30 mt-0.5">—</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+
+            {/* MonArk column */}
+            <motion.div
+              className="bg-[#EDE6DF] rounded-xl border border-[#EDE6DF] border-l-[3px] border-l-[#A08C6E] p-6 sm:p-8"
+              initial={{ opacity: 0, x: 16 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1, ease: easeOut }}
+            >
+              <h3 className="font-editorial-headline text-lg text-foreground mb-5">MonArk</h3>
+              <ul className="space-y-4">
+                {[
+                  '3 curated introductions per week',
+                  'Optimized for relational alignment',
+                  'RIF works before you ever see a name',
+                  'Person first. Always.',
+                ].map((item, i) => (
+                  <li key={i} className="font-body text-sm text-foreground leading-relaxed flex items-start gap-2.5">
+                    <span className="text-[#A08C6E] mt-0.5">✦</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* ═══════════ PRICING ═══════════ */}
       <SectionDivider />
       <MonArkPricing onSelectPlan={(planName) => openWaitlist(planName)} />
