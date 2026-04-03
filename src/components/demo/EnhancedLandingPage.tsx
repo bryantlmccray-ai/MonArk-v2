@@ -601,6 +601,16 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
+      {/* ═══════════ PRESS BADGE ═══════════ */}
+      <section className="py-8 bg-background">
+        <div className="text-center">
+          <p className="font-body text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">As Heard On</p>
+          <p className="font-editorial italic text-[#A08C6E] text-base sm:text-lg">
+            Save Me a Spot — Chicago's relationship wellness podcast
+          </p>
+        </div>
+      </section>
+
       {/* ═══════════ PRICING ═══════════ */}
       <SectionDivider />
       <MonArkPricing onSelectPlan={(planName) => openWaitlist(planName)} />
