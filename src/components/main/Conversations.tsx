@@ -21,48 +21,21 @@ export const Conversations: React.FC = () => {
   const [activeChatConversation, setActiveChatConversation] = useState<any>(null);
   const [feedbackConversation, setFeedbackConversation] = useState<{id: string; name: string; itineraryId: string} | null>(null);
 
-  const conversations = [
-    {
-      id: 1,
-      name: 'Maya',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b047?w=150&h=150&fit=crop&crop=face',
-      lastMessage: 'That sounds like an amazing experience!',
-      time: '2h',
-      isNewMatch: false,
-      lastActivity: new Date(Date.now() - 2 * 60 * 60 * 1000),
-      messageCount: 24,
-      mutualEngagement: 0.8,
-      conversationId: 'conv_maya_001',
-      userId: user?.id || '76cc75e6-3228-4b19-97b5-f455639f6109'
-    },
-    {
-      id: 2,
-      name: 'Alex',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-      lastMessage: 'New Match! Ready to start the chat?',
-      time: '1d',
-      isNewMatch: true,
-      lastActivity: new Date(Date.now() - 24 * 60 * 60 * 1000),
-      messageCount: 1,
-      mutualEngagement: 0.3,
-      conversationId: 'conv_alex_001',
-      userId: user?.id || '76cc75e6-3228-4b19-97b5-f455639f6109'
-    },
-    {
-      id: 3,
-      name: 'Jordan',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-      lastMessage: 'I love that idea for our first date',
-      time: '3d',
-      isNewMatch: false,
-      lastActivity: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-      messageCount: 18,
-      mutualEngagement: 0.9,
-      hadDate: true,
-      conversationId: 'conv_jordan_001',
-      userId: user?.id || '76cc75e6-3228-4b19-97b5-f455639f6109'
-    },
-  ];
+  // Use real conversations from Supabase, no hardcoded demo data
+  const conversations = realConversations.map((conv: any) => ({
+    id: conv.id,
+    name: conv.match_name || conv.name || 'Connection',
+    image: conv.match_photo || conv.image || '',
+    lastMessage: conv.last_message || 'Start the conversation',
+    time: conv.last_activity ? formatTimeAgo(conv.last_activity) : '',
+    isNewMatch: (conv.message_count || 0) <= 1,
+    lastActivity: conv.last_activity ? new Date(conv.last_activity) : new Date(),
+    messageCount: conv.message_count || 0,
+    mutualEngagement: conv.mutual_engagement_score || 0,
+    conversationId: conv.conversation_id,
+    userId: user?.id || '',
+    hadDate: false,
+  }));
 
   useEffect(() => {
     if (!user) return;
