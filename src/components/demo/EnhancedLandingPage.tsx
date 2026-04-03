@@ -71,15 +71,9 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
   return (
     <div className="min-h-screen bg-background relative">
-      {/* ═══════════ FIXED ATMOSPHERIC BACKGROUND ═══════════ */}
-      <div className="fixed inset-0 z-0 overflow-hidden bg-[radial-gradient(ellipse_at_top,hsl(220_20%_18%)_0%,hsl(225_22%_12%)_40%,hsl(230_20%_8%)_100%)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,hsl(20_18%_20%/0.25)_0%,transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,hsl(30_25%_22%/0.15)_0%,transparent_50%)]" />
-        <div className="absolute inset-0 bg-background/55" />
-      </div>
-      <div className="relative z-10">
+      <div className="relative">
       {/* ═══════════ STICKY NAV ═══════════ */}
-      <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
+      <nav className="sticky top-0 z-50 bg-background/95 border-b border-border/50" style={{ backdropFilter: 'none' }}>
         <div className="max-w-5xl mx-auto px-5 sm:px-8 flex items-center justify-between h-14">
           <div className="flex items-center gap-2">
             <img src={monarkLogoHorizontal} alt="MonArk" className="h-10 object-contain" />
@@ -141,10 +135,6 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       )}
 
-      {/* Subtle warm texture overlay */}
-      <div className="fixed inset-0 opacity-[0.015] pointer-events-none z-0" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-      }} />
 
       {/* ═══════════ HERO ═══════════ */}
       <section className="relative overflow-hidden">
