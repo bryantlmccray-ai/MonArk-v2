@@ -128,7 +128,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <div className="flex-1 flex flex-col gap-2 p-5">
               <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-base font-body font-medium text-foreground py-3 border-b border-border/50 transition-colors hover:text-primary">How It Works</a>
               <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="text-base font-body font-medium text-foreground py-3 border-b border-border/50 transition-colors hover:text-primary">Pricing</a>
-              <button onClick={() => { setMobileMenuOpen(false); onSignIn?.(); }} className="text-base font-body font-medium text-primary py-3 border-b border-border/50 transition-colors hover:text-primary/80 text-left">Sign In</button>
+              <button onClick={() => { setMobileMenuOpen(false); setShowSignInModal(true); }} className="text-base font-body font-medium text-primary py-3 border-b border-border/50 transition-colors hover:text-primary/80 text-left">Sign In</button>
             </div>
             <div className="p-5 border-t border-border">
               <Button onClick={() => { setMobileMenuOpen(false); openWaitlist(); }} className="w-full py-3 text-sm tracking-[0.08em] font-body">
