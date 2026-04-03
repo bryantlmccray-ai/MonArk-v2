@@ -50,9 +50,12 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
   const [showWaitlistModal, setShowWaitlistModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [waitlistPlan, setWaitlistPlan] = useState<string | undefined>();
+  const [waitlistEmail, setWaitlistEmail] = useState<string | undefined>();
+  const [heroEmail, setHeroEmail] = useState('');
 
-  const openWaitlist = (plan?: string) => {
+  const openWaitlist = (plan?: string, email?: string) => {
     setWaitlistPlan(plan);
+    setWaitlistEmail(email);
     setShowWaitlistModal(true);
   };
 
