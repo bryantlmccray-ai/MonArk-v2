@@ -64,7 +64,7 @@ export const useNotificationTriggers = () => {
       if (isSubscribed) return;
 
       try {
-        const channelName = `email-triggers-${user.id}-${Date.now()}`;
+        const channelName = `email-triggers-${user.id}`;
         channel = supabase
           .channel(channelName)
           // New mutual match notification
