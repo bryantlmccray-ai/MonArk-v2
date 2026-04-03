@@ -24,7 +24,7 @@ const TIERS = {
       "Basic RIF compatibility insights",
       "MonArk venue recommendations with matches",
     ],
-    cta: "JOIN THE WAITLIST",
+    cta: "RESERVE YOUR SPOT — THE ARK",
     accent: false,
   },
   innerArk: {
