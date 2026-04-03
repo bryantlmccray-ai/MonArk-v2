@@ -608,14 +608,14 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               )}
             </motion.div>
 
-            {profile?.bio && (() => {
-              const raw = profile.bio || '';
+            {(() => {
+              const raw = profile?.bio || '';
               let cleaned = raw
                 .replace(/(I get most excited talking about\.{0,3}\s*)+/gi, '')
                 .replace(/(I'm looking for someone who values\.{0,3}\s*)+/gi, '')
                 .replace(/(A perfect Saturday for me is\.{0,3}\s*)+/gi, '')
                 .trim();
-              if (!cleaned || cleaned.length < 10) return null;
+              const hasContent = cleaned && cleaned.length >= 10;
               return (
                 <motion.div
                   initial="hidden"
@@ -625,9 +625,15 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                   className="relative bg-card rounded-2xl p-6 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
                 >
                   <div className="absolute top-4 left-5 text-5xl font-serif text-primary/20 leading-none select-none">"</div>
-                  <p className="text-foreground/90 text-[15px] leading-relaxed font-body pl-6 pr-2 pt-4 italic">
-                    {cleaned}
-                  </p>
+                  {hasContent ? (
+                    <p className="text-foreground/90 text-[15px] leading-relaxed font-body pl-6 pr-2 pt-4 italic">
+                      {cleaned}
+                    </p>
+                  ) : (
+                    <p className="text-[#D9D0C5] text-[15px] leading-relaxed font-body pl-6 pr-2 pt-4 italic">
+                      Add something about yourself
+                    </p>
+                  )}
                   <div className="mt-3 pl-6">
                     <div className="w-10 h-0.5 bg-primary/30 rounded-full" />
                   </div>

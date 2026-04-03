@@ -24,7 +24,7 @@ const TIERS = {
       "Basic RIF compatibility insights",
       "MonArk venue recommendations with matches",
     ],
-    cta: "JOIN THE WAITLIST",
+    cta: "RESERVE YOUR SPOT — THE ARK",
     accent: false,
   },
   innerArk: {
@@ -44,7 +44,7 @@ const TIERS = {
       "Early access to new features",
       "Inner Ark badge — visible signal of seriousness",
     ],
-    cta: "JOIN THE WAITLIST",
+    cta: "RESERVE YOUR SPOT — THE INNER ARK",
     accent: true,
   },
 };
@@ -325,7 +325,14 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
                     </motion.div>
                   )}
                   <p
-                    className={`text-xs font-medium mt-2 ${
+                    className={`text-xs mt-2 ${
+                      isAccent ? "text-[hsl(140_45%_55%)]" : "text-[hsl(140_45%_42%)]"
+                    }`}
+                  >
+                    Locked in at launch. No charge until we go live.
+                  </p>
+                  <p
+                    className={`text-xs font-medium mt-1 ${
                       isAccent ? "text-[hsl(30_40%_72%/0.7)]" : "text-muted-foreground"
                     }`}
                   >

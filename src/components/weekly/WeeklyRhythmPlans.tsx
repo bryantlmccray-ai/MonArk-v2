@@ -292,6 +292,15 @@ export const WeeklyRhythmPlans = () => {
         </div>
       </div>
 
+      {/* Mood Explainer */}
+      <div className="px-6 pb-2">
+        <div className="max-w-[420px]">
+          <p className="font-body text-sm text-[#3D3428]/80 leading-relaxed">
+            Your mood shapes this week's introductions. Reset brings calm, reflective profiles. Spark brings energy and curiosity. Stretch brings someone who'll challenge your growth edge. You can update this once per week.
+          </p>
+        </div>
+      </div>
+
       {/* Rhythm Selector */}
       <div className="px-6 pb-4">
         <div className="max-w-4xl mx-auto grid grid-cols-3 gap-4">
@@ -337,6 +346,9 @@ export const WeeklyRhythmPlans = () => {
             );
           })}
         </div>
+
+        {/* Bone divider before cards */}
+        <div className="h-px bg-[#EDE6DF] mx-6 mt-2" />
 
         {/* Clear CTA after mood selection */}
         <AnimatePresence>

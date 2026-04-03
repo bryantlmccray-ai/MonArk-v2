@@ -202,7 +202,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <div className="relative bg-card rounded-2xl p-7 border border-border shadow-[var(--shadow-elevated)]">
                   <p className="text-[10px] font-caption text-primary tracking-[0.2em] mb-2">LIMITED EARLY ACCESS</p>
                   <h2 className="text-2xl sm:text-3xl font-editorial-headline text-foreground mb-1">Get Your 3</h2>
-                  <p className="text-sm text-muted-foreground font-body mb-4">Join 250+ intentional daters on the waitlist</p>
+                  <p className="text-sm text-muted-foreground font-body mb-4">Reserve your spot among intentional daters</p>
 
                   <div className="flex gap-2 mb-4">
                     <input
@@ -494,6 +494,9 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <p className="text-xs text-muted-foreground font-body tracking-[0.15em] uppercase mt-0.5">
                   CEO & Founder
                 </p>
+                <p className="font-editorial italic text-[#A08C6E] text-sm mt-3">
+                  As heard on <em>Save Me a Spot</em> — Chicago's leading relationship wellness podcast
+                </p>
               </div>
             </motion.div>
           </div>
@@ -595,6 +598,16 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ═══════════ PRESS BADGE ═══════════ */}
+      <section className="py-8 bg-background">
+        <div className="text-center">
+          <p className="font-body text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">As Heard On</p>
+          <p className="font-editorial italic text-[#A08C6E] text-base sm:text-lg">
+            Save Me a Spot — Chicago's relationship wellness podcast
+          </p>
         </div>
       </section>
 
