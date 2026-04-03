@@ -537,7 +537,10 @@ export const SundayMatches = () => {
 
             {/* Pool Tab */}
             <TabsContent value="pool" className="space-y-4">
-              <div className="text-center pb-1">
+              <div className="text-center pb-1 space-y-2">
+                <p className="text-[13px] uppercase tracking-[0.15em] text-[#A08C6E] font-body max-w-md mx-auto">
+                  These members didn't make your curated 3 this week — but the connection potential is still high. Explore on your own terms.
+                </p>
                 <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-caption">
                   More compatible people this week
                 </p>

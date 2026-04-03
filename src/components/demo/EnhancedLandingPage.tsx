@@ -494,6 +494,9 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <p className="text-xs text-muted-foreground font-body tracking-[0.15em] uppercase mt-0.5">
                   CEO & Founder
                 </p>
+                <p className="font-editorial italic text-[#A08C6E] text-sm mt-3">
+                  As heard on <em>Save Me a Spot</em> — Chicago's leading relationship wellness podcast
+                </p>
               </div>
             </motion.div>
           </div>
