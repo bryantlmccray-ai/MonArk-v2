@@ -105,33 +105,42 @@ export function useSubscription() {
 
     fetchSubscription();
 
-    // Listen for realtime changes to subscription
-    const channel = supabase
-      .channel("subscription-changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "user_profiles",
-          filter: `user_id=eq.${supabase.auth.getUser().then((r) => r.data.user?.id)}`,
-        },
-        (payload) => {
-          const row = payload.new as Record<string, unknown>;
-          setState({
-            tier: (row.subscription_tier as SubscriptionTier) || "free",
-            status: (row.subscription_status as string) || "inactive",
-            expiresAt: row.subscription_expires_at as string | null,
-            trialEndsAt: row.trial_ends_at as string | null,
-            loading: false,
-          });
-        }
-      )
-      .subscribe();
+    // Listen for realtime changes to subscription — use user-scoped channel name
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+
+    const setupChannel = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!mounted || !user) return;
+
+      channel = supabase
+        .channel(`subscription-${user.id}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "UPDATE",
+            schema: "public",
+            table: "user_profiles",
+            filter: `user_id=eq.${user.id}`,
+          },
+          (payload) => {
+            const row = payload.new as Record<string, unknown>;
+            setState({
+              tier: (row.subscription_tier as SubscriptionTier) || "free",
+              status: (row.subscription_status as string) || "inactive",
+              expiresAt: row.subscription_expires_at as string | null,
+              trialEndsAt: row.trial_ends_at as string | null,
+              loading: false,
+            });
+          }
+        )
+        .subscribe();
+    };
+
+    setupChannel();
 
     return () => {
       mounted = false;
-      supabase.removeChannel(channel);
+      if (channel) supabase.removeChannel(channel);
     };
   }, []);
 

@@ -574,9 +574,9 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
-              { quote: "MonArk feels like comfort.", name: "Sarah, Brooklyn" },
-              { quote: "You're doing my investigation for me.", name: "James, Manhattan" },
-              { quote: "If someone is putting in the work versus checking a few boxes, that shows their intent.", name: "Priya, Park Slope" },
+              { quote: "MonArk feels like comfort.", name: "MonArk Waitlist Member" },
+              { quote: "You're doing my investigation for me.", name: "MonArk Waitlist Member" },
+              { quote: "If someone is putting in the work versus checking a few boxes, that shows their intent.", name: "MonArk Waitlist Member" },
             ].map((item, idx) => (
               <motion.div
                 key={idx}
