@@ -249,7 +249,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-3">How Smart Matching Works</h2>
-            <p className="text-xs sm:text-sm font-caption text-muted-foreground tracking-[0.15em] uppercase max-w-lg mx-auto leading-relaxed">Your RIF — a 10-question profile that reads how you connect, not just who you are. Relational intelligence curates your perfect 3.</p>
+            <p className="text-xs sm:text-sm font-caption text-muted-foreground tracking-[0.15em] uppercase max-w-lg mx-auto leading-relaxed">Your RIF — a 15-question profile that reads how you connect, not just who you are. Relational intelligence curates your perfect 3.</p>
             <SectionDivider />
           </motion.div>
 
