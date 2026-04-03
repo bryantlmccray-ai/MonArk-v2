@@ -17,8 +17,7 @@ export const useNotificationTriggers = () => {
   useEffect(() => {
     if (!user?.id) return;
 
-    let channel: any = null;
-    let isSubscribed = false;
+
 
     const sendEmailNotification = async (
       type: 'match' | 'message' | 'date_proposal' | 'system' | 'safety',
@@ -60,81 +59,66 @@ export const useNotificationTriggers = () => {
       }
     };
 
-    const setupSubscription = async () => {
-      if (isSubscribed) return;
+    let mounted = true;
 
-      try {
-        const channelName = `email-triggers-${user.id}`;
-        channel = supabase
-          .channel(channelName)
-          // New mutual match notification
-          .on(
-            'postgres_changes',
-            {
-              event: 'UPDATE',
-              schema: 'public',
-              table: 'matches',
-              filter: `liked_user_id=eq.${user.id}`
-            },
-            async (payload) => {
-              try {
-                const match = payload.new as any;
-                if (match.is_mutual && !payload.old?.is_mutual) {
-                  await sendEmailNotification(
-                    'match',
-                    'New Match!',
-                    'Someone accepted your connection! Start a conversation now.',
-                    'https://monark.app/matches'
-                  );
-                }
-              } catch (error) {
-                console.error('Error handling match notification:', error);
-              }
+    const channelName = `email-triggers-${user.id}`;
+    const channel = supabase
+      .channel(channelName)
+      // New mutual match notification
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'matches',
+          filter: `liked_user_id=eq.${user.id}`
+        },
+        async (payload) => {
+          if (!mounted) return;
+          try {
+            const match = payload.new as any;
+            if (match.is_mutual && !payload.old?.is_mutual) {
+              await sendEmailNotification(
+                'match',
+                'New Match!',
+                'Someone accepted your connection! Start a conversation now.',
+                'https://monark.app/matches'
+              );
             }
-          )
-          // New message notification
-          .on(
-            'postgres_changes',
-            {
-              event: 'INSERT',
-              schema: 'public',
-              table: 'messages',
-              filter: `recipient_user_id=eq.${user.id}`
-            },
-            async (payload) => {
-              try {
-                const message = payload.new as any;
-                await sendEmailNotification(
-                  'message',
-                  'New Message',
-                  'You have a new message waiting for you.',
-                  `https://monark.app/matches?conversation=${message.conversation_id}`
-                );
-              } catch (error) {
-                console.error('Error handling message notification:', error);
-              }
-            }
-          );
-
-        await channel.subscribe();
-        isSubscribed = true;
-        console.log('Email notification triggers subscribed');
-      } catch (error) {
-        console.error('Error setting up email notification triggers:', error);
-      }
-    };
-
-    setupSubscription();
+          } catch (error) {
+            console.error('Error handling match notification:', error);
+          }
+        }
+      )
+      // New message notification
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+          filter: `recipient_user_id=eq.${user.id}`
+        },
+        async (payload) => {
+          if (!mounted) return;
+          try {
+            const message = payload.new as any;
+            await sendEmailNotification(
+              'message',
+              'New Message',
+              'You have a new message waiting for you.',
+              `https://monark.app/matches?conversation=${message.conversation_id}`
+            );
+          } catch (error) {
+            console.error('Error handling message notification:', error);
+          }
+        }
+      )
+      .subscribe();
 
     return () => {
-      isSubscribed = false;
-      if (channel) {
-        try {
-          supabase.removeChannel(channel);
-        } catch (error) {
-          console.error('Error removing channel:', error);
-        }
-      }
+      mounted = false;
+      supabase.removeChannel(channel);
     };
   }, [user?.id]);
 
