@@ -41,7 +41,12 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
 
-  const totalSteps = 3;
+  React.useEffect(() => {
+    if (initialEmail) {
+      setFormData(prev => ({ ...prev, email: initialEmail }));
+    }
+  }, [initialEmail]);
+
   const stepNames: Record<number, string> = { 1: 'About You', 2: 'Your Preferences', 3: 'Final Details' };
 
   const handleInputChange = (field: string, value: string | boolean) => {
