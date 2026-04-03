@@ -504,8 +504,8 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                     </div>
                   </div>
 
-                  {/* Age, Height & Weight */}
-                  <div className="grid grid-cols-3 gap-3">
+                  {/* Age & Height */}
+                  <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5 block font-caption">Age</label>
                       <input
@@ -526,18 +526,6 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                         onChange={e => setEditHeightText(e.target.value)}
                         placeholder={`5'10"`}
                         maxLength={6}
-                        className="w-full h-10 px-3 text-sm bg-card border border-border/70 rounded-xl text-foreground font-body placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary/40 transition-all"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5 block font-caption">Weight</label>
-                      <input
-                        type="text"
-                        inputMode="numeric"
-                        value={editWeight}
-                        onChange={e => setEditWeight(e.target.value.replace(/\D/g, '').slice(0, 3))}
-                        placeholder="185 lbs"
-                        maxLength={3}
                         className="w-full h-10 px-3 text-sm bg-card border border-border/70 rounded-xl text-foreground font-body placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary/40 transition-all"
                       />
                     </div>
