@@ -86,7 +86,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <a href="#how-it-works" className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide">How It Works</a>
             <a href="#pricing" className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide">Pricing</a>
             <button
-              onClick={() => onSignIn?.()}
+              onClick={() => setShowSignInModal(true)}
               className="text-sm font-body font-medium text-primary hover:text-primary/80 transition-colors tracking-wide"
             >
               Sign In
