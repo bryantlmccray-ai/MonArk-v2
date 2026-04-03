@@ -347,6 +347,9 @@ export const WeeklyRhythmPlans = () => {
           })}
         </div>
 
+        {/* Bone divider before cards */}
+        <div className="h-px bg-[#EDE6DF] mx-6 mt-2" />
+
         {/* Clear CTA after mood selection */}
         <AnimatePresence>
           {selectedRhythm && (
