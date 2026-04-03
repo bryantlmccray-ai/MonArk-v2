@@ -558,10 +558,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
-              "MonArk feels like comfort.",
-              "You're doing my investigation for me.",
-              "If someone is putting in the work versus checking a few boxes, that shows their intent.",
-            ].map((quote, idx) => (
+              { quote: "MonArk feels like comfort.", name: "Sarah, Brooklyn" },
+              { quote: "You're doing my investigation for me.", name: "James, Manhattan" },
+              { quote: "If someone is putting in the work versus checking a few boxes, that shows their intent.", name: "Priya, Park Slope" },
+            ].map((item, idx) => (
               <motion.div
                 key={idx}
                 initial={{ opacity: 1 }}
@@ -571,10 +571,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 className="bg-[hsl(230_18%_15%)] rounded-2xl p-7 flex flex-col justify-between shadow-[0_8px_32px_rgba(28,31,46,0.25)]"
               >
                 <p className="text-[hsl(240_6%_78%)] font-body text-sm leading-relaxed mb-6 italic">
-                  "{quote}"
+                  "{item.quote}"
                 </p>
                 <p className="text-[hsl(30_40%_72%)] font-caption text-xs tracking-[0.12em] uppercase">
-                  — MonArk Waitlist Member
+                  — {item.name}
                 </p>
               </motion.div>
             ))}
