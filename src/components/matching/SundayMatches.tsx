@@ -29,8 +29,9 @@ const ImageWithFallback = ({ src, alt, className, loading }: { src: string; alt:
 
   if (failed || !src || src === '/placeholder.svg') {
     return (
-      <div className={`${className} flex items-center justify-center bg-gradient-to-br from-primary/80 to-accent/60`}>
-        <span className="text-primary-foreground font-serif text-4xl opacity-90">{initials}</span>
+      <div className={`${className} flex flex-col items-center justify-center bg-[#E8DED4]`}>
+        <span className="font-serif text-2xl text-[#A08C6E] tracking-wide">MA</span>
+        <span className="font-body text-[11px] text-[#A08C6E]/70 mt-1">Photo coming soon</span>
       </div>
     );
   }

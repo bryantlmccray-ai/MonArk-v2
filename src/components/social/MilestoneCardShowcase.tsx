@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export const MilestoneCardShowcase: React.FC = () => {
   const [variant, setVariant] = useState<'story' | 'feed'>('story');
-  const [accentColor, setAccentColor] = useState<'terracotta' | 'sage' | 'navy'>('terracotta');
+  const [accentColor, setAccentColor] = useState<'gold' | 'linen' | 'walnut'>('gold');
   const [milestoneType, setMilestoneType] = useState<'first-match' | 'first-date' | 'connection' | 'weekly-insight'>('first-match');
 
   const headlines = {
@@ -40,7 +40,7 @@ export const MilestoneCardShowcase: React.FC = () => {
             </Tabs>
           </div>
 
-          {/* Accent Color */}
+          {/* Accent Color — Brand-aligned */}
           <div>
             <label className="text-xs uppercase tracking-wider text-muted-foreground mb-2 block">
               Accent Color
@@ -48,30 +48,30 @@ export const MilestoneCardShowcase: React.FC = () => {
             <div className="flex gap-2">
               <Button
                 size="sm"
-                variant={accentColor === 'terracotta' ? 'default' : 'outline'}
-                onClick={() => setAccentColor('terracotta')}
+                variant={accentColor === 'gold' ? 'default' : 'outline'}
+                onClick={() => setAccentColor('gold')}
                 className="gap-2"
               >
-                <span className="w-3 h-3 rounded-full" style={{ background: 'hsl(15, 45%, 55%)' }} />
-                Terracotta
+                <span className="w-3 h-3 rounded-full" style={{ background: '#A08C6E' }} />
+                Gold
               </Button>
               <Button
                 size="sm"
-                variant={accentColor === 'sage' ? 'default' : 'outline'}
-                onClick={() => setAccentColor('sage')}
+                variant={accentColor === 'linen' ? 'default' : 'outline'}
+                onClick={() => setAccentColor('linen')}
                 className="gap-2"
               >
-                <span className="w-3 h-3 rounded-full" style={{ background: 'hsl(140, 25%, 45%)' }} />
-                Sage
+                <span className="w-3 h-3 rounded-full" style={{ background: '#E8DED4' }} />
+                Linen
               </Button>
               <Button
                 size="sm"
-                variant={accentColor === 'navy' ? 'default' : 'outline'}
-                onClick={() => setAccentColor('navy')}
+                variant={accentColor === 'walnut' ? 'default' : 'outline'}
+                onClick={() => setAccentColor('walnut')}
                 className="gap-2"
               >
-                <span className="w-3 h-3 rounded-full" style={{ background: 'hsl(220, 40%, 35%)' }} />
-                Navy
+                <span className="w-3 h-3 rounded-full" style={{ background: '#4A3E30' }} />
+                Walnut
               </Button>
             </div>
           </div>

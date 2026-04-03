@@ -54,7 +54,7 @@ const FOUNDING = {
   tagline: "First 200 Signups",
   description:
     "Lock in lifetime pricing and get full access to every Inner Ark feature as we roll them out. Founding Members shape the platform from day one — with a direct line to the team building MonArk.",
-  cta: "JOIN THE WAITLIST",
+  cta: "CLAIM MY FOUNDING SPOT",
 };
 
 const VALID_INVITE_CODE = "MONARK2026";
@@ -105,10 +105,14 @@ const FoundingMembersBanner = ({ onSelectPlan }: { onSelectPlan?: (plan: string)
           </Badge>
         </div>
 
-        <div className="flex items-baseline gap-2 mb-4">
+        <div className="flex items-baseline gap-2 mb-2">
           <span className="font-editorial text-3xl text-[hsl(30_40%_72%)]">$35</span>
           <span className="text-sm font-body text-[hsl(240_6%_55%)]">/mo — locked for life</span>
         </div>
+
+        <p className="font-body text-xs text-[hsl(30_40%_72%/0.8)] mb-4">
+          First 200 members only. Your rate is locked for life.
+        </p>
 
         <p className="font-body text-sm leading-relaxed text-[hsl(240_6%_58%)] max-w-[520px] mb-8">
           {FOUNDING.description}
@@ -130,7 +134,7 @@ const FoundingMembersBanner = ({ onSelectPlan }: { onSelectPlan?: (plan: string)
           />
           <button
             onClick={handleVerify}
-            className="py-3.5 px-8 rounded-full bg-[hsl(30_40%_72%/0.12)] border border-[hsl(30_40%_72%/0.5)] text-[hsl(30_40%_72%)] font-body text-xs font-medium tracking-[0.15em] uppercase transition-all duration-300 hover:bg-[hsl(30_40%_72%/0.2)] hover:border-[hsl(30_40%_72%)] hover:shadow-[0_0_24px_hsl(30_40%_72%/0.15)] whitespace-nowrap"
+            className="py-3.5 px-8 rounded-full bg-[#A08C6E] text-[#F0EBE3] font-body text-xs font-medium tracking-[0.15em] uppercase transition-all duration-300 hover:bg-[#A08C6E]/90 hover:shadow-[0_0_24px_hsl(30_40%_72%/0.15)] whitespace-nowrap"
           >
             {FOUNDING.cta}
           </button>
@@ -214,7 +218,7 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
               }`}
             >
               Quarterly
-              <span className="text-[10px] font-semibold bg-[hsl(140_45%_42%)] text-white px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+              <span className="text-[10px] font-semibold bg-[hsl(140_45%_42%)] text-[#F0EBE3] px-1.5 py-0.5 rounded-full uppercase tracking-wider">
                 Save 25%
               </span>
             </button>
@@ -232,7 +236,6 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
             const price = isQuarterly ? tier.quarterlyPerMonth : tier.monthly;
             const quarterlyTotal = (tier.quarterlyPerMonth * 3);
             const isAccent = tier.accent;
-            const cardKey = `${tier.name}-${isQuarterly ? 'q' : 'm'}`;
 
             return (
               <motion.div
@@ -376,10 +379,10 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
                 {/* CTA */}
                 <button
                   onClick={() => onSelectPlan?.(tier.name)}
-                  className={`w-full py-3.5 px-8 rounded-full font-body text-sm font-medium tracking-[0.12em] uppercase transition-all duration-300 ${
+                  className={`w-full py-3.5 px-8 rounded-[40px] font-body text-sm font-medium tracking-[0.12em] uppercase transition-all duration-300 ${
                     isAccent
-                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                      : "bg-transparent text-primary border-[1.5px] border-primary hover:bg-muted"
+                      ? "bg-[#A08C6E] text-[#F0EBE3] hover:bg-[#A08C6E]/90"
+                      : "bg-[#A08C6E] text-[#F0EBE3] hover:bg-[#A08C6E]/90"
                   }`}
                 >
                   {tier.cta}

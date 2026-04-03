@@ -504,8 +504,8 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                     </div>
                   </div>
 
-                  {/* Age, Height & Weight */}
-                  <div className="grid grid-cols-3 gap-3">
+                  {/* Age & Height */}
+                  <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5 block font-caption">Age</label>
                       <input
@@ -526,18 +526,6 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                         onChange={e => setEditHeightText(e.target.value)}
                         placeholder={`5'10"`}
                         maxLength={6}
-                        className="w-full h-10 px-3 text-sm bg-card border border-border/70 rounded-xl text-foreground font-body placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary/40 transition-all"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5 block font-caption">Weight</label>
-                      <input
-                        type="text"
-                        inputMode="numeric"
-                        value={editWeight}
-                        onChange={e => setEditWeight(e.target.value.replace(/\D/g, '').slice(0, 3))}
-                        placeholder="185 lbs"
-                        maxLength={3}
                         className="w-full h-10 px-3 text-sm bg-card border border-border/70 rounded-xl text-foreground font-body placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary/40 transition-all"
                       />
                     </div>
@@ -592,12 +580,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                       <span className="text-foreground text-sm font-body">{formatHeight(profile.height_cm)}</span>
                     </div>
                   )}
-                  {profile?.weight_lbs && (
-                    <div className="flex items-center justify-between py-3">
-                      <span className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] font-caption">Weight</span>
-                      <span className="text-foreground text-sm font-body">{profile.weight_lbs} lbs</span>
-                    </div>
-                  )}
+                  {/* Weight intentionally hidden from public profile */}
                   {profile?.preference_to_see && profile.preference_to_see.length > 0 && (
                     <div className="flex items-center justify-between py-3 last:pb-0">
                       <span className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] font-caption">Looking for</span>

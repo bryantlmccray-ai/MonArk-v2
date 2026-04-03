@@ -79,7 +79,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       <div className="relative">
       {/* ═══════════ STICKY NAV ═══════════ */}
       <nav className="sticky top-0 z-50 bg-background/95 border-b border-border/50" style={{ backdropFilter: 'none' }}>
-        <div className="max-w-5xl mx-auto px-5 sm:px-8 flex items-center justify-between h-14">
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-16 flex items-center justify-between h-14">
           <div className="flex items-center gap-2">
             <img src={monarkLogoHorizontal} alt="MonArk" className="h-10 object-contain" />
           </div>
@@ -140,7 +140,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       )}
 
-      {/* ═══════════ HERO ═══════════ */}
+      {/* ═══════════ HERO — Emotional Hook ═══════════ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-card via-background to-secondary/40" />
 
@@ -152,7 +152,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        <div className="relative max-w-4xl mx-auto px-5 sm:px-8 pt-8 pb-16 sm:pt-12 sm:pb-20">
+        <div className="relative max-w-4xl mx-auto px-6 sm:px-8 lg:px-16 pt-8 pb-16 sm:pt-12 sm:pb-20">
           <div className="text-center space-y-7">
             {/* Brand */}
             <motion.div
@@ -163,31 +163,38 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             >
               <MonArkLogo size="xl" animated={true} rotateOnLoad={true} className="mx-auto" />
 
-              <div className="space-y-3">
-                <h1 className="text-5xl sm:text-7xl lg:text-8xl font-editorial-headline text-foreground leading-[0.92] tracking-tight">
-                  Mon<span className="text-accent">A</span>rk
+              <div className="space-y-4">
+                <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-editorial-headline italic text-foreground leading-[1.08] tracking-tight px-2">
+                  Dating shouldn't feel like a second job.
                 </h1>
                 <div className="w-16 h-px mx-auto bg-primary/30" />
-                <p className="text-xs sm:text-sm font-caption text-muted-foreground tracking-[0.25em] uppercase">
-                  3 curated matches. Every week.
-                </p>
-                <p className="text-[11px] font-body text-muted-foreground/70 tracking-wide mt-1">
-                  Powered by your Relational Intelligence Profile (RIF)
+                <p className="max-w-xl mx-auto text-base sm:text-lg font-body text-foreground/75 leading-relaxed px-2">
+                  MonArk gives you 3 curated introductions every week — powered by your Relational Intelligence Profile. No swiping. No algorithm games. Just people who actually align with how you connect, communicate, and love.
                 </p>
               </div>
             </motion.div>
 
-            {/* Value Prop */}
-            <motion.p
-              className="max-w-lg mx-auto text-base md:text-lg font-body text-muted-foreground leading-relaxed"
-              initial={{ opacity: 1 }}
+            {/* Pull Quote Cards */}
+            <motion.div
+              className="flex flex-col sm:flex-row gap-4 justify-center items-stretch max-w-lg mx-auto"
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15, ease: easeOut }}
+              transition={{ duration: 0.6, delay: 0.2, ease: easeOut }}
             >
-              No endless swiping. No algorithm games. Just{' '}
-              <a href="#how-it-works" className="text-foreground font-medium hover:text-primary transition-colors underline underline-offset-4 decoration-primary/40">Smart Matching</a> that
-              understands how you connect, communicate, and love.
-            </motion.p>
+              {[
+                { quote: "You're doing my investigation for me." },
+                { quote: "MonArk feels like comfort." },
+              ].map((item, i) => (
+                <div key={i} className="flex-1 bg-[#EDE6DF] rounded-xl p-5 text-center">
+                  <p className="font-editorial italic text-[#A08C6E] text-sm leading-relaxed mb-2">
+                    "{item.quote}"
+                  </p>
+                  <p className="font-body text-xs uppercase tracking-[0.15em] text-foreground/60">
+                    — Early Access Member, Chicago
+                  </p>
+                </div>
+              ))}
+            </motion.div>
 
             {/* ── Primary CTA Card ── */}
             <motion.div
@@ -241,10 +248,44 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
+      {/* ═══════════ RIF SECTION — Position 2 ═══════════ */}
+      <section className="py-16 bg-background">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
+          <motion.div
+            className="text-center mb-10"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: easeOut }}
+          >
+            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+              The Relational Intelligence Framework
+            </h2>
+            <p className="font-body font-medium text-base text-[#A08C6E] tracking-wide mb-6">
+              The intelligence behind your introductions.
+            </p>
+            <div className="max-w-[520px] mx-auto">
+              <p className="font-body text-sm text-foreground leading-relaxed mb-8">
+                Most platforms sort by photos and proximity. MonArk sorts by emotional readiness, relational values, and behavioral compatibility — a proprietary framework we call RIF. Your 3 weekly introductions aren't random. They're the result of a system built to surface alignment, not just attraction.
+              </p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-3">
+              {['Emotional Readiness', 'Relational Values', 'Behavioral Compatibility'].map((pill) => (
+                <span
+                  key={pill}
+                  className="font-body text-xs font-medium uppercase tracking-[0.15em] text-[#A08C6E] bg-[#EDE6DF] px-5 py-2 rounded-full"
+                >
+                  {pill}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
-
+      {/* ═══════════ HOW IT WORKS ═══════════ */}
       <section id="how-it-works" className="py-16 bg-background scroll-mt-16">
-        <div className="max-w-4xl mx-auto px-5">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
             className="text-center mb-10"
             initial={{ opacity: 1 }}
@@ -419,7 +460,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
       {/* ═══════════ FOUNDER STORY ═══════════ */}
       <section className="py-16 bg-secondary/30 overflow-hidden">
-        <div className="max-w-4xl mx-auto px-5">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
             className="text-center mb-10"
             initial={{ opacity: 1 }}
@@ -505,7 +546,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
       {/* ═══════════ BUILT WITH CARE ═══════════ */}
       <section className="py-16 bg-background">
-        <div className="max-w-3xl mx-auto px-5">
+        <div className="max-w-3xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
             className="text-center mb-10"
             initial={{ opacity: 1 }}
@@ -560,9 +601,9 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
-      {/* ═══════════ TESTIMONIALS ═══════════ */}
+      {/* ═══════════ TESTIMONIALS — From Early Access Members ═══════════ */}
       <section className="py-16 bg-background">
-        <div className="max-w-5xl mx-auto px-5 sm:px-8">
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
             className="text-center mb-10"
             initial={{ opacity: 1 }}
@@ -570,16 +611,14 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <p className="text-xs font-caption text-primary tracking-[0.2em] uppercase mb-2">What Members Are Saying</p>
-            <p className="text-sm text-muted-foreground font-body mb-3">Voices from the waitlist.</p>
+            <h2 className="font-editorial-headline italic text-2xl sm:text-[28px] text-foreground mb-2">From Early Access Members</h2>
             <SectionDivider />
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl mx-auto">
             {[
-              { quote: "MonArk feels like comfort.", name: "MonArk Waitlist Member" },
-              { quote: "You're doing my investigation for me.", name: "MonArk Waitlist Member" },
-              { quote: "If someone is putting in the work versus checking a few boxes, that shows their intent.", name: "MonArk Waitlist Member" },
+              { quote: "I've tried every app. MonArk is the first time I felt like someone was actually paying attention to who I am.", name: "Early Access Member, Chicago" },
+              { quote: "Three people, once a week. It sounds simple until you realize how much thought went into each one.", name: "Early Access Member, Chicago" },
             ].map((item, idx) => (
               <motion.div
                 key={idx}
@@ -611,44 +650,9 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
-      {/* ═══════════ RIF SECTION ═══════════ */}
-      <section className="py-16 bg-background">
-        <div className="max-w-4xl mx-auto px-5 sm:px-8">
-          <motion.div
-            className="text-center mb-10"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: easeOut }}
-          >
-            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
-              The Relational Intelligence Framework
-            </h2>
-            <p className="font-body font-medium text-base text-[#A08C6E] tracking-wide mb-6">
-              The intelligence behind your introductions.
-            </p>
-            <div className="max-w-[520px] mx-auto">
-              <p className="font-body text-sm text-foreground leading-relaxed mb-8">
-                Most platforms sort by photos and proximity. MonArk sorts by emotional readiness, relational values, and behavioral compatibility — a proprietary framework we call RIF. Your 3 weekly introductions aren't random. They're the result of a system designed to surface alignment, not just attraction.
-              </p>
-            </div>
-            <div className="flex flex-wrap justify-center gap-3">
-              {['Emotional Readiness', 'Relational Values', 'Behavioral Compatibility'].map((pill) => (
-                <span
-                  key={pill}
-                  className="font-body text-xs font-medium uppercase tracking-[0.15em] text-[#A08C6E] bg-[#EDE6DF] px-5 py-2 rounded-full"
-                >
-                  {pill}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
       {/* ═══════════ SKEPTIC COMPARISON ═══════════ */}
       <section className="py-16 bg-secondary/30">
-        <div className="max-w-4xl mx-auto px-5 sm:px-8">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
             className="text-center mb-10"
             initial={{ opacity: 0, y: 20 }}
@@ -720,13 +724,20 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       <SectionDivider />
       <MonArkPricing onSelectPlan={(planName) => openWaitlist(planName)} />
 
+      {/* Early access line below pricing */}
+      <div className="text-center pb-8 -mt-4">
+        <p className="font-body text-[13px] text-foreground/75">
+          Early Access members receive matches immediately upon launch. No waiting period.
+        </p>
+      </div>
+
       {/* Waitlist Modal */}
       <WaitlistModal isOpen={showWaitlistModal} onClose={() => { setShowWaitlistModal(false); setWaitlistPlan(undefined); setWaitlistEmail(undefined); }} sourcePage="enhanced-landing" selectedPlan={waitlistPlan} initialEmail={waitlistEmail} />
       <SignInModal isOpen={showSignInModal} onClose={() => setShowSignInModal(false)} />
 
       {/* ═══════════ INSTAGRAM ═══════════ */}
       <section className="py-14 bg-secondary/30">
-        <div className="max-w-5xl mx-auto px-5">
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-16">
           <div className="text-center mb-8">
             <a
               href="https://www.instagram.com/monark.eq/"
@@ -785,7 +796,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
       {/* ═══════════ FOOTER ═══════════ */}
       <footer className="py-12 bg-muted border-t border-border">
-        <div className="max-w-4xl mx-auto px-5 text-center">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16 text-center">
           <img src={monarkLogoHorizontal} alt="MonArk — Date well." className="h-10 w-auto object-contain mx-auto mb-6" />
 
           <div className="mb-6">

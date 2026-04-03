@@ -1,6 +1,9 @@
 import React from 'react';
 import { Calendar, Star, Sparkles, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 
 interface DatesJournalProps {
   onStartDebrief: () => void;
@@ -9,10 +12,29 @@ interface DatesJournalProps {
 }
 
 export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDateCompleted }) => {
-  const completedDates = [
-    { id: '1', name: 'Maya', date: '2024-01-15', rating: 5, venue: 'Coffee Shop', hasReflection: false },
-    { id: '2', name: 'Jordan', date: '2024-01-10', rating: 4, venue: 'Art Gallery', hasReflection: true },
-  ];
+  const { user } = useAuth();
+
+  const { data: completedDates = [] } = useQuery({
+    queryKey: ['date-journal', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      const { data, error } = await supabase
+        .from('date_journal')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return (data || []).map((d: any) => ({
+        id: d.id,
+        name: d.partner_name,
+        date: d.date_completed || d.created_at,
+        rating: d.rating || 0,
+        venue: d.date_activity || d.date_title,
+        hasReflection: !!d.reflection_notes,
+      }));
+    },
+    enabled: !!user?.id,
+  });
 
   return (
     <div className="bg-background">
@@ -31,7 +53,7 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
           <h3 className="text-base font-semibold text-foreground">Completed Dates</h3>
 
           {completedDates.length > 0 ? (
-            completedDates.map((date) => (
+            completedDates.map((date: any) => (
               <div
                 key={date.id}
                 className="bg-card rounded-2xl p-4 border border-border/60 hover:border-primary/20 transition-all duration-200 group shadow-[0_1px_3px_rgba(100,80,60,0.04)] hover:shadow-[0_2px_8px_rgba(100,80,60,0.08)]"
@@ -64,7 +86,7 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                 {!date.hasReflection && onDateCompleted ? (
                   <div className="mt-3 space-y-1.5">
                     <p className="text-xs text-muted-foreground italic font-body pl-0.5">
-                      How did {date.venue.toLowerCase()} with {date.name} go?
+                      How did {date.venue?.toLowerCase()} with {date.name} go?
                     </p>
                     <Button
                       variant="outline"
@@ -90,14 +112,21 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
               </div>
             ))
           ) : (
-            <div className="text-center py-14 bg-card rounded-2xl border border-border/60">
-              <div className="w-14 h-14 rounded-2xl bg-primary/8 flex items-center justify-center mx-auto mb-3">
-                <Calendar className="w-7 h-7 text-primary/50" />
+            <div className="text-center py-16 bg-card rounded-2xl border border-border/60">
+              {/* MA compass monogram */}
+              <div className="w-16 h-16 rounded-full bg-[#E8DED4] flex items-center justify-center mx-auto mb-4">
+                <span className="font-serif text-lg text-[#A08C6E] tracking-wide">MA</span>
               </div>
-              <p className="text-foreground font-medium text-sm mb-1">No completed dates yet</p>
-              <p className="text-xs text-muted-foreground">
-                Accept a weekly option to plan your first date!
+              <p className="font-editorial italic text-foreground text-xl mb-2">Your story starts here.</p>
+              <p className="text-sm text-muted-foreground font-body max-w-xs mx-auto mb-6">
+                Every introduction, every date, every moment worth keeping — your journal holds it all.
               </p>
+              <button
+                onClick={() => onDateCompleted?.()}
+                className="inline-flex items-center px-6 py-2.5 bg-[#A08C6E] text-[#F0EBE3] font-body font-medium text-xs tracking-[0.15em] uppercase rounded-[40px] hover:bg-[#A08C6E]/90 transition-all"
+              >
+                ADD YOUR FIRST ENTRY
+              </button>
             </div>
           )}
         </div>
