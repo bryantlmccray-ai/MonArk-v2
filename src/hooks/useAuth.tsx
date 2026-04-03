@@ -32,22 +32,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         if (!mounted) return;
+        
+        // Only react to meaningful auth events — ignore TOKEN_REFRESHED
+        // to prevent navigation loops and unnecessary re-renders
+        if (event === 'TOKEN_REFRESHED') {
+          return;
+        }
         
         console.log('Auth state changed:', event, session?.user?.id);
         
-        try {
-          // Update session and user state immediately
-          setSession(session);
-          setUser(session?.user ?? null);
-          setLoading(false);
-        } catch (error) {
-          console.error('Error in auth state change handler:', error);
-          if (mounted) {
-            setLoading(false);
-          }
-        }
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
       }
     );
 
