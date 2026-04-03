@@ -221,6 +221,11 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
           </div>
         </div>
 
+        {/* Founding Members Banner with Invite Code */}
+        <div className="mb-12">
+          <FoundingMembersBanner onSelectPlan={onSelectPlan} />
+        </div>
+
         {/* Tier Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           {Object.values(TIERS).map((tier, idx) => {
@@ -376,9 +381,6 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
             );
           })}
         </div>
-
-        {/* Founding Members Banner with Invite Code */}
-        <FoundingMembersBanner onSelectPlan={onSelectPlan} />
 
         {/* Bottom Note */}
         <p className="text-center text-[13px] text-muted-foreground mt-8 italic font-editorial">
