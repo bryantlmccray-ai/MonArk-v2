@@ -931,10 +931,15 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               variants={fadeUp}
               className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
             >
-              <h3 className="text-foreground font-medium text-lg mb-2">MonArk Trust Score</h3>
-              <p className="text-muted-foreground text-sm mb-4">Build trust through verification and authentic connections</p>
-              <button onClick={onOpenTrustScore} className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 hover:shadow-warm-glow" disabled={isSigningOut}>
-                Get Verified & Build Trust
+              <div className="flex items-center gap-2 mb-2">
+                <ShieldCheck className="h-5 w-5 text-[#A08C6E]" />
+                <h3 className="text-foreground font-medium text-lg">MonArk Trust Score</h3>
+              </div>
+              <p className="font-body text-[13px] text-[#3D3428]/80 leading-relaxed max-w-[400px] mb-4">
+                Your Trust Score signals to potential connections that you're exactly who you say you are. Verification takes under 2 minutes — a quick ID check, no data stored. Members with a verified Trust Score receive priority placement in weekly introductions.
+              </p>
+              <button onClick={onOpenTrustScore} className="w-full py-3 bg-[#A08C6E] text-[#F0EBE3] font-body font-medium text-sm tracking-[0.12em] uppercase rounded-[40px] transition-all duration-300 hover:bg-[#A08C6E]/90 hover:shadow-warm-glow" disabled={isSigningOut}>
+                VERIFY IN 2 MINUTES
               </button>
             </motion.div>
 
