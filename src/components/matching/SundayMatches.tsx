@@ -169,7 +169,7 @@ const DEMO_POOL_MATCHES: UnifiedMatch[] = [
 ];
 
 export const SundayMatches = () => {
-  const navigate = useNavigate();
+  const _nav = useNavigate(); // retained for future use
   const { 
     matches: curatedMatches, 
     loading: curatedLoading, 
