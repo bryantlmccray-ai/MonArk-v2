@@ -592,12 +592,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                       <span className="text-foreground text-sm font-body">{formatHeight(profile.height_cm)}</span>
                     </div>
                   )}
-                  {profile?.weight_lbs && (
-                    <div className="flex items-center justify-between py-3">
-                      <span className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] font-caption">Weight</span>
-                      <span className="text-foreground text-sm font-body">{profile.weight_lbs} lbs</span>
-                    </div>
-                  )}
+                  {/* Weight intentionally hidden from public profile */}
                   {profile?.preference_to_see && profile.preference_to_see.length > 0 && (
                     <div className="flex items-center justify-between py-3 last:pb-0">
                       <span className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] font-caption">Looking for</span>
