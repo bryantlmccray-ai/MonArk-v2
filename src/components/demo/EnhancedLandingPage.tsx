@@ -605,6 +605,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
       {/* Waitlist Modal */}
       <WaitlistModal isOpen={showWaitlistModal} onClose={() => { setShowWaitlistModal(false); setWaitlistPlan(undefined); setWaitlistEmail(undefined); }} sourcePage="enhanced-landing" selectedPlan={waitlistPlan} initialEmail={waitlistEmail} />
+      <SignInModal isOpen={showSignInModal} onClose={() => setShowSignInModal(false)} />
 
       {/* ═══════════ INSTAGRAM ═══════════ */}
       <section className="py-14 bg-secondary/30">
