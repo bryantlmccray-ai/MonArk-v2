@@ -188,7 +188,7 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
             Invest in how you connect
           </h2>
           <p className="font-body text-base text-muted-foreground max-w-[520px] mx-auto">
-            No free tier. No swiping. Every MonArk member is here with intention.
+            No free tier. No swiping. Every MonArk member is here with intention. Every member pays — because serious daters deserve serious matches.
           </p>
         </motion.div>
 
