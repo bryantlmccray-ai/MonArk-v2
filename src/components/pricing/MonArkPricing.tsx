@@ -368,7 +368,14 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
                       >
                         ✦
                       </span>
-                      <span className="inline">{feature}</span>
+                      <span className="inline">
+                        {feature}
+                        {feature === 'Access to Discovery Map' && (
+                          <span className={`block text-xs italic mt-0.5 ${isAccent ? 'text-[hsl(240_6%_60%)]' : 'text-muted-foreground'}`}>
+                            Browse nearby members by compatibility — a curated map of people who match your RIF in your city.
+                          </span>
+                        )}
+                      </span>
                       {feature.includes('Inner Ark badge') && (
                         <span className="inline-flex items-center gap-0.5 ml-1.5 px-1.5 py-0.5 rounded-full bg-primary/15 text-[10px] font-semibold text-primary whitespace-nowrap">✦ Inner Ark</span>
                       )}
