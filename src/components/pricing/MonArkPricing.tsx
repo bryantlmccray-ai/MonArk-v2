@@ -44,7 +44,7 @@ const TIERS = {
       "Early access to new features",
       "Inner Ark badge — visible signal of seriousness",
     ],
-    cta: "JOIN THE WAITLIST",
+    cta: "RESERVE YOUR SPOT — THE INNER ARK",
     accent: true,
   },
 };
