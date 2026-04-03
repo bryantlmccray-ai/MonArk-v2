@@ -16,14 +16,15 @@ interface WaitlistModalProps {
   onClose: () => void;
   sourcePage?: string;
   selectedPlan?: string;
+  initialEmail?: string;
 }
 
-export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, sourcePage = 'demo-landing', selectedPlan }) => {
+export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, sourcePage = 'demo-landing', selectedPlan, initialEmail }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    email: '',
+    email: initialEmail || '',
     ageRange: '',
     city: '',
     genderIdentity: '',
@@ -39,6 +40,12 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, s
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
+
+  React.useEffect(() => {
+    if (initialEmail) {
+      setFormData(prev => ({ ...prev, email: initialEmail }));
+    }
+  }, [initialEmail]);
 
   const totalSteps = 3;
   const stepNames: Record<number, string> = { 1: 'About You', 2: 'Your Preferences', 3: 'Final Details' };
