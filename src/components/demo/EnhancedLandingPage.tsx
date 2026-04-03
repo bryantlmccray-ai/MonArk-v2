@@ -10,6 +10,7 @@ import gracePortrait from '@/assets/team/grace-omalley.png';
 import { useDemo } from '@/contexts/DemoContext';
 import { DemoMainApp } from './DemoMainApp';
 import { WaitlistModal } from './WaitlistModal';
+import { SignInModal } from '@/components/auth/SignInModal';
 
 // Instagram feed images
 import igArtOfDating from '@/assets/instagram/ig-art-of-dating.png';
