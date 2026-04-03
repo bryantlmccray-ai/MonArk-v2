@@ -295,17 +295,13 @@ export const SundayMatches = () => {
   };
 
   const handleStartChat = () => {
-    if (mutualMatch?.conversationId) {
-      navigate(`/chat/${mutualMatch.conversationId}`);
-    }
     setMutualMatch(null);
+    window.dispatchEvent(new CustomEvent('monark-navigate', { detail: { tab: 'matches' } }));
   };
 
   const handlePlanDate = () => {
-    if (mutualMatch?.conversationId) {
-      navigate(`/chat/${mutualMatch.conversationId}`);
-    }
     setMutualMatch(null);
+    window.dispatchEvent(new CustomEvent('monark-navigate', { detail: { tab: 'matches' } }));
   };
 
   const [showWelcomeTip, setShowWelcomeTip] = useState(() => {
