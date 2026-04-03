@@ -170,6 +170,9 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <p className="text-xs sm:text-sm font-caption text-muted-foreground tracking-[0.25em] uppercase">
                   3 curated matches. Every week.
                 </p>
+                <p className="text-[11px] font-body text-muted-foreground/70 tracking-wide mt-1">
+                  Powered by your Relational Intelligence Profile (RIF)
+                </p>
               </div>
             </motion.div>
 
