@@ -69,6 +69,9 @@ const App = () => (
                   <Route path="/admin/analytics" element={<AdminMFAGate><AdminAnalytics /></AdminMFAGate>} />
                   <Route path="/admin/curation" element={<AdminMFAGate><AdminMatchCuration /></AdminMFAGate>} />
                   <Route path="/milestone-cards" element={<MilestoneCardShowcase />} />
+                  <Route path="/sign-in" element={<Navigate to="/" replace />} />
+                  <Route path="/login" element={<Navigate to="/" replace />} />
+                  <Route path="/auth" element={<Navigate to="/" replace />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
