@@ -198,19 +198,27 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <div className="relative bg-card rounded-2xl p-7 border border-border shadow-[var(--shadow-elevated)]">
                   <p className="text-[10px] font-caption text-primary tracking-[0.2em] mb-2">LIMITED EARLY ACCESS</p>
                   <h2 className="text-2xl sm:text-3xl font-editorial-headline text-foreground mb-1">Get Your 3</h2>
-                  <p className="text-sm text-muted-foreground font-body mb-6">Join 100+ intentional daters on the waitlist</p>
+                  <p className="text-sm text-muted-foreground font-body mb-4">Join 100+ intentional daters on the waitlist</p>
 
-                  <Button
-                    onClick={() => openWaitlist()}
-                    className="w-full py-5 text-sm tracking-[0.08em] font-body"
-                    size="lg"
-                  >
-                    JOIN THE WAITLIST
-                  </Button>
+                  <div className="flex gap-2 mb-4">
+                    <input
+                      type="email"
+                      value={heroEmail}
+                      onChange={(e) => setHeroEmail(e.target.value)}
+                      placeholder="Enter your email"
+                      className="flex-1 h-11 px-4 rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring"
+                    />
+                    <Button
+                      onClick={() => openWaitlist(undefined, heroEmail || undefined)}
+                      className="h-11 px-5 text-sm tracking-[0.08em] font-body shrink-0"
+                    >
+                      JOIN
+                    </Button>
+                  </div>
 
-                  <div className="mt-5 pt-4 border-t border-border">
+                  <div className="pt-3 border-t border-border">
                     <p className="text-sm text-muted-foreground font-body leading-relaxed text-center italic">
-                      "Answer 10 thoughtful questions. We find people who get you."
+                      "Answer 15 thoughtful questions. We find people who get you."
                     </p>
                   </div>
                 </div>
