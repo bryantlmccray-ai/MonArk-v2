@@ -139,7 +139,6 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           </motion.div>
         </div>
       )}
-  const [showSignInModal, setShowSignInModal] = useState(false);
 
       {/* ═══════════ HERO ═══════════ */}
       <section className="relative overflow-hidden">
