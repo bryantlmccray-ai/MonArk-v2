@@ -71,13 +71,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
   return (
     <div className="min-h-screen bg-background relative">
-      {/* ═══════════ FIXED ATMOSPHERIC BACKGROUND ═══════════ */}
-      <div className="fixed inset-0 z-0 overflow-hidden bg-[radial-gradient(ellipse_at_top,hsl(220_20%_18%)_0%,hsl(225_22%_12%)_40%,hsl(230_20%_8%)_100%)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,hsl(20_18%_20%/0.25)_0%,transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,hsl(30_25%_22%/0.15)_0%,transparent_50%)]" />
-        <div className="absolute inset-0 bg-background/55" />
-      </div>
-      <div className="relative z-10">
+      <div className="relative">
       {/* ═══════════ STICKY NAV ═══════════ */}
       <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
         <div className="max-w-5xl mx-auto px-5 sm:px-8 flex items-center justify-between h-14">
