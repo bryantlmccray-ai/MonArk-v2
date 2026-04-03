@@ -17,8 +17,7 @@ export const useNotificationTriggers = () => {
   useEffect(() => {
     if (!user?.id) return;
 
-    let channel: any = null;
-    let isSubscribed = false;
+
 
     const sendEmailNotification = async (
       type: 'match' | 'message' | 'date_proposal' | 'system' | 'safety',
