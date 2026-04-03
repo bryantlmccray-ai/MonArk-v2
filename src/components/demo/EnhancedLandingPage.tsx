@@ -248,6 +248,41 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
+      {/* ═══════════ RIF SECTION ═══════════ */}
+      <section className="py-16 bg-background">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
+          <motion.div
+            className="text-center mb-10"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: easeOut }}
+          >
+            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+              The Relational Intelligence Framework
+            </h2>
+            <p className="font-body font-medium text-base text-[#A08C6E] tracking-wide mb-6">
+              The intelligence behind your introductions.
+            </p>
+            <div className="max-w-[520px] mx-auto">
+              <p className="font-body text-sm text-foreground leading-relaxed mb-8">
+                Most platforms sort by photos and proximity. MonArk sorts by emotional readiness, relational values, and behavioral compatibility — a proprietary framework we call RIF. Your 3 weekly introductions aren't random. They're the result of a system built to surface alignment, not just attraction.
+              </p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-3">
+              {['Emotional Readiness', 'Relational Values', 'Behavioral Compatibility'].map((pill) => (
+                <span
+                  key={pill}
+                  className="font-body text-xs font-medium uppercase tracking-[0.15em] text-[#A08C6E] bg-[#EDE6DF] px-5 py-2 rounded-full"
+                >
+                  {pill}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ═══════════ HOW IT WORKS ═══════════ */}
       <section id="how-it-works" className="py-16 bg-background scroll-mt-16">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
