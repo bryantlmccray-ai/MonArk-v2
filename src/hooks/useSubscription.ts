@@ -123,6 +123,7 @@ export function useSubscription() {
             filter: `user_id=eq.${user.id}`,
           },
           (payload) => {
+            if (!mounted) return;
             const row = payload.new as Record<string, unknown>;
             setState({
               tier: (row.subscription_tier as SubscriptionTier) || "free",
@@ -134,6 +135,12 @@ export function useSubscription() {
           }
         )
         .subscribe();
+
+      // If unmounted while awaiting, clean up immediately
+      if (!mounted) {
+        supabase.removeChannel(channel);
+        channel = null;
+      }
     };
 
     setupChannel();
