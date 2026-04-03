@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Sparkles, Calendar, MessageCircle, Heart, Zap, RotateCcw, Archive } from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
+
+const formatTimeAgo = (dateStr: string) => {
+  try {
+    return formatDistanceToNow(new Date(dateStr), { addSuffix: false });
+  } catch {
+    return '';
+  }
+};
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
