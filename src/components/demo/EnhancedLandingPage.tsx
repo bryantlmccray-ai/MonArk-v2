@@ -256,25 +256,37 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <SectionDivider />
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-4 gap-5">
             {[
               { icon: PenLine, num: "01", title: "Take the RIF", desc: "15 questions about how you communicate, connect, and date. Takes 5 minutes." },
               { icon: Heart, num: "02", title: "Get Your 3", desc: "Every Sunday, receive 3 matches who fit your style—not just your type." },
               { icon: MapPin, num: "03", title: "Date With Intention", desc: "We suggest premium first dates at vetted venues. No awkward coffee shop roulette." },
+              { icon: MessageCircleHeart, num: "04", title: "Close the Loop", desc: "No ghosting. After every date, choose to advance or send a kind, automated closure. Everyone gets respect.", highlight: true },
             ].map((item, i) => (
               <motion.div
                 key={i}
-                className="text-center p-6 rounded-2xl border border-transparent bg-card/0 hover:bg-card hover:border-border hover:shadow-[var(--shadow-editorial)] transition-all duration-400 group"
+                className={`text-center p-6 rounded-2xl border transition-all duration-400 group ${
+                  item.highlight
+                    ? "bg-primary/5 border-primary/20 hover:bg-primary/10 hover:border-primary/30 hover:shadow-[var(--shadow-elevated)]"
+                    : "border-transparent bg-card/0 hover:bg-card hover:border-border hover:shadow-[var(--shadow-editorial)]"
+                }`}
                 initial={{ opacity: 1 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
               >
-                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center bg-secondary border border-border group-hover:bg-primary/10 group-hover:border-primary/20 transition-all duration-300">
+                <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center border transition-all duration-300 ${
+                  item.highlight
+                    ? "bg-primary/10 border-primary/25 group-hover:bg-primary/15 group-hover:border-primary/35"
+                    : "bg-secondary border-border group-hover:bg-primary/10 group-hover:border-primary/20"
+                }`}>
                   <item.icon className="h-7 w-7 text-primary" strokeWidth={1.5} />
                 </div>
                 <span className="text-3xl font-editorial-headline text-primary/30 leading-none">{item.num}</span>
                 <h3 className="font-editorial-headline text-lg text-foreground mt-2 mb-2">{item.title}</h3>
+                {item.highlight && (
+                  <span className="inline-block text-[9px] font-caption text-primary tracking-[0.15em] uppercase bg-primary/10 px-2.5 py-0.5 rounded-full mb-2">Anti-Ghosting</span>
+                )}
                 <p className="text-sm text-muted-foreground font-body leading-relaxed">{item.desc}</p>
               </motion.div>
             ))}
