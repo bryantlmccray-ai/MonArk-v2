@@ -30,8 +30,7 @@ const ImageWithFallback = ({ src, alt, className, loading }: { src: string; alt:
   if (failed || !src || src === '/placeholder.svg') {
     return (
       <div className={`${className} flex flex-col items-center justify-center bg-[#E8DED4]`}>
-        <span className="font-serif text-2xl text-[#A08C6E] tracking-wide">MA</span>
-        <span className="font-body text-[11px] text-[#A08C6E]/70 mt-1">Photo coming soon</span>
+        <span className="font-serif text-2xl text-[#A08C6E] tracking-wide">{initials}</span>
       </div>
     );
   }
@@ -43,7 +42,6 @@ const ImageWithFallback = ({ src, alt, className, loading }: { src: string; alt:
       loading={loading}
       className={className}
       onError={() => setFailed(true)}
-      crossOrigin="anonymous"
     />
   );
 };

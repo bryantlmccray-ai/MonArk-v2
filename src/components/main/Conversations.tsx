@@ -33,9 +33,9 @@ export const Conversations: React.FC = () => {
   // Use real conversations from Supabase, no hardcoded demo data
   const conversations = realConversations.map((conv: any) => ({
     id: conv.id,
-    name: conv.match_name || conv.name || 'Connection',
-    image: conv.match_photo || conv.image || '',
-    lastMessage: conv.last_message || 'Start the conversation',
+    name: conv.otherUser?.name || conv.match_name || conv.name || 'Your match',
+    image: conv.otherUser?.avatar_url || conv.match_photo || conv.image || '',
+    lastMessage: conv.lastMessage?.content || conv.last_message || 'Start the conversation',
     time: conv.last_activity ? formatTimeAgo(conv.last_activity) : '',
     isNewMatch: (conv.message_count || 0) <= 1,
     lastActivity: conv.last_activity ? new Date(conv.last_activity) : new Date(),
