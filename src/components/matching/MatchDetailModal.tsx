@@ -92,7 +92,6 @@ export const MatchDetailModal = ({
                 fallback.innerHTML = `<span class="text-primary-foreground font-serif text-5xl opacity-90">${(match.name || 'M').split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()}</span>`;
                 target.parentNode?.insertBefore(fallback, target);
               }}
-              crossOrigin="anonymous"
             />
             
             {/* Photo navigation */}
