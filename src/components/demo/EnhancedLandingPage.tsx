@@ -618,8 +618,8 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl mx-auto">
             {[
-              { quote: "I've tried every app. MonArk is the first time I felt like someone was actually paying attention to who I am.", name: "Early Access Member, Chicago" },
-              { quote: "Three people, once a week. It sounds simple until you realize how much thought went into each one.", name: "Early Access Member, Chicago" },
+              { quote: "I've tried every app. MonArk is the first time I felt like someone was actually paying attention to who I am.", name: "Janelle · Early Access Member, Chicago" },
+              { quote: "Three people, once a week. It sounds simple until you realize how much thought went into each one.", name: "Marcus T. · Early Access Member, Chicago" },
             ].map((item, idx) => (
               <motion.div
                 key={idx}
