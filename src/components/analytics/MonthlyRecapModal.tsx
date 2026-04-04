@@ -56,7 +56,26 @@ export const MonthlyRecapModal: React.FC<MonthlyRecapModalProps> = ({
   }, [autoPlay, insights]);
 
   if (!insights && !loading) {
-    return null;
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="max-w-md h-[400px] p-0 bg-card border-2 border-border shadow-[0_8px_40px_-4px_hsl(var(--foreground)/0.15)]">
+          <div className="flex items-center justify-center h-full px-8">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                <TrendingUp className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="text-foreground text-lg font-semibold">No Recap Yet</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                Your MonArk Moments recap will be available once you have enough activity this month. Keep connecting!
+              </p>
+              <Button variant="outline" onClick={onClose} className="mt-2">
+                Got it
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
   }
 
   if (loading) {
