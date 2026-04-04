@@ -91,7 +91,7 @@ export const MatchDetailModal = ({
                 fallback.className = 'w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/80 to-accent/60';
                 fallback.innerHTML = `<span class="text-primary-foreground font-serif text-5xl opacity-90">${(match.name || 'M').split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()}</span>`;
                 target.parentNode?.insertBefore(fallback, target);
-              }
+              }}
             />
             
             {/* Photo navigation */}
