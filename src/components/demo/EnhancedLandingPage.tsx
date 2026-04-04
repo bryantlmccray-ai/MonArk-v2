@@ -183,7 +183,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             >
               {[
                 { quote: "You're doing my investigation for me.", name: "Aisha" },
-                { quote: "MonArk feels like comfort.", name: "Angela" },
+                { quote: "MonArk feels like comfort.", name: "Samuel" },
               ].map((item, i) => (
                 <div key={i} className="flex-1 bg-[#EDE6DF] rounded-xl p-5 text-center">
                   <p className="font-editorial italic text-[#A08C6E] text-sm leading-relaxed mb-2">
