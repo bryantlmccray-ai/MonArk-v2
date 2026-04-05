@@ -253,10 +253,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             {/* App Store badges in hero */}
             <div className="flex items-center justify-center gap-3 pt-2">
               <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-[#A08C6E] text-[#A08C6E] font-body text-xs tracking-[0.08em] cursor-default select-none">
-                🍎 App Store — Coming Soon
+                App Store — Coming Soon
               </span>
               <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-[#A08C6E] text-[#A08C6E] font-body text-xs tracking-[0.08em] cursor-default select-none">
-                ▶ Google Play — Coming Soon
+                Google Play — Coming Soon
               </span>
             </div>
           </div>
@@ -829,10 +829,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
             {[
-              { src: "/images/instagram/ig-1.jpg", alt: "MonArk — The Art of Dating" },
-              { src: "/images/instagram/ig-2.jpg", alt: "MonArk — Romantic sunset" },
-              { src: "/images/instagram/ig-3.jpg", alt: "MonArk — Champagne celebration" },
-              { src: "/images/instagram/ig-4.jpg", alt: "MonArk — Love notes and coffee" },
+              { src: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=600&h=600&fit=crop", alt: "MonArk — The Art of Dating" },
+              { src: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600&h=600&fit=crop", alt: "MonArk — Romantic sunset" },
+              { src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=600&fit=crop", alt: "MonArk — Champagne celebration" },
+              { src: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600&h=600&fit=crop", alt: "MonArk — Love notes and coffee" },
             ].map((image, i) => (
               <a
                 key={i}
@@ -885,10 +885,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           {/* App Store Badges */}
           <div className="flex items-center justify-center gap-3 mb-5">
             <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-[#A08C6E] text-[#A08C6E] font-body text-xs tracking-[0.08em] cursor-default select-none">
-              🍎 App Store — Coming Soon
+              App Store — Coming Soon
             </span>
             <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-[#A08C6E] text-[#A08C6E] font-body text-xs tracking-[0.08em] cursor-default select-none">
-              ▶ Google Play — Coming Soon
+              Google Play — Coming Soon
             </span>
           </div>
 
