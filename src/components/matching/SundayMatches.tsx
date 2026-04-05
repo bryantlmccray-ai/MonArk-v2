@@ -5,7 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Sparkles, Users, Calendar, Heart, MapPin, ChevronRight,
-  Coffee, Wine, Palette, Music, Compass, Moon, MessageCircle
+  Coffee, Wine, Palette, Music, Compass, Moon, MessageCircle,
+  Clock, X
 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import { useSubscription } from '@/hooks/useSubscription';
@@ -274,6 +275,105 @@ const PoolCard: React.FC<{
   </Card>
 );
 
+/** MatchChip — horizontal card with photo + details (compact list view) */
+const MatchChip: React.FC<{
+  match: UnifiedMatch;
+  onConnect: (m: UnifiedMatch) => void;
+  onDetail: (m: UnifiedMatch) => void;
+  onDismiss?: (m: UnifiedMatch) => void;
+}> = ({ match, onConnect, onDetail, onDismiss }) => (
+  <div
+    className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border/50 hover:shadow-sm transition-shadow cursor-pointer group"
+    onClick={() => onDetail(match)}
+  >
+    {/* Photo */}
+    <div className="relative w-14 h-14 rounded-lg overflow-hidden flex-shrink-0">
+      <ImageWithFallback
+        src={match.photoUrl}
+        alt={match.name}
+        name={match.name}
+        className="h-full w-full"
+      />
+    </div>
+
+    {/* Details */}
+    <div className="flex-1 min-w-0">
+      <div className="flex items-center gap-2">
+        <p className="font-serif font-semibold text-sm text-foreground truncate">
+          {match.name}, {match.age}
+        </p>
+        <Badge variant="outline" className="text-[10px] font-medium shrink-0">
+          {match.compatibilityScore}%
+        </Badge>
+      </div>
+      <p className="text-xs text-muted-foreground truncate">{match.occupation}</p>
+      <div className="flex items-center text-xs text-muted-foreground mt-0.5">
+        <MapPin className="h-2.5 w-2.5 mr-1" />
+        <span className="truncate">{match.location}</span>
+      </div>
+    </div>
+
+    {/* Actions */}
+    <div className="flex items-center gap-1.5 flex-shrink-0">
+      <Button
+        size="sm" className="h-8 w-8 p-0"
+        onClick={(e) => { e.stopPropagation(); onConnect(match); }}
+      >
+        <Heart className="h-3.5 w-3.5" />
+      </Button>
+      {onDismiss && (
+        <Button
+          variant="ghost" size="sm" className="h-8 w-8 p-0 text-muted-foreground"
+          onClick={(e) => { e.stopPropagation(); onDismiss(match); }}
+        >
+          <X className="h-3.5 w-3.5" />
+        </Button>
+      )}
+      <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+    </div>
+  </div>
+);
+
+/** StatusBar — curated count + next refresh countdown with pulse */
+const StatusBar: React.FC<{
+  curatedCount: number;
+  poolCount: number;
+  refreshLabel: string;
+}> = ({ curatedCount, poolCount, refreshLabel }) => (
+  <div className="flex items-center justify-between rounded-xl bg-card border border-border/50 px-4 py-3">
+    {/* Left: counts */}
+    <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
+        <Heart className="w-4 h-4 text-primary" />
+        <div>
+          <p className="text-sm font-semibold text-foreground">{curatedCount} Curated</p>
+          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">This Week</p>
+        </div>
+      </div>
+      <div className="w-px h-8 bg-border/50" />
+      <div className="flex items-center gap-2">
+        <Compass className="w-4 h-4 text-muted-foreground" />
+        <div>
+          <p className="text-sm font-semibold text-foreground">{poolCount}</p>
+          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">In Pool</p>
+        </div>
+      </div>
+    </div>
+
+    {/* Right: next drop countdown with pulse */}
+    <div className="flex items-center gap-2">
+      <div className="relative flex items-center justify-center">
+        <span className="absolute inline-flex h-3 w-3 rounded-full bg-primary/40 animate-ping" />
+        <span className="relative inline-flex h-2 w-2 rounded-full bg-primary animate-pulse" />
+      </div>
+      <div className="text-right">
+        <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Next drop</p>
+        <p className="text-xs font-medium text-foreground">{refreshLabel}</p>
+      </div>
+    </div>
+  </div>
+);
+
 /* ══════════════════════════════════════════════════════════════
    Main Component
    ══════════════════════════════════════════════════════════════ */
@@ -369,21 +469,15 @@ export const SundayMatches: React.FC = () => {
   const nextRefresh = getNextRefreshDate();
   const refreshLabel = formatDistanceToNow(nextRefresh, { addSuffix: true });
   const matchCount = isDemo ? DEMO_CURATED.length : pendingCount;
+  const poolCount = poolMatches.length;
 
   const spotlightMatch = displayMatches[0] || null;
   const gridMatches = displayMatches.slice(1);
 
   return (
     <div className="space-y-4 pb-8">
-      {/* Info bar */}
-      <div className="flex items-center justify-between text-sm text-muted-foreground px-1">
-        <span>{matchCount} match{matchCount !== 1 ? 'es' : ''} · refreshes {refreshLabel}</span>
-        {matchCount > 0 && (
-          <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">
-            <Sparkles className="w-3 h-3 mr-1" /> New
-          </Badge>
-        )}
-      </div>
+      {/* Status bar */}
+      <StatusBar curatedCount={matchCount} poolCount={poolCount} refreshLabel={refreshLabel} />
 
       {/* 3-tab layout */}
       <Tabs defaultValue="your3" className="w-full">
