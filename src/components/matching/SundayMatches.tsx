@@ -5,7 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Sparkles, Users, Calendar, Heart, MapPin, ChevronRight,
-  Coffee, Wine, Palette, Music, Compass, Moon, MessageCircle
+  Coffee, Wine, Palette, Music, Compass, Moon, MessageCircle,
+  Clock, X
 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import { useSubscription } from '@/hooks/useSubscription';
