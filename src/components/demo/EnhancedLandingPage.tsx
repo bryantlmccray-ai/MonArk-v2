@@ -53,6 +53,8 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
   const [waitlistPlan, setWaitlistPlan] = useState<string | undefined>();
   const [waitlistEmail, setWaitlistEmail] = useState<string | undefined>();
   const [heroEmail, setHeroEmail] = useState('');
+  const [heroSubmitted, setHeroSubmitted] = useState(false);
+  const [heroSubmitting, setHeroSubmitting] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
 
   const openWaitlist = (plan?: string, email?: string) => {
@@ -75,7 +77,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
   }
 
   return (
-    <div className="min-h-screen bg-background relative isolate" style={{ contain: 'layout paint' }}>
+    <div className="min-h-screen bg-background relative isolate">
       <div className="relative">
       {/* ═══════════ STICKY NAV ═══════════ */}
       <nav className="sticky top-0 z-50 bg-background/95 border-b border-border/50" style={{ backdropFilter: 'none' }}>
@@ -86,12 +88,6 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           <div className="hidden md:flex items-center gap-8">
             <a href="#how-it-works" className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide">How It Works</a>
             <a href="#pricing" className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide">Pricing</a>
-            <button
-              onClick={() => setShowSignInModal(true)}
-              className="text-sm font-body font-medium text-primary hover:text-primary/80 transition-colors tracking-wide"
-            >
-              Sign In
-            </button>
           </div>
           <button
             onClick={() => openWaitlist()}
@@ -129,7 +125,6 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <div className="flex-1 flex flex-col gap-2 p-5">
               <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-base font-body font-medium text-foreground py-3 border-b border-border/50 transition-colors hover:text-primary">How It Works</a>
               <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="text-base font-body font-medium text-foreground py-3 border-b border-border/50 transition-colors hover:text-primary">Pricing</a>
-              <button onClick={() => { setMobileMenuOpen(false); setShowSignInModal(true); }} className="text-base font-body font-medium text-primary py-3 border-b border-border/50 transition-colors hover:text-primary/80 text-left">Sign In</button>
             </div>
             <div className="p-5 border-t border-border">
               <Button onClick={() => { setMobileMenuOpen(false); openWaitlist(); }} className="w-full py-3 text-sm tracking-[0.08em] font-body">
@@ -208,24 +203,37 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
                 <div className="relative bg-card rounded-2xl p-7 border border-border shadow-[var(--shadow-elevated)]">
                   <p className="text-[10px] font-caption text-primary tracking-[0.2em] mb-2">LIMITED EARLY ACCESS</p>
+
                   <h2 className="text-2xl sm:text-3xl font-editorial-headline text-foreground mb-1">Get Your 3</h2>
                   <p className="text-sm text-muted-foreground font-body mb-4">Reserve your spot among intentional daters</p>
 
-                  <div className="flex gap-2 mb-4">
-                    <input
-                      type="email"
-                      value={heroEmail}
-                      onChange={(e) => setHeroEmail(e.target.value)}
-                      placeholder="Enter your email"
-                      className="flex-1 h-11 px-4 rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring"
-                    />
-                    <Button
-                      onClick={() => openWaitlist(undefined, heroEmail || undefined)}
-                      className="h-11 px-5 text-sm tracking-[0.08em] font-body shrink-0"
-                    >
-                      JOIN
-                    </Button>
-                  </div>
+                  {heroSubmitted ? (
+                    <p className="font-editorial italic text-[#A08C6E] text-base text-center py-3">
+                      You're on the list. We'll be in touch.
+                    </p>
+                  ) : (
+                    <div className="flex gap-2 mb-4">
+                      <input
+                        type="email"
+                        value={heroEmail}
+                        onChange={(e) => setHeroEmail(e.target.value)}
+                        placeholder="Enter your email"
+                        className="flex-1 h-11 px-4 rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring"
+                      />
+                      <Button
+                        disabled={heroSubmitting}
+                        onClick={() => {
+                          if (!heroEmail) return;
+                          setHeroSubmitting(true);
+                          openWaitlist(undefined, heroEmail);
+                          setTimeout(() => { setHeroSubmitted(true); setHeroSubmitting(false); }, 400);
+                        }}
+                        className="h-11 px-5 text-sm tracking-[0.08em] font-body shrink-0"
+                      >
+                        JOIN
+                      </Button>
+                    </div>
+                  )}
 
                   <div className="pt-3 border-t border-border">
                     <p className="text-sm text-muted-foreground font-body leading-relaxed text-center italic">
@@ -273,7 +281,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               {['Emotional Readiness', 'Relational Values', 'Behavioral Compatibility'].map((pill) => (
                 <span
                   key={pill}
-                  className="font-body text-xs font-medium uppercase tracking-[0.15em] text-[#A08C6E] bg-[#EDE6DF] px-5 py-2 rounded-full"
+                  className="font-body text-xs font-medium uppercase tracking-[0.15em] text-[#7A6A55] bg-[#EDE6DF] px-5 py-2 rounded-full"
                 >
                   {pill}
                 </span>
@@ -298,16 +306,16 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <SectionDivider />
           </motion.div>
 
-          <div className="grid md:grid-cols-4 gap-5">
+          <div className="grid md:grid-cols-4 gap-5 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none -mx-6 px-6 md:mx-0 md:px-0">
             {[
-              { icon: PenLine, num: "01", title: "Take the RIF", desc: "15 questions about how you communicate, connect, and date. Takes 5 minutes." },
-              { icon: Heart, num: "02", title: "Get Your 3", desc: "Every Sunday, receive 3 matches who fit your style—not just your type." },
-              { icon: MapPin, num: "03", title: "Date With Intention", desc: "We suggest premium first dates at vetted venues. No awkward coffee shop roulette." },
-              { icon: MessageCircleHeart, num: "04", title: "Close the Loop", desc: "No ghosting. After every date, choose to advance or send a kind, automated closure. Everyone gets respect.", highlight: true },
+              { icon: PenLine, num: "1", title: "Take the RIF", desc: "15 questions about how you communicate, connect, and date. Takes 5 minutes." },
+              { icon: Heart, num: "2", title: "Get Your 3", desc: "Every Sunday, receive 3 matches who fit your style—not just your type." },
+              { icon: MapPin, num: "3", title: "Date With Intention", desc: "We suggest premium first dates at vetted venues. No awkward coffee shop roulette." },
+              { icon: MessageCircleHeart, num: "4", title: "Close the Loop", desc: "No ghosting. After every date, choose to advance or send a kind, automated closure. Everyone gets respect.", highlight: true },
             ].map((item, i) => (
               <motion.div
                 key={i}
-                className={`text-center p-6 rounded-2xl border transition-all duration-400 group ${
+                className={`text-center p-6 rounded-2xl border transition-all duration-400 group min-w-[260px] md:min-w-0 snap-center ${
                   item.highlight
                     ? "bg-primary/5 border-primary/20 hover:bg-primary/10 hover:border-primary/30 hover:shadow-[var(--shadow-elevated)]"
                     : "border-transparent bg-card/0 hover:bg-card hover:border-border hover:shadow-[var(--shadow-editorial)]"
@@ -824,6 +832,17 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           <p className="text-muted-foreground font-body text-sm mb-5">
             &copy; {new Date().getFullYear()} MonArk. Dating reimagined with Smart Matching.
           </p>
+
+          {/* App Store Badges */}
+          <div className="flex items-center justify-center gap-3 mb-5">
+            <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-[#A08C6E] text-[#A08C6E] font-body text-xs tracking-[0.08em] cursor-default select-none">
+              App Store — Coming Soon
+            </span>
+            <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-[#A08C6E] text-[#A08C6E] font-body text-xs tracking-[0.08em] cursor-default select-none">
+              Google Play — Coming Soon
+            </span>
+          </div>
+
           <div className="flex flex-wrap items-center justify-center gap-2 text-sm font-body text-muted-foreground">
             <a href="#how-it-works" className="hover:text-foreground hover:underline transition-colors">How It Works</a>
             <span className="text-border">·</span>
@@ -832,6 +851,8 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <a href="/privacy" className="hover:text-foreground hover:underline transition-colors">Privacy Policy</a>
             <span className="text-border">·</span>
             <a href="/terms" className="hover:text-foreground hover:underline transition-colors">Terms of Service</a>
+            <span className="text-border">·</span>
+            <button onClick={() => setShowSignInModal(true)} className="hover:text-foreground hover:underline transition-colors">Sign In</button>
           </div>
         </div>
       </footer>

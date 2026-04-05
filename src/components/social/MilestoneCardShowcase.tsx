@@ -19,7 +19,7 @@ export const MilestoneCardShowcase: React.FC = () => {
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-2xl font-serif tracking-wide mb-2 text-foreground">
-          Shareable Milestone Cards
+          Milestone Cards
         </h1>
         <p className="text-muted-foreground mb-8">
           Editorial-style social graphics for Instagram Stories & Feed

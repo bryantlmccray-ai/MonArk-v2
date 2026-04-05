@@ -199,7 +199,7 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
   };
 
   return (
-    <div className="bg-background isolate relative z-0" style={{ contain: 'layout paint' }}>
+    <div className="bg-background isolate relative z-0">
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Header Bar */}
         <div className="flex justify-between items-start">

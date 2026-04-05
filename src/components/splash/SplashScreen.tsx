@@ -118,7 +118,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                     className="font-body text-sm tracking-[0.22em] uppercase"
                     style={{ color: "rgba(255,255,255,0.55)", fontWeight: 300 }}
                   >
-                    By invitation only. Join the waitlist.
+                    Limited early access. Join the waitlist.
                   </p>
 
                   <motion.p

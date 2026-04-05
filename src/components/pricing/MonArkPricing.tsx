@@ -8,8 +8,8 @@ interface MonArkPricingProps {
 }
 
 const TIERS = {
-  ark: {
-    name: "The Ark",
+  compass: {
+    name: "The Compass",
     monthly: 39.99,
     quarterlyPerMonth: 29.99,
     quarterlyTotal: 89.97,
@@ -24,19 +24,19 @@ const TIERS = {
       "Basic RIF compatibility insights",
       "MonArk venue recommendations with matches",
     ],
-    cta: "RESERVE YOUR SPOT — THE ARK",
+    cta: "RESERVE YOUR SPOT — THE COMPASS",
     accent: false,
   },
-  innerArk: {
-    name: "The Inner Ark",
+  ark: {
+    name: "The Ark",
     monthly: 79.99,
-    quarterlyPerMonth: 59.99,
-    quarterlyTotal: 179.97,
+    quarterlyPerMonth: 74.99,
+    quarterlyTotal: 224.97,
     badge: "Most Intentional",
     description:
       "The elevated experience. Deeper insights, wider reach, and concierge-level curation.",
     features: [
-      "Everything in The Ark",
+      "Everything in The Compass",
       "Priority match queue — first pick before standard members",
       "Expanded match pool — 5 curated instead of 3",
       "Full RIF compatibility report per match",
@@ -44,7 +44,7 @@ const TIERS = {
       "Early access to new features",
       "Inner Ark badge — visible signal of seriousness",
     ],
-    cta: "RESERVE YOUR SPOT — THE INNER ARK",
+    cta: "RESERVE YOUR SPOT — THE ARK",
     accent: true,
   },
 };
@@ -110,8 +110,11 @@ const FoundingMembersBanner = ({ onSelectPlan }: { onSelectPlan?: (plan: string)
           <span className="text-sm font-body text-[hsl(240_6%_55%)]">/mo — locked for life</span>
         </div>
 
-        <p className="font-body text-xs text-[hsl(30_40%_72%/0.8)] mb-4">
+        <p className="font-body text-xs text-[hsl(30_40%_72%/0.8)] mb-2">
           First 200 members only. Your rate is locked for life.
+        </p>
+        <p className="font-body text-xs text-[hsl(30_40%_72%/0.6)] mb-4">
+          After 200 members, this tier closes permanently.
         </p>
 
         <p className="font-body text-sm leading-relaxed text-[hsl(240_6%_58%)] max-w-[520px] mb-8">
@@ -139,6 +142,14 @@ const FoundingMembersBanner = ({ onSelectPlan }: { onSelectPlan?: (plan: string)
             {FOUNDING.cta}
           </button>
         </div>
+
+        {/* Helper text for no invite code */}
+        <p className="mt-4 text-sm font-body text-[hsl(240_6%_60%)]">
+          Don't have a code?{' '}
+          <button onClick={() => onSelectPlan?.("Waitlist")} className="text-[hsl(30_40%_72%)] underline underline-offset-4 decoration-[hsl(30_40%_72%/0.4)] hover:decoration-[hsl(30_40%_72%)] hover:text-[hsl(30_40%_85%)] transition-all">
+            Request your invite →
+          </button>
+        </p>
 
         {/* Feedback messages */}
         <motion.div

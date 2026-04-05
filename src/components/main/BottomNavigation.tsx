@@ -11,7 +11,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, o
     { id: 'weekly', icon: Calendar, label: 'Your 3' },
     { id: 'matches', icon: MessageCircle, label: 'Chats' },
     { id: 'dates', icon: BookOpen, label: 'Journal' },
-    { id: 'shareables', icon: Share2, label: 'Shareables' },
+    { id: 'shareables', icon: Share2, label: 'Milestones' },
     { id: 'profile', icon: User, label: 'Profile' },
   ];
 

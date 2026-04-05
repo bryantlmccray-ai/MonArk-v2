@@ -29,7 +29,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
     { id: 'weekly', icon: Calendar, label: 'Your 3 Options', hasNotification: false },
     { id: 'matches', icon: MessageCircle, label: 'Connections', hasNotification: true },
     { id: 'dates', icon: BookOpen, label: 'Journal', hasNotification: false },
-    { id: 'shareables', icon: Share2, label: 'MonArk Shareables', hasNotification: false },
+    { id: 'shareables', icon: Share2, label: 'Milestone Cards', hasNotification: false },
     { id: 'profile', icon: User, label: 'Profile', hasNotification: false },
   ];
 
@@ -38,14 +38,12 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
       <SidebarHeader className="border-b border-sidebar-border p-6">
         <div className="flex flex-col items-center gap-2">
           <div 
-            className="h-14 w-14 rounded-full ring-2 ring-primary cursor-pointer hover:opacity-80 transition-opacity duration-300 flex items-center justify-center"
+            className="h-14 w-14 rounded-full ring-2 ring-primary cursor-pointer hover:opacity-80 transition-opacity duration-300 flex items-center justify-center overflow-hidden bg-[#A08C6E]"
             onClick={() => onTabChange('profile')}
           >
-            <img 
-              src="/lovable-uploads/e11ccc80-2237-4aac-b579-dccb89f8d727.png" 
-              alt="MonArk — Date well."
-              className="h-12 w-12 object-contain rounded-full"
-            />
+            <span className="font-body font-medium text-base text-[#F0EBE3] tracking-wide">
+              {displayName.slice(0, 2).toUpperCase()}
+            </span>
           </div>
           <span className="text-xs font-medium text-sidebar-foreground/80 tracking-wide">{displayName}</span>
           <span className="text-[10px] font-caption tracking-[0.12em] text-primary/70 bg-primary/10 px-2.5 py-0.5 rounded-full">

@@ -161,7 +161,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
 
   if (isMobile) {
     return (
-      <div className="h-screen bg-background relative flex flex-col overflow-hidden isolate" style={{ contain: 'layout paint' }}>
+      <div className="h-screen bg-background relative flex flex-col overflow-hidden isolate">
         {/* Mobile header with logo + avatar */}
         <header className="flex-shrink-0 z-40 flex items-center justify-between px-5 py-3 bg-card/98 backdrop-blur-2xl border-b border-border/50" style={{ boxShadow: '0 1px 12px rgba(90, 70, 50, 0.06)' }}>
           <img 
