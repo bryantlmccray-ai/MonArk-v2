@@ -53,6 +53,8 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
   const [waitlistPlan, setWaitlistPlan] = useState<string | undefined>();
   const [waitlistEmail, setWaitlistEmail] = useState<string | undefined>();
   const [heroEmail, setHeroEmail] = useState('');
+  const [heroSubmitted, setHeroSubmitted] = useState(false);
+  const [heroSubmitting, setHeroSubmitting] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
 
   const openWaitlist = (plan?: string, email?: string) => {
