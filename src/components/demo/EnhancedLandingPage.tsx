@@ -253,10 +253,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             {/* App Store badges in hero */}
             <div className="flex items-center justify-center gap-3 pt-2">
               <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-[#A08C6E] text-[#A08C6E] font-body text-xs tracking-[0.08em] cursor-default select-none">
-                🍎 App Store — Coming Soon
+                App Store — Coming Soon
               </span>
               <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-[#A08C6E] text-[#A08C6E] font-body text-xs tracking-[0.08em] cursor-default select-none">
-                ▶ Google Play — Coming Soon
+                Google Play — Coming Soon
               </span>
             </div>
           </div>
