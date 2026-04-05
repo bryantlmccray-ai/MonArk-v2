@@ -7,7 +7,7 @@
     <title>MonArk - Intentional Dating & Connection</title>
     <meta name="description" content="MonArk - A premium wellness-focused dating platform for intentional connection." />
     <meta name="author" content="MonArk" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://joinmonarkapp.com https://www.joinmonarkapp.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://maps.gstatic.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.supabase.co https://maps.googleapis.com https://maps.gstatic.com https://joinmonarkapp.com https://www.joinmonarkapp.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://maps.googleapis.com https://api.openai.com https://joinmonarkapp.com https://www.joinmonarkapp.com https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self';" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://joinmonarkapp.com https://www.joinmonarkapp.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://maps.gstatic.com https://challenges.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.supabase.co https://maps.googleapis.com https://maps.gstatic.com https://joinmonarkapp.com https://www.joinmonarkapp.com https://www.facebook.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://maps.googleapis.com https://api.openai.com https://joinmonarkapp.com https://www.joinmonarkapp.com https://challenges.cloudflare.com https://www.google-analytics.com https://analytics.google.com; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self';" />
 
     <!-- PWA / Mobile -->
     <meta name="theme-color" content="#1a1a1a" />
@@ -24,12 +24,74 @@
     <meta property="og:image" content="https://joinmonarkapp.com/og-cover.jpg" />
     <meta property="og:url" content="https://joinmonarkapp.com" />
 
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "MonArk",
+      "url": "https://joinmonarkapp.com",
+      "logo": "https://joinmonarkapp.com/og-cover.jpg",
+      "sameAs": ["https://instagram.com/monark.eq"]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "MonArk",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "iOS, Android",
+      "description": "An emotional intelligence platform for intentional human connection.",
+      "offers": {
+        "@type": "Offer",
+        "price": "29.99",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <!-- GTM: PASTE_CONTAINER_ID_HERE
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+    -->
+
+    <!-- GA4: Replace G-XXXXXXXXXX with your GA4 Measurement ID
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    -->
+
+    <!-- META_PIXEL: PASTE_PIXEL_ID_HERE
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', 'PASTE_PIXEL_ID_HERE');
+      fbq('track', 'PageView');
+    </script>
+    -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" as="style" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   </head>
 
   <body>
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:bg-primary focus:text-primary-foreground focus:px-4 focus:py-2 focus:rounded-lg">Skip to main content</a>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
