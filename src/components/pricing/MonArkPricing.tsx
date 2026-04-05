@@ -143,6 +143,14 @@ const FoundingMembersBanner = ({ onSelectPlan }: { onSelectPlan?: (plan: string)
           </button>
         </div>
 
+        {/* Helper text for no invite code */}
+        <p className="mt-4 text-sm font-body text-[hsl(240_6%_60%)]">
+          Don't have a code?{' '}
+          <button onClick={() => onSelectPlan?.("Waitlist")} className="text-[hsl(30_40%_72%)] underline underline-offset-4 decoration-[hsl(30_40%_72%/0.4)] hover:decoration-[hsl(30_40%_72%)] hover:text-[hsl(30_40%_85%)] transition-all">
+            Request your invite →
+          </button>
+        </p>
+
         {/* Feedback messages */}
         <motion.div
           initial={false}
