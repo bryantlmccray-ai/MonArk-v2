@@ -684,25 +684,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
-      {/* ═══════════ PRESS BADGE ═══════════ */}
-      <section className="py-10 bg-background">
-        <div className="flex flex-col items-center gap-2">
-          <p className="font-body text-[10px] tracking-[0.15em] uppercase text-muted-foreground">As Heard On</p>
-          <a href="https://open.spotify.com/episode/3AcuI12nSrUWqGvwPFwNGP" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 bg-[#121212] rounded-full px-5 py-2.5 shadow-lg hover:scale-105 transition-transform cursor-pointer">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.502 17.305a.749.749 0 0 1-1.03.249c-2.822-1.725-6.373-2.116-10.558-1.159a.75.75 0 0 1-.333-1.462c4.578-1.048 8.508-.597 11.672 1.342a.75.75 0 0 1 .249 1.03zm1.468-3.263a.937.937 0 0 1-1.287.308c-3.228-1.984-8.152-2.56-11.97-1.401a.938.938 0 0 1-.543-1.795c4.36-1.322 9.776-.682 13.492 1.601a.937.937 0 0 1 .308 1.287zm.126-3.403C15.675 8.567 9.106 8.348 5.304 9.502a1.124 1.124 0 1 1-.652-2.152c4.37-1.325 11.627-1.07 16.215 1.56a1.124 1.124 0 0 1-1.771 1.13z" fill="#1DB954"/>
-            </svg>
-            <span className="font-editorial italic text-white text-sm sm:text-base">
-              Save Me a Spot
-            </span>
-            <span className="text-white/50 text-sm hidden sm:inline">—</span>
-            <span className="text-white/50 text-xs sm:text-sm hidden sm:inline">
-              Chicago's relationship wellness podcast
-            </span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-[#1DB954] ml-1"><polygon points="4,2 14,8 4,14" fill="currentColor"/></svg>
-          </a>
-        </div>
-      </section>
+
 
       {/* ═══════════ SKEPTIC COMPARISON ═══════════ */}
       <section className="py-16 bg-secondary/30">
