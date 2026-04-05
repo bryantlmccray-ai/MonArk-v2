@@ -829,10 +829,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
             {[
-              { src: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=600&h=600&fit=crop", alt: "MonArk — The Art of Dating" },
-              { src: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600&h=600&fit=crop", alt: "MonArk — Romantic sunset" },
-              { src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=600&fit=crop", alt: "MonArk — Champagne celebration" },
-              { src: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600&h=600&fit=crop", alt: "MonArk — Love notes and coffee" },
+              { src: "/images/instagram/ig-1.png", alt: "MonArk — Brand grid" },
+              { src: "/images/instagram/ig-2.png", alt: "MonArk — Date well bar scene" },
+              { src: "/images/instagram/ig-3.png", alt: "MonArk — Date well lifestyle" },
+              { src: "/images/instagram/ig-4.png", alt: "MonArk — What consumers are saying" },
             ].map((image, i) => (
               <a
                 key={i}
