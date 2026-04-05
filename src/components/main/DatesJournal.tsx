@@ -1,9 +1,12 @@
-import React from 'react';
-import { Calendar, Star, Sparkles, BookOpen } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calendar, Star, Sparkles, BookOpen, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 
 interface DatesJournalProps {
   onStartDebrief: () => void;
@@ -11,8 +14,18 @@ interface DatesJournalProps {
   onDateCompleted?: (partnerName?: string) => void;
 }
 
+interface LocalEntry {
+  id: string;
+  text: string;
+  date: string;
+}
+
 export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDateCompleted }) => {
   const { user } = useAuth();
+  const [showEntryModal, setShowEntryModal] = useState(false);
+  const [entryText, setEntryText] = useState('');
+  const [entryDate, setEntryDate] = useState(new Date().toISOString().slice(0, 10));
+  const [localEntries, setLocalEntries] = useState<LocalEntry[]>([]);
 
   const { data: completedDates = [] } = useQuery({
     queryKey: ['date-journal', user?.id],
@@ -36,6 +49,18 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
     enabled: !!user?.id,
   });
 
+  const handleSaveEntry = () => {
+    if (!entryText.trim()) return;
+    setLocalEntries(prev => [{
+      id: crypto.randomUUID(),
+      text: entryText.trim(),
+      date: entryDate,
+    }, ...prev]);
+    setEntryText('');
+    setEntryDate(new Date().toISOString().slice(0, 10));
+    setShowEntryModal(false);
+  };
+
   return (
     <div className="bg-background">
       <div className="max-w-2xl mx-auto space-y-6">
@@ -48,6 +73,21 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
           <h1 className="text-2xl font-serif font-bold text-foreground tracking-tight">Date Journal</h1>
           <p className="text-muted-foreground font-body text-sm">Reflect on the moments that matter</p>
         </div>
+
+        {/* Local entries */}
+        {localEntries.length > 0 && (
+          <div className="space-y-3">
+            <h3 className="text-base font-semibold text-foreground">Your Entries</h3>
+            {localEntries.map((entry) => (
+              <div key={entry.id} className="bg-card rounded-2xl p-4 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]">
+                <p className="text-xs text-muted-foreground mb-1">
+                  {new Date(entry.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                </p>
+                <p className="text-sm text-foreground font-body leading-relaxed line-clamp-3">{entry.text}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="space-y-3">
           <h3 className="text-base font-semibold text-foreground">Completed Dates</h3>
@@ -111,7 +151,7 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                 ) : null}
               </div>
             ))
-          ) : (
+          ) : localEntries.length === 0 ? (
             <div className="text-center py-16 bg-card rounded-2xl border border-border/60">
               {/* MA compass monogram */}
               <div className="w-16 h-16 rounded-full bg-[#E8DED4] flex items-center justify-center mx-auto mb-4">
@@ -122,15 +162,52 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                 Every introduction, every date, every moment worth keeping — your journal holds it all.
               </p>
               <button
-                onClick={() => onDateCompleted?.()}
+                onClick={() => setShowEntryModal(true)}
                 className="inline-flex items-center px-6 py-2.5 bg-[#A08C6E] text-[#F0EBE3] font-body font-medium text-xs tracking-[0.15em] uppercase rounded-[40px] hover:bg-[#A08C6E]/90 transition-all"
               >
                 ADD YOUR FIRST ENTRY
               </button>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
+
+      {/* Entry Modal */}
+      <Dialog open={showEntryModal} onOpenChange={setShowEntryModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-lg">New Journal Entry</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div>
+              <label className="text-xs font-body text-muted-foreground mb-1 block">Date</label>
+              <Input
+                type="date"
+                value={entryDate}
+                onChange={(e) => setEntryDate(e.target.value)}
+                className="font-body text-sm"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-body text-muted-foreground mb-1 block">What happened? How did it feel?</label>
+              <Textarea
+                value={entryText}
+                onChange={(e) => setEntryText(e.target.value)}
+                placeholder="Write about your experience..."
+                className="min-h-[120px] font-body text-sm resize-none"
+              />
+            </div>
+            <div className="flex gap-2 justify-end">
+              <Button variant="outline" onClick={() => setShowEntryModal(false)} className="text-sm">
+                Cancel
+              </Button>
+              <Button onClick={handleSaveEntry} disabled={!entryText.trim()} className="text-sm">
+                Save Entry
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

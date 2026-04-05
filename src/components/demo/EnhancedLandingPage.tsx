@@ -832,6 +832,17 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           <p className="text-muted-foreground font-body text-sm mb-5">
             &copy; {new Date().getFullYear()} MonArk. Dating reimagined with Smart Matching.
           </p>
+
+          {/* App Store Badges */}
+          <div className="flex items-center justify-center gap-3 mb-5">
+            <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-[#A08C6E] text-[#A08C6E] font-body text-xs tracking-[0.08em] cursor-default select-none">
+              App Store — Coming Soon
+            </span>
+            <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-[#A08C6E] text-[#A08C6E] font-body text-xs tracking-[0.08em] cursor-default select-none">
+              Google Play — Coming Soon
+            </span>
+          </div>
+
           <div className="flex flex-wrap items-center justify-center gap-2 text-sm font-body text-muted-foreground">
             <a href="#how-it-works" className="hover:text-foreground hover:underline transition-colors">How It Works</a>
             <span className="text-border">·</span>
@@ -840,6 +851,8 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <a href="/privacy" className="hover:text-foreground hover:underline transition-colors">Privacy Policy</a>
             <span className="text-border">·</span>
             <a href="/terms" className="hover:text-foreground hover:underline transition-colors">Terms of Service</a>
+            <span className="text-border">·</span>
+            <button onClick={() => setShowSignInModal(true)} className="hover:text-foreground hover:underline transition-colors">Sign In</button>
           </div>
         </div>
       </footer>
