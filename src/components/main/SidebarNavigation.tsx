@@ -29,7 +29,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
     { id: 'weekly', icon: Calendar, label: 'Your 3 Options', hasNotification: false },
     { id: 'matches', icon: MessageCircle, label: 'Connections', hasNotification: true },
     { id: 'dates', icon: BookOpen, label: 'Journal', hasNotification: false },
-    { id: 'shareables', icon: Share2, label: 'MonArk Shareables', hasNotification: false },
+    { id: 'shareables', icon: Share2, label: 'Milestone Cards', hasNotification: false },
     { id: 'profile', icon: User, label: 'Profile', hasNotification: false },
   ];
 

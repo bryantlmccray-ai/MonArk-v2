@@ -306,16 +306,16 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <SectionDivider />
           </motion.div>
 
-          <div className="grid md:grid-cols-4 gap-5">
+          <div className="grid md:grid-cols-4 gap-5 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none -mx-6 px-6 md:mx-0 md:px-0">
             {[
-              { icon: PenLine, num: "01", title: "Take the RIF", desc: "15 questions about how you communicate, connect, and date. Takes 5 minutes." },
-              { icon: Heart, num: "02", title: "Get Your 3", desc: "Every Sunday, receive 3 matches who fit your style—not just your type." },
-              { icon: MapPin, num: "03", title: "Date With Intention", desc: "We suggest premium first dates at vetted venues. No awkward coffee shop roulette." },
-              { icon: MessageCircleHeart, num: "04", title: "Close the Loop", desc: "No ghosting. After every date, choose to advance or send a kind, automated closure. Everyone gets respect.", highlight: true },
+              { icon: PenLine, num: "1", title: "Take the RIF", desc: "15 questions about how you communicate, connect, and date. Takes 5 minutes." },
+              { icon: Heart, num: "2", title: "Get Your 3", desc: "Every Sunday, receive 3 matches who fit your style—not just your type." },
+              { icon: MapPin, num: "3", title: "Date With Intention", desc: "We suggest premium first dates at vetted venues. No awkward coffee shop roulette." },
+              { icon: MessageCircleHeart, num: "4", title: "Close the Loop", desc: "No ghosting. After every date, choose to advance or send a kind, automated closure. Everyone gets respect.", highlight: true },
             ].map((item, i) => (
               <motion.div
                 key={i}
-                className={`text-center p-6 rounded-2xl border transition-all duration-400 group ${
+                className={`text-center p-6 rounded-2xl border transition-all duration-400 group min-w-[260px] md:min-w-0 snap-center ${
                   item.highlight
                     ? "bg-primary/5 border-primary/20 hover:bg-primary/10 hover:border-primary/30 hover:shadow-[var(--shadow-elevated)]"
                     : "border-transparent bg-card/0 hover:bg-card hover:border-border hover:shadow-[var(--shadow-editorial)]"
