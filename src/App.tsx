@@ -12,6 +12,7 @@ import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { AdminMFAGate } from "@/components/auth/AdminMFAGate";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import { AuthGuard } from "@/components/common/AuthGuard";
 
 // Lazy-load routes that are NOT on the critical path
 const Privacy = lazy(() => import("./pages/Privacy"));
@@ -30,10 +31,10 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 30_000,      // 30s before refetch
-      gcTime: 5 * 60_000,     // 5m garbage collection
-      retry: 1,               // Single retry on failure
-      refetchOnWindowFocus: true, // Sync when user returns to tab
+      staleTime: 30_000,
+      gcTime: 5 * 60_000,
+      retry: 1,
+      refetchOnWindowFocus: true,
     },
   },
 });
@@ -56,7 +57,9 @@ const App = () => (
               <Suspense fallback={<PageFallback />}>
                 <Routes>
                   <Route path="/" element={<Index />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/dashboard" element={<AuthGuard><Dashboard /></AuthGuard>} />
+                  <Route path="/journal" element={<AuthGuard><Dashboard /></AuthGuard>} />
+                  <Route path="/connections" element={<AuthGuard><Dashboard /></AuthGuard>} />
                   <Route path="/index" element={<Index />} />
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/terms" element={<Terms />} />

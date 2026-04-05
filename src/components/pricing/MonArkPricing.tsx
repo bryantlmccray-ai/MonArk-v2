@@ -133,6 +133,7 @@ const FoundingMembersBanner = ({ onSelectPlan }: { onSelectPlan?: (plan: string)
             onChange={(e) => { setInviteCode(e.target.value); setCodeState("idle"); }}
             onKeyDown={(e) => e.key === "Enter" && handleVerify()}
             placeholder="Enter invite code"
+            aria-label="Enter your Founding Member invite code"
             className="flex-1 px-5 py-3.5 rounded-full bg-[hsl(230_18%_17%)] border border-[hsl(30_40%_72%/0.25)] text-[hsl(30_40%_85%)] placeholder:text-[hsl(240_6%_40%)] font-body text-sm tracking-[0.05em] focus:outline-none focus:border-[hsl(30_40%_72%/0.6)] focus:shadow-[0_0_20px_hsl(30_40%_72%/0.1)] transition-all duration-300"
           />
           <button
