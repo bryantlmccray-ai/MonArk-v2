@@ -31,6 +31,7 @@ const ImageWithFallback = ({ src, alt, className, loading }: { src: string; alt:
     return (
       <div className={`${className} flex flex-col items-center justify-center bg-[#E8DED4]`}>
         <span className="font-serif text-2xl text-[#A08C6E] tracking-wide">{initials}</span>
+        <span className="text-[10px] text-[#A08C6E]/60 font-body mt-1 uppercase tracking-[0.1em]">{alt}</span>
       </div>
     );
   }
