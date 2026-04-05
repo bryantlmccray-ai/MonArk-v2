@@ -469,21 +469,15 @@ export const SundayMatches: React.FC = () => {
   const nextRefresh = getNextRefreshDate();
   const refreshLabel = formatDistanceToNow(nextRefresh, { addSuffix: true });
   const matchCount = isDemo ? DEMO_CURATED.length : pendingCount;
+  const poolCount = poolMatches.length;
 
   const spotlightMatch = displayMatches[0] || null;
   const gridMatches = displayMatches.slice(1);
 
   return (
     <div className="space-y-4 pb-8">
-      {/* Info bar */}
-      <div className="flex items-center justify-between text-sm text-muted-foreground px-1">
-        <span>{matchCount} match{matchCount !== 1 ? 'es' : ''} · refreshes {refreshLabel}</span>
-        {matchCount > 0 && (
-          <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">
-            <Sparkles className="w-3 h-3 mr-1" /> New
-          </Badge>
-        )}
-      </div>
+      {/* Status bar */}
+      <StatusBar curatedCount={matchCount} poolCount={poolCount} refreshLabel={refreshLabel} />
 
       {/* 3-tab layout */}
       <Tabs defaultValue="your3" className="w-full">
