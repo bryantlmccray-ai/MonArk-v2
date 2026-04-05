@@ -410,6 +410,13 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
           })}
         </div>
 
+        {/* Billing note */}
+        {isQuarterly && (
+          <p className="text-center text-xs text-muted-foreground mt-2 font-body">
+            Billed quarterly. Cancel anytime.
+          </p>
+        )}
+
         {/* Bottom Note */}
         <p className="text-center text-[13px] text-muted-foreground mt-8 italic font-editorial">
           No swiping. No algorithms. No free tier. Just intention.
