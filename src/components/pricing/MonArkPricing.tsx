@@ -229,7 +229,7 @@ export const MonArkPricing = ({ onSelectPlan }: MonArkPricingProps = {}) => {
               }`}
             >
               Quarterly
-              <span className="text-[10px] font-semibold bg-[hsl(140_45%_42%)] text-[#F0EBE3] px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+              <span className="text-[13px] font-semibold bg-[#A08C6E] text-[#F0EBE3] px-2.5 py-1 rounded uppercase tracking-wider">
                 Save 25%
               </span>
             </button>
