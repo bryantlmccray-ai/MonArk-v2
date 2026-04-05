@@ -207,21 +207,33 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   <h2 className="text-2xl sm:text-3xl font-editorial-headline text-foreground mb-1">Get Your 3</h2>
                   <p className="text-sm text-muted-foreground font-body mb-4">Reserve your spot among intentional daters</p>
 
-                  <div className="flex gap-2 mb-4">
-                    <input
-                      type="email"
-                      value={heroEmail}
-                      onChange={(e) => setHeroEmail(e.target.value)}
-                      placeholder="Enter your email"
-                      className="flex-1 h-11 px-4 rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring"
-                    />
-                    <Button
-                      onClick={() => openWaitlist(undefined, heroEmail || undefined)}
-                      className="h-11 px-5 text-sm tracking-[0.08em] font-body shrink-0"
-                    >
-                      JOIN
-                    </Button>
-                  </div>
+                  {heroSubmitted ? (
+                    <p className="font-editorial italic text-[#A08C6E] text-base text-center py-3">
+                      You're on the list. We'll be in touch.
+                    </p>
+                  ) : (
+                    <div className="flex gap-2 mb-4">
+                      <input
+                        type="email"
+                        value={heroEmail}
+                        onChange={(e) => setHeroEmail(e.target.value)}
+                        placeholder="Enter your email"
+                        className="flex-1 h-11 px-4 rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring"
+                      />
+                      <Button
+                        disabled={heroSubmitting}
+                        onClick={() => {
+                          if (!heroEmail) return;
+                          setHeroSubmitting(true);
+                          openWaitlist(undefined, heroEmail);
+                          setTimeout(() => { setHeroSubmitted(true); setHeroSubmitting(false); }, 400);
+                        }}
+                        className="h-11 px-5 text-sm tracking-[0.08em] font-body shrink-0"
+                      >
+                        JOIN
+                      </Button>
+                    </div>
+                  )}
 
                   <div className="pt-3 border-t border-border">
                     <p className="text-sm text-muted-foreground font-body leading-relaxed text-center italic">
