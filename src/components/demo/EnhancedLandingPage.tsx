@@ -75,7 +75,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
   }
 
   return (
-    <div className="min-h-screen bg-background relative isolate" style={{ contain: 'layout paint' }}>
+    <div className="min-h-screen bg-background relative isolate">
       <div className="relative">
       {/* ═══════════ STICKY NAV ═══════════ */}
       <nav className="sticky top-0 z-50 bg-background/95 border-b border-border/50" style={{ backdropFilter: 'none' }}>
