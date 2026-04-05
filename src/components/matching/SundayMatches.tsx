@@ -559,7 +559,7 @@ export const SundayMatches: React.FC = () => {
         <TabsContent value="explore">
           <div className="mt-2 space-y-3">
             <p className="text-xs text-muted-foreground text-center px-4">
-              These members didn't make your curated 3 this week — but the connection potential is still high.
+              These members didn't make your curated 3 this week — but the connection potential is still high. Explore on your own terms.
             </p>
             {poolLoading && !isDemo ? (
               <div className="flex items-center justify-center py-12"><LoadingSpinner /></div>
