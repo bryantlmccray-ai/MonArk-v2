@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { MonArkLogo } from '@/components/MonArkLogo';
 import monarkLogoHorizontal from '@/assets/monark-logo-horizontal.png';
-import { PenLine, Heart, MapPin, ArrowRight, Instagram, Menu, X, HelpCircle, MessageCircleHeart } from 'lucide-react';
+import { PenLine, Heart, MapPin, ArrowRight, Instagram, Menu, X, HelpCircle, MessageCircleHeart, ChevronDown } from 'lucide-react';
 import { MonArkPricing } from '@/components/pricing/MonArkPricing';
 import { motion } from 'framer-motion';
 import founderPortrait from '@/assets/founder-bryant.jpeg';
@@ -11,23 +11,12 @@ import { useDemo } from '@/contexts/DemoContext';
 import { DemoMainApp } from './DemoMainApp';
 import { WaitlistModal } from './WaitlistModal';
 import { SignInModal } from '@/components/auth/SignInModal';
-
-// Instagram feed images
-import igArtOfDating from '@/assets/instagram/ig-art-of-dating.png';
-import igOurPromise from '@/assets/instagram/ig-our-promise.png';
-import igWomanPortrait from '@/assets/instagram/ig-woman-portrait.png';
-import igManSuit from '@/assets/instagram/ig-man-suit.png';
-import igWelcomeCircle from '@/assets/instagram/ig-welcome-circle.png';
-import igChampagne from '@/assets/instagram/ig-champagne.png';
-import igSunglasses from '@/assets/instagram/ig-sunglasses.png';
-import igTestimonials from '@/assets/instagram/ig-testimonials.png';
-
-const instagramImages = [
-  igWomanPortrait,
-  igArtOfDating,
-  igChampagne,
-  igTestimonials,
-];
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
@@ -77,7 +66,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
   }
 
   return (
-    <div className="min-h-screen bg-background relative isolate">
+    <div id="main-content" className="min-h-screen bg-background relative isolate">
       <div className="relative">
       {/* ═══════════ STICKY NAV ═══════════ */}
       <nav className="sticky top-0 z-50 bg-background/95 border-b border-border/50" style={{ backdropFilter: 'none' }}>
@@ -88,6 +77,12 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           <div className="hidden md:flex items-center gap-8">
             <a href="#how-it-works" className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide">How It Works</a>
             <a href="#pricing" className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide">Pricing</a>
+            <button
+              onClick={() => setShowSignInModal(true)}
+              className="text-sm font-body text-foreground hover:text-primary transition-colors tracking-wide"
+            >
+              Sign In
+            </button>
           </div>
           <button
             onClick={() => openWaitlist()}
@@ -125,6 +120,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <div className="flex-1 flex flex-col gap-2 p-5">
               <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-base font-body font-medium text-foreground py-3 border-b border-border/50 transition-colors hover:text-primary">How It Works</a>
               <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="text-base font-body font-medium text-foreground py-3 border-b border-border/50 transition-colors hover:text-primary">Pricing</a>
+              <button onClick={() => { setMobileMenuOpen(false); setShowSignInModal(true); }} className="text-base font-body font-medium text-foreground py-3 border-b border-border/50 transition-colors hover:text-primary text-left">Sign In</button>
             </div>
             <div className="p-5 border-t border-border">
               <Button onClick={() => { setMobileMenuOpen(false); openWaitlist(); }} className="w-full py-3 text-sm tracking-[0.08em] font-body">
@@ -147,7 +143,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        <div className="relative max-w-4xl mx-auto px-6 sm:px-8 lg:px-16 pt-8 pb-16 sm:pt-12 sm:pb-20">
+        <div className="relative max-w-4xl mx-auto px-6 sm:px-8 lg:px-16 pt-8 pb-6 sm:pt-12 sm:pb-8">
           <div className="text-center space-y-7">
             {/* Brand */}
             <motion.div
@@ -212,13 +208,14 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                       You're on the list. We'll be in touch.
                     </p>
                   ) : (
-                    <div className="flex gap-2 mb-4">
+                    <div className="flex gap-2 mb-3">
                       <input
                         type="email"
                         value={heroEmail}
                         onChange={(e) => setHeroEmail(e.target.value)}
                         placeholder="Enter your email"
-                        className="flex-1 h-11 px-4 rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring"
+                        aria-label="Enter your email to join the MonArk waitlist"
+                        className="flex-1 h-14 px-4 rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring w-full"
                       />
                       <Button
                         disabled={heroSubmitting}
@@ -228,14 +225,23 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                           openWaitlist(undefined, heroEmail);
                           setTimeout(() => { setHeroSubmitted(true); setHeroSubmitting(false); }, 400);
                         }}
-                        className="h-11 px-5 text-sm tracking-[0.08em] font-body shrink-0"
+                        className="h-14 px-6 text-sm tracking-[0.08em] font-body shrink-0"
                       >
-                        JOIN
+                        Reserve My Spot
                       </Button>
                     </div>
                   )}
 
-                  <div className="pt-3 border-t border-border">
+                  {!heroSubmitted && (
+                    <p className="text-[13px] text-muted-foreground font-body text-center">
+                      Already a member?{' '}
+                      <button onClick={() => setShowSignInModal(true)} className="text-primary hover:underline transition-colors">
+                        Sign in →
+                      </button>
+                    </p>
+                  )}
+
+                  <div className="pt-3 border-t border-border mt-3">
                     <p className="text-sm text-muted-foreground font-body leading-relaxed text-center italic">
                       "Answer 15 thoughtful questions. We find people who get you."
                     </p>
@@ -244,16 +250,26 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               </div>
             </motion.div>
 
-            {/* Secondary CTA */}
-            <motion.div
-              className="space-y-2 pt-1"
-              initial={{ opacity: 1 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.4 }}
-            >
-            </motion.div>
+            {/* App Store badges in hero */}
+            <div className="flex items-center justify-center gap-3 pt-2">
+              <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-[#A08C6E] text-[#A08C6E] font-body text-xs tracking-[0.08em] cursor-default select-none">
+                🍎 App Store — Coming Soon
+              </span>
+              <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-[#A08C6E] text-[#A08C6E] font-body text-xs tracking-[0.08em] cursor-default select-none">
+                ▶ Google Play — Coming Soon
+              </span>
+            </div>
           </div>
         </div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="flex justify-center pb-6"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <ChevronDown className="h-6 w-6 text-primary/50" />
+        </motion.div>
       </section>
 
       {/* ═══════════ RIF SECTION ═══════════ */}
@@ -296,7 +312,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
             className="text-center mb-10"
-            initial={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
@@ -320,7 +336,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                     ? "bg-primary/5 border-primary/20 hover:bg-primary/10 hover:border-primary/30 hover:shadow-[var(--shadow-elevated)]"
                     : "border-transparent bg-card/0 hover:bg-card hover:border-border hover:shadow-[var(--shadow-editorial)]"
                 }`}
-                initial={{ opacity: 1 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
@@ -344,7 +360,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
           <motion.p
             className="text-center mt-10 text-sm font-caption text-muted-foreground tracking-[0.12em] uppercase"
-            initial={{ opacity: 1 }}
+            initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
@@ -355,7 +371,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           {/* Match Profile Card Mockups */}
           <motion.div
             className="mt-14 mb-14"
-            initial={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -363,14 +379,14 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <p className="text-center text-xs font-caption text-primary tracking-[0.2em] uppercase mb-8">Every Sunday morning, your 3 arrive.</p>
             <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
               {[
-                { photo: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=400&fit=crop", name: "Jordan", age: 28, location: "Brooklyn, NY", score: 92, tagline: "Strong communicator · Values depth", reason: "You both value slow-building trust and direct communication.", interests: ["Live Jazz", "Cooking", "Hiking"] },
-                { photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop", name: "Marcus", age: 31, location: "Manhattan, NY", score: 85, tagline: "Intentional dater · Emotionally present", reason: "Complementary conflict styles—he speaks up, you reflect first.", interests: ["Poetry", "Yoga", "Art Museums"] },
-                { photo: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop", name: "Priya", age: 27, location: "Park Slope, NY", score: 78, tagline: "Curious spirit · Steady pacing", reason: "Shared pacing preference and aligned relationship goals.", interests: ["Film", "Running", "Travel"] },
+                { photo: "/images/matches/jordan.jpg", name: "Jordan", age: 28, location: "River North, Chicago", score: 92, tagline: "Strong communicator · Values depth", reason: "You both value slow-building trust and direct communication.", interests: ["Live Jazz", "Cooking", "Hiking"] },
+                { photo: "/images/matches/marcus.jpg", name: "Marcus", age: 31, location: "Lincoln Park, Chicago", score: 85, tagline: "Intentional dater · Emotionally present", reason: "Complementary conflict styles—he speaks up, you reflect first.", interests: ["Poetry", "Yoga", "Art Museums"] },
+                { photo: "/images/matches/priya.jpg", name: "Priya", age: 27, location: "West Loop, Chicago", score: 78, tagline: "Curious spirit · Steady pacing", reason: "Shared pacing preference and aligned relationship goals.", interests: ["Film", "Running", "Travel"] },
               ].map((card, i) => (
                 <motion.div
                   key={i}
                   className="bg-[hsl(230_18%_15%)] border border-[hsl(30_40%_72%/0.15)] rounded-2xl p-5 shadow-[0_4px_24px_rgba(28,31,46,0.3)] hover:border-[hsl(30_40%_72%/0.35)] transition-all duration-300"
-                  initial={{ opacity: 1 }}
+                  initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.12 * i }}
@@ -381,7 +397,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   </div>
                   {/* Avatar + Name */}
                   <div className="flex items-center gap-3 mb-4">
-                    <img src={card.photo} alt={card.name} className="w-12 h-12 rounded-full object-cover shrink-0 border border-primary/20" />
+                    <img src={card.photo} alt={`${card.name}, ${card.age} — MonArk member`} loading="lazy" className="w-12 h-12 rounded-full object-cover shrink-0 border border-primary/20" />
                     <div>
                       <h4 className="font-serif text-lg text-[hsl(40_30%_88%)] leading-tight">{card.name}, {card.age}</h4>
                       <span className="text-[11px] text-[hsl(30_40%_72%/0.7)] flex items-center gap-1">
@@ -429,7 +445,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           {/* Sample RIF Question Preview */}
           <motion.div
             className="mt-12"
-            initial={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.15 }}
@@ -445,7 +461,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <motion.div
                   key={i}
                   className="relative bg-[hsl(230_18%_15%)] border border-[hsl(30_40%_72%/0.2)] rounded-2xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(28,31,46,0.25)] hover:border-[hsl(30_40%_72%/0.4)] transition-all duration-300"
-                  initial={{ opacity: 1 }}
+                  initial={{ opacity: 0, x: -10 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.1 * i }}
@@ -472,7 +488,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
             className="text-center mb-10"
-            initial={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
@@ -486,7 +502,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             {/* Founder Image */}
             <motion.div
               className="relative order-2 md:order-1"
-              initial={{ opacity: 1 }}
+              initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.8, ease: easeOut }}
@@ -516,7 +532,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             {/* Text */}
             <motion.div
               className="space-y-5 order-1 md:order-2"
-              initial={{ opacity: 1 }}
+              initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.8, delay: 0.15, ease: easeOut }}
@@ -558,7 +574,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-3xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
             className="text-center mb-10"
-            initial={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
@@ -575,7 +591,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               <motion.div
                 key={member.name}
                 className="text-center space-y-3 group"
-                initial={{ opacity: 1 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.6, ease: easeOut, delay: i * 0.08 }}
@@ -615,7 +631,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
             className="text-center mb-10"
-            initial={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
@@ -631,7 +647,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             ].map((item, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 1 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.12, ease: easeOut }}
@@ -749,6 +765,42 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </p>
       </div>
 
+      {/* ═══════════ FAQ ═══════════ */}
+      <section className="py-16 bg-background">
+        <div className="max-w-3xl mx-auto px-6 sm:px-8 lg:px-16">
+          <motion.div
+            className="text-center mb-10"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-2">Your Questions, Answered</h2>
+            <SectionDivider />
+          </motion.div>
+
+          <Accordion type="single" collapsible className="space-y-3">
+            {[
+              { q: "How does curation actually work?", a: "MonArk uses the Relational Intelligence Framework (RIF) — a behavioral assessment rooted in emotional intelligence research. Your responses shape a compatibility profile that powers your weekly curated introductions." },
+              { q: "What if none of my 3 interest me?", a: "You can pass on any introduction. Your feedback refines future curation. MonArk learns from every decision you make." },
+              { q: "Is MonArk inclusive of all sexual orientations and gender identities?", a: "Yes. MonArk is designed for all adults seeking intentional connection, regardless of orientation or identity. Curation is always preference-informed." },
+              { q: "How is my personal data protected?", a: "Your data is never sold. Your profile is never publicly searchable. MonArk uses encrypted storage and strict access controls. Full details are in our Privacy Policy." },
+              { q: "What's the difference between The Compass and The Ark?", a: "The Compass is for members ready to date intentionally. The Ark adds advanced relationship tooling — deeper journaling, milestone tracking, and priority placement in the curation queue." },
+              { q: "How do I get a Founding Member invite code?", a: "Founding Member codes are distributed by invitation from the MonArk team. Join the waitlist and you may receive one based on early interest and waitlist position." },
+            ].map((faq, i) => (
+              <AccordionItem key={i} value={`faq-${i}`} className="bg-[#F2EDE8] rounded-xl border-none px-6">
+                <AccordionTrigger className="font-editorial-headline text-base text-foreground hover:no-underline py-5">
+                  {faq.q}
+                </AccordionTrigger>
+                <AccordionContent className="font-body text-sm text-muted-foreground leading-relaxed pb-5">
+                  {faq.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
       {/* Waitlist Modal */}
       <WaitlistModal isOpen={showWaitlistModal} onClose={() => { setShowWaitlistModal(false); setWaitlistPlan(undefined); setWaitlistEmail(undefined); }} sourcePage="enhanced-landing" selectedPlan={waitlistPlan} initialEmail={waitlistEmail} />
       <SignInModal isOpen={showSignInModal} onClose={() => setShowSignInModal(false)} />
@@ -776,7 +828,12 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
-            {instagramImages.map((image, i) => (
+            {[
+              { src: "/images/instagram/ig-1.jpg", alt: "MonArk — The Art of Dating" },
+              { src: "/images/instagram/ig-2.jpg", alt: "MonArk — Romantic sunset" },
+              { src: "/images/instagram/ig-3.jpg", alt: "MonArk — Champagne celebration" },
+              { src: "/images/instagram/ig-4.jpg", alt: "MonArk — Love notes and coffee" },
+            ].map((image, i) => (
               <a
                 key={i}
                 href="https://www.instagram.com/monark.eq/"
@@ -786,8 +843,8 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 style={{ animationDelay: `${i * 80}ms`, animationFillMode: 'backwards' }}
               >
                 <img
-                  src={image}
-                  alt={`MonArk Instagram post ${i + 1}`}
+                  src={image.src}
+                  alt={image.alt}
                   loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                 />
@@ -798,17 +855,9 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             ))}
           </div>
 
-          <div className="text-center mt-8">
-            <a
-              href="https://www.instagram.com/monark.eq/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-border bg-card/60 backdrop-blur-sm text-foreground hover:bg-card hover:border-primary/30 transition-all duration-300 font-body text-sm tracking-wide"
-            >
-              View More on Instagram
-              <ArrowRight className="h-4 w-4" />
-            </a>
-          </div>
+          <p className="text-center mt-6 text-sm text-muted-foreground font-body">
+            @monark.eq — Follow our journey
+          </p>
         </div>
       </section>
 
@@ -836,10 +885,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           {/* App Store Badges */}
           <div className="flex items-center justify-center gap-3 mb-5">
             <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-[#A08C6E] text-[#A08C6E] font-body text-xs tracking-[0.08em] cursor-default select-none">
-              App Store — Coming Soon
+              🍎 App Store — Coming Soon
             </span>
             <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-[#A08C6E] text-[#A08C6E] font-body text-xs tracking-[0.08em] cursor-default select-none">
-              Google Play — Coming Soon
+              ▶ Google Play — Coming Soon
             </span>
           </div>
 
