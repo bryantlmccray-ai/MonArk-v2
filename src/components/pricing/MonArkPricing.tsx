@@ -110,8 +110,11 @@ const FoundingMembersBanner = ({ onSelectPlan }: { onSelectPlan?: (plan: string)
           <span className="text-sm font-body text-[hsl(240_6%_55%)]">/mo — locked for life</span>
         </div>
 
-        <p className="font-body text-xs text-[hsl(30_40%_72%/0.8)] mb-4">
+        <p className="font-body text-xs text-[hsl(30_40%_72%/0.8)] mb-2">
           First 200 members only. Your rate is locked for life.
+        </p>
+        <p className="font-body text-xs text-[hsl(30_40%_72%/0.6)] mb-4">
+          After 200 members, this tier closes permanently.
         </p>
 
         <p className="font-body text-sm leading-relaxed text-[hsl(240_6%_58%)] max-w-[520px] mb-8">
