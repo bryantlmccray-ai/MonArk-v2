@@ -5,68 +5,65 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MapPin, Heart, MessageCircle, Users } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useCuratedMatches, type CuratedMatch } from '@/hooks/useCuratedMatches';
+import { useDatingPool, type DatingPoolMatch } from '@/hooks/useDatingPool';
 import { DatingPool } from '@/components/matching/DatingPool';
-
-interface Match {
-  id: string;
-  name: string;
-  age: number;
-  location: string;
-  tagline: string;
-  photoUrl: string;
-  compatibilityScore: number;
-  reason: string;
-  interests: string[];
-}
-
-const MOCK_MATCHES: Match[] = [
-  {
-    id: '1',
-    name: 'Sophia',
-    age: 28,
-    location: 'River North',
-    tagline: 'Strong communicator · Values depth',
-    photoUrl: '/images/matches/sophia.jpg',
-    compatibilityScore: 92,
-    reason: 'You both value slow-building trust and direct communication.',
-    interests: ['Live Jazz', 'Cooking', 'Hiking']
-  },
-  {
-    id: '2',
-    name: 'Marcus',
-    age: 31,
-    location: 'Lincoln Park',
-    tagline: 'Intentional dater · Emotionally present',
-    photoUrl: '/images/matches/marcus.jpg',
-    compatibilityScore: 85,
-    reason: 'Complementary conflict styles—he speaks up, you reflect first.',
-    interests: ['Poetry', 'Yoga', 'Art Museums']
-  },
-  {
-    id: '3',
-    name: 'Elena',
-    age: 27,
-    location: 'West Loop',
-    tagline: 'Curious spirit · Steady pacing',
-    photoUrl: '/images/matches/elena.jpg',
-    compatibilityScore: 78,
-    reason: 'Shared pacing preference and aligned relationship goals.',
-    interests: ['Film', 'Running', 'Travel']
-  }
-];
+import { MatchDetailModal } from '@/components/matching/MatchDetailModal';
+import { MatchRevealCeremony } from '@/components/matching/MatchRevealCeremony';
+import { MutualMatchModal } from '@/components/matching/MutualMatchModal';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 
 export const SundayMatches: React.FC = () => {
   const { setShowPaywall } = useSubscription();
-  const [matches] = useState<Match[]>(MOCK_MATCHES);
+  const { matches: curatedMatches, loading: curatedLoading, acceptMatch, passMatch, pendingCount } = useCuratedMatches();
+
+  // Detail modal state
+  const [selectedMatch, setSelectedMatch] = useState<CuratedMatch | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [processing, setProcessing] = useState(false);
+
+  // Mutual match modal state
+  const [mutualMatch, setMutualMatch] = useState<{ name: string; photo?: string; conversationId?: string } | null>(null);
+
+  const handleConnect = async (match: CuratedMatch) => {
+    setProcessing(true);
+    const result = await acceptMatch(match.id);
+    setProcessing(false);
+    setDetailOpen(false);
+    setSelectedMatch(null);
+
+    if (result.isMutual && result.matchName) {
+      setMutualMatch({
+        name: result.matchName,
+        photo: result.matchPhoto,
+        conversationId: result.conversationId,
+      });
+    }
+  };
+
+  const handlePass = async (match: CuratedMatch) => {
+    setProcessing(true);
+    await passMatch(match.id);
+    setProcessing(false);
+    setDetailOpen(false);
+    setSelectedMatch(null);
+  };
+
+  const openDetail = (match: CuratedMatch) => {
+    setSelectedMatch(match);
+    setDetailOpen(true);
+  };
 
   return (
     <div className="space-y-4 pb-8">
       {/* Compact info bar */}
       <div className="flex items-center justify-between text-sm text-muted-foreground px-1">
-        <span>3 curated matches · refreshes Sunday</span>
-        <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">
-          New Matches
-        </Badge>
+        <span>{pendingCount} curated match{pendingCount !== 1 ? 'es' : ''} · refreshes Sunday</span>
+        {pendingCount > 0 && (
+          <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">
+            New Matches
+          </Badge>
+        )}
       </div>
 
       {/* Tabs: Your 3 + Explore */}
@@ -83,63 +80,109 @@ export const SundayMatches: React.FC = () => {
 
         {/* ── Your 3 curated matches ── */}
         <TabsContent value="your3">
-          <div className="grid gap-4 md:grid-cols-3 mt-2">
-            {matches.map((match) => (
-              <Card key={match.id} className="overflow-hidden border-border/50 shadow-sm hover:shadow-md transition-shadow">
-                <div className="relative h-48 w-full">
-                  <img
-                    src={match.photoUrl}
-                    alt={`${match.name}, ${match.age} — MonArk member`}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                      target.parentElement?.classList.add('bg-[#A08C6E]', 'flex', 'items-center', 'justify-center');
-                      const fallback = document.createElement('div');
-                      fallback.className = 'text-white text-4xl font-serif';
-                      fallback.textContent = match.name.slice(0, 2).toUpperCase();
-                      target.parentElement?.appendChild(fallback);
-                    }}
-                  />
-                </div>
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-lg font-serif">{match.name}, {match.age}</CardTitle>
-                      <div className="flex items-center text-xs text-muted-foreground mt-1">
-                        <MapPin className="h-3 w-3 mr-1" />
-                        {match.location}
+          {curatedLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <LoadingSpinner />
+            </div>
+          ) : curatedMatches.length === 0 ? (
+            <div className="text-center py-12 bg-card/50 rounded-xl border border-border/50 mt-2">
+              <h3 className="text-lg font-semibold text-foreground mb-2">No matches yet</h3>
+              <p className="text-muted-foreground text-sm max-w-sm mx-auto">
+                Your curated matches arrive every Sunday. Check back soon!
+              </p>
+            </div>
+          ) : (
+            <MatchRevealCeremony matchCount={curatedMatches.length}>
+              <div className="grid gap-4 md:grid-cols-3 mt-2">
+                {curatedMatches.map((match) => (
+                  <Card
+                    key={match.id}
+                    className="overflow-hidden border-border/50 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                    onClick={() => openDetail(match)}
+                  >
+                    <div className="relative h-48 w-full">
+                      <img
+                        src={match.profile.photos?.[0] || '/placeholder.svg'}
+                        alt={`${match.profile.name || 'Match'}, ${match.profile.age || ''} — MonArk member`}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          target.parentElement?.classList.add('bg-[#A08C6E]', 'flex', 'items-center', 'justify-center');
+                          const fallback = document.createElement('div');
+                          fallback.className = 'text-white text-4xl font-serif';
+                          fallback.textContent = (match.profile.name || 'M').slice(0, 2).toUpperCase();
+                          target.parentElement?.appendChild(fallback);
+                        }}
+                      />
+                    </div>
+                    <CardHeader className="pb-2">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <CardTitle className="text-lg font-serif">
+                            {match.profile.name}{match.profile.age ? `, ${match.profile.age}` : ''}
+                          </CardTitle>
+                          {match.profile.location && (
+                            <div className="flex items-center text-xs text-muted-foreground mt-1">
+                              <MapPin className="h-3 w-3 mr-1" />
+                              {match.profile.location}
+                            </div>
+                          )}
+                        </div>
+                        {match.compatibility_score && (
+                          <div className="text-right">
+                            <div className="text-xs font-medium text-primary">
+                              {Math.round(match.compatibility_score * 100)}%
+                            </div>
+                            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Match</div>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-xs font-medium text-primary">{match.compatibilityScore}%</div>
-                      <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Match</div>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-xs text-muted-foreground italic">"{match.reason}"</p>
-                  <div className="flex flex-wrap gap-2">
-                    {match.interests.map((interest) => (
-                      <Badge key={interest} variant="outline" className="text-[10px] font-normal">
-                        {interest}
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="flex gap-2 pt-2">
-                    <Button className="flex-1" size="sm" onClick={() => setShowPaywall(true)}>
-                      <Heart className="h-4 w-4 mr-2" />
-                      Connect
-                    </Button>
-                    <Button variant="ghost" size="sm" className="px-3">
-                      <MessageCircle className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {match.match_reason && (
+                        <p className="text-xs text-muted-foreground italic">"{match.match_reason}"</p>
+                      )}
+                      {match.profile.interests && match.profile.interests.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {match.profile.interests.slice(0, 3).map((interest) => (
+                            <Badge key={interest} variant="outline" className="text-[10px] font-normal">
+                              {interest}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                      <div className="flex gap-2 pt-2">
+                        <Button
+                          className="flex-1"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleConnect(match);
+                          }}
+                        >
+                          <Heart className="h-4 w-4 mr-2" />
+                          Connect
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="px-3"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openDetail(match);
+                          }}
+                        >
+                          <MessageCircle className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </MatchRevealCeremony>
+          )}
         </TabsContent>
 
         {/* ── Explore / Dating Pool ── */}
@@ -152,6 +195,45 @@ export const SundayMatches: React.FC = () => {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Match Detail Modal */}
+      {selectedMatch && (
+        <MatchDetailModal
+          match={{
+            id: selectedMatch.id,
+            name: selectedMatch.profile.name || 'Match',
+            age: selectedMatch.profile.age,
+            photos: selectedMatch.profile.photos || [],
+            bio: selectedMatch.profile.bio || '',
+            location: selectedMatch.profile.location || '',
+            interests: selectedMatch.profile.interests || [],
+            occupation: selectedMatch.profile.occupation || '',
+            education_level: selectedMatch.profile.education_level || '',
+            compatibility_score: selectedMatch.compatibility_score,
+            match_reason: selectedMatch.match_reason,
+          }}
+          isOpen={detailOpen}
+          onClose={() => {
+            setDetailOpen(false);
+            setSelectedMatch(null);
+          }}
+          onLike={() => handleConnect(selectedMatch)}
+          onPass={() => handlePass(selectedMatch)}
+          isProcessing={processing}
+          isCurated
+        />
+      )}
+
+      {/* Mutual Match Modal */}
+      {mutualMatch && (
+        <MutualMatchModal
+          isOpen={!!mutualMatch}
+          onClose={() => setMutualMatch(null)}
+          matchName={mutualMatch.name}
+          matchPhoto={mutualMatch.photo}
+          onStartChat={() => setMutualMatch(null)}
+        />
+      )}
     </div>
   );
 };
