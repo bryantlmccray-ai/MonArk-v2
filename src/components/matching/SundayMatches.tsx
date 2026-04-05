@@ -428,6 +428,15 @@ export const SundayMatches: React.FC = () => {
         type: 'pool' as const,
       }));
 
+  // Tip banner state (localStorage-persisted)
+  const [tipDismissed, setTipDismissed] = useState(() => {
+    try { return localStorage.getItem('monark-match-tip-dismissed') === 'true'; } catch { return false; }
+  });
+  const dismissTip = () => {
+    setTipDismissed(true);
+    try { localStorage.setItem('monark-match-tip-dismissed', 'true'); } catch {}
+  };
+
   // Modal state
   const [selectedMatch, setSelectedMatch] = useState<UnifiedMatch | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
@@ -476,6 +485,29 @@ export const SundayMatches: React.FC = () => {
 
   return (
     <div className="space-y-4 pb-8">
+      {/* Dismissible tip banner */}
+      {!tipDismissed && (
+        <div className="relative bg-card border-2 border-border rounded-xl px-4 py-3 shadow-lg">
+          <button
+            onClick={dismissTip}
+            className="absolute top-2 right-2 p-1 rounded-full hover:bg-secondary/50 transition-colors"
+            aria-label="Dismiss tip"
+          >
+            <X className="w-3.5 h-3.5 text-muted-foreground" />
+          </button>
+          <div className="flex items-start gap-3 pr-6">
+            <Sparkles className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold text-foreground">Your weekly matches are here</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Tap any card to view their full profile. If you both connect, you'll unlock messaging.
+                Explore the pool for more compatible people beyond your curated 3.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Status bar */}
       <StatusBar curatedCount={matchCount} poolCount={poolCount} refreshLabel={refreshLabel} />
 
