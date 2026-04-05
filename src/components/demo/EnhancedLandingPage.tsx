@@ -281,7 +281,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               {['Emotional Readiness', 'Relational Values', 'Behavioral Compatibility'].map((pill) => (
                 <span
                   key={pill}
-                  className="font-body text-xs font-medium uppercase tracking-[0.15em] text-[#A08C6E] bg-[#EDE6DF] px-5 py-2 rounded-full"
+                  className="font-body text-xs font-medium uppercase tracking-[0.15em] text-[#7A6A55] bg-[#EDE6DF] px-5 py-2 rounded-full"
                 >
                   {pill}
                 </span>
