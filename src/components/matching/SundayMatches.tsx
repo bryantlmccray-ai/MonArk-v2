@@ -19,6 +19,118 @@ import { WeeklyRhythmPlans } from '@/components/weekly/WeeklyRhythmPlans';
 import { ApiErrorFallback } from '@/components/common/ApiErrorFallback';
 import { useActionProtection } from '@/hooks/useActionProtection';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
+import { useDemo } from '@/contexts/DemoContext';
+
+export interface UnifiedMatch {
+  id: string;
+  name: string;
+  age: number;
+  location: string;
+  occupation: string;
+  bio: string;
+  photoUrl: string;
+  compatibilityScore: number;
+  matchReason: string;
+  interests: string[];
+  type: 'curated' | 'pool';
+}
+
+const DEMO_CURATED: UnifiedMatch[] = [
+  {
+    id: 'curated-1',
+    name: 'Sophia',
+    age: 28,
+    location: 'River North',
+    occupation: 'Art Curator',
+    bio: 'Strong communicator who values depth and intentionality in every connection.',
+    photoUrl: '/images/matches/sophia.jpg',
+    compatibilityScore: 94,
+    matchReason: 'You both value slow-building trust and direct communication.',
+    interests: ['Live Jazz', 'Gallery Openings', 'Hiking'],
+    type: 'curated',
+  },
+  {
+    id: 'curated-2',
+    name: 'Marcus',
+    age: 31,
+    location: 'Lincoln Park',
+    occupation: 'Music Producer',
+    bio: 'Intentional dater who brings emotional presence to every conversation.',
+    photoUrl: '/images/matches/marcus.jpg',
+    compatibilityScore: 89,
+    matchReason: 'Complementary conflict styles — he speaks up, you reflect first.',
+    interests: ['Poetry', 'Yoga', 'Art Museums'],
+    type: 'curated',
+  },
+  {
+    id: 'curated-3',
+    name: 'Elena',
+    age: 27,
+    location: 'West Loop',
+    occupation: 'Architect',
+    bio: 'Curious spirit with steady pacing and aligned relationship goals.',
+    photoUrl: '/images/matches/elena.jpg',
+    compatibilityScore: 92,
+    matchReason: 'Shared pacing preference and aligned relationship goals.',
+    interests: ['Film', 'Running', 'Travel'],
+    type: 'curated',
+  },
+];
+
+const DEMO_POOL: UnifiedMatch[] = [
+  {
+    id: 'pool-1',
+    name: 'James',
+    age: 30,
+    location: 'Wicker Park',
+    occupation: 'Filmmaker',
+    bio: 'Storyteller at heart — always chasing the next great narrative.',
+    photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400',
+    compatibilityScore: 78,
+    matchReason: 'Shared creative energy and curiosity-driven outlook.',
+    interests: ['Cinema', 'Street Photography', 'Coffee'],
+    type: 'pool',
+  },
+  {
+    id: 'pool-2',
+    name: 'Maya',
+    age: 29,
+    location: 'Logan Square',
+    occupation: 'Interior Designer',
+    bio: 'Finds beauty in details and believes spaces shape connections.',
+    photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400',
+    compatibilityScore: 82,
+    matchReason: 'Both drawn to aesthetics and intentional living.',
+    interests: ['Design', 'Brunch', 'Ceramics'],
+    type: 'pool',
+  },
+  {
+    id: 'pool-3',
+    name: 'David',
+    age: 33,
+    location: 'Fulton Market',
+    occupation: 'Chef',
+    bio: 'Believes the best conversations happen over a shared meal.',
+    photoUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400',
+    compatibilityScore: 85,
+    matchReason: 'Aligned values on quality time and presence.',
+    interests: ['Cooking', 'Wine Tasting', 'Farmers Markets'],
+    type: 'pool',
+  },
+  {
+    id: 'pool-4',
+    name: 'Aria',
+    age: 26,
+    location: 'Hyde Park',
+    occupation: 'Musician',
+    bio: 'Classically trained with a love for spontaneous jam sessions.',
+    photoUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400',
+    compatibilityScore: 80,
+    matchReason: 'Complementary creative rhythms and emotional expressiveness.',
+    interests: ['Music', 'Poetry Nights', 'Nature Walks'],
+    type: 'pool',
+  },
+];
 
 export const SundayMatches: React.FC = () => {
   const { setShowPaywall } = useSubscription();
