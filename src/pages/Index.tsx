@@ -20,6 +20,7 @@ const Index = () => {
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = React.useState(false);
   const [showDemo, setShowDemo] = React.useState(false);
   const [showAuth, setShowAuth] = React.useState(false);
+  const [authStartMode, setAuthStartMode] = React.useState<'login' | 'signup'>('login');
   const [showSplash, setShowSplash] = React.useState(true);
   const [showProfileComplete, setShowProfileComplete] = React.useState(false);
   const [skippedProfile, setSkippedProfile] = React.useState(false);
@@ -109,19 +110,25 @@ const Index = () => {
 
   // Show auth page if requested (and not in demo mode)
   if (showAuth && !isDemoMode) {
-    return <AuthPage />;
+    return <AuthPage defaultMode={authStartMode} />;
   }
 
   // Show enhanced landing page if user is not logged in and not in demo mode
   if (!user && !isDemoMode) {
     return <EnhancedLandingPage 
       onExitToApp={() => {
+        setAuthStartMode('login');
         setShowAuth(true);
       }}
       onStartDemo={() => {
         setShowDemo(true);
       }}
       onSignIn={() => {
+        setAuthStartMode('login');
+        setShowAuth(true);
+      }}
+      onSignUp={() => {
+        setAuthStartMode('signup');
         setShowAuth(true);
       }}
     />;

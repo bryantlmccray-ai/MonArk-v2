@@ -32,9 +32,10 @@ interface EnhancedLandingPageProps {
   onExitToApp?: () => void;
   onStartDemo?: () => void;
   onSignIn?: () => void;
+  onSignUp?: () => void;
 }
 
-export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExitToApp, onStartDemo, onSignIn }) => {
+export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExitToApp, onStartDemo, onSignIn, onSignUp }) => {
   const { demoData, setDemoMode } = useDemo();
   const [showFullDemo, setShowFullDemo] = useState(false);
   const [showWaitlistModal, setShowWaitlistModal] = useState(false);
@@ -251,12 +252,20 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                     </div>
                   )}
 
-                  <p className="text-[13px] text-muted-foreground font-body text-center">
-                    Already have an account?{' '}
-                    <button onClick={() => setShowSignInModal(true)} className="text-primary font-medium hover:underline transition-colors">
-                      Sign in
-                    </button>
-                  </p>
+                  <div className="text-center space-y-1.5">
+                    <p className="text-[13px] text-muted-foreground font-body">
+                      Ready to get started?{' '}
+                      <button onClick={() => onSignUp?.()} className="text-primary font-semibold hover:underline transition-colors">
+                        Sign up
+                      </button>
+                    </p>
+                    <p className="text-[13px] text-muted-foreground font-body">
+                      Already have an account?{' '}
+                      <button onClick={() => setShowSignInModal(true)} className="text-primary font-medium hover:underline transition-colors">
+                        Sign in
+                      </button>
+                    </p>
+                  </div>
 
                   <div className="pt-3 border-t border-border mt-3">
                     <p className="text-sm text-muted-foreground font-body leading-relaxed text-center italic">
