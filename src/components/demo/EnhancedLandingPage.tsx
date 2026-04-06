@@ -160,7 +160,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 </h1>
                 <div className="w-16 h-px mx-auto bg-primary/30" />
                 <p className="max-w-xl mx-auto text-base sm:text-lg font-body text-foreground/75 leading-relaxed px-2">
-                  MonArk gives you 3 curated introductions every week — powered by your Relational Intelligence Profile. No swiping. No algorithm games. Just people who actually align with how you connect, communicate, and love.
+                  MonArk gives you 3 curated introductions every week — powered by your <a href="#rif-framework" className="underline underline-offset-2 decoration-primary/50 hover:decoration-primary transition-colors cursor-pointer">Relational Intelligence</a> Profile. No swiping. No algorithm games. Just people who actually align with how you connect, communicate, and love.
                 </p>
               </div>
             </motion.div>
@@ -292,7 +292,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       </section>
 
       {/* ═══════════ RIF SECTION ═══════════ */}
-      <section className="py-16 bg-background">
+      <section id="rif-framework" className="py-16 bg-background scroll-mt-4">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
             className="text-center mb-10"
