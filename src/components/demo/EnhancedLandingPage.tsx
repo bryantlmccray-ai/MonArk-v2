@@ -251,14 +251,12 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                     </div>
                   )}
 
-                  {!heroSubmitted && (
-                    <p className="text-[13px] text-muted-foreground font-body text-center">
-                      Already a member?{' '}
-                      <button onClick={() => setShowSignInModal(true)} className="text-primary hover:underline transition-colors">
-                        Sign in →
-                      </button>
-                    </p>
-                  )}
+                  <p className="text-[13px] text-muted-foreground font-body text-center">
+                    Already have an account?{' '}
+                    <button onClick={() => setShowSignInModal(true)} className="text-primary font-medium hover:underline transition-colors">
+                      Sign in
+                    </button>
+                  </p>
 
                   <div className="pt-3 border-t border-border mt-3">
                     <p className="text-sm text-muted-foreground font-body leading-relaxed text-center italic">
