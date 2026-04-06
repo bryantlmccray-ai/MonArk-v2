@@ -32,9 +32,10 @@ interface EnhancedLandingPageProps {
   onExitToApp?: () => void;
   onStartDemo?: () => void;
   onSignIn?: () => void;
+  onSignUp?: () => void;
 }
 
-export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExitToApp, onStartDemo, onSignIn }) => {
+export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExitToApp, onStartDemo, onSignIn, onSignUp }) => {
   const { demoData, setDemoMode } = useDemo();
   const [showFullDemo, setShowFullDemo] = useState(false);
   const [showWaitlistModal, setShowWaitlistModal] = useState(false);

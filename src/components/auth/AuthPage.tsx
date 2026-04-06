@@ -17,9 +17,9 @@ import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '';
 
-export const AuthPage: React.FC = () => {
+export const AuthPage: React.FC<{ defaultMode?: 'login' | 'signup' }> = ({ defaultMode = 'login' }) => {
   const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(defaultMode === 'login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
