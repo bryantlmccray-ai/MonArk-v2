@@ -100,29 +100,39 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               className="absolute inset-0"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
             >
               {/* Back layer: previous image at full opacity — prevents black flash */}
               <div className="absolute inset-0" style={{ zIndex: 1 }}>
                 {renderImage(heroImages[slide.previous])}
               </div>
 
-              {/* Front layer: current image fades in over the back layer */}
+              {/* Front layer: current image fades in over the back layer
+                  First frame uses a more dramatic zoom + pan for a cinematic
+                  opening that feels alive from the very first moment */}
               <motion.div
                 key={slide.current}
                 className="absolute inset-0"
                 style={{ zIndex: 2, willChange: "opacity, transform" }}
                 initial={
                   isFirst.current
-                    ? { opacity: 1, scale: 1.05, x: "1%" }
-                    : { opacity: 0, scale: 1.05, x: "1%" }
+                    ? { opacity: 1, scale: 1.14, x: "3%" }
+                    : { opacity: 0, scale: 1.06, x: "1.5%" }
                 }
                 animate={{ opacity: 1, scale: 1, x: "0%" }}
-                transition={{
-                  opacity: { duration: 2, ease: [0.22, 1, 0.36, 1] },
-                  scale: { duration: 6, ease: [0.33, 1, 0.68, 1] },
-                  x: { duration: 6, ease: [0.33, 1, 0.68, 1] },
-                }}
+                transition={
+                  isFirst.current
+                    ? {
+                        opacity: { duration: 0.01 },
+                        scale: { duration: 8, ease: [0.25, 0.1, 0.25, 1] },
+                        x: { duration: 8, ease: [0.25, 0.1, 0.25, 1] },
+                      }
+                    : {
+                        opacity: { duration: 2, ease: [0.22, 1, 0.36, 1] },
+                        scale: { duration: 6, ease: [0.33, 1, 0.68, 1] },
+                        x: { duration: 6, ease: [0.33, 1, 0.68, 1] },
+                      }
+                }
               >
                 {renderImage(heroImages[slide.current])}
               </motion.div>
