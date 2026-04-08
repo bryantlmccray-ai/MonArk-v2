@@ -1,11 +1,18 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Clock, Crown, ArrowRight, Sparkles } from 'lucide-react';
+import { CheckCircle2, Clock, Crown, ArrowRight, Sparkles, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useSubscription } from '@/hooks/useSubscription';
 import { AuthenticatedNav } from './AuthenticatedNav';
+
+const DEMO_MATCHES = [
+  { initials: 'SL', name: 'Sophia', note: 'You both value slow-building trust and direct communication.' },
+  { initials: 'MR', name: 'Marcus', note: 'Complementary conflict styles — he speaks up, you reflect first.' },
+  { initials: 'EK', name: 'Elena', note: 'Shared pacing preference and aligned relationship goals.' },
+];
 
 interface DashboardHomeProps {
   onStartRIF: () => void;
@@ -91,7 +98,12 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onStartRIF, onSign
               <Clock className="w-5 h-5 text-[hsl(30_40%_72%)]" />
             </div>
             <div className="flex-1">
-              <h3 className="font-editorial text-lg text-[hsl(30_40%_85%)] mb-1">Your 3</h3>
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="font-editorial text-lg text-[hsl(30_40%_85%)]">Your 3</h3>
+                <Badge className="bg-[hsl(30_40%_72%/0.15)] text-[hsl(30_40%_72%)] border-[hsl(30_40%_72%/0.3)] text-[10px] font-caption tracking-[0.1em] uppercase">
+                  Demo Mode
+                </Badge>
+              </div>
               <p className="text-sm font-body text-[hsl(240_6%_60%)] leading-relaxed mb-4">
                 Your 3 matches arrive every Sunday.
               </p>
@@ -102,22 +114,45 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onStartRIF, onSign
                     <span className="w-2 h-2 rounded-full bg-[hsl(30_40%_72%)] animate-pulse" />
                     Next Delivery: Sunday
                   </div>
-                  {/* Placeholder match cards */}
-                  <div className="grid grid-cols-3 gap-2 mt-3">
-                    {[1, 2, 3].map((i) => (
+                  {/* Demo match profiles */}
+                  <div className="space-y-2.5 mt-3">
+                    {DEMO_MATCHES.map((m) => (
                       <div
-                        key={i}
-                        className="aspect-[3/4] rounded-xl bg-[hsl(230_18%_22%)] border border-[hsl(230_18%_28%)] flex items-center justify-center"
+                        key={m.initials}
+                        className="flex items-center gap-3 p-3 rounded-xl bg-[hsl(230_18%_22%)] border border-[hsl(230_18%_28%)]"
                       >
-                        <span className="text-2xl font-editorial text-[hsl(230_18%_32%)]">{i}</span>
+                        <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#A08C6E' }}>
+                          <span className="text-sm font-editorial text-white tracking-wider">{m.initials}</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-editorial text-[hsl(30_40%_85%)]">{m.name}</p>
+                          <p className="text-xs font-body text-[hsl(240_6%_55%)] leading-relaxed truncate">{m.note}</p>
+                        </div>
+                        <Heart className="w-4 h-4 text-[hsl(30_40%_72%/0.4)] flex-shrink-0" />
                       </div>
                     ))}
                   </div>
                 </div>
               ) : (
-                <div className="bg-[hsl(230_18%_22%)] rounded-xl border border-dashed border-[hsl(230_18%_30%)] p-4 text-center">
-                  <p className="text-xs font-body text-[hsl(240_6%_50%)]">
-                    Complete your RIF to unlock your first matches
+                <div className="space-y-2.5">
+                  {/* Demo match profiles even before RIF */}
+                  {DEMO_MATCHES.map((m) => (
+                    <div
+                      key={m.initials}
+                      className="flex items-center gap-3 p-3 rounded-xl bg-[hsl(230_18%_22%)] border border-[hsl(230_18%_28%)]"
+                    >
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#A08C6E' }}>
+                        <span className="text-sm font-editorial text-white tracking-wider">{m.initials}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-editorial text-[hsl(30_40%_85%)]">{m.name}</p>
+                        <p className="text-xs font-body text-[hsl(240_6%_55%)] leading-relaxed truncate">{m.note}</p>
+                      </div>
+                      <Heart className="w-4 h-4 text-[hsl(30_40%_72%/0.4)] flex-shrink-0" />
+                    </div>
+                  ))}
+                  <p className="text-[10px] font-caption text-[hsl(240_6%_45%)] tracking-[0.1em] uppercase text-center pt-1">
+                    Complete your RIF to unlock real matches
                   </p>
                 </div>
               )}
