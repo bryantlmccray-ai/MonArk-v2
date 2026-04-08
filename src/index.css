@@ -367,3 +367,19 @@
     animation: none !important;
   }
 }
+
+/*
+ * Framer Motion safety net: elements with whileInView start at opacity:0
+ * via inline styles. If IntersectionObserver never fires (scroll race,
+ * browser quirks, SSR hydration), this keyframe forces them visible
+ * after 2.5s so no content is permanently hidden.
+ */
+@keyframes fm-safety-reveal {
+  to { opacity: 1; transform: none; }
+}
+
+[style*="opacity: 0"][style*="translateY"],
+[style*="opacity: 0"][style*="translateX"],
+[style*="opacity:0"][style*="translate"] {
+  animation: fm-safety-reveal 0.01s 2.5s both;
+}
