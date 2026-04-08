@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -99,6 +99,8 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[420px] p-0 bg-card border-border rounded-2xl overflow-hidden">
+        <DialogTitle className="sr-only">Sign In</DialogTitle>
+        <DialogDescription className="sr-only">Sign in to your MonArk account</DialogDescription>
         <div className="p-6 space-y-5">
           {/* Header */}
           <div className="text-center space-y-2">

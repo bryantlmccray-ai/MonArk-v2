@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, MessageCircle, BookOpen, Calendar, Share2, Crown } from 'lucide-react';
+import { User, MessageCircle, BookOpen, Calendar, Share2, Crown, Brain } from 'lucide-react';
 import { useProfile } from '@/hooks/useProfile';
 import { useSubscription } from '@/hooks/useSubscription';
 import {
@@ -30,6 +30,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
     { id: 'matches', icon: MessageCircle, label: 'Connections', hasNotification: true },
     { id: 'dates', icon: BookOpen, label: 'Journal', hasNotification: false },
     { id: 'shareables', icon: Share2, label: 'Milestone Cards', hasNotification: false },
+    { id: 'rif', icon: Brain, label: 'Relational Profile', hasNotification: false },
     { id: 'profile', icon: User, label: 'Profile', hasNotification: false },
   ];
 

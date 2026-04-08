@@ -18,6 +18,7 @@ import { useAnalytics } from '@/hooks/useAnalytics';
 import { useContactFeedback } from '@/hooks/useContactFeedback';
 import { ContactShareFeedback } from '@/components/feedback/ContactShareFeedback';
 import { MilestoneCardShowcase } from '@/components/social/MilestoneCardShowcase';
+import RIFQuiz from '@/components/onboarding/RIFQuiz';
 import { ProfileGate } from '@/components/common/ProfileGate';
 import PaywallModal from '@/components/PaywallModal';
 import { useSubscription } from '@/hooks/useSubscription';
@@ -140,6 +141,14 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
         );
       case 'shareables':
         return <MilestoneCardShowcase />;
+      case 'rif':
+        return (
+          <RIFQuiz 
+            userId={user?.id || ''} 
+            onComplete={() => handleTabChange('profile')} 
+            onSkip={() => handleTabChange('profile')} 
+          />
+        );
       case 'profile':
          return (
           <Profile
