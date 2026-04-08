@@ -141,6 +141,14 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
         );
       case 'shareables':
         return <MilestoneCardShowcase />;
+      case 'rif':
+        return (
+          <RIFQuiz 
+            userId={user?.id || ''} 
+            onComplete={() => handleTabChange('profile')} 
+            onSkip={() => handleTabChange('profile')} 
+          />
+        );
       case 'profile':
          return (
           <Profile
