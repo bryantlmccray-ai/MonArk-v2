@@ -123,7 +123,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                   animate={{ scale: 1, x: "0%" }}
                   transition={{ duration: 0.01 }}
                 >
-                  {renderImageLayer(heroImages[previousIndex])}
+                  {renderImageLayer(heroImages[slideState.previous])}
                 </motion.div>
               </div>
 
@@ -131,7 +131,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                   Ken Burns drift for cinematic life */}
               <div className="absolute inset-0" style={{ zIndex: 2 }}>
                 <motion.div
-                  key={currentIndex}
+                  key={slideState.current}
                   className="absolute inset-0"
                   initial={
                     isFirstRender.current
@@ -146,7 +146,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                   }}
                   style={{ willChange: "opacity, transform" }}
                 >
-                  {renderImageLayer(heroImages[currentIndex])}
+                  {renderImageLayer(heroImages[slideState.current])}
                 </motion.div>
               </div>
             </>
