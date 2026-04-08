@@ -196,21 +196,35 @@ export const AuthPage: React.FC<{ defaultMode?: 'login' | 'signup' }> = ({ defau
           description,
           variant: "destructive"
         });
+        // Don't reset age verification screen on error — let user retry
+        setLoading(false);
         return;
       }
+
+      // Always store age data in localStorage so it survives page reloads / email confirmation
+      const pendingAgeData = {
+        dateOfBirth: ageData.dateOfBirth.toISOString().split('T')[0],
+        userId: data.user?.id,
+      };
+      localStorage.setItem('monark-pending-age-verification', JSON.stringify(pendingAgeData));
 
       if (data.session && data.user) {
+        // Auto-confirmed: persist immediately, then let useEffect handle navigation
         try {
           await persistAgeVerification(data.user.id, ageData.dateOfBirth);
+          localStorage.removeItem('monark-pending-age-verification');
         } catch (profileError) {
-          console.error('Failed to save age verification:', profileError);
+          console.error('Failed to save age verification (will retry on next load):', profileError);
         }
-
-        clearSignupAttempt();
+        // Don't call clearSignupAttempt() — the useEffect on `user` will navigate away
         return;
       }
 
-      clearSignupAttempt();
+      // Email confirmation required — show "check your email" screen
+      setShowAgeVerification(false);
+      setSignupData(null);
+      setCaptchaToken(null);
+      turnstileRef.current?.reset();
       setPendingVerificationEmail(signupData.email);
     } catch (err) {
       toast({

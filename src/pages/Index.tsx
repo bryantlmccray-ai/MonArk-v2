@@ -12,6 +12,7 @@ import { AuthGuard } from '@/components/common/AuthGuard';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useDemo } from '@/contexts/DemoContext';
+import { supabase } from '@/integrations/supabase/client';
 
 const Index = () => {
   const { user, loading: authLoading, isDemoMode, exitDemoMode, signOut } = useAuth();
@@ -39,6 +40,50 @@ const Index = () => {
       setShowAuth(false);
     }
   }, [user, isDemoMode]);
+
+  // Persist pending age verification data from localStorage after email confirmation
+  React.useEffect(() => {
+    if (!user) return;
+    const raw = localStorage.getItem('monark-pending-age-verification');
+    if (!raw) return;
+
+    try {
+      const { dateOfBirth, userId } = JSON.parse(raw);
+      // Only persist if it's the same user
+      if (userId && userId !== user.id) return;
+
+      const persist = async () => {
+        const formattedDate = dateOfBirth; // Already formatted as YYYY-MM-DD
+        const { data: existing } = await supabase
+          .from('user_profiles')
+          .select('id')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (existing) {
+          await supabase.from('user_profiles').update({
+            date_of_birth: formattedDate,
+            age_verified: true,
+            updated_at: new Date().toISOString(),
+          }).eq('user_id', user.id);
+        } else {
+          await supabase.from('user_profiles').insert({
+            user_id: user.id,
+            date_of_birth: formattedDate,
+            age_verified: true,
+          });
+        }
+
+        localStorage.removeItem('monark-pending-age-verification');
+        console.log('[Index] Persisted pending age verification');
+        refetchProfile();
+      };
+
+      persist().catch((err) => console.error('[Index] Failed to persist age verification:', err));
+    } catch (e) {
+      localStorage.removeItem('monark-pending-age-verification');
+    }
+  }, [user, refetchProfile]);
 
   // Add escape key listener to exit demo
   React.useEffect(() => {
