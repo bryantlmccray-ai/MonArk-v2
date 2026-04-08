@@ -13,6 +13,7 @@ import { AdminMFAGate } from "@/components/auth/AdminMFAGate";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { AuthGuard } from "@/components/common/AuthGuard";
+import { AuthPage } from "@/components/auth/AuthPage";
 
 // Lazy-load routes that are NOT on the critical path
 const Privacy = lazy(() => import("./pages/Privacy"));
