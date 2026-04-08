@@ -278,10 +278,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
             {/* App Store badges in hero */}
             <div className="flex items-center justify-center gap-3 pt-2">
-              <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-[#A08C6E] text-[#A08C6E] font-body text-xs tracking-[0.08em] cursor-default select-none">
+              <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-muted-foreground/30 text-muted-foreground/50 font-body text-xs tracking-[0.08em] cursor-not-allowed select-none opacity-60">
                 App Store — Coming Soon
               </span>
-              <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-[#A08C6E] text-[#A08C6E] font-body text-xs tracking-[0.08em] cursor-default select-none">
+              <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-muted-foreground/30 text-muted-foreground/50 font-body text-xs tracking-[0.08em] cursor-not-allowed select-none opacity-60">
                 Google Play — Coming Soon
               </span>
             </div>
@@ -875,17 +875,6 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16 text-center">
           <img src={monarkLogoHorizontal} alt="MonArk — Date well." className="h-10 w-auto object-contain mx-auto mb-6" />
 
-          <div className="mb-6">
-            <a
-              href="https://www.instagram.com/monark.eq/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-border bg-card/60 backdrop-blur-sm text-foreground hover:bg-card transition-all duration-300 group"
-            >
-              <Instagram className="h-4 w-4 text-primary group-hover:text-foreground transition-colors" />
-              <span className="text-sm font-body tracking-wide">@monark.eq</span>
-            </a>
-          </div>
 
           <p className="text-muted-foreground font-body text-sm mb-5">
             &copy; {new Date().getFullYear()} MonArk. Dating reimagined with Smart Matching.
