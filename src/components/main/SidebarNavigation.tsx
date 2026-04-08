@@ -1,13 +1,15 @@
 import React from 'react';
-import { User, MessageCircle, BookOpen, Calendar, Share2, Crown, Brain } from 'lucide-react';
+import { User, MessageCircle, BookOpen, Calendar, Share2, Crown, Brain, LogOut } from 'lucide-react';
 import { useProfile } from '@/hooks/useProfile';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useAuth } from '@/hooks/useAuth';
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
+  SidebarFooter,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
