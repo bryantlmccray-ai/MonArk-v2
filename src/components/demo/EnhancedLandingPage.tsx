@@ -305,7 +305,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             className="text-center mb-10"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.6, ease: easeOut }}
           >
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
@@ -340,7 +340,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             className="text-center mb-10"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-3">How Smart Matching Works</h2>
@@ -364,7 +364,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 }`}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
               >
                 <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center border transition-all duration-300 ${
@@ -388,7 +388,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             className="text-center mt-10 text-sm font-caption text-muted-foreground tracking-[0.12em] uppercase"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ delay: 0.2 }}
           >
             No swipes. No chaos. Just connection that feels like alignment.
@@ -399,7 +399,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             className="mt-14 mb-14"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
             <p className="text-center text-xs font-caption text-primary tracking-[0.2em] uppercase mb-8">Every Sunday morning, your 3 arrive.</p>
@@ -414,7 +414,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   className="bg-[hsl(230_18%_15%)] border border-[hsl(30_40%_72%/0.15)] rounded-2xl p-5 shadow-[0_4px_24px_rgba(28,31,46,0.3)] hover:border-[hsl(30_40%_72%/0.35)] transition-all duration-300"
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, amount: 0.1 }}
                   transition={{ duration: 0.4, delay: 0.12 * i }}
                 >
                   {/* Badge */}
@@ -473,7 +473,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             className="mt-12"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.6, delay: 0.15 }}
           >
             <h3 className="text-center font-editorial-headline text-xl sm:text-2xl text-foreground mb-2">A Glimpse Into Your RIF</h3>
@@ -489,7 +489,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   className="relative bg-[hsl(230_18%_15%)] border border-[hsl(30_40%_72%/0.2)] rounded-2xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(28,31,46,0.25)] hover:border-[hsl(30_40%_72%/0.4)] transition-all duration-300"
                   initial={{ opacity: 0, x: -10 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, amount: 0.1 }}
                   transition={{ duration: 0.4, delay: 0.1 * i }}
                 >
                   <div className="flex items-start gap-4">
@@ -516,7 +516,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             className="text-center mb-10"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-2">Why I Built MonArk</h2>
@@ -530,7 +530,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               className="relative order-2 md:order-1"
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
+              viewport={{ once: true, amount: 0.1, margin: "-80px" }}
               transition={{ duration: 0.8, ease: easeOut }}
             >
               <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-primary/20 via-border to-primary/15 blur-sm" />
@@ -549,7 +549,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   className="absolute inset-0 bg-gradient-to-tr from-transparent via-card/8 to-transparent"
                   initial={{ x: "-100%" }}
                   whileInView={{ x: "100%" }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, amount: 0.1 }}
                   transition={{ duration: 1.2, delay: 0.6, ease: "easeInOut" }}
                 />
               </motion.div>
@@ -560,7 +560,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               className="space-y-5 order-1 md:order-2"
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
+              viewport={{ once: true, amount: 0.1, margin: "-80px" }}
               transition={{ duration: 0.8, delay: 0.15, ease: easeOut }}
             >
               <p className="text-base text-muted-foreground font-body leading-relaxed">
@@ -602,7 +602,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             className="text-center mb-10"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-2">Built with Care</h2>
@@ -619,7 +619,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 className="text-center space-y-3 group"
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
+                viewport={{ once: true, amount: 0.1, margin: "-40px" }}
                 transition={{ duration: 0.6, ease: easeOut, delay: i * 0.08 }}
               >
                 <motion.div
@@ -659,7 +659,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             className="text-center mb-10"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.5 }}
           >
             <h2 className="font-editorial-headline italic text-2xl sm:text-[28px] text-foreground mb-2">From Early Access Members</h2>
@@ -675,7 +675,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 key={idx}
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.5, delay: idx * 0.12, ease: easeOut }}
                 className="bg-[hsl(230_18%_15%)] rounded-2xl p-7 flex flex-col justify-between shadow-[0_8px_32px_rgba(28,31,46,0.25)]"
               >
@@ -700,7 +700,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             className="text-center mb-10"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.6, ease: easeOut }}
           >
             <h2 className="font-editorial-headline italic text-3xl sm:text-[32px] text-foreground mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
@@ -717,7 +717,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               className="bg-[#EDE6DF] rounded-xl border border-[#EDE6DF] p-6 sm:p-8"
               initial={{ opacity: 0, x: -16 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.5, ease: easeOut }}
             >
               <h3 className="font-editorial-headline text-lg text-foreground/70 mb-5">The apps</h3>
@@ -741,7 +741,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               className="bg-[#EDE6DF] rounded-xl border border-[#EDE6DF] border-l-[3px] border-l-[#A08C6E] p-6 sm:p-8"
               initial={{ opacity: 0, x: 16 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.5, delay: 0.1, ease: easeOut }}
             >
               <h3 className="font-editorial-headline text-lg text-foreground mb-5">MonArk</h3>
@@ -781,7 +781,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             className="text-center mb-10"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-2">Your Questions, Answered</h2>
