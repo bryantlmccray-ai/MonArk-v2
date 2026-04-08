@@ -61,11 +61,10 @@ export const DatingPool = () => {
             <Users className="w-8 h-8 text-secondary-foreground" />
           </div>
           <h3 className="text-lg font-semibold text-foreground mb-2">
-            Pool Empty
+            Your matches are being curated
           </h3>
           <p className="text-muted-foreground mb-4 max-w-sm mx-auto">
-            You've browsed through your entire dating pool for this week.
-            New pool arrives next Sunday!
+            We're reviewing profiles that align with your relational style. We'll notify you when your first introductions are ready.
           </p>
         </div>
       ) : (
