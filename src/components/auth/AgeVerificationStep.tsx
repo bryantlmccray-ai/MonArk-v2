@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { MonArkLogo } from '@/components/MonArkLogo';
+import { motion } from 'framer-motion';
 
 interface AgeVerificationStepProps {
   onNext: (data: { dateOfBirth: Date; ageConfirmed: boolean }) => void;
@@ -34,7 +35,6 @@ export const AgeVerificationStep: React.FC<AgeVerificationStepProps> = ({ onNext
     const dayNum = parseInt(day);
     const yearNum = parseInt(year);
 
-    // Basic validation
     if (!month || !day || !year) {
       return { isValid: false, error: 'All fields are required' };
     }
@@ -55,7 +55,6 @@ export const AgeVerificationStep: React.FC<AgeVerificationStepProps> = ({ onNext
       return { isValid: false, error: 'Year must be 4 digits (YYYY)' };
     }
 
-    // Create date and validate it's a real date
     const date = new Date(yearNum, monthNum - 1, dayNum);
     
     if (date.getFullYear() !== yearNum || 
@@ -111,124 +110,136 @@ export const AgeVerificationStep: React.FC<AgeVerificationStepProps> = ({ onNext
     setYear(value);
   };
 
+  const isFormValid = month && day && year && ageConfirmed;
+
   return (
-    <div className="min-h-screen bg-gray-900 p-6 flex flex-col items-center justify-center">
-      <div className="w-full max-w-md space-y-8">
-        {/* Header */}
-        <div className="text-center space-y-4">
-          <h1 className="text-3xl font-light text-gray-100">Age Verification</h1>
-          <p className="text-gray-400">
+    <div className="min-h-screen flex items-center justify-center px-6 relative overflow-hidden bg-background">
+      {/* Subtle warm radial glow */}
+      <div
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full pointer-events-none opacity-40"
+        style={{ background: "radial-gradient(circle, hsl(var(--primary) / 0.08) 0%, transparent 70%)" }}
+      />
+
+      <motion.div
+        className="w-full max-w-sm space-y-6 relative z-10"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {/* Logo */}
+        <div className="text-center">
+          <MonArkLogo size="xl" rotateOnLoad={true} className="mb-8" />
+        </div>
+
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-serif font-bold tracking-tight text-foreground">
+            Age Verification
+          </h1>
+          <p className="font-body text-sm text-muted-foreground">
             To ensure a safe community, we need to verify you're 18 or older
           </p>
         </div>
 
-        {/* Date Input */}
-        <Card className="bg-gray-800/50 border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-gray-100 text-lg">Enter Your Date of Birth</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="month" className="text-gray-100 text-sm">
-                  Month (MM)
-                </Label>
-                <Input
-                  id="month"
-                  type="text"
-                  value={month}
-                  onChange={handleMonthChange}
-                  placeholder="MM"
-                  className="bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 text-center"
-                  maxLength={2}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="day" className="text-gray-100 text-sm">
-                  Day (DD)
-                </Label>
-                <Input
-                  id="day"
-                  type="text"
-                  value={day}
-                  onChange={handleDayChange}
-                  placeholder="DD"
-                  className="bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 text-center"
-                  maxLength={2}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="year" className="text-gray-100 text-sm">
-                  Year (YYYY)
-                </Label>
-                <Input
-                  id="year"
-                  type="text"
-                  value={year}
-                  onChange={handleYearChange}
-                  placeholder="YYYY"
-                  className="bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 text-center"
-                  maxLength={4}
-                />
-              </div>
-            </div>
+        {/* Card */}
+        <div className="bg-card border border-border/60 rounded-2xl p-6 space-y-5 shadow-[var(--shadow-elevated)]">
+          <p className="text-sm font-medium text-foreground">Enter Your Date of Birth</p>
 
-            {/* Date Preview */}
-            {month && day && year && validateDate(month, day, year).isValid && (
-              <div className="text-center text-gray-100 p-4 bg-gray-800 rounded-lg">
-                <p className="text-sm text-gray-400">Selected date:</p>
-                <p className="text-lg font-medium">
-                  {month.padStart(2, '0')}/{day.padStart(2, '0')}/{year}
-                </p>
-                <p className="text-sm text-gray-400 mt-1">
-                  Age: {calculateAge(validateDate(month, day, year).date!)} years
-                </p>
-              </div>
-            )}
-
-            {/* Age Confirmation Checkbox */}
-            <div className="flex items-start space-x-3 p-4 bg-gray-800 rounded-lg">
-              <Checkbox
-                id="age-confirm"
-                checked={ageConfirmed}
-                onCheckedChange={(checked) => setAgeConfirmed(checked as boolean)}
-                className="mt-1"
+          <div className="grid grid-cols-3 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="month" className="text-xs font-medium text-muted-foreground">
+                Month
+              </Label>
+              <Input
+                id="month"
+                type="text"
+                value={month}
+                onChange={handleMonthChange}
+                placeholder="MM"
+                className="rounded-xl h-11 text-center"
+                maxLength={2}
               />
-              <div className="grid gap-1.5 leading-none">
-                <Label
-                  htmlFor="age-confirm"
-                  className="text-gray-100 text-sm font-medium leading-relaxed cursor-pointer"
-                >
-                  I confirm that I am 18 years of age or older and agree to MonArk's Terms of Service
-                </Label>
-              </div>
             </div>
+            
+            <div className="space-y-1.5">
+              <Label htmlFor="day" className="text-xs font-medium text-muted-foreground">
+                Day
+              </Label>
+              <Input
+                id="day"
+                type="text"
+                value={day}
+                onChange={handleDayChange}
+                placeholder="DD"
+                className="rounded-xl h-11 text-center"
+                maxLength={2}
+              />
+            </div>
+            
+            <div className="space-y-1.5">
+              <Label htmlFor="year" className="text-xs font-medium text-muted-foreground">
+                Year
+              </Label>
+              <Input
+                id="year"
+                type="text"
+                value={year}
+                onChange={handleYearChange}
+                placeholder="YYYY"
+                className="rounded-xl h-11 text-center"
+                maxLength={4}
+              />
+            </div>
+          </div>
 
-            {error && (
-              <div className="p-4 bg-red-900/20 border border-red-700 rounded-lg">
-                <p className="text-red-400 text-sm">{error}</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+          {/* Date Preview */}
+          {month && day && year && validateDate(month, day, year).isValid && (
+            <div className="text-center p-3 bg-secondary/60 rounded-xl">
+              <p className="text-xs text-muted-foreground">Selected date</p>
+              <p className="text-base font-medium text-foreground">
+                {month.padStart(2, '0')}/{day.padStart(2, '0')}/{year}
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Age: {calculateAge(validateDate(month, day, year).date!)} years
+              </p>
+            </div>
+          )}
 
-        {/* Continue Button */}
-        <Button
-          onClick={handleSubmit}
-          disabled={!month || !day || !year || !ageConfirmed}
-          className="w-full py-4 bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-900 font-semibold rounded-xl transition-all duration-300 hover:from-yellow-300 hover:to-amber-400 disabled:opacity-50"
-        >
-          Continue
-        </Button>
+          {/* Age Confirmation Checkbox */}
+          <div className="flex items-start space-x-3 p-3 bg-secondary/40 rounded-xl">
+            <Checkbox
+              id="age-confirm"
+              checked={ageConfirmed}
+              onCheckedChange={(checked) => setAgeConfirmed(checked as boolean)}
+              className="mt-0.5"
+            />
+            <Label
+              htmlFor="age-confirm"
+              className="text-sm text-foreground leading-relaxed cursor-pointer"
+            >
+              I confirm that I am 18 years of age or older and agree to MonArk's Terms of Service
+            </Label>
+          </div>
+
+          {error && (
+            <div className="p-3 bg-destructive/10 border border-destructive/30 rounded-xl">
+              <p className="text-destructive text-sm">{error}</p>
+            </div>
+          )}
+
+          <Button
+            onClick={handleSubmit}
+            disabled={!isFormValid}
+            className="w-full rounded-xl h-11"
+          >
+            Continue
+          </Button>
+        </div>
 
         {/* Privacy Note */}
-        <div className="text-center text-xs text-gray-500">
-          <p>Your date of birth is kept private and secure.</p>
-          <p>We only use it for age verification purposes.</p>
-        </div>
-      </div>
+        <p className="text-center text-[11px] uppercase tracking-[0.15em] text-muted-foreground/60">
+          Your date of birth is kept private and secure
+        </p>
+      </motion.div>
     </div>
   );
 };
