@@ -25,6 +25,7 @@ interface SidebarNavigationProps {
 export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab, onTabChange, onArkNavigation, onUpgrade }) => {
   const { profile } = useProfile();
   const { tierLabel } = useSubscription();
+  const { signOut } = useAuth();
   const displayName = profile?.first_name || 'Member';
 
   const tabs = [
