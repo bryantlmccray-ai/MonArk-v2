@@ -23,8 +23,7 @@ interface SplashScreenProps {
 export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isExiting, setIsExiting] = useState(false);
   const [isReady, setIsReady] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [previousIndex, setPreviousIndex] = useState(0);
+  const [slideState, setSlideState] = useState({ current: 0, previous: 0 });
   const [imagesReady, setImagesReady] = useState(false);
   const isFirstRender = useRef(true);
 
@@ -75,16 +74,15 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     if (!imagesReady) return;
 
     const interval = window.setInterval(() => {
-      setPreviousIndex((prev) => {
-        // previous becomes whatever current was
-        return currentIndex;
-      });
-      setCurrentIndex((prev) => (prev + 1) % heroImages.length);
+      setSlideState((prev) => ({
+        previous: prev.current,
+        current: (prev.current + 1) % heroImages.length,
+      }));
       isFirstRender.current = false;
     }, ROTATION_INTERVAL);
 
     return () => window.clearInterval(interval);
-  }, [imagesReady, currentIndex]);
+  }, [imagesReady]);
 
   const renderImageLayer = (src: string) => (
     <>
@@ -125,7 +123,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                   animate={{ scale: 1, x: "0%" }}
                   transition={{ duration: 0.01 }}
                 >
-                  {renderImageLayer(heroImages[previousIndex])}
+                  {renderImageLayer(heroImages[slideState.previous])}
                 </motion.div>
               </div>
 
@@ -133,7 +131,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                   Ken Burns drift for cinematic life */}
               <div className="absolute inset-0" style={{ zIndex: 2 }}>
                 <motion.div
-                  key={currentIndex}
+                  key={slideState.current}
                   className="absolute inset-0"
                   initial={
                     isFirstRender.current
@@ -148,7 +146,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                   }}
                   style={{ willChange: "opacity, transform" }}
                 >
-                  {renderImageLayer(heroImages[currentIndex])}
+                  {renderImageLayer(heroImages[slideState.current])}
                 </motion.div>
               </div>
             </>
