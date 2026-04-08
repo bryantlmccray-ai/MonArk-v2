@@ -15,17 +15,12 @@ interface SplashScreenProps {
   onComplete: () => void;
 }
 
-/**
- * Two-layer crossfade: the "back" layer holds the previous image at full
- * opacity while the "front" layer fades the new image in on top.
- * This guarantees zero black-flash between transitions.
- */
 export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isExiting, setIsExiting] = useState(false);
   const [isReady, setIsReady] = useState(false);
-  const [slideState, setSlideState] = useState({ current: 0, previous: 0 });
   const [imagesReady, setImagesReady] = useState(false);
-  const isFirstRender = useRef(true);
+  const [slide, setSlide] = useState({ current: 0, previous: 0 });
+  const isFirst = useRef(true);
 
   const handleEnter = () => {
     setIsExiting(true);
@@ -33,58 +28,44 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     window.setTimeout(onComplete, 800);
   };
 
-  // Skip if already seen
+  // Skip if seen
   useEffect(() => {
     if (sessionStorage.getItem("monark-splash-seen-v9")) {
       onComplete();
       return;
     }
-    const readyTimer = window.setTimeout(() => setIsReady(true), 2400);
-    return () => window.clearTimeout(readyTimer);
+    const t = window.setTimeout(() => setIsReady(true), 2400);
+    return () => window.clearTimeout(t);
   }, [onComplete]);
 
-  // Preload images
+  // Preload
   useEffect(() => {
-    let cancelled = false;
-    let resolved = false;
-
-    const markReady = () => {
-      if (!cancelled && !resolved) {
-        resolved = true;
-        setImagesReady(true);
-      }
-    };
-
+    let done = false;
+    const mark = () => { if (!done) { done = true; setImagesReady(true); } };
     heroImages.forEach((src) => {
       const img = new Image();
-      img.onload = markReady;
-      img.onerror = markReady;
+      img.onload = mark;
+      img.onerror = mark;
       img.src = src;
     });
-
-    const fallback = window.setTimeout(markReady, 700);
-    return () => {
-      cancelled = true;
-      window.clearTimeout(fallback);
-    };
+    const fb = window.setTimeout(mark, 800);
+    return () => { done = true; window.clearTimeout(fb); };
   }, []);
 
-  // Rotate
+  // Rotate — single setInterval, no stale closures
   useEffect(() => {
     if (!imagesReady) return;
-
-    const interval = window.setInterval(() => {
-      setSlideState((prev) => ({
+    const iv = window.setInterval(() => {
+      setSlide((prev) => ({
         previous: prev.current,
         current: (prev.current + 1) % heroImages.length,
       }));
-      isFirstRender.current = false;
+      isFirst.current = false;
     }, ROTATION_INTERVAL);
-
-    return () => window.clearInterval(interval);
+    return () => window.clearInterval(iv);
   }, [imagesReady]);
 
-  const renderImageLayer = (src: string) => (
+  const renderImage = (src: string) => (
     <>
       <img
         src={src}
@@ -113,49 +94,43 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           transition={{ duration: 0.8, ease: "easeInOut" }}
           onClick={isReady ? handleEnter : undefined}
         >
+          {/* ── Image layers ── */}
           {imagesReady && (
-            <>
-              {/* BACK LAYER — previous image, always fully opaque, provides
-                  seamless coverage while the front layer fades in */}
+            <motion.div
+              className="absolute inset-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {/* Back layer: previous image at full opacity — prevents black flash */}
               <div className="absolute inset-0" style={{ zIndex: 1 }}>
-                <motion.div
-                  className="absolute inset-0"
-                  animate={{ scale: 1, x: "0%" }}
-                  transition={{ duration: 0.01 }}
-                >
-                  {renderImageLayer(heroImages[slideState.previous])}
-                </motion.div>
+                {renderImage(heroImages[slide.previous])}
               </div>
 
-              {/* FRONT LAYER — current image fades in on top with a slow
-                  Ken Burns drift for cinematic life */}
-              <div className="absolute inset-0" style={{ zIndex: 2 }}>
-                <motion.div
-                  key={slideState.current}
-                  className="absolute inset-0"
-                  initial={
-                    isFirstRender.current
-                      ? { opacity: 1, scale: 1.06, x: "1.5%" }
-                      : { opacity: 0, scale: 1.06, x: "1.5%" }
-                  }
-                  animate={{ opacity: 1, scale: 1, x: "0%" }}
-                  transition={{
-                    opacity: { duration: 1.8, ease: [0.22, 1, 0.36, 1] },
-                    scale: { duration: 5, ease: [0.33, 1, 0.68, 1] },
-                    x: { duration: 5, ease: [0.33, 1, 0.68, 1] },
-                  }}
-                  style={{ willChange: "opacity, transform" }}
-                >
-                  {renderImageLayer(heroImages[slideState.current])}
-                </motion.div>
-              </div>
-            </>
+              {/* Front layer: current image fades in over the back layer */}
+              <motion.div
+                key={slide.current}
+                className="absolute inset-0"
+                style={{ zIndex: 2, willChange: "opacity, transform" }}
+                initial={
+                  isFirst.current
+                    ? { opacity: 1, scale: 1.05, x: "1%" }
+                    : { opacity: 0, scale: 1.05, x: "1%" }
+                }
+                animate={{ opacity: 1, scale: 1, x: "0%" }}
+                transition={{
+                  opacity: { duration: 2, ease: [0.22, 1, 0.36, 1] },
+                  scale: { duration: 6, ease: [0.33, 1, 0.68, 1] },
+                  x: { duration: 6, ease: [0.33, 1, 0.68, 1] },
+                }}
+              >
+                {renderImage(heroImages[slide.current])}
+              </motion.div>
+            </motion.div>
           )}
 
-          {/* Dark scrim */}
+          {/* Scrim */}
           <div className="absolute inset-0 pointer-events-none bg-black/50" style={{ zIndex: 3 }} />
-
-          {/* Bottom gradient */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -166,7 +141,10 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           />
 
           {/* Bottom text */}
-          <div className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-16 md:pb-20 pointer-events-none" style={{ zIndex: 5 }}>
+          <div
+            className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-16 md:pb-20 pointer-events-none"
+            style={{ zIndex: 5 }}
+          >
             <AnimatePresence>
               {isReady && (
                 <motion.div
