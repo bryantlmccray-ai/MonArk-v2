@@ -8,8 +8,8 @@ interface MonArkPricingProps {
 }
 
 const TIERS = {
-  compass: {
-    name: "The Compass",
+  ark: {
+    name: "The Ark",
     monthly: 39.99,
     quarterlyPerMonth: 29.99,
     quarterlyTotal: 89.97,
@@ -24,11 +24,11 @@ const TIERS = {
       "Basic RIF compatibility insights",
       "MonArk venue recommendations with matches",
     ],
-    cta: "RESERVE YOUR SPOT — THE COMPASS",
+    cta: "RESERVE YOUR SPOT — THE ARK",
     accent: false,
   },
-  ark: {
-    name: "The Ark",
+  innerArk: {
+    name: "The Inner Ark",
     monthly: 79.99,
     quarterlyPerMonth: 74.99,
     quarterlyTotal: 224.97,
@@ -36,7 +36,7 @@ const TIERS = {
     description:
       "The elevated experience. Deeper insights, wider reach, and concierge-level curation.",
     features: [
-      "Everything in The Compass",
+      "Everything in The Ark",
       "Priority match queue — first pick before standard members",
       "Expanded match pool — 5 curated instead of 3",
       "Full RIF compatibility report per match",
@@ -44,7 +44,7 @@ const TIERS = {
       "Early access to new features",
       "Inner Ark badge — visible signal of seriousness",
     ],
-    cta: "RESERVE YOUR SPOT — THE ARK",
+    cta: "RESERVE YOUR SPOT — THE INNER ARK",
     accent: true,
   },
 };
