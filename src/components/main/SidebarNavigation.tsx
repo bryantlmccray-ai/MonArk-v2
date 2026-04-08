@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, MessageCircle, BookOpen, Calendar, Share2, Crown } from 'lucide-react';
+import { User, MessageCircle, BookOpen, Calendar, Share2, Crown, Brain } from 'lucide-react';
 import { useProfile } from '@/hooks/useProfile';
 import { useSubscription } from '@/hooks/useSubscription';
 import {
