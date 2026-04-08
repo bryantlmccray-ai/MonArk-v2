@@ -1,13 +1,15 @@
 import React from 'react';
-import { User, MessageCircle, BookOpen, Calendar, Share2, Crown, Brain } from 'lucide-react';
+import { User, MessageCircle, BookOpen, Calendar, Share2, Crown, Brain, LogOut } from 'lucide-react';
 import { useProfile } from '@/hooks/useProfile';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useAuth } from '@/hooks/useAuth';
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
+  SidebarFooter,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -23,6 +25,7 @@ interface SidebarNavigationProps {
 export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab, onTabChange, onArkNavigation, onUpgrade }) => {
   const { profile } = useProfile();
   const { tierLabel } = useSubscription();
+  const { signOut } = useAuth();
   const displayName = profile?.first_name || 'Member';
 
   const tabs = [
@@ -107,6 +110,19 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
           </SidebarGroup>
         )}
       </SidebarContent>
+      <SidebarFooter className="border-t border-sidebar-border p-3">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={() => signOut()}
+              className="w-full justify-start text-sidebar-foreground/60 hover:text-destructive hover:bg-destructive/10 transition-all duration-300 rounded-xl"
+            >
+              <LogOut className="h-5 w-5 stroke-[1.5px]" />
+              <span className="tracking-wide">Sign Out</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 };
