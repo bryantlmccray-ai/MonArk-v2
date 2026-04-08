@@ -13,6 +13,7 @@ import { AdminMFAGate } from "@/components/auth/AdminMFAGate";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { AuthGuard } from "@/components/common/AuthGuard";
+import { AuthPage } from "@/components/auth/AuthPage";
 
 // Lazy-load routes that are NOT on the critical path
 const Privacy = lazy(() => import("./pages/Privacy"));
@@ -72,9 +73,12 @@ const App = () => (
                   <Route path="/admin/analytics" element={<AdminMFAGate><AdminAnalytics /></AdminMFAGate>} />
                   <Route path="/admin/curation" element={<AdminMFAGate><AdminMatchCuration /></AdminMFAGate>} />
                   <Route path="/milestone-cards" element={<MilestoneCardShowcase />} />
-                  <Route path="/sign-in" element={<Navigate to="/" replace />} />
-                  <Route path="/login" element={<Navigate to="/" replace />} />
-                  <Route path="/auth" element={<Navigate to="/" replace />} />
+                  <Route path="/signin" element={<AuthPage defaultMode="login" />} />
+                  <Route path="/sign-in" element={<AuthPage defaultMode="login" />} />
+                  <Route path="/login" element={<AuthPage defaultMode="login" />} />
+                  <Route path="/signup" element={<AuthPage defaultMode="signup" />} />
+                  <Route path="/sign-up" element={<AuthPage defaultMode="signup" />} />
+                  <Route path="/auth" element={<AuthPage defaultMode="login" />} />
                   <Route path="/privacy-policy" element={<Navigate to="/privacy" replace />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
