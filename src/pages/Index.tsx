@@ -204,8 +204,19 @@ const Index = () => {
     return <AuthGuard><MainApp initialTab={initialTab} /></AuthGuard>;
   }
 
-  // If user has a profile but it's not complete, show profile creation
+  // If user has a profile but hasn't completed onboarding (RIF quiz, etc.), show onboarding first
+  if (profile && !profile.is_profile_complete && (profile.onboarding_step == null || profile.onboarding_step < 10) && !hasCompletedOnboarding) {
+    return (
+      <OnboardingFlow 
+        onComplete={() => setHasCompletedOnboarding(true)} 
+        onSkipToWaiting={() => setSkippedProfile(true)}
+        onExit={isDemoMode ? () => exitDemoMode() : undefined}
+        showExitButton={isDemoMode}
+      />
+    );
+  }
 
+  // If user has a profile but it's not complete (onboarding done), show profile creation
   if (profile && !profile.is_profile_complete) {
     return <ProfileCreation 
       onComplete={async () => {
@@ -219,7 +230,7 @@ const Index = () => {
     />;
   }
 
-  // Show onboarding if user hasn't completed it yet
+  // Show onboarding if no profile exists yet
   if (!hasCompletedOnboarding) {
     return (
       <OnboardingFlow 
