@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import splashHero1 from "@/assets/splash-hero.jpeg";
 import splashHero2 from "@/assets/splash-hero-2.jpeg";
@@ -9,19 +9,24 @@ import splashHero7 from "@/assets/splash-hero-7.jpeg";
 import splashHero8 from "@/assets/splash-hero-8.jpeg";
 
 const heroImages = [splashHero6, splashHero7, splashHero1, splashHero2, splashHero4, splashHero5, splashHero8];
-const ROTATION_INTERVAL = 4200;
-const CROSSFADE_DURATION = 1.6;
-const ACTIVE_MOTION_DURATION = 4.8;
+const ROTATION_INTERVAL = 4500;
 
 interface SplashScreenProps {
   onComplete: () => void;
 }
 
+/**
+ * Two-layer crossfade: the "back" layer holds the previous image at full
+ * opacity while the "front" layer fades the new image in on top.
+ * This guarantees zero black-flash between transitions.
+ */
 export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isExiting, setIsExiting] = useState(false);
   const [isReady, setIsReady] = useState(false);
-  const [currentImage, setCurrentImage] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [previousIndex, setPreviousIndex] = useState(0);
   const [imagesReady, setImagesReady] = useState(false);
+  const isFirstRender = useRef(true);
 
   const handleEnter = () => {
     setIsExiting(true);
@@ -29,19 +34,17 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     window.setTimeout(onComplete, 800);
   };
 
+  // Skip if already seen
   useEffect(() => {
     if (sessionStorage.getItem("monark-splash-seen-v9")) {
       onComplete();
       return;
     }
-
     const readyTimer = window.setTimeout(() => setIsReady(true), 2400);
-
-    return () => {
-      window.clearTimeout(readyTimer);
-    };
+    return () => window.clearTimeout(readyTimer);
   }, [onComplete]);
 
+  // Preload images
   useEffect(() => {
     let cancelled = false;
     let resolved = false;
@@ -55,31 +58,52 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
 
     heroImages.forEach((src) => {
       const img = new Image();
-      img.decoding = "async";
       img.onload = markReady;
       img.onerror = markReady;
       img.src = src;
     });
 
     const fallback = window.setTimeout(markReady, 700);
-
     return () => {
       cancelled = true;
       window.clearTimeout(fallback);
     };
   }, []);
 
+  // Rotate
   useEffect(() => {
     if (!imagesReady) return;
 
     const interval = window.setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % heroImages.length);
+      setPreviousIndex((prev) => {
+        // previous becomes whatever current was
+        return currentIndex;
+      });
+      setCurrentIndex((prev) => (prev + 1) % heroImages.length);
+      isFirstRender.current = false;
     }, ROTATION_INTERVAL);
 
-    return () => {
-      window.clearInterval(interval);
-    };
-  }, [imagesReady]);
+    return () => window.clearInterval(interval);
+  }, [imagesReady, currentIndex]);
+
+  const renderImageLayer = (src: string) => (
+    <>
+      <img
+        src={src}
+        alt=""
+        decoding="async"
+        className="absolute inset-0 h-full w-full object-cover object-[center_20%] md:scale-110 md:blur-2xl"
+        style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.52)" }}
+      />
+      <img
+        src={src}
+        alt=""
+        decoding="async"
+        className="absolute inset-0 hidden h-full w-full object-contain px-8 py-8 md:block lg:px-14 lg:py-12"
+        style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.7)" }}
+      />
+    </>
+  );
 
   return (
     <AnimatePresence>
@@ -91,72 +115,60 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           transition={{ duration: 0.8, ease: "easeInOut" }}
           onClick={isReady ? handleEnter : undefined}
         >
-          {imagesReady &&
-            heroImages.map((src, index) => {
-              const isActive = currentImage === index;
-
-              return (
+          {imagesReady && (
+            <>
+              {/* BACK LAYER — previous image, always fully opaque, provides
+                  seamless coverage while the front layer fades in */}
+              <div className="absolute inset-0" style={{ zIndex: 1 }}>
                 <motion.div
-                  key={src}
-                  aria-hidden="true"
+                  className="absolute inset-0"
+                  animate={{ scale: 1, x: "0%" }}
+                  transition={{ duration: 0.01 }}
+                >
+                  {renderImageLayer(heroImages[previousIndex])}
+                </motion.div>
+              </div>
+
+              {/* FRONT LAYER — current image fades in on top with a slow
+                  Ken Burns drift for cinematic life */}
+              <div className="absolute inset-0" style={{ zIndex: 2 }}>
+                <motion.div
+                  key={currentIndex}
                   className="absolute inset-0"
                   initial={
-                    index === 0
-                      ? { opacity: 1, x: "2%", scale: 1.08 }
-                      : { opacity: 0, x: "-3%", scale: 1.05 }
+                    isFirstRender.current
+                      ? { opacity: 1, scale: 1.06, x: "1.5%" }
+                      : { opacity: 0, scale: 1.06, x: "1.5%" }
                   }
-                  animate={
-                    isActive
-                      ? { opacity: 1, x: "0%", scale: 1 }
-                      : { opacity: 0, x: "-3%", scale: 1.05 }
-                  }
-                  transition={
-                    isActive
-                      ? {
-                          opacity: { duration: CROSSFADE_DURATION, ease: [0.22, 1, 0.36, 1] },
-                          x: { duration: ACTIVE_MOTION_DURATION, ease: [0.33, 1, 0.68, 1] },
-                          scale: { duration: ACTIVE_MOTION_DURATION, ease: [0.33, 1, 0.68, 1] },
-                        }
-                      : {
-                          opacity: { duration: CROSSFADE_DURATION, ease: [0.22, 1, 0.36, 1] },
-                          x: { duration: CROSSFADE_DURATION, ease: [0.22, 1, 0.36, 1] },
-                          scale: { duration: CROSSFADE_DURATION, ease: [0.22, 1, 0.36, 1] },
-                        }
-                  }
+                  animate={{ opacity: 1, scale: 1, x: "0%" }}
+                  transition={{
+                    opacity: { duration: 1.8, ease: [0.22, 1, 0.36, 1] },
+                    scale: { duration: 5, ease: [0.33, 1, 0.68, 1] },
+                    x: { duration: 5, ease: [0.33, 1, 0.68, 1] },
+                  }}
                   style={{ willChange: "opacity, transform" }}
                 >
-                  <img
-                    src={src}
-                    alt=""
-                    loading={index === 0 ? "eager" : "lazy"}
-                    decoding="async"
-                    className="absolute inset-0 h-full w-full object-cover object-[center_20%] md:scale-110 md:blur-2xl"
-                    style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.52)" }}
-                  />
-
-                  <img
-                    src={src}
-                    alt=""
-                    loading={index === 0 ? "eager" : "lazy"}
-                    decoding="async"
-                    className="absolute inset-0 hidden h-full w-full object-contain px-8 py-8 md:block lg:px-14 lg:py-12"
-                    style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.7)" }}
-                  />
+                  {renderImageLayer(heroImages[currentIndex])}
                 </motion.div>
-              );
-            })}
+              </div>
+            </>
+          )}
 
-          <div className="absolute inset-0 pointer-events-none bg-black/50" />
+          {/* Dark scrim */}
+          <div className="absolute inset-0 pointer-events-none bg-black/50" style={{ zIndex: 3 }} />
 
+          {/* Bottom gradient */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
+              zIndex: 4,
               background:
                 "linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 40%, transparent 100%)",
             }}
           />
 
-          <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center pb-16 md:pb-20 pointer-events-none">
+          {/* Bottom text */}
+          <div className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-16 md:pb-20 pointer-events-none" style={{ zIndex: 5 }}>
             <AnimatePresence>
               {isReady && (
                 <motion.div
