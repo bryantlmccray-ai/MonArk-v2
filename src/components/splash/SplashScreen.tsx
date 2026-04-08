@@ -1,22 +1,37 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import splashHero1 from "@/assets/splash-hero.jpeg";
 import splashHero6 from "@/assets/splash-hero-6.jpeg";
 import splashHero7 from "@/assets/splash-hero-7.jpeg";
 
 const heroImages = [splashHero6, splashHero7, splashHero1];
-const ROTATION_INTERVAL = 4500;
+const ROTATION_INTERVAL = 5600;
+const DISSOLVE_DURATION = 2;
+const INITIAL_REVEAL_DURATION = 1.2;
+const DRIFT_DURATION = 6;
 
 interface SplashScreenProps {
   onComplete: () => void;
+}
+
+interface SlideState {
+  current: number;
+  previous: number;
+  isTransitioning: boolean;
+  transitionKey: number;
 }
 
 export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isExiting, setIsExiting] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [imagesReady, setImagesReady] = useState(false);
-  const [slide, setSlide] = useState({ current: 0, previous: 0 });
-  const isFirst = useRef(true);
+  const [slide, setSlide] = useState<SlideState>({
+    current: 0,
+    previous: 0,
+    isTransitioning: false,
+    transitionKey: 0,
+  });
+  const isFirstFrame = useRef(true);
 
   const handleEnter = () => {
     setIsExiting(true);
@@ -24,42 +39,65 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     window.setTimeout(onComplete, 800);
   };
 
-  // Skip if seen
   useEffect(() => {
     if (sessionStorage.getItem("monark-splash-seen-v9")) {
       onComplete();
       return;
     }
-    const t = window.setTimeout(() => setIsReady(true), 2400);
-    return () => window.clearTimeout(t);
+
+    const readyTimer = window.setTimeout(() => setIsReady(true), 2400);
+    return () => window.clearTimeout(readyTimer);
   }, [onComplete]);
 
-  // Preload
   useEffect(() => {
-    let done = false;
-    const mark = () => { if (!done) { done = true; setImagesReady(true); } };
+    let resolved = false;
+
+    const markReady = () => {
+      if (!resolved) {
+        resolved = true;
+        setImagesReady(true);
+      }
+    };
+
     heroImages.forEach((src) => {
       const img = new Image();
-      img.onload = mark;
-      img.onerror = mark;
+      img.onload = markReady;
+      img.onerror = markReady;
       img.src = src;
     });
-    const fb = window.setTimeout(mark, 800);
-    return () => { done = true; window.clearTimeout(fb); };
+
+    const fallback = window.setTimeout(markReady, 800);
+    return () => {
+      resolved = true;
+      window.clearTimeout(fallback);
+    };
   }, []);
 
-  // Rotate — single setInterval, no stale closures
   useEffect(() => {
     if (!imagesReady) return;
-    const iv = window.setInterval(() => {
+
+    const interval = window.setInterval(() => {
       setSlide((prev) => ({
         previous: prev.current,
         current: (prev.current + 1) % heroImages.length,
+        isTransitioning: true,
+        transitionKey: prev.transitionKey + 1,
       }));
-      isFirst.current = false;
+      isFirstFrame.current = false;
     }, ROTATION_INTERVAL);
-    return () => window.clearInterval(iv);
+
+    return () => window.clearInterval(interval);
   }, [imagesReady]);
+
+  useEffect(() => {
+    if (!slide.isTransitioning) return;
+
+    const timeout = window.setTimeout(() => {
+      setSlide((prev) => ({ ...prev, isTransitioning: false }));
+    }, DISSOLVE_DURATION * 1000);
+
+    return () => window.clearTimeout(timeout);
+  }, [slide.isTransitioning, slide.transitionKey]);
 
   const renderImage = (src: string) => (
     <>
@@ -90,43 +128,51 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           transition={{ duration: 0.8, ease: "easeInOut" }}
           onClick={isReady ? handleEnter : undefined}
         >
-          {/* ── Image layers ── */}
           {imagesReady && (
             <motion.div
               className="absolute inset-0"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: INITIAL_REVEAL_DURATION, ease: [0.22, 1, 0.36, 1] }}
             >
-              {/* Back layer: previous image at full opacity — prevents black flash */}
-              <div className="absolute inset-0" style={{ zIndex: 1 }}>
-                {renderImage(heroImages[slide.previous])}
-              </div>
+              {slide.isTransitioning && (
+                <motion.div
+                  key={`out-${slide.transitionKey}-${slide.previous}`}
+                  className="absolute inset-0"
+                  style={{ zIndex: 1, willChange: "opacity, transform" }}
+                  initial={{ opacity: 1, scale: 1, x: "0%" }}
+                  animate={{ opacity: 0, scale: 1.02, x: "-1%" }}
+                  transition={{
+                    opacity: { duration: DISSOLVE_DURATION, ease: [0.22, 1, 0.36, 1] },
+                    scale: { duration: DRIFT_DURATION, ease: [0.33, 1, 0.68, 1] },
+                    x: { duration: DRIFT_DURATION, ease: [0.33, 1, 0.68, 1] },
+                  }}
+                >
+                  {renderImage(heroImages[slide.previous])}
+                </motion.div>
+              )}
 
-              {/* Front layer: current image fades in over the back layer
-                  First frame uses a more dramatic zoom + pan for a cinematic
-                  opening that feels alive from the very first moment */}
               <motion.div
-                key={slide.current}
+                key={`in-${slide.transitionKey}-${slide.current}`}
                 className="absolute inset-0"
                 style={{ zIndex: 2, willChange: "opacity, transform" }}
                 initial={
-                  isFirst.current
+                  isFirstFrame.current
                     ? { opacity: 1, scale: 1.14, x: "3%" }
-                    : { opacity: 0, scale: 1.06, x: "1.5%" }
+                    : { opacity: 0, scale: 1.08, x: "2%" }
                 }
                 animate={{ opacity: 1, scale: 1, x: "0%" }}
                 transition={
-                  isFirst.current
+                  isFirstFrame.current
                     ? {
                         opacity: { duration: 0.01 },
                         scale: { duration: 8, ease: [0.25, 0.1, 0.25, 1] },
                         x: { duration: 8, ease: [0.25, 0.1, 0.25, 1] },
                       }
                     : {
-                        opacity: { duration: 2, ease: [0.22, 1, 0.36, 1] },
-                        scale: { duration: 6, ease: [0.33, 1, 0.68, 1] },
-                        x: { duration: 6, ease: [0.33, 1, 0.68, 1] },
+                        opacity: { duration: DISSOLVE_DURATION, ease: [0.22, 1, 0.36, 1] },
+                        scale: { duration: DRIFT_DURATION, ease: [0.33, 1, 0.68, 1] },
+                        x: { duration: DRIFT_DURATION, ease: [0.33, 1, 0.68, 1] },
                       }
                 }
               >
@@ -135,7 +181,6 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
             </motion.div>
           )}
 
-          {/* Scrim */}
           <div className="absolute inset-0 pointer-events-none bg-black/50" style={{ zIndex: 3 }} />
           <div
             className="absolute inset-0 pointer-events-none"
@@ -146,7 +191,6 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
             }}
           />
 
-          {/* Bottom text */}
           <div
             className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-16 md:pb-20 pointer-events-none"
             style={{ zIndex: 5 }}
