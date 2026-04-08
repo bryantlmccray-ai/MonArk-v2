@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import splashHero1 from "@/assets/splash-hero.jpeg";
 import splashHero2 from "@/assets/splash-hero-2.jpeg";
@@ -9,8 +9,7 @@ import splashHero7 from "@/assets/splash-hero-7.jpeg";
 import splashHero8 from "@/assets/splash-hero-8.jpeg";
 
 const heroImages = [splashHero6, splashHero7, splashHero1, splashHero2, splashHero4, splashHero5, splashHero8];
-const INITIAL_TRANSITION_DELAY = 2800;
-const ROTATION_INTERVAL = 4200;
+const ROTATION_INTERVAL = 4500;
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -20,7 +19,8 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isExiting, setIsExiting] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
-  const [hasLoadedInitialFrame, setHasLoadedInitialFrame] = useState(false);
+  const [imagesPreloaded, setImagesPreloaded] = useState(false);
+  const intervalRef = useRef<number | null>(null);
 
   const handleEnter = () => {
     setIsExiting(true);
@@ -28,66 +28,55 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     window.setTimeout(onComplete, 800);
   };
 
+  // Skip splash if already seen
   useEffect(() => {
     if (sessionStorage.getItem("monark-splash-seen-v9")) {
       onComplete();
       return;
     }
-
     const readyTimer = window.setTimeout(() => setIsReady(true), 2400);
-
-    return () => {
-      window.clearTimeout(readyTimer);
-    };
+    return () => window.clearTimeout(readyTimer);
   }, [onComplete]);
 
+  // Preload all images
   useEffect(() => {
-    let isCancelled = false;
-    const fallbackTimer = window.setTimeout(() => {
-      if (!isCancelled) {
-        setHasLoadedInitialFrame(true);
-      }
-    }, 1200);
+    let cancelled = false;
+    let loadedCount = 0;
 
-    heroImages.forEach((src, index) => {
-      const image = new Image();
-      image.decoding = "async";
-      image.loading = index === 0 ? "eager" : "lazy";
-      image.onload = () => {
-        if (!isCancelled && index === 0) {
-          window.clearTimeout(fallbackTimer);
-          setHasLoadedInitialFrame(true);
+    heroImages.forEach((src) => {
+      const img = new Image();
+      img.onload = img.onerror = () => {
+        loadedCount++;
+        if (loadedCount >= 1 && !cancelled) {
+          setImagesPreloaded(true);
         }
       };
-      image.onerror = () => {
-        if (!isCancelled && index === 0) {
-          window.clearTimeout(fallbackTimer);
-          setHasLoadedInitialFrame(true);
-        }
-      };
-      image.src = src;
+      img.src = src;
     });
 
+    // Safety fallback — show after 800ms regardless
+    const fallback = window.setTimeout(() => {
+      if (!cancelled) setImagesPreloaded(true);
+    }, 800);
+
     return () => {
-      isCancelled = true;
-      window.clearTimeout(fallbackTimer);
+      cancelled = true;
+      window.clearTimeout(fallback);
     };
   }, []);
 
+  // Rotate images
   useEffect(() => {
-    if (!hasLoadedInitialFrame) return;
+    if (!imagesPreloaded) return;
 
-    const delay = currentImage === 0 ? INITIAL_TRANSITION_DELAY : ROTATION_INTERVAL;
-    const timeout = window.setTimeout(() => {
+    intervalRef.current = window.setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % heroImages.length);
-    }, delay);
+    }, ROTATION_INTERVAL);
 
     return () => {
-      window.clearTimeout(timeout);
+      if (intervalRef.current) window.clearInterval(intervalRef.current);
     };
-  }, [currentImage, hasLoadedInitialFrame]);
-
-  const currentSrc = heroImages[currentImage];
+  }, [imagesPreloaded]);
 
   return (
     <AnimatePresence>
@@ -99,46 +88,46 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           transition={{ duration: 0.8, ease: "easeInOut" }}
           onClick={isReady ? handleEnter : undefined}
         >
-          {hasLoadedInitialFrame ? (
-            <AnimatePresence initial={false} mode="sync">
-              <motion.div
-                key={currentSrc}
-                aria-hidden="true"
-                className="absolute inset-0"
-                initial={
-                  currentImage === 0
-                    ? { opacity: 1, x: "0%", scale: 1 }
-                    : { opacity: 0, x: "2%", scale: 1.03 }
-                }
-                animate={{ opacity: 1, x: "0%", scale: 1 }}
-                exit={{ opacity: 0, x: "-2%", scale: 1.01 }}
-                transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
-                style={{ willChange: "opacity, transform" }}
-              >
-                <img
-                  src={currentSrc}
-                  alt=""
-                  loading={currentImage === 0 ? "eager" : "lazy"}
-                  fetchPriority={currentImage === 0 ? "high" : "auto"}
-                  decoding="async"
-                  className="absolute inset-0 h-full w-full object-cover object-[center_20%] md:scale-110 md:blur-2xl"
-                  style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.52)" }}
-                />
+          {/* All images stacked — CSS transitions handle crossfade */}
+          {imagesPreloaded &&
+            heroImages.map((src, index) => {
+              const isActive = currentImage === index;
+              return (
+                <div
+                  key={src}
+                  aria-hidden="true"
+                  className="absolute inset-0"
+                  style={{
+                    opacity: isActive ? 1 : 0,
+                    transform: isActive
+                      ? "translateX(0%) scale(1)"
+                      : "translateX(-3%) scale(1.03)",
+                    transition: "opacity 1.8s cubic-bezier(0.22, 1, 0.36, 1), transform 1.8s cubic-bezier(0.22, 1, 0.36, 1)",
+                    willChange: "opacity, transform",
+                  }}
+                >
+                  {/* Mobile: full-bleed cover */}
+                  <img
+                    src={src}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover object-[center_20%] md:scale-110 md:blur-2xl"
+                    style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.52)" }}
+                  />
+                  {/* Desktop: contained with blurred background */}
+                  <img
+                    src={src}
+                    alt=""
+                    className="absolute inset-0 hidden h-full w-full object-contain px-8 py-8 md:block lg:px-14 lg:py-12"
+                    style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.7)" }}
+                  />
+                </div>
+              );
+            })}
 
-                <img
-                  src={currentSrc}
-                  alt=""
-                  loading="eager"
-                  decoding="async"
-                  className="absolute inset-0 hidden h-full w-full object-contain px-8 py-8 md:block lg:px-14 lg:py-12"
-                  style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.7)" }}
-                />
-              </motion.div>
-            </AnimatePresence>
-          ) : null}
-
+          {/* Dark scrim for text legibility */}
           <div className="absolute inset-0 pointer-events-none bg-black/50" />
 
+          {/* Bottom gradient */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -147,6 +136,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
             }}
           />
 
+          {/* Bottom text */}
           <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center pb-16 md:pb-20 pointer-events-none">
             <AnimatePresence>
               {isReady && (
