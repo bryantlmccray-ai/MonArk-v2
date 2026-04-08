@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import splashHero1 from "@/assets/splash-hero.jpeg";
 import splashHero2 from "@/assets/splash-hero-2.jpeg";
@@ -18,12 +18,42 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isExiting, setIsExiting] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
   const handleEnter = () => {
     setIsExiting(true);
     sessionStorage.setItem("monark-splash-seen-v9", "true");
     window.setTimeout(onComplete, 800);
   };
+
+  // Preload all images before showing transitions
+  useEffect(() => {
+    let cancelled = false;
+    const promises = heroImages.map(
+      (src) =>
+        new Promise<void>((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve();
+          img.onerror = () => resolve(); // don't block on error
+          img.src = src;
+        })
+    );
+
+    // Show after first image loads (fast), preload rest in background
+    const firstImg = new Image();
+    firstImg.onload = () => {
+      if (!cancelled) setImagesLoaded(true);
+    };
+    firstImg.onerror = () => {
+      if (!cancelled) setImagesLoaded(true);
+    };
+    firstImg.src = heroImages[0];
+
+    // Preload remaining in background
+    Promise.all(promises).catch(() => {});
+
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     if (sessionStorage.getItem("monark-splash-seen-v9")) {
@@ -39,52 +69,60 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
 
   // Rotate images every 5 seconds
   useEffect(() => {
+    if (!imagesLoaded) return;
     const interval = window.setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % heroImages.length);
     }, 5000);
     return () => window.clearInterval(interval);
-  }, []);
-
+  }, [imagesLoaded]);
 
   return (
     <AnimatePresence>
       {!isExiting ? (
         <motion.div
-          className="fixed inset-0 z-[100] overflow-hidden cursor-pointer"
+          className="fixed inset-0 z-[100] overflow-hidden cursor-pointer bg-black"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
           onClick={isReady ? handleEnter : undefined}
         >
-          {/* Rotating hero images with responsive desktop scaling */}
-          {heroImages.map((src, index) => (
-            <motion.div
-              key={src}
-              aria-hidden="true"
-              className="absolute inset-0"
-              initial={{ opacity: 0, x: "8%", scale: 1.08 }}
-              animate={{
-                opacity: currentImage === index ? 1 : 0,
-                x: currentImage === index ? "0%" : "-8%",
-                scale: currentImage === index ? 1 : 1.08,
-              }}
-              transition={{ duration: 2.5, ease: [0.25, 0.1, 0.25, 1] }}
-            >
-              <img
-                src={src}
-                alt=""
-                className="absolute inset-0 h-full w-full object-cover object-[center_20%] md:scale-110 md:blur-2xl"
-                style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.52)" }}
-              />
+          {/* Rotating hero images with smooth crossfade */}
+          {imagesLoaded &&
+            heroImages.map((src, index) => {
+              const isActive = currentImage === index;
+              const isFirst = index === 0 && currentImage === 0;
 
-              <img
-                src={src}
-                alt=""
-                className="absolute inset-0 hidden h-full w-full object-contain px-8 py-8 md:block lg:px-14 lg:py-12"
-                style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.7)" }}
-              />
-            </motion.div>
-          ))}
+              return (
+                <motion.div
+                  key={src}
+                  aria-hidden="true"
+                  className="absolute inset-0"
+                  initial={isFirst ? { opacity: 1, x: "0%", scale: 1 } : { opacity: 0, x: "4%", scale: 1.04 }}
+                  animate={{
+                    opacity: isActive ? 1 : 0,
+                    x: isActive ? "0%" : "-4%",
+                    scale: isActive ? 1 : 1.04,
+                  }}
+                  transition={{ duration: 1.8, ease: [0.25, 0.1, 0.25, 1] }}
+                >
+                  {/* Background blurred fill for mobile */}
+                  <img
+                    src={src}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover object-[center_20%] md:scale-110 md:blur-2xl"
+                    style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.52)" }}
+                  />
+
+                  {/* Contained image for desktop */}
+                  <img
+                    src={src}
+                    alt=""
+                    className="absolute inset-0 hidden h-full w-full object-contain px-8 py-8 md:block lg:px-14 lg:py-12"
+                    style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.7)" }}
+                  />
+                </motion.div>
+              );
+            })}
 
           {/* Uniform dark scrim for text legibility on ALL images */}
           <div className="absolute inset-0 pointer-events-none bg-black/50" />
