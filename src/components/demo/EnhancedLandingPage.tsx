@@ -299,7 +299,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       </section>
 
       {/* ═══════════ RIF SECTION ═══════════ */}
-      <section id="rif-framework" className="py-16 bg-background scroll-mt-4">
+      <section id="rif-framework" className="py-16 bg-background scroll-mt-16">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
             className="text-center mb-10"
