@@ -74,16 +74,15 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     if (!imagesReady) return;
 
     const interval = window.setInterval(() => {
-      setPreviousIndex((prev) => {
-        // previous becomes whatever current was
-        return currentIndex;
-      });
-      setCurrentIndex((prev) => (prev + 1) % heroImages.length);
+      setSlideState((prev) => ({
+        previous: prev.current,
+        current: (prev.current + 1) % heroImages.length,
+      }));
       isFirstRender.current = false;
     }, ROTATION_INTERVAL);
 
     return () => window.clearInterval(interval);
-  }, [imagesReady, currentIndex]);
+  }, [imagesReady]);
 
   const renderImageLayer = (src: string) => (
     <>
