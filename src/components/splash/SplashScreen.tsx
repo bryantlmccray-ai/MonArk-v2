@@ -23,8 +23,7 @@ interface SplashScreenProps {
 export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isExiting, setIsExiting] = useState(false);
   const [isReady, setIsReady] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [previousIndex, setPreviousIndex] = useState(0);
+  const [slideState, setSlideState] = useState({ current: 0, previous: 0 });
   const [imagesReady, setImagesReady] = useState(false);
   const isFirstRender = useRef(true);
 
