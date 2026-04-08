@@ -33,21 +33,71 @@ export const AuthPage: React.FC<{ defaultMode?: 'login' | 'signup' }> = ({ defau
   const [resetEmail, setResetEmail] = useState('');
   const [resetSent, setResetSent] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(null);
   const turnstileRef = useRef<TurnstileInstance>(null);
-  const { user, signIn, signUp, enterDemoMode } = useAuth();
-  const { updateProfile } = useProfile();
+  const { user, signIn } = useAuth();
   const { toast } = useToast();
 
-  // Show welcome toast when user authenticates (driven by React context, not window events)
   React.useEffect(() => {
-    if (user) {
+    if (!user) return;
+
+    if (isLogin) {
       toast({
         title: "Welcome back!",
         description: "You have successfully signed in to MonArk.",
       });
       navigate('/dashboard', { replace: true });
+      return;
     }
-  }, [user, toast, navigate]);
+
+    toast({
+      title: "Account created!",
+      description: "Welcome to MonArk. Let's continue your onboarding.",
+    });
+    navigate('/', { replace: true });
+  }, [user, isLogin, toast, navigate]);
+
+  const clearSignupAttempt = () => {
+    setShowAgeVerification(false);
+    setSignupData(null);
+    setCaptchaToken(null);
+    turnstileRef.current?.reset();
+  };
+
+  const persistAgeVerification = async (userId: string, dateOfBirth: Date) => {
+    const formattedDate = dateOfBirth.toISOString().split('T')[0];
+    const { data: existingProfile, error: fetchError } = await supabase
+      .from('user_profiles')
+      .select('id')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (fetchError) throw fetchError;
+
+    if (existingProfile) {
+      const { error: updateError } = await supabase
+        .from('user_profiles')
+        .update({
+          date_of_birth: formattedDate,
+          age_verified: true,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('user_id', userId);
+
+      if (updateError) throw updateError;
+      return;
+    }
+
+    const { error: insertError } = await supabase
+      .from('user_profiles')
+      .insert({
+        user_id: userId,
+        date_of_birth: formattedDate,
+        age_verified: true,
+      });
+
+    if (insertError) throw insertError;
+  };
 
   const handlePasswordReset = async () => {
     const result = emailSchema.safeParse(resetEmail);
@@ -117,8 +167,7 @@ export const AuthPage: React.FC<{ defaultMode?: 'login' | 'signup' }> = ({ defau
 
     setLoading(true);
     try {
-      // Pass CAPTCHA token if Turnstile is enabled
-      let signUpOptions: Parameters<typeof supabase.auth.signUp>[0] = {
+      const signUpOptions: Parameters<typeof supabase.auth.signUp>[0] = {
         email: signupData.email,
         password: signupData.password,
         options: {
@@ -128,25 +177,41 @@ export const AuthPage: React.FC<{ defaultMode?: 'login' | 'signup' }> = ({ defau
         },
       };
 
-      const { error } = await supabase.auth.signUp(signUpOptions);
-      
+      const { data, error } = await supabase.auth.signUp(signUpOptions);
+
       if (error) {
-        toast({
-          title: "Signup failed",
-          description: "Unable to create your account. Please try again.",
-          variant: "destructive"
-        });
-      } else {
-        await updateProfile({
-          date_of_birth: ageData.dateOfBirth.toISOString().split('T')[0],
-          age_verified: true,
-        });
+        const normalizedMessage = error.message.toLowerCase();
+        let description = "Unable to create your account. Please try again.";
+
+        if (normalizedMessage.includes('rate limit') || normalizedMessage.includes('too many requests')) {
+          description = "Too many signup attempts were made for this address. Please wait a bit or use a different email.";
+        } else if (normalizedMessage.includes('already registered') || normalizedMessage.includes('already been registered')) {
+          description = "An account with this email already exists. Please sign in instead.";
+        } else if (normalizedMessage.includes('invalid')) {
+          description = error.message;
+        }
 
         toast({
-          title: "Account created!",
-          description: "Welcome to MonArk! Please check your email to verify your account.",
+          title: "Signup failed",
+          description,
+          variant: "destructive"
         });
+        return;
       }
+
+      if (data.session && data.user) {
+        try {
+          await persistAgeVerification(data.user.id, ageData.dateOfBirth);
+        } catch (profileError) {
+          console.error('Failed to save age verification:', profileError);
+        }
+
+        clearSignupAttempt();
+        return;
+      }
+
+      clearSignupAttempt();
+      setPendingVerificationEmail(signupData.email);
     } catch (err) {
       toast({
         title: "Error",
@@ -155,10 +220,6 @@ export const AuthPage: React.FC<{ defaultMode?: 'login' | 'signup' }> = ({ defau
       });
     } finally {
       setLoading(false);
-      setShowAgeVerification(false);
-      setSignupData(null);
-      setCaptchaToken(null);
-      turnstileRef.current?.reset();
     }
   };
 
@@ -211,7 +272,6 @@ export const AuthPage: React.FC<{ defaultMode?: 'login' | 'signup' }> = ({ defau
           }
         }
       } else {
-        // Require CAPTCHA for signup if Turnstile is configured
         if (TURNSTILE_SITE_KEY && !captchaToken) {
           toast({
             title: "Verification required",
@@ -232,6 +292,72 @@ export const AuthPage: React.FC<{ defaultMode?: 'login' | 'signup' }> = ({ defau
       setLoading(false);
     }
   };
+
+  if (pendingVerificationEmail) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6 relative overflow-hidden bg-background">
+        <div
+          className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full pointer-events-none opacity-40"
+          style={{ background: "radial-gradient(circle, hsl(var(--primary) / 0.08) 0%, transparent 70%)" }}
+        />
+
+        <motion.div
+          className="w-full max-w-sm space-y-6 relative z-10"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="text-center">
+            <MonArkLogo size="xl" rotateOnLoad={true} className="mb-8" />
+          </div>
+
+          <div className="bg-card border border-border/60 rounded-2xl p-6 space-y-5 shadow-[var(--shadow-elevated)] text-center">
+            <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto bg-primary/10 text-primary text-xl font-semibold">
+              ✓
+            </div>
+            <div className="space-y-2">
+              <h1 className="text-2xl font-serif font-bold tracking-tight text-foreground">Check your email</h1>
+              <p className="font-body text-sm leading-relaxed text-muted-foreground">
+                We sent a verification link to <span className="font-medium text-foreground">{pendingVerificationEmail}</span>.
+              </p>
+              <p className="font-body text-sm leading-relaxed text-muted-foreground">
+                Once you confirm your email, return to MonArk and you'll continue onboarding from there.
+              </p>
+            </div>
+
+            <div className="space-y-3 pt-1">
+              <Button
+                className="w-full rounded-xl"
+                onClick={() => {
+                  setPendingVerificationEmail(null);
+                  setIsLogin(true);
+                  setPassword('');
+                  setResetEmail(email || pendingVerificationEmail);
+                  setEmail(email || pendingVerificationEmail);
+                }}
+              >
+                Back to sign in
+              </Button>
+              <Button
+                variant="ghost"
+                className="w-full rounded-xl text-muted-foreground"
+                onClick={() => {
+                  setPendingVerificationEmail(null);
+                  setIsLogin(false);
+                  setEmail('');
+                  setPassword('');
+                  setName('');
+                  setAgreedToTerms(false);
+                }}
+              >
+                Use a different email
+              </Button>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   if (showAgeVerification) {
     return <AgeVerificationStep onNext={handleAgeVerification} />;
