@@ -109,6 +109,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
             </SidebarGroupContent>
           </SidebarGroup>
         )}
+      </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border p-3">
         <SidebarMenu>
           <SidebarMenuItem>
