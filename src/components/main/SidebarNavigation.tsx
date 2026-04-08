@@ -95,10 +95,11 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ activeTab,
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     onClick={onUpgrade}
-                    className="w-full justify-start text-[#D9D0C5] hover:bg-primary/10 font-body font-medium transition-all duration-300 rounded-xl"
+                    className="w-full justify-start font-body font-medium transition-all duration-300 rounded-[40px] bg-[#A08C6E] text-[#F0EBE3] hover:bg-[#A08C6E]/90 tracking-[0.12em] uppercase text-xs"
+                    style={{ fontWeight: 500 }}
                   >
-                    <Crown className="h-5 w-5 stroke-[2px] text-[#A08C6E]" />
-                    <span className="tracking-wide">Join the Inner Ark</span>
+                    <Crown className="h-5 w-5 stroke-[2px] text-[#F0EBE3]" />
+                    <span>Join the Inner Ark</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>

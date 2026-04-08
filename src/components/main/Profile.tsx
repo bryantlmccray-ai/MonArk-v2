@@ -870,41 +870,59 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
               )}
             </motion.div>
 
-            {/* MonArk Moments */}
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              custom={7}
-              variants={fadeUp}
-              className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
-            >
-              <div className="flex items-center space-x-2 mb-2">
-                <TrendingUp className="h-5 w-5 text-primary" />
-                <h3 className="text-foreground font-medium text-lg">MonArk Moments</h3>
-              </div>
-              <p className="text-muted-foreground text-sm mb-4">Get personalized monthly insights about your dating journey</p>
-              
-              <div className="space-y-3">
-                {analyticsEnabled ? (
-                  <>
-                    <div className="flex items-center justify-between p-3 bg-primary/10 rounded-xl border border-primary/20">
-                      <div className="flex items-center space-x-2">
-                        <Calendar className="h-4 w-4 text-primary" />
-                        <span className="text-foreground text-sm">Analytics Enabled</span>
+            {/* MonArk Moments — gated behind at least 1 completed date */}
+            {(profile as any)?.dates_completed > 0 || analyticsEnabled ? (
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                custom={7}
+                variants={fadeUp}
+                className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+              >
+                <div className="flex items-center space-x-2 mb-2">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  <h3 className="text-foreground font-medium text-lg">MonArk Moments</h3>
+                </div>
+                <p className="text-muted-foreground text-sm mb-4">Get personalized monthly insights about your dating journey</p>
+                
+                <div className="space-y-3">
+                  {analyticsEnabled ? (
+                    <>
+                      <div className="flex items-center justify-between p-3 bg-primary/10 rounded-xl border border-primary/20">
+                        <div className="flex items-center space-x-2">
+                          <Calendar className="h-4 w-4 text-primary" />
+                          <span className="text-foreground text-sm">Analytics Enabled</span>
+                        </div>
+                        <button onClick={() => setShowAnalyticsModal(true)} className="text-xs text-primary hover:text-primary/80 transition-colors" disabled={isSigningOut}>Manage</button>
                       </div>
-                      <button onClick={() => setShowAnalyticsModal(true)} className="text-xs text-primary hover:text-primary/80 transition-colors" disabled={isSigningOut}>Manage</button>
-                    </div>
-                    <button onClick={() => setShowRecapModal(true)} className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 hover:shadow-warm-glow" disabled={isSigningOut}>
-                      View This Month's Recap
+                      <button onClick={() => setShowRecapModal(true)} className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:bg-primary/90 hover:shadow-warm-glow" disabled={isSigningOut}>
+                        View This Month's Recap
+                      </button>
+                    </>
+                  ) : (
+                    <button onClick={() => setShowAnalyticsModal(true)} className="w-full py-3 bg-transparent border border-primary text-primary rounded-xl transition-colors hover:bg-primary/10" disabled={isSigningOut}>
+                      Enable MonArk Moments
                     </button>
-                  </>
-                ) : (
-                  <button onClick={() => setShowAnalyticsModal(true)} className="w-full py-3 bg-transparent border border-primary text-primary rounded-xl transition-colors hover:bg-primary/10" disabled={isSigningOut}>
-                    Enable MonArk Moments
-                  </button>
-                )}
-              </div>
-            </motion.div>
+                  )}
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                custom={7}
+                variants={fadeUp}
+                className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+              >
+                <div className="flex items-center space-x-2 mb-2">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  <h3 className="text-foreground font-medium text-lg">MonArk Moments</h3>
+                </div>
+                <p className="text-muted-foreground text-sm">
+                  Complete your first introduction to unlock personalized monthly insights about your dating journey.
+                </p>
+              </motion.div>
+            )}
 
             {/* Trust Score */}
             <motion.div

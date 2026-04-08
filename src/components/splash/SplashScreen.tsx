@@ -85,7 +85,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           ))}
 
           {/* Uniform dark scrim for text legibility on ALL images */}
-          <div className="absolute inset-0 pointer-events-none bg-black/40" />
+          <div className="absolute inset-0 pointer-events-none bg-black/50" />
 
           {/* Bottom gradient for extra text legibility */}
           <div
@@ -109,7 +109,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 >
                   <p
                     className="font-body text-sm tracking-[0.22em] uppercase"
-                    style={{ color: "rgba(255,255,255,0.85)", fontWeight: 300 }}
+                    style={{ color: "rgba(255,255,255,0.95)", fontWeight: 400 }}
                   >
                     The art of intentional dating
                   </p>

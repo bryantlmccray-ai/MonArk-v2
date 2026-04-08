@@ -360,7 +360,7 @@
 
 /* Reduced motion: ensure content is always visible */
 @media (prefers-reduced-motion: reduce) {
-  [data-framer], .motion-element, [style*="opacity: 0"], [style*="translateY"] {
+  * {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
