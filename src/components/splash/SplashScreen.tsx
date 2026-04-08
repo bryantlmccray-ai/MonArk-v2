@@ -1,14 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import splashHero1 from "@/assets/splash-hero.jpeg";
-import splashHero2 from "@/assets/splash-hero-2.jpeg";
-import splashHero4 from "@/assets/splash-hero-4.jpeg";
-import splashHero5 from "@/assets/splash-hero-5.jpeg";
 import splashHero6 from "@/assets/splash-hero-6.jpeg";
 import splashHero7 from "@/assets/splash-hero-7.jpeg";
-import splashHero8 from "@/assets/splash-hero-8.jpeg";
 
-const heroImages = [splashHero6, splashHero7, splashHero1, splashHero2, splashHero4, splashHero5, splashHero8];
+const heroImages = [splashHero6, splashHero7, splashHero1];
 const ROTATION_INTERVAL = 4500;
 
 interface SplashScreenProps {
