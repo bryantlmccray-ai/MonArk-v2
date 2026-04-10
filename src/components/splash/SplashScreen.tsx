@@ -6,7 +6,7 @@ import splashHero7 from "@/assets/splash-hero-7.jpeg";
 
 const heroImages = [splashHero6, splashHero7, splashHero1];
 const ROTATION_INTERVAL = 5600;
-const DISSOLVE_DURATION = 2.5;
+const DISSOLVE_DURATION = 2;
 const INITIAL_REVEAL_DURATION = 1.2;
 
 interface SplashScreenProps {
