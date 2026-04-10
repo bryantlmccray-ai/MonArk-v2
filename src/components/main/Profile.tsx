@@ -1,7 +1,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { PhotoLightbox } from '@/components/ui/PhotoLightbox';
-import { Settings, ShieldCheck, Edit, LogOut, MapPin, TrendingUp, Calendar, Heart, Briefcase, GraduationCap, Ruler, Dumbbell, Cigarette, Wine, Sparkles, Camera, Palette, Clock, DollarSign, Eye, User, Users } from 'lucide-react';
+import { Settings, ShieldCheck, Edit, LogOut, MapPin, TrendingUp, Calendar, Heart, Briefcase, GraduationCap, Ruler, Dumbbell, Cigarette, Wine, Sparkles, Camera, Palette, Clock, DollarSign, Eye, User, Users, Brain, ArrowRight } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ProfileCreation } from '../profile/ProfileCreation';
 import { LocationConsentModal } from '../location/LocationConsentModal';
@@ -18,9 +18,10 @@ import { motion } from 'framer-motion';
 interface ProfileProps {
   onOpenTrustScore: () => void;
   onOpenSettings: () => void;
+  onNavigate?: (tab: string) => void;
 }
 
-export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettings }) => {
+export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettings, onNavigate }) => {
   const [showProfileCreation, setShowProfileCreation] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
