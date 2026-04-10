@@ -316,10 +316,21 @@ interface Archetype {
 }
 
 function determineArchetype(scores: RIFScores): Archetype {
-  const avg = (scores.intent_clarity + scores.emotional_readiness + scores.pacing_preferences + scores.boundary_respect + scores.post_date_alignment) / 5;
+  // Scores are 0-100; convert to 0-10 scale for avg thresholds
+  const avg = (scores.intent_clarity + scores.emotional_readiness + scores.pacing_preferences + scores.boundary_respect + scores.post_date_alignment) / 5 / 10;
 
-  // "The Hopeful Romantic" — high emotional readiness, lower pacing
-  if (scores.emotional_readiness >= 70 && scores.pacing_preferences <= 45) {
+  // "The Intentional Partner" — avg 8–10 (high across the board)
+  if (avg >= 8) {
+    return {
+      label: "The Intentional Partner",
+      tagline: "You date with clarity, depth, and purpose.",
+      narrative:
+        "You know what you want, you communicate it, and you show up with emotional availability. Your boundaries are clear, your follow-through is strong, and you bring a rare combination of openness and self-awareness to every connection. MonArk will match you with people who operate at the same level of intentionality.",
+    };
+  }
+
+  // "The Hopeful Romantic" — avg 6–7.9, high emotional readiness, lower pacing
+  if (avg >= 6 && scores.emotional_readiness >= 70 && scores.pacing_preferences <= 55) {
     return {
       label: "The Hopeful Romantic",
       tagline: "You lead with your heart — and that's a strength.",
@@ -338,22 +349,21 @@ function determineArchetype(scores: RIFScores): Archetype {
     };
   }
 
-  // "The Intentional Partner" — high across the board (avg 80+)
-  if (avg >= 80) {
+  // Fallback for moderate profiles that don't match specific archetypes
+  if (avg >= 6) {
     return {
-      label: "The Intentional Partner",
-      tagline: "You date with clarity, depth, and purpose.",
+      label: "The Hopeful Romantic",
+      tagline: "You lead with your heart — and that's a strength.",
       narrative:
-        "You know what you want, you communicate it, and you show up with emotional availability. Your boundaries are clear, your follow-through is strong, and you bring a rare combination of openness and self-awareness to every connection. MonArk will match you with people who operate at the same level of intentionality.",
+        "You show up with emotional depth and genuine openness. You prefer to let things unfold at a pace that honors the connection rather than rushing. Your ideal partner meets your vulnerability with presence, creating space for something real to grow.",
     };
   }
 
-  // Default / moderate scores
   return {
-    label: "The Intentional Partner",
-    tagline: "You're building something meaningful.",
+    label: "The Guarded Opener",
+    tagline: "You're learning to open — on your own terms.",
     narrative:
-      "Your profile shows a thoughtful approach to dating — balancing openness with self-awareness. You value genuine connection and are willing to invest in the process. MonArk will use these insights to find people who complement how you relate.",
+      "You approach connection thoughtfully, sometimes cautiously. You're aware of your boundaries even if articulating them is still a work in progress. You thrive with a partner who creates emotional safety without forcing depth before you're ready — and who respects the pace of your unfolding.",
   };
 }
 
