@@ -20,12 +20,8 @@ const ImageLayer = ({ src }: { src: string }) => (
       src={src}
       alt=""
       decoding="async"
-      className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
+      className="absolute inset-0 h-full w-full object-cover object-[center_20%] md:scale-110 md:blur-2xl"
       style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.55)" }}
-    />
-    <div
-      className="absolute inset-0 hidden md:block"
-      style={{ backdropFilter: "blur(28px)", WebkitBackdropFilter: "blur(28px)" }}
     />
     {/* Foreground — sharp portrait, desktop only */}
     <img
