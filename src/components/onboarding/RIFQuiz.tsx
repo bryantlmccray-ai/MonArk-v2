@@ -553,6 +553,15 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
 
   // ── CELEBRATION ─────────────────────────────
   if (phase === "celebration" && scores) {
+    const archetype = determineArchetype(scores);
+    const scoreEntries: { dim: Dimension; value: number }[] = [
+      { dim: "IC", value: scores.intent_clarity },
+      { dim: "ER", value: scores.emotional_readiness },
+      { dim: "PP", value: scores.pacing_preferences },
+      { dim: "BR", value: scores.boundary_respect },
+      { dim: "PA", value: scores.post_date_alignment },
+    ];
+
     return (
       <motion.div
         initial={{ opacity: 0 }}
@@ -560,10 +569,10 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
         className="min-h-screen bg-background flex items-center justify-center p-6 relative overflow-hidden"
       >
         {/* Floating sparkle particles */}
-        {[...Array(12)].map((_, i) => (
+        {[...Array(16)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute text-primary/20"
+            className="absolute text-primary/15"
             initial={{
               x: Math.random() * 400 - 200,
               y: Math.random() * 400 - 200,
@@ -571,25 +580,25 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
               scale: 0,
             }}
             animate={{
-              y: [null, -60 - Math.random() * 120],
-              opacity: [0, 0.6, 0],
-              scale: [0, 1.2, 0.4],
+              y: [null, -80 - Math.random() * 140],
+              opacity: [0, 0.5, 0],
+              scale: [0, 1.2, 0.3],
             }}
             transition={{
-              duration: 2.5 + Math.random() * 1.5,
-              delay: i * 0.15,
+              duration: 3 + Math.random() * 2,
+              delay: i * 0.12,
               ease: "easeOut",
             }}
             style={{
-              left: `${15 + Math.random() * 70}%`,
-              top: `${20 + Math.random() * 60}%`,
+              left: `${10 + Math.random() * 80}%`,
+              top: `${15 + Math.random() * 70}%`,
             }}
           >
             <Sparkles className="w-4 h-4" />
           </motion.div>
         ))}
 
-        <div className="text-center max-w-[480px] w-full relative z-10">
+        <div className="max-w-[520px] w-full relative z-10">
           {/* Animated icon */}
           <motion.div
             initial={{ scale: 0, rotate: -30 }}
@@ -600,42 +609,112 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
             <Heart className="w-9 h-9 text-primary" />
           </motion.div>
 
-          {/* Headline */}
+          {/* Archetype label */}
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="font-body text-[11px] tracking-[0.2em] text-primary mb-3 uppercase"
+            className="font-body text-[11px] tracking-[0.2em] text-primary mb-2 uppercase text-center"
           >
-            Assessment Complete
+            You are
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.65 }}
-            className="font-serif text-4xl font-normal text-foreground leading-[1.2] mb-4"
+            className="font-serif text-4xl font-normal text-foreground leading-[1.2] mb-2 text-center"
           >
-            Your relational profile<br />is ready.
+            {archetype.label}
           </motion.h1>
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.85 }}
-            className="text-[15px] text-foreground/70 leading-[1.7] mb-10"
+            className="text-[15px] text-foreground/60 leading-[1.7] mb-8 text-center italic font-serif"
           >
-            MonArk now understands how you relate — and will use this to find connections that truly align.
+            {archetype.tagline}
           </motion.p>
 
-          {/* Partner complement insight */}
+          {/* Narrative insight card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.1 }}
-            className="bg-card rounded-2xl border border-border p-6 text-left mb-10 shadow-sm"
+            transition={{ delay: 1.05 }}
+            className="bg-card rounded-2xl border border-border p-6 text-left mb-6 shadow-sm"
           >
             <div className="flex items-center gap-2 mb-3">
               <Sparkles className="w-4 h-4 text-primary" />
               <span className="text-[11px] tracking-[0.15em] text-primary uppercase font-medium">
+                What this means for you
+              </span>
+            </div>
+            <p className="text-[14px] text-foreground/80 leading-[1.8]">
+              {archetype.narrative}
+            </p>
+          </motion.div>
+
+          {/* Staggered dimension scores */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.3 }}
+            className="bg-card rounded-2xl border border-border p-6 text-left mb-8 shadow-sm"
+          >
+            <p className="text-[11px] tracking-[0.15em] text-primary uppercase font-medium mb-5">
+              Your Dimensions
+            </p>
+            <div className="space-y-5">
+              {scoreEntries.map(({ dim, value }, idx) => {
+                const meta = DIMENSION_META[dim];
+                return (
+                  <motion.div
+                    key={dim}
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 1.5 + idx * 0.15, duration: 0.4 }}
+                  >
+                    <div className="flex justify-between items-baseline mb-1.5">
+                      <span className="text-[13px] font-medium text-foreground tracking-[0.03em]">
+                        {meta.label}
+                      </span>
+                      <motion.span
+                        className={`font-serif text-xl font-normal ${meta.colorClass}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1.7 + idx * 0.15 }}
+                      >
+                        {value}
+                      </motion.span>
+                    </div>
+                    <p className="text-xs text-foreground/50 mb-2">{meta.description}</p>
+                    <div className="h-[3px] bg-secondary rounded overflow-hidden">
+                      <motion.div
+                        className={`h-full rounded ${DIM_BAR_COLORS[dim]}`}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${value}%` }}
+                        transition={{
+                          duration: 0.9,
+                          delay: 1.6 + idx * 0.15,
+                          ease: [0.25, 0.46, 0.45, 0.94],
+                        }}
+                      />
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </motion.div>
+
+          {/* Partner complement */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 2.5 }}
+            className="bg-card rounded-2xl border border-border p-6 text-left mb-8 shadow-sm"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <Heart className="w-4 h-4 text-accent" />
+              <span className="text-[11px] tracking-[0.15em] text-accent uppercase font-medium">
                 Your Ideal Partner
               </span>
             </div>
@@ -645,16 +724,23 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
           </motion.div>
 
           {/* CTA */}
-          <motion.button
+          <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.4 }}
-            onClick={() => setPhase("results")}
-            className="bg-primary text-primary-foreground border-none rounded-full px-8 py-3.5 text-xs font-medium tracking-[0.12em] cursor-pointer transition-opacity hover:opacity-90 active:scale-[0.97] inline-flex items-center gap-2"
+            transition={{ delay: 2.8 }}
+            className="text-center"
           >
-            VIEW YOUR DIMENSIONS
-            <ArrowRight className="w-3.5 h-3.5" />
-          </motion.button>
+            <p className="text-xs text-foreground/50 tracking-[0.05em] mb-4">
+              Your profile is live. MonArk will begin curating your first connections.
+            </p>
+            <button
+              onClick={() => onComplete(scores)}
+              className="bg-primary text-primary-foreground border-none rounded-full px-8 py-3.5 text-xs font-medium tracking-[0.12em] cursor-pointer transition-opacity hover:opacity-90 active:scale-[0.97] inline-flex items-center gap-2"
+            >
+              CONTINUE TO PROFILE
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </motion.div>
         </div>
       </motion.div>
     );
