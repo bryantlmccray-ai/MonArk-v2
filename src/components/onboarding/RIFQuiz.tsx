@@ -307,12 +307,61 @@ const DIM_BAR_COLORS: Record<Dimension, string> = {
   PA: "bg-muted-foreground",
 };
 
+// ── ARCHETYPE ENGINE ─────────────────────────
+
+interface Archetype {
+  label: string;
+  tagline: string;
+  narrative: string;
+}
+
+function determineArchetype(scores: RIFScores): Archetype {
+  const avg = (scores.intent_clarity + scores.emotional_readiness + scores.pacing_preferences + scores.boundary_respect + scores.post_date_alignment) / 5;
+
+  // "The Hopeful Romantic" — high emotional readiness, lower pacing
+  if (scores.emotional_readiness >= 70 && scores.pacing_preferences <= 45) {
+    return {
+      label: "The Hopeful Romantic",
+      tagline: "You lead with your heart — and that's a strength.",
+      narrative:
+        "You show up with emotional depth and genuine openness. You prefer to let things unfold at a pace that honors the connection rather than rushing. Your ideal partner meets your vulnerability with presence, creating space for something real to grow.",
+    };
+  }
+
+  // "The Guarded Opener" — lower boundary respect or emotional readiness
+  if (scores.boundary_respect <= 50 || scores.emotional_readiness <= 40) {
+    return {
+      label: "The Guarded Opener",
+      tagline: "You're learning to open — on your own terms.",
+      narrative:
+        "You approach connection thoughtfully, sometimes cautiously. You're aware of your boundaries even if articulating them is still a work in progress. You thrive with a partner who creates emotional safety without forcing depth before you're ready — and who respects the pace of your unfolding.",
+    };
+  }
+
+  // "The Intentional Partner" — high across the board (avg 80+)
+  if (avg >= 80) {
+    return {
+      label: "The Intentional Partner",
+      tagline: "You date with clarity, depth, and purpose.",
+      narrative:
+        "You know what you want, you communicate it, and you show up with emotional availability. Your boundaries are clear, your follow-through is strong, and you bring a rare combination of openness and self-awareness to every connection. MonArk will match you with people who operate at the same level of intentionality.",
+    };
+  }
+
+  // Default / moderate scores
+  return {
+    label: "The Intentional Partner",
+    tagline: "You're building something meaningful.",
+    narrative:
+      "Your profile shows a thoughtful approach to dating — balancing openness with self-awareness. You value genuine connection and are willing to invest in the process. MonArk will use these insights to find people who complement how you relate.",
+  };
+}
+
 // ── PARTNER COMPLEMENT GENERATOR ─────────────
 
 function generatePartnerComplement(scores: RIFScores): string {
   const lines: string[] = [];
 
-  // Lead with their strongest trait → what partner complements it
   if (scores.intent_clarity >= 70) {
     lines.push("You thrive with someone who values open communication and is ready to build something intentional.");
   } else if (scores.intent_clarity >= 40) {
@@ -321,26 +370,22 @@ function generatePartnerComplement(scores: RIFScores): string {
     lines.push("You're best matched with someone who enjoys discovering connection organically, without pressure to define things early.");
   }
 
-  // Emotional readiness complement
   if (scores.emotional_readiness >= 70) {
     lines.push("Your emotional depth pairs well with a partner who can meet vulnerability with presence — not someone who shuts down when things get real.");
   } else if (scores.emotional_readiness <= 40) {
     lines.push("Look for someone who creates emotional safety without forcing depth before you're ready.");
   }
 
-  // Pacing
   if (scores.pacing_preferences >= 70) {
     lines.push("Avoid partners who are emotionally unavailable or prefer casual, undefined connections.");
   } else if (scores.pacing_preferences <= 35) {
     lines.push("A partner who respects your pace and doesn't rush milestones will bring out your best.");
   }
 
-  // Boundary respect
   if (scores.boundary_respect >= 75) {
     lines.push("Your strong sense of boundaries means you'll flourish with someone who communicates directly and respects limits without taking them personally.");
   }
 
-  // Pick 2-3 most relevant lines
   return lines.slice(0, 3).join(" ");
 }
 
@@ -357,7 +402,7 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<RIFAnswers>({});
   const [selected, setSelected] = useState<number | null>(null);
-  const [phase, setPhase] = useState<"intro" | "quiz" | "saving" | "celebration" | "results">("intro");
+  const [phase, setPhase] = useState<"intro" | "quiz" | "saving" | "celebration">("intro");
   const [scores, setScores] = useState<RIFScores | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -508,115 +553,7 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
 
   // ── CELEBRATION ─────────────────────────────
   if (phase === "celebration" && scores) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="min-h-screen bg-background flex items-center justify-center p-6 relative overflow-hidden"
-      >
-        {/* Floating sparkle particles */}
-        {[...Array(12)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute text-primary/20"
-            initial={{
-              x: Math.random() * 400 - 200,
-              y: Math.random() * 400 - 200,
-              opacity: 0,
-              scale: 0,
-            }}
-            animate={{
-              y: [null, -60 - Math.random() * 120],
-              opacity: [0, 0.6, 0],
-              scale: [0, 1.2, 0.4],
-            }}
-            transition={{
-              duration: 2.5 + Math.random() * 1.5,
-              delay: i * 0.15,
-              ease: "easeOut",
-            }}
-            style={{
-              left: `${15 + Math.random() * 70}%`,
-              top: `${20 + Math.random() * 60}%`,
-            }}
-          >
-            <Sparkles className="w-4 h-4" />
-          </motion.div>
-        ))}
-
-        <div className="text-center max-w-[480px] w-full relative z-10">
-          {/* Animated icon */}
-          <motion.div
-            initial={{ scale: 0, rotate: -30 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 180, damping: 14, delay: 0.2 }}
-            className="mx-auto w-20 h-20 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mb-8"
-          >
-            <Heart className="w-9 h-9 text-primary" />
-          </motion.div>
-
-          {/* Headline */}
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="font-body text-[11px] tracking-[0.2em] text-primary mb-3 uppercase"
-          >
-            Assessment Complete
-          </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.65 }}
-            className="font-serif text-4xl font-normal text-foreground leading-[1.2] mb-4"
-          >
-            Your relational profile<br />is ready.
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.85 }}
-            className="text-[15px] text-foreground/70 leading-[1.7] mb-10"
-          >
-            MonArk now understands how you relate — and will use this to find connections that truly align.
-          </motion.p>
-
-          {/* Partner complement insight */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.1 }}
-            className="bg-card rounded-2xl border border-border p-6 text-left mb-10 shadow-sm"
-          >
-            <div className="flex items-center gap-2 mb-3">
-              <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-[11px] tracking-[0.15em] text-primary uppercase font-medium">
-                Your Ideal Partner
-              </span>
-            </div>
-            <p className="text-[14px] text-foreground/80 leading-[1.75] italic font-serif">
-              "{generatePartnerComplement(scores)}"
-            </p>
-          </motion.div>
-
-          {/* CTA */}
-          <motion.button
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.4 }}
-            onClick={() => setPhase("results")}
-            className="bg-primary text-primary-foreground border-none rounded-full px-8 py-3.5 text-xs font-medium tracking-[0.12em] cursor-pointer transition-opacity hover:opacity-90 active:scale-[0.97] inline-flex items-center gap-2"
-          >
-            VIEW YOUR DIMENSIONS
-            <ArrowRight className="w-3.5 h-3.5" />
-          </motion.button>
-        </div>
-      </motion.div>
-    );
-  }
-
-  // ── RESULTS ────────────────────────────────
-  if (phase === "results" && scores) {
+    const archetype = determineArchetype(scores);
     const scoreEntries: { dim: Dimension; value: number }[] = [
       { dim: "IC", value: scores.intent_clarity },
       { dim: "ER", value: scores.emotional_readiness },
@@ -629,68 +566,187 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="min-h-screen bg-background flex items-center justify-center p-6"
+        className="min-h-screen bg-background flex items-center justify-center p-6 relative overflow-hidden"
       >
-        <div className="bg-card rounded-2xl p-10 max-w-[560px] w-full shadow-sm">
-          <p className="font-serif text-lg tracking-[0.15em] text-primary border-b border-border pb-3 mb-6 inline-block">
-            MA
-          </p>
-          <p className="font-body text-[11px] tracking-[0.2em] text-primary mb-3 uppercase">
-            Your RIF Profile
-          </p>
-          <h2 className="font-serif text-[28px] font-normal text-foreground mb-4">
-            Your relational landscape.
-          </h2>
-          <p className="text-[15px] text-foreground/85 leading-[1.7] mb-8">
-            This is how you show up. These dimensions guide how MonArk curates
-            connections that actually align with who you are right now.
-          </p>
-
-          <div className="space-y-7">
-            {scoreEntries.map(({ dim, value }) => {
-              const meta = DIMENSION_META[dim];
-              return (
-                <motion.div
-                  key={dim}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: DIMENSION_ORDER.indexOf(dim) * 0.1 + 0.2 }}
-                >
-                  <div className="flex justify-between items-baseline mb-1">
-                    <span className="text-[13px] font-medium text-foreground tracking-[0.05em]">
-                      {meta.label}
-                    </span>
-                    <span className={`font-serif text-[22px] font-normal ${meta.colorClass}`}>
-                      {value}
-                    </span>
-                  </div>
-                  <p className="text-xs text-foreground/55 mb-2">{meta.description}</p>
-                  <div className="h-[3px] bg-secondary rounded overflow-hidden">
-                    <motion.div
-                      className={`h-full rounded ${DIM_BAR_COLORS[dim]}`}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${value}%` }}
-                      transition={{ duration: 0.8, delay: DIMENSION_ORDER.indexOf(dim) * 0.1 + 0.3 }}
-                    />
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          <p className="text-xs text-foreground/50 tracking-[0.05em] mt-8 mb-6">
-            Your profile is live. MonArk will begin curating your first connections.
-          </p>
-          <button
-            onClick={() => onComplete(scores)}
-            className="bg-primary text-primary-foreground border-none rounded-full px-8 py-3.5 text-xs font-medium tracking-[0.12em] cursor-pointer transition-opacity hover:opacity-90 active:scale-[0.97]"
+        {/* Floating sparkle particles */}
+        {[...Array(16)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute text-primary/15"
+            initial={{
+              x: Math.random() * 400 - 200,
+              y: Math.random() * 400 - 200,
+              opacity: 0,
+              scale: 0,
+            }}
+            animate={{
+              y: [null, -80 - Math.random() * 140],
+              opacity: [0, 0.5, 0],
+              scale: [0, 1.2, 0.3],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              delay: i * 0.12,
+              ease: "easeOut",
+            }}
+            style={{
+              left: `${10 + Math.random() * 80}%`,
+              top: `${15 + Math.random() * 70}%`,
+            }}
           >
-            CONTINUE TO PROFILE
-          </button>
+            <Sparkles className="w-4 h-4" />
+          </motion.div>
+        ))}
+
+        <div className="max-w-[520px] w-full relative z-10">
+          {/* Animated icon */}
+          <motion.div
+            initial={{ scale: 0, rotate: -30 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 180, damping: 14, delay: 0.2 }}
+            className="mx-auto w-20 h-20 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mb-8"
+          >
+            <Heart className="w-9 h-9 text-primary" />
+          </motion.div>
+
+          {/* Archetype label */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="font-body text-[11px] tracking-[0.2em] text-primary mb-2 uppercase text-center"
+          >
+            You are
+          </motion.p>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.65 }}
+            className="font-serif text-4xl font-normal text-foreground leading-[1.2] mb-2 text-center"
+          >
+            {archetype.label}
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.85 }}
+            className="text-[15px] text-foreground/60 leading-[1.7] mb-8 text-center italic font-serif"
+          >
+            {archetype.tagline}
+          </motion.p>
+
+          {/* Narrative insight card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.05 }}
+            className="bg-card rounded-2xl border border-border p-6 text-left mb-6 shadow-sm"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-[11px] tracking-[0.15em] text-primary uppercase font-medium">
+                What this means for you
+              </span>
+            </div>
+            <p className="text-[14px] text-foreground/80 leading-[1.8]">
+              {archetype.narrative}
+            </p>
+          </motion.div>
+
+          {/* Staggered dimension scores */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.3 }}
+            className="bg-card rounded-2xl border border-border p-6 text-left mb-8 shadow-sm"
+          >
+            <p className="text-[11px] tracking-[0.15em] text-primary uppercase font-medium mb-5">
+              Your Dimensions
+            </p>
+            <div className="space-y-5">
+              {scoreEntries.map(({ dim, value }, idx) => {
+                const meta = DIMENSION_META[dim];
+                return (
+                  <motion.div
+                    key={dim}
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 1.5 + idx * 0.15, duration: 0.4 }}
+                  >
+                    <div className="flex justify-between items-baseline mb-1.5">
+                      <span className="text-[13px] font-medium text-foreground tracking-[0.03em]">
+                        {meta.label}
+                      </span>
+                      <motion.span
+                        className={`font-serif text-xl font-normal ${meta.colorClass}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1.7 + idx * 0.15 }}
+                      >
+                        {value}
+                      </motion.span>
+                    </div>
+                    <p className="text-xs text-foreground/50 mb-2">{meta.description}</p>
+                    <div className="h-[3px] bg-secondary rounded overflow-hidden">
+                      <motion.div
+                        className={`h-full rounded ${DIM_BAR_COLORS[dim]}`}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${value}%` }}
+                        transition={{
+                          duration: 0.9,
+                          delay: 1.6 + idx * 0.15,
+                          ease: [0.25, 0.46, 0.45, 0.94],
+                        }}
+                      />
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </motion.div>
+
+          {/* Partner complement */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 2.5 }}
+            className="bg-card rounded-2xl border border-border p-6 text-left mb-8 shadow-sm"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <Heart className="w-4 h-4 text-accent" />
+              <span className="text-[11px] tracking-[0.15em] text-accent uppercase font-medium">
+                Your Ideal Partner
+              </span>
+            </div>
+            <p className="text-[14px] text-foreground/80 leading-[1.75] italic font-serif">
+              "{generatePartnerComplement(scores)}"
+            </p>
+          </motion.div>
+
+          {/* CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 2.8 }}
+            className="text-center"
+          >
+            <p className="text-xs text-foreground/50 tracking-[0.05em] mb-4">
+              Your profile is live. MonArk will begin curating your first connections.
+            </p>
+            <button
+              onClick={() => onComplete(scores)}
+              className="bg-primary text-primary-foreground border-none rounded-full px-8 py-3.5 text-xs font-medium tracking-[0.12em] cursor-pointer transition-opacity hover:opacity-90 active:scale-[0.97] inline-flex items-center gap-2"
+            >
+              CONTINUE TO PROFILE
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </motion.div>
         </div>
       </motion.div>
     );
   }
+
+  // Results phase removed — celebration now includes dimensions inline
 
   // ── QUIZ ───────────────────────────────────
   return (
