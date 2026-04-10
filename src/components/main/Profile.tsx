@@ -1,7 +1,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { PhotoLightbox } from '@/components/ui/PhotoLightbox';
-import { Settings, ShieldCheck, Edit, LogOut, MapPin, TrendingUp, Calendar, Heart, Briefcase, GraduationCap, Ruler, Dumbbell, Cigarette, Wine, Sparkles, Camera, Palette, Clock, DollarSign, Eye, User, Users } from 'lucide-react';
+import { Settings, ShieldCheck, Edit, LogOut, MapPin, TrendingUp, Calendar, Heart, Briefcase, GraduationCap, Ruler, Dumbbell, Cigarette, Wine, Sparkles, Camera, Palette, Clock, DollarSign, Eye, User, Users, Brain, ArrowRight } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ProfileCreation } from '../profile/ProfileCreation';
 import { LocationConsentModal } from '../location/LocationConsentModal';
@@ -18,9 +18,10 @@ import { motion } from 'framer-motion';
 interface ProfileProps {
   onOpenTrustScore: () => void;
   onOpenSettings: () => void;
+  onNavigate?: (tab: string) => void;
 }
 
-export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettings }) => {
+export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettings, onNavigate }) => {
   const [showProfileCreation, setShowProfileCreation] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
@@ -921,6 +922,39 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
                 <p className="text-muted-foreground text-sm">
                   Complete your first introduction to unlock personalized monthly insights about your dating journey.
                 </p>
+              </motion.div>
+            )}
+
+            {/* Relational Profile (RIF) — Entry Point */}
+            {onNavigate && (
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                custom={7.5}
+                variants={fadeUp}
+                className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <Brain className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-foreground font-serif text-lg">Relational Profile</h3>
+                      <p className="text-muted-foreground text-xs font-body mt-0.5">
+                        {profile?.rif_quiz_answers && Object.keys(profile.rif_quiz_answers).length > 0
+                          ? 'View or retake your RIF assessment'
+                          : 'Take your RIF to unlock smarter matches'}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => onNavigate('rif')}
+                    className="p-2 text-primary hover:bg-primary/10 rounded-xl transition-all active:scale-95"
+                  >
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                </div>
               </motion.div>
             )}
 

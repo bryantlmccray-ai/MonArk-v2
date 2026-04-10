@@ -154,6 +154,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
           <Profile
             onOpenTrustScore={() => setShowTrustScore(true)}
             onOpenSettings={() => setShowSettings(true)}
+            onNavigate={handleTabChange}
           />
         );
       default:
