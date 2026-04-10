@@ -54,7 +54,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
       onComplete();
       return;
     }
-    const readyTimer = window.setTimeout(() => setIsReady(true), 0);
+    const readyTimer = window.setTimeout(() => setIsReady(true), 400);
     return () => window.clearTimeout(readyTimer);
   }, [onComplete]);
 
