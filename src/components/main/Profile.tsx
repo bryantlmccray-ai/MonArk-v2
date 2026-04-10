@@ -14,6 +14,7 @@ import { useMonthlyAnalytics } from '@/hooks/useMonthlyAnalytics';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
+import { RelationalProfileSection } from '@/components/rif/RelationalProfileSection';
 
 interface ProfileProps {
   onOpenTrustScore: () => void;
