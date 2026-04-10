@@ -358,11 +358,16 @@
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* Reduced motion: ensure content is always visible */
+/* Reduced motion: ensure content is always visible, but preserve
+   Radix portal/dialog centering transforms */
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *:not([data-radix-portal] *) {
     opacity: 1 !important;
     transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+  [data-radix-portal] * {
     transition: none !important;
     animation: none !important;
   }
