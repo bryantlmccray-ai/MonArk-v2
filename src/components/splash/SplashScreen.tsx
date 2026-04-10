@@ -158,7 +158,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                   exit={{ opacity: 0 }}
                   variants={{
                     hidden: {},
-                    visible: { transition: { staggerChildren: 0.25, delayChildren: 0 } },
+                    visible: { transition: { staggerChildren: 0.3, delayChildren: 0 } },
                   }}
                 >
                   <motion.p
