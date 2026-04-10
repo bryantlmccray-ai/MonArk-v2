@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Sparkles, Heart, ArrowRight } from "lucide-react";
 import { queryKeys } from "@/lib/queryKeys";
 
 // ── TYPES ────────────────────────────────────
@@ -307,6 +307,43 @@ const DIM_BAR_COLORS: Record<Dimension, string> = {
   PA: "bg-muted-foreground",
 };
 
+// ── PARTNER COMPLEMENT GENERATOR ─────────────
+
+function generatePartnerComplement(scores: RIFScores): string {
+  const lines: string[] = [];
+
+  // Lead with their strongest trait → what partner complements it
+  if (scores.intent_clarity >= 70) {
+    lines.push("You thrive with someone who values open communication and is ready to build something intentional.");
+  } else if (scores.intent_clarity >= 40) {
+    lines.push("You do well with someone who's patient with exploration and comfortable letting clarity emerge together.");
+  } else {
+    lines.push("You're best matched with someone who enjoys discovering connection organically, without pressure to define things early.");
+  }
+
+  // Emotional readiness complement
+  if (scores.emotional_readiness >= 70) {
+    lines.push("Your emotional depth pairs well with a partner who can meet vulnerability with presence — not someone who shuts down when things get real.");
+  } else if (scores.emotional_readiness <= 40) {
+    lines.push("Look for someone who creates emotional safety without forcing depth before you're ready.");
+  }
+
+  // Pacing
+  if (scores.pacing_preferences >= 70) {
+    lines.push("Avoid partners who are emotionally unavailable or prefer casual, undefined connections.");
+  } else if (scores.pacing_preferences <= 35) {
+    lines.push("A partner who respects your pace and doesn't rush milestones will bring out your best.");
+  }
+
+  // Boundary respect
+  if (scores.boundary_respect >= 75) {
+    lines.push("Your strong sense of boundaries means you'll flourish with someone who communicates directly and respects limits without taking them personally.");
+  }
+
+  // Pick 2-3 most relevant lines
+  return lines.slice(0, 3).join(" ");
+}
+
 // ── COMPONENT ────────────────────────────────
 
 interface RIFQuizProps {
@@ -320,7 +357,7 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<RIFAnswers>({});
   const [selected, setSelected] = useState<number | null>(null);
-  const [phase, setPhase] = useState<"intro" | "quiz" | "saving" | "results">("intro");
+  const [phase, setPhase] = useState<"intro" | "quiz" | "saving" | "celebration" | "results">("intro");
   const [scores, setScores] = useState<RIFScores | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -367,11 +404,10 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
       setPhase("quiz");
       return;
     }
-    // Invalidate profile cache so RelationalProfileSection picks up rif_quiz_answers
     queryClient.invalidateQueries({ queryKey: queryKeys.profile.all });
     const computed = scoreRifAnswers(finalAnswers);
     setScores(computed);
-    setPhase("results");
+    setPhase("celebration");
   }
 
   useEffect(() => {
@@ -454,6 +490,115 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
           </div>
         </div>
       </div>
+    );
+  }
+
+  // ── CELEBRATION ─────────────────────────────
+  if (phase === "celebration" && scores) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-screen bg-background flex items-center justify-center p-6 relative overflow-hidden"
+      >
+        {/* Floating sparkle particles */}
+        {[...Array(12)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute text-primary/20"
+            initial={{
+              x: Math.random() * 400 - 200,
+              y: Math.random() * 400 - 200,
+              opacity: 0,
+              scale: 0,
+            }}
+            animate={{
+              y: [null, -60 - Math.random() * 120],
+              opacity: [0, 0.6, 0],
+              scale: [0, 1.2, 0.4],
+            }}
+            transition={{
+              duration: 2.5 + Math.random() * 1.5,
+              delay: i * 0.15,
+              ease: "easeOut",
+            }}
+            style={{
+              left: `${15 + Math.random() * 70}%`,
+              top: `${20 + Math.random() * 60}%`,
+            }}
+          >
+            <Sparkles className="w-4 h-4" />
+          </motion.div>
+        ))}
+
+        <div className="text-center max-w-[480px] w-full relative z-10">
+          {/* Animated icon */}
+          <motion.div
+            initial={{ scale: 0, rotate: -30 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 180, damping: 14, delay: 0.2 }}
+            className="mx-auto w-20 h-20 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mb-8"
+          >
+            <Heart className="w-9 h-9 text-primary" />
+          </motion.div>
+
+          {/* Headline */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="font-body text-[11px] tracking-[0.2em] text-primary mb-3 uppercase"
+          >
+            Assessment Complete
+          </motion.p>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.65 }}
+            className="font-serif text-4xl font-normal text-foreground leading-[1.2] mb-4"
+          >
+            Your relational profile<br />is ready.
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.85 }}
+            className="text-[15px] text-foreground/70 leading-[1.7] mb-10"
+          >
+            MonArk now understands how you relate — and will use this to find connections that truly align.
+          </motion.p>
+
+          {/* Partner complement insight */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.1 }}
+            className="bg-card rounded-2xl border border-border p-6 text-left mb-10 shadow-sm"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-[11px] tracking-[0.15em] text-primary uppercase font-medium">
+                Your Ideal Partner
+              </span>
+            </div>
+            <p className="text-[14px] text-foreground/80 leading-[1.75] italic font-serif">
+              "{generatePartnerComplement(scores)}"
+            </p>
+          </motion.div>
+
+          {/* CTA */}
+          <motion.button
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.4 }}
+            onClick={() => setPhase("results")}
+            className="bg-primary text-primary-foreground border-none rounded-full px-8 py-3.5 text-xs font-medium tracking-[0.12em] cursor-pointer transition-opacity hover:opacity-90 active:scale-[0.97] inline-flex items-center gap-2"
+          >
+            VIEW YOUR DIMENSIONS
+            <ArrowRight className="w-3.5 h-3.5" />
+          </motion.button>
+        </div>
+      </motion.div>
     );
   }
 
