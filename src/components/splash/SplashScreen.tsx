@@ -153,26 +153,41 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               {isReady && (
                 <motion.div
                   className="flex flex-col items-center gap-4"
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial="hidden"
+                  animate="visible"
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.7, ease: "easeOut" }}
+                  variants={{
+                    hidden: {},
+                    visible: { transition: { staggerChildren: 0.25, delayChildren: 0 } },
+                  }}
                 >
-                  <p
+                  <motion.p
                     className="font-body text-sm tracking-[0.22em] uppercase"
                     style={{ color: "rgba(255,255,255,0.95)", fontWeight: 400 }}
+                    variants={{
+                      hidden: { opacity: 0, y: 12 },
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+                    }}
                   >
                     The art of intentional dating
-                  </p>
-                  <p
+                  </motion.p>
+                  <motion.p
                     className="font-body text-sm tracking-[0.22em] uppercase"
                     style={{ color: "rgba(255,255,255,0.55)", fontWeight: 300 }}
+                    variants={{
+                      hidden: { opacity: 0, y: 12 },
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+                    }}
                   >
                     Limited early access. Join the waitlist.
-                  </p>
+                  </motion.p>
                   <motion.p
                     className="font-body text-xs tracking-[0.15em] uppercase"
                     style={{ color: "rgba(255,255,255,0.4)", fontWeight: 300 }}
+                    variants={{
+                      hidden: { opacity: 0, y: 12 },
+                      visible: { opacity: 0.7, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+                    }}
                     animate={{ opacity: [0.3, 0.7, 0.3] }}
                     transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                   >
