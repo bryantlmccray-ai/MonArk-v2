@@ -3,7 +3,7 @@ import { Brain, ArrowRight, RefreshCw, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useRIF } from '@/hooks/useRIF';
 import { useProfile } from '@/hooks/useProfile';
-import { getRIFSummary, type RIFDimensionScores } from '@/utils/rifScoreMapping';
+import { getRIFSummary, mapQuizAnswersToRIFScores, type RIFDimensionScores } from '@/utils/rifScoreMapping';
 import { cn } from '@/lib/utils';
 
 interface RelationalProfileSectionProps {
@@ -54,7 +54,9 @@ export const RelationalProfileSection: React.FC<RelationalProfileSectionProps> =
         boundary_respect: rifProfile!.boundary_respect ?? 5,
         post_date_alignment: rifProfile!.post_date_alignment ?? 5,
       }
-    : null;
+    : hasQuizAnswers
+      ? mapQuizAnswersToRIFScores(profile!.rif_quiz_answers)
+      : null;
 
   const insights = scores ? getRIFSummary(scores) : [];
 
