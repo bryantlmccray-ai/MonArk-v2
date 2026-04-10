@@ -404,8 +404,21 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
       setPhase("quiz");
       return;
     }
-    queryClient.invalidateQueries({ queryKey: queryKeys.profile.all });
+
     const computed = scoreRifAnswers(finalAnswers);
+
+    queryClient.setQueryData(queryKeys.profile.byUser(userId), (existing: Record<string, unknown> | null) => {
+      if (!existing) return existing;
+
+      return {
+        ...existing,
+        rif_quiz_answers: finalAnswers,
+        updated_at: new Date().toISOString(),
+      };
+    });
+    queryClient.invalidateQueries({ queryKey: queryKeys.profile.byUser(userId) });
+    queryClient.invalidateQueries({ queryKey: queryKeys.profile.all });
+
     setScores(computed);
     setPhase("celebration");
   }
