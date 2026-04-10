@@ -112,6 +112,8 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                   exit={{ opacity: 0, scale: 1.02, x: "-1%" }}
                   transition={{
                     opacity: { duration: DISSOLVE_DURATION, ease: [0.22, 1, 0.36, 1] },
+                    scale: { duration: ROTATION_INTERVAL / 1000, ease: [0.25, 0.1, 0.25, 1] },
+                    x: { duration: ROTATION_INTERVAL / 1000, ease: [0.25, 0.1, 0.25, 1] },
                   }}
                 >
                   <ImageLayer src={heroImages[currentIndex]} />
