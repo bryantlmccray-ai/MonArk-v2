@@ -8,6 +8,8 @@ const heroImages = [splashHero6, splashHero7, splashHero1];
 const ROTATION_INTERVAL = 5600;
 const DISSOLVE_DURATION = 2;
 const INITIAL_REVEAL_DURATION = 1.2;
+const DRIFT_PX = 3;
+const DRIFT_SCALE_START = 1.08;
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -104,9 +106,9 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 <motion.div
                   key={currentIndex}
                   className="absolute inset-0"
-                  style={{ willChange: "opacity" }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
+                  style={{ willChange: "opacity, transform" }}
+                  initial={{ opacity: 0, scale: DRIFT_SCALE_START, x: `${DRIFT_PX}%` }}
+                  animate={{ opacity: 1, scale: 1, x: "0%" }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: DISSOLVE_DURATION, ease: "easeInOut" }}
                 >
