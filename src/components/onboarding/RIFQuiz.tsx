@@ -307,12 +307,61 @@ const DIM_BAR_COLORS: Record<Dimension, string> = {
   PA: "bg-muted-foreground",
 };
 
+// ── ARCHETYPE ENGINE ─────────────────────────
+
+interface Archetype {
+  label: string;
+  tagline: string;
+  narrative: string;
+}
+
+function determineArchetype(scores: RIFScores): Archetype {
+  const avg = (scores.intent_clarity + scores.emotional_readiness + scores.pacing_preferences + scores.boundary_respect + scores.post_date_alignment) / 5;
+
+  // "The Hopeful Romantic" — high emotional readiness, lower pacing
+  if (scores.emotional_readiness >= 70 && scores.pacing_preferences <= 45) {
+    return {
+      label: "The Hopeful Romantic",
+      tagline: "You lead with your heart — and that's a strength.",
+      narrative:
+        "You show up with emotional depth and genuine openness. You prefer to let things unfold at a pace that honors the connection rather than rushing. Your ideal partner meets your vulnerability with presence, creating space for something real to grow.",
+    };
+  }
+
+  // "The Guarded Opener" — lower boundary respect or emotional readiness
+  if (scores.boundary_respect <= 50 || scores.emotional_readiness <= 40) {
+    return {
+      label: "The Guarded Opener",
+      tagline: "You're learning to open — on your own terms.",
+      narrative:
+        "You approach connection thoughtfully, sometimes cautiously. You're aware of your boundaries even if articulating them is still a work in progress. You thrive with a partner who creates emotional safety without forcing depth before you're ready — and who respects the pace of your unfolding.",
+    };
+  }
+
+  // "The Intentional Partner" — high across the board (avg 80+)
+  if (avg >= 80) {
+    return {
+      label: "The Intentional Partner",
+      tagline: "You date with clarity, depth, and purpose.",
+      narrative:
+        "You know what you want, you communicate it, and you show up with emotional availability. Your boundaries are clear, your follow-through is strong, and you bring a rare combination of openness and self-awareness to every connection. MonArk will match you with people who operate at the same level of intentionality.",
+    };
+  }
+
+  // Default / moderate scores
+  return {
+    label: "The Intentional Partner",
+    tagline: "You're building something meaningful.",
+    narrative:
+      "Your profile shows a thoughtful approach to dating — balancing openness with self-awareness. You value genuine connection and are willing to invest in the process. MonArk will use these insights to find people who complement how you relate.",
+  };
+}
+
 // ── PARTNER COMPLEMENT GENERATOR ─────────────
 
 function generatePartnerComplement(scores: RIFScores): string {
   const lines: string[] = [];
 
-  // Lead with their strongest trait → what partner complements it
   if (scores.intent_clarity >= 70) {
     lines.push("You thrive with someone who values open communication and is ready to build something intentional.");
   } else if (scores.intent_clarity >= 40) {
@@ -321,26 +370,22 @@ function generatePartnerComplement(scores: RIFScores): string {
     lines.push("You're best matched with someone who enjoys discovering connection organically, without pressure to define things early.");
   }
 
-  // Emotional readiness complement
   if (scores.emotional_readiness >= 70) {
     lines.push("Your emotional depth pairs well with a partner who can meet vulnerability with presence — not someone who shuts down when things get real.");
   } else if (scores.emotional_readiness <= 40) {
     lines.push("Look for someone who creates emotional safety without forcing depth before you're ready.");
   }
 
-  // Pacing
   if (scores.pacing_preferences >= 70) {
     lines.push("Avoid partners who are emotionally unavailable or prefer casual, undefined connections.");
   } else if (scores.pacing_preferences <= 35) {
     lines.push("A partner who respects your pace and doesn't rush milestones will bring out your best.");
   }
 
-  // Boundary respect
   if (scores.boundary_respect >= 75) {
     lines.push("Your strong sense of boundaries means you'll flourish with someone who communicates directly and respects limits without taking them personally.");
   }
 
-  // Pick 2-3 most relevant lines
   return lines.slice(0, 3).join(" ");
 }
 
