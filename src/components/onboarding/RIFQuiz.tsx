@@ -307,6 +307,43 @@ const DIM_BAR_COLORS: Record<Dimension, string> = {
   PA: "bg-muted-foreground",
 };
 
+// ── PARTNER COMPLEMENT GENERATOR ─────────────
+
+function generatePartnerComplement(scores: RIFScores): string {
+  const lines: string[] = [];
+
+  // Lead with their strongest trait → what partner complements it
+  if (scores.intent_clarity >= 70) {
+    lines.push("You thrive with someone who values open communication and is ready to build something intentional.");
+  } else if (scores.intent_clarity >= 40) {
+    lines.push("You do well with someone who's patient with exploration and comfortable letting clarity emerge together.");
+  } else {
+    lines.push("You're best matched with someone who enjoys discovering connection organically, without pressure to define things early.");
+  }
+
+  // Emotional readiness complement
+  if (scores.emotional_readiness >= 70) {
+    lines.push("Your emotional depth pairs well with a partner who can meet vulnerability with presence — not someone who shuts down when things get real.");
+  } else if (scores.emotional_readiness <= 40) {
+    lines.push("Look for someone who creates emotional safety without forcing depth before you're ready.");
+  }
+
+  // Pacing
+  if (scores.pacing_preferences >= 70) {
+    lines.push("Avoid partners who are emotionally unavailable or prefer casual, undefined connections.");
+  } else if (scores.pacing_preferences <= 35) {
+    lines.push("A partner who respects your pace and doesn't rush milestones will bring out your best.");
+  }
+
+  // Boundary respect
+  if (scores.boundary_respect >= 75) {
+    lines.push("Your strong sense of boundaries means you'll flourish with someone who communicates directly and respects limits without taking them personally.");
+  }
+
+  // Pick 2-3 most relevant lines
+  return lines.slice(0, 3).join(" ");
+}
+
 // ── COMPONENT ────────────────────────────────
 
 interface RIFQuizProps {
