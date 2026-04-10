@@ -493,6 +493,115 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
     );
   }
 
+  // ── CELEBRATION ─────────────────────────────
+  if (phase === "celebration" && scores) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-screen bg-background flex items-center justify-center p-6 relative overflow-hidden"
+      >
+        {/* Floating sparkle particles */}
+        {[...Array(12)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute text-primary/20"
+            initial={{
+              x: Math.random() * 400 - 200,
+              y: Math.random() * 400 - 200,
+              opacity: 0,
+              scale: 0,
+            }}
+            animate={{
+              y: [null, -60 - Math.random() * 120],
+              opacity: [0, 0.6, 0],
+              scale: [0, 1.2, 0.4],
+            }}
+            transition={{
+              duration: 2.5 + Math.random() * 1.5,
+              delay: i * 0.15,
+              ease: "easeOut",
+            }}
+            style={{
+              left: `${15 + Math.random() * 70}%`,
+              top: `${20 + Math.random() * 60}%`,
+            }}
+          >
+            <Sparkles className="w-4 h-4" />
+          </motion.div>
+        ))}
+
+        <div className="text-center max-w-[480px] w-full relative z-10">
+          {/* Animated icon */}
+          <motion.div
+            initial={{ scale: 0, rotate: -30 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 180, damping: 14, delay: 0.2 }}
+            className="mx-auto w-20 h-20 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mb-8"
+          >
+            <Heart className="w-9 h-9 text-primary" />
+          </motion.div>
+
+          {/* Headline */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="font-body text-[11px] tracking-[0.2em] text-primary mb-3 uppercase"
+          >
+            Assessment Complete
+          </motion.p>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.65 }}
+            className="font-serif text-4xl font-normal text-foreground leading-[1.2] mb-4"
+          >
+            Your relational profile<br />is ready.
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.85 }}
+            className="text-[15px] text-foreground/70 leading-[1.7] mb-10"
+          >
+            MonArk now understands how you relate — and will use this to find connections that truly align.
+          </motion.p>
+
+          {/* Partner complement insight */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.1 }}
+            className="bg-card rounded-2xl border border-border p-6 text-left mb-10 shadow-sm"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-[11px] tracking-[0.15em] text-primary uppercase font-medium">
+                Your Ideal Partner
+              </span>
+            </div>
+            <p className="text-[14px] text-foreground/80 leading-[1.75] italic font-serif">
+              "{generatePartnerComplement(scores)}"
+            </p>
+          </motion.div>
+
+          {/* CTA */}
+          <motion.button
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.4 }}
+            onClick={() => setPhase("results")}
+            className="bg-primary text-primary-foreground border-none rounded-full px-8 py-3.5 text-xs font-medium tracking-[0.12em] cursor-pointer transition-opacity hover:opacity-90 active:scale-[0.97] inline-flex items-center gap-2"
+          >
+            VIEW YOUR DIMENSIONS
+            <ArrowRight className="w-3.5 h-3.5" />
+          </motion.button>
+        </div>
+      </motion.div>
+    );
+  }
+
   // ── RESULTS ────────────────────────────────
   if (phase === "results" && scores) {
     const scoreEntries: { dim: Dimension; value: number }[] = [
