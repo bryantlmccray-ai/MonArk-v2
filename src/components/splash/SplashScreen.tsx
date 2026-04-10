@@ -5,11 +5,11 @@ import splashHero6 from "@/assets/splash-hero-6.jpeg";
 import splashHero7 from "@/assets/splash-hero-7.jpeg";
 
 const heroImages = [splashHero6, splashHero7, splashHero1];
-const ROTATION_INTERVAL = 5600;
-const DISSOLVE_DURATION = 2;
+const ROTATION_INTERVAL = 6000;
+const DISSOLVE_DURATION = 2.4;
 const INITIAL_REVEAL_DURATION = 1.2;
-const DRIFT_PX = 3;
-const DRIFT_SCALE_START = 1.08;
+const DRIFT_PX = 4;
+const DRIFT_SCALE_START = 1.06;
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -106,14 +106,30 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 <motion.div
                   key={currentIndex}
                   className="absolute inset-0"
-                  style={{ willChange: "opacity, transform" }}
-                  initial={{ opacity: 0, scale: DRIFT_SCALE_START, x: `${DRIFT_PX}%` }}
-                  animate={{ opacity: 1, scale: 1, x: "0%" }}
-                  exit={{ opacity: 0, scale: 1.02, x: "-1%" }}
+                  style={{ willChange: "opacity, transform, filter" }}
+                  initial={{
+                    opacity: 0,
+                    scale: DRIFT_SCALE_START,
+                    x: `${DRIFT_PX}%`,
+                    filter: "brightness(0.3) saturate(0)",
+                  }}
+                  animate={{
+                    opacity: 1,
+                    scale: 1,
+                    x: "0%",
+                    filter: "brightness(1) saturate(1)",
+                  }}
+                  exit={{
+                    opacity: 0,
+                    scale: 1.03,
+                    x: "-2%",
+                    filter: "brightness(0.4) saturate(0)",
+                  }}
                   transition={{
-                    opacity: { duration: DISSOLVE_DURATION, ease: [0.22, 1, 0.36, 1] },
+                    opacity: { duration: DISSOLVE_DURATION, ease: [0.16, 1, 0.3, 1] },
                     scale: { duration: ROTATION_INTERVAL / 1000, ease: [0.25, 0.1, 0.25, 1] },
                     x: { duration: ROTATION_INTERVAL / 1000, ease: [0.25, 0.1, 0.25, 1] },
+                    filter: { duration: DISSOLVE_DURATION * 1.2, ease: [0.22, 1, 0.36, 1] },
                   }}
                 >
                   <ImageLayer src={heroImages[currentIndex]} />
