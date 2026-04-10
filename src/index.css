@@ -359,14 +359,15 @@
 }
 
 /* Reduced motion: ensure content is always visible, but preserve
-   Radix portal/dialog centering transforms */
+   Radix UI centering transforms (elements with data-state) */
 @media (prefers-reduced-motion: reduce) {
-  *:not([data-radix-portal] *) {
+  *:not([data-state]):not([data-radix-portal] *) {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
     animation: none !important;
   }
+  [data-state],
   [data-radix-portal] * {
     transition: none !important;
     animation: none !important;
