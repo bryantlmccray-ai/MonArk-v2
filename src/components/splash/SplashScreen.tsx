@@ -23,16 +23,13 @@ const ImageLayer = ({ src }: { src: string }) => (
       className="absolute inset-0 h-full w-full object-cover object-[center_20%] md:scale-110 md:blur-2xl"
       style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.52)" }}
     />
-    {/* Foreground — sharp portrait, desktop only */}
+    {/* Foreground — portrait-contained image on top, desktop only */}
     <img
       src={src}
       alt=""
       decoding="async"
-      className="absolute inset-0 h-full w-full object-cover object-[center_20%] hidden md:block"
-      style={{
-        filter: "grayscale(100%) contrast(1.08) brightness(0.55)",
-        clipPath: "inset(0 15% 0 15%)",
-      }}
+      className="absolute inset-0 hidden h-full w-full object-contain px-8 py-8 md:block lg:px-14 lg:py-12"
+      style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.52)" }}
     />
   </>
 );
