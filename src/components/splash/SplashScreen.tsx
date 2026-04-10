@@ -21,7 +21,7 @@ const ImageLayer = ({ src }: { src: string }) => (
       alt=""
       decoding="async"
       className="absolute inset-0 h-full w-full object-cover object-[center_20%] md:scale-110 md:blur-2xl"
-      style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.55)" }}
+      style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.52)" }}
     />
     {/* Foreground — sharp portrait, desktop only */}
     <img
