@@ -110,7 +110,9 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                   initial={{ opacity: 0, scale: DRIFT_SCALE_START, x: `${DRIFT_PX}%` }}
                   animate={{ opacity: 1, scale: 1, x: "0%" }}
                   exit={{ opacity: 0, scale: 1.02, x: "-1%" }}
-                  transition={{ duration: DISSOLVE_DURATION, ease: "easeInOut" }}
+                  transition={{
+                    opacity: { duration: DISSOLVE_DURATION, ease: [0.22, 1, 0.36, 1] },
+                  }}
                 >
                   <ImageLayer src={heroImages[currentIndex]} />
                 </motion.div>
