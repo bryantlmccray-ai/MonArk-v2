@@ -96,13 +96,8 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         >
           {/* Image slideshow with true crossfade */}
           {imagesReady && (
-            <motion.div
-              className="absolute inset-0"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: INITIAL_REVEAL_DURATION, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <AnimatePresence initial={false}>
+            <div className="absolute inset-0">
+              <AnimatePresence initial={false} mode="sync">
                 <motion.div
                   key={currentIndex}
                   className="absolute inset-0"
@@ -135,7 +130,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                   <ImageLayer src={heroImages[currentIndex]} />
                 </motion.div>
               </AnimatePresence>
-            </motion.div>
+            </div>
           )}
 
           {/* Scrim overlays */}
