@@ -8,8 +8,6 @@ const heroImages = [splashHero6, splashHero7, splashHero1];
 const ROTATION_INTERVAL = 5600;
 const DISSOLVE_DURATION = 2;
 const INITIAL_REVEAL_DURATION = 1.2;
-const DRIFT_PX = 3; // percent drift
-const DRIFT_SCALE_START = 1.08;
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -95,15 +93,11 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                 <motion.div
                   key={currentIndex}
                   className="absolute inset-0"
-                  style={{ willChange: "opacity, transform" }}
-                  initial={{ opacity: 0, scale: DRIFT_SCALE_START, x: `${DRIFT_PX}%` }}
-                  animate={{ opacity: 1, scale: 1, x: "0%" }}
-                  exit={{ opacity: 0, scale: 1.02, x: "-1%" }}
-                  transition={{
-                    opacity: { duration: DISSOLVE_DURATION, ease: [0.22, 1, 0.36, 1] },
-                    scale: { duration: ROTATION_INTERVAL / 1000, ease: [0.25, 0.1, 0.25, 1] },
-                    x: { duration: ROTATION_INTERVAL / 1000, ease: [0.25, 0.1, 0.25, 1] },
-                  }}
+                  style={{ willChange: "opacity" }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: DISSOLVE_DURATION, ease: "easeInOut" }}
                 >
                   <ImageLayer src={heroImages[currentIndex]} />
                 </motion.div>
