@@ -14,13 +14,31 @@ interface SplashScreenProps {
 }
 
 const ImageLayer = ({ src }: { src: string }) => (
-  <img
-    src={src}
-    alt=""
-    decoding="async"
-    className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
-    style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.55)" }}
-  />
+  <>
+    {/* Background — full-bleed base, blurred on desktop */}
+    <img
+      src={src}
+      alt=""
+      decoding="async"
+      className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
+      style={{ filter: "grayscale(100%) contrast(1.08) brightness(0.55)" }}
+    />
+    <div
+      className="absolute inset-0 hidden md:block"
+      style={{ backdropFilter: "blur(28px)", WebkitBackdropFilter: "blur(28px)" }}
+    />
+    {/* Foreground — sharp portrait, desktop only */}
+    <img
+      src={src}
+      alt=""
+      decoding="async"
+      className="absolute inset-0 h-full w-full object-cover object-[center_20%] hidden md:block"
+      style={{
+        filter: "grayscale(100%) contrast(1.08) brightness(0.55)",
+        clipPath: "inset(0 15% 0 15%)",
+      }}
+    />
+  </>
 );
 
 export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
