@@ -367,6 +367,8 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
       setPhase("quiz");
       return;
     }
+    // Invalidate profile cache so RelationalProfileSection picks up rif_quiz_answers
+    queryClient.invalidateQueries({ queryKey: queryKeys.profile.all });
     const computed = scoreRifAnswers(finalAnswers);
     setScores(computed);
     setPhase("results");
