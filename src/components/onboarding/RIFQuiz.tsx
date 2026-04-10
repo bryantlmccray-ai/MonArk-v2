@@ -357,7 +357,7 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<RIFAnswers>({});
   const [selected, setSelected] = useState<number | null>(null);
-  const [phase, setPhase] = useState<"intro" | "quiz" | "saving" | "results">("intro");
+  const [phase, setPhase] = useState<"intro" | "quiz" | "saving" | "celebration" | "results">("intro");
   const [scores, setScores] = useState<RIFScores | null>(null);
   const [error, setError] = useState<string | null>(null);
 
