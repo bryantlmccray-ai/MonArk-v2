@@ -359,15 +359,17 @@
 }
 
 /* Reduced motion: ensure content is always visible, but preserve
-   Radix UI centering transforms (elements with data-state) */
+   Radix UI centering transforms */
 @media (prefers-reduced-motion: reduce) {
-  *:not([data-state]):not([data-radix-portal] *) {
+  *:not([data-state]):not([role="dialog"]):not([data-radix-popper-content-wrapper]):not([data-radix-portal] *) {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
     animation: none !important;
   }
   [data-state],
+  [role="dialog"],
+  [data-radix-popper-content-wrapper],
   [data-radix-portal] * {
     transition: none !important;
     animation: none !important;
