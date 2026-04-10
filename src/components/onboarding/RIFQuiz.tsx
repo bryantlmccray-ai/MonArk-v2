@@ -316,6 +316,7 @@ interface RIFQuizProps {
 }
 
 export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
+  const queryClient = useQueryClient();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<RIFAnswers>({});
   const [selected, setSelected] = useState<number | null>(null);
