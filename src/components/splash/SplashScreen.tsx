@@ -8,6 +8,8 @@ const heroImages = [splashHero6, splashHero7, splashHero1];
 const ROTATION_INTERVAL = 5600;
 const DISSOLVE_DURATION = 2;
 const INITIAL_REVEAL_DURATION = 1.2;
+const DRIFT_PX = 3;
+const DRIFT_SCALE_START = 1.08;
 
 interface SplashScreenProps {
   onComplete: () => void;
