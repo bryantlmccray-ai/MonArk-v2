@@ -245,37 +245,9 @@ export const Profile: React.FC<ProfileProps> = ({ onOpenTrustScore, onOpenSettin
           </TooltipProvider>
         </div>
 
-        {/* Relational Profile (RIF) — Always visible entry point */}
+        {/* Relational Profile (RIF) — Full results or CTA */}
         {onNavigate && (
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            custom={0.3}
-            variants={fadeUp}
-            className="bg-card rounded-2xl p-5 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Brain className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <h3 className="text-foreground font-serif text-lg">Relational Profile</h3>
-                  <p className="text-muted-foreground text-xs font-body mt-0.5">
-                    {profile?.rif_quiz_answers && Object.keys(profile.rif_quiz_answers).length > 0
-                      ? 'View or retake your RIF assessment'
-                      : 'Take your RIF to unlock smarter matches'}
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => onNavigate('rif')}
-                className="p-2 text-primary hover:bg-primary/10 rounded-xl transition-all active:scale-95"
-              >
-                <ArrowRight className="h-5 w-5" />
-              </button>
-            </div>
-          </motion.div>
+          <RelationalProfileSection onNavigateToRIF={() => onNavigate('rif')} />
         )}
 
         {!hasCompleteProfile ? (
