@@ -165,8 +165,8 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                     className="font-body text-sm tracking-[0.22em] uppercase"
                     style={{ color: "rgba(255,255,255,0.95)", fontWeight: 400 }}
                     variants={{
-                      hidden: { opacity: 0, y: 12 },
-                      visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+                      hidden: { opacity: 0, y: 8 },
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
                     }}
                   >
                     The art of intentional dating
@@ -175,8 +175,8 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                     className="font-body text-sm tracking-[0.22em] uppercase"
                     style={{ color: "rgba(255,255,255,0.55)", fontWeight: 300 }}
                     variants={{
-                      hidden: { opacity: 0, y: 12 },
-                      visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+                      hidden: { opacity: 0, y: 8 },
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
                     }}
                   >
                     Limited early access. Join the waitlist.
@@ -185,8 +185,8 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                     className="font-body text-xs tracking-[0.15em] uppercase"
                     style={{ color: "rgba(255,255,255,0.4)", fontWeight: 300 }}
                     variants={{
-                      hidden: { opacity: 0, y: 12 },
-                      visible: { opacity: 0.7, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+                      hidden: { opacity: 0, y: 8 },
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
                     }}
                     animate={{ opacity: [0.3, 0.7, 0.3] }}
                     transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
