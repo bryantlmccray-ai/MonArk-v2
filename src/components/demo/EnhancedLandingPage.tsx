@@ -515,7 +515,18 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
             className="text-center mb-10"
-            {/* ═══════════ DISCOVER MODE ═══════════ */}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-2">Why I Built MonArk</h2>
+            <p className="text-sm font-body text-muted-foreground tracking-[0.08em] uppercase">A Founder's Note on Intentional Dating</p>
+            <SectionDivider />
+          </motion.div>
+
+
+      {/* ═══════════ DISCOVER MODE ═══════════ */}
       <section className="py-20 bg-foreground text-background overflow-hidden">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
