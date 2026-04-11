@@ -107,7 +107,7 @@ export const useConversationReadiness = () => {
 
   // Calculate conversation pattern for a set of messages
   const calculatePattern = (messages: Message[]): ConversationPattern | null => {
-    if (messages.length < 3) return null;
+    if (messages.length < 5) return null; // Need at least 5 for meaningful pattern
 
     const conversationId = messages[0].conversation_id;
     
@@ -159,7 +159,7 @@ export const useConversationReadiness = () => {
     let readinessScore = 0.5; // Base score
 
     // Positive factors
-    if (allInterestIndicators.length > 0) readinessScore += 0.2;
+    if (allInterestIndicators.length >= 3) readinessScore += 0.15; // Require 3+ indicators (was 1+, was +0.2)
     if (emojiUsage > 20) readinessScore += 0.1;
     if (energyLevel === 'high') readinessScore += 0.15;
     if (energyLevel === 'medium') readinessScore += 0.05;
@@ -199,6 +199,17 @@ export const useConversationReadiness = () => {
       };
     }
 
+    // Safety guard: never fire readiness with fewer than 20 messages
+    // This prevents premature date nudges after just a few exchanges
+    if (messages.length < 20) {
+      return {
+        isReady: false,
+        confidence: 0,
+        triggers: ['Minimum conversation depth not reached (' + messages.length + '/20 messages)'],
+        suggestedTiming: 'later'
+      };
+    }
+
     // Check cooldown
     const cooldownEnd = cooldowns.get(conversationId);
     if (cooldownEnd && new Date() < cooldownEnd) {
@@ -231,7 +242,7 @@ export const useConversationReadiness = () => {
       analyzeMessage(msg).isLullIndicator
     );
     
-    if (hasLullIndicators && pattern.lastActivityGap > 30 && pattern.lastActivityGap < 120) {
+    if (hasLullIndicators && pattern.lastActivityGap > 60 && pattern.lastActivityGap < 180) {
       triggers.push('Natural conversation lull detected');
       confidence += 0.15;
     }
@@ -243,7 +254,8 @@ export const useConversationReadiness = () => {
     }
 
     // Determine if ready
-    const isReady = confidence >= 0.7 && triggers.length > 0;
+    // Raised threshold to 0.75 to avoid premature date nudges (was 0.7)
+    const isReady = confidence >= 0.75 && triggers.length > 0;
 
     // Determine timing
     let suggestedTiming: 'immediate' | 'soon' | 'later';
