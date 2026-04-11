@@ -264,32 +264,32 @@ const handler = async (req: Request): Promise<Response> => {
               const dateTitle = proposal.title || proposal.activity || 'your date';
 
               // Send journal prompt to proposal creator
-              if (creatorProfile?.email) {
-                await supabase.functions.invoke('send-notification-email', {
-                  body: {
-                    to: creatorProfile.email,
-                    type: 'system',
-                    title: `Reflect on your time with ${partnerFirstNameForCreator} — whenever you're ready 📔`,
-                    message: `No rush — your journal is here whenever you feel like reflecting on your time with ${partnerFirstNameForCreator}. Even a quick note helps MonArk find better connections for you.`,
-                    actionUrl: `https://monark.app/dates?log=${proposal.id}`
-                  }
-                });
-                journalPromptsCount++;
-              }
+// In-app journal prompt to proposal creator
+                          await supabase.from('notifications').insert({
+                                          user_id: proposal.creator_user_id,
+                                          type: 'journal_prompt',
+                                          title: `How did it go with ${partnerFirstNameForCreator}? ✦`,
+                                          message: `Take a moment to reflect on your time together. Your journal is waiting — no rush.`,
+                                          action_url: `/dates?log=${proposal.id}`,
+                                          action_label: 'Open your journal',
+                                          is_read: false,
+                                          created_at: new Date().toISOString(),
+                          });
+                          journalPromptsCount++;
 
               // Send journal prompt to recipient
-              if (recipientProfile?.email) {
-                await supabase.functions.invoke('send-notification-email', {
-                  body: {
-                    to: recipientProfile.email,
-                    type: 'system',
-                    title: `Reflect on your time with ${partnerFirstNameForRecipient} — whenever you're ready 📔`,
-                    message: `No rush — your journal is here whenever you feel like reflecting on your time with ${partnerFirstNameForRecipient}. Your honest take helps us keep improving your matches.`,
-                    actionUrl: `https://monark.app/dates?log=${proposal.id}`
-                  }
-                });
-                journalPromptsCount++;
-              }
+// In-app journal prompt to recipient
+                          await supabase.from('notifications').insert({
+                                          user_id: proposal.recipient_user_id,
+                                          type: 'journal_prompt',
+                                          title: `How did it go with ${partnerFirstNameForRecipient}? ✦`,
+                                          message: `Take a moment to reflect on your time together. Your journal is waiting — no rush.`,
+                                          action_url: `/dates?log=${proposal.id}`,
+                                          action_label: 'Open your journal',
+                                          is_read: false,
+                                          created_at: new Date().toISOString(),
+                          });
+                          journalPromptsCount++;
             }
 
             // Mark proposal so we don't prompt again
