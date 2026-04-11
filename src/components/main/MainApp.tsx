@@ -18,6 +18,9 @@ import { useAnalytics } from '@/hooks/useAnalytics';
 import { useContactFeedback } from '@/hooks/useContactFeedback';
 import { ContactShareFeedback } from '@/components/feedback/ContactShareFeedback';
 import { MilestoneCardShowcase } from '@/components/social/MilestoneCardShowcase';
+import { DiscoverMode } from '@/components/matching/DiscoverMode';
+import { PendingConnections } from '@/components/matching/PendingConnections';
+import { useProgressiveProfile } from '@/hooks/useProgressiveProfile';
 import RIFQuiz from '@/components/onboarding/RIFQuiz';
 import { ProfileGate } from '@/components/common/ProfileGate';
 import PaywallModal from '@/components/PaywallModal';
@@ -52,6 +55,9 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   const initials = firstName.slice(0, 2).toUpperCase();
   
   
+  // Progressive daily profile question
+  const { question: dailyQ, showCard: showDailyQ, submitAnswer: submitDailyQ, isSubmitting: dailyQSubmitting, dismiss: dismissDailyQ } = useProgressiveProfile();
+
   // Email notification triggers
   useNotificationTriggers();
   
@@ -139,6 +145,8 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
             onDateCompleted={handleDateCompleted}
           />
         );
+      case 'discover':
+        return <DiscoverMode />;
       case 'shareables':
         return <MilestoneCardShowcase />;
       case 'rif':
@@ -200,6 +208,45 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
            
            {/* RIF Beta Insights Card */}
            {activeTab === 'profile' && <RifInsightsCard />}
+
+           {/* Daily profile question — shown on weekly tab only */}
+           {activeTab === 'weekly' && showDailyQ && (
+             <div className="bg-card border border-primary/20 rounded-2xl p-4 shadow-sm">
+               <div className="flex items-start gap-3">
+                 <span className="text-primary text-lg mt-0.5">✨</span>
+                 <div className="flex-1 min-w-0">
+                   <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">Today’s question</p>
+                   <p className="text-sm font-medium text-foreground leading-snug mb-3">{dailyQ.prompt}</p>
+                   <textarea
+                     id="daily-q-input"
+                     rows={3}
+                     placeholder="Your answer sharpens your Sunday matches…"
+                     className="w-full text-sm bg-muted/50 border border-border/60 rounded-xl px-3 py-2 resize-none focus:outline-none focus:ring-1 focus:ring-primary/40 text-foreground placeholder:text-muted-foreground/60"
+                   />
+                   <div className="flex items-center gap-2 mt-2">
+                     <button
+                       className="text-xs px-3 py-1.5 bg-primary text-primary-foreground rounded-lg font-medium disabled:opacity-50"
+                       disabled={dailyQSubmitting}
+                       onClick={() => {
+                         const el = document.getElementById('daily-q-input') as HTMLTextAreaElement;
+                         if (el?.value.trim()) submitDailyQ(el.value);
+                       }}
+                     >
+                       {dailyQSubmitting ? 'Saving…' : 'Save answer'}
+                     </button>
+                     <button onClick={dismissDailyQ} className="text-xs text-muted-foreground hover:text-foreground">
+                       Skip today
+                     </button>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           )}
+
+           {/* Pending connections — shown on weekly tab */}
+           {activeTab === 'weekly' && (
+             <PendingConnections />
+           )}
           
            {renderActiveScreen()}
           </div>
