@@ -48,7 +48,9 @@ interface OnboardingData {
 // 10: Profile Complete Screen
 
 export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onSkipToWaiting, onExit, showExitButton = false }) => {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(() => {
+    try { const s = localStorage.getItem('monark_onboarding_step'); return s ? Math.max(0, parseInt(s, 10)) : 0; } catch { return 0; }
+  });
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({
     photos: [],
     bio: '',
@@ -62,6 +64,13 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onSk
   
   const { profile, updateProfile } = useProfile();
   const { toast } = useToast();
+
+  // Persist step to localStorage for browser-refresh resilience
+  useEffect(() => {
+    if (currentStep > 0) {
+      try { localStorage.setItem('monark_onboarding_step', String(currentStep)); } catch {}
+    }
+  }, [currentStep]);
 
   // Resume from saved step if user returns to onboarding
   useEffect(() => {
@@ -82,7 +91,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, onSk
 
   // Save progress when step changes (for screens 4+ where profile data is collected)
   const saveProgress = async (step: number, data?: Partial<OnboardingData>) => {
-    if (step < 4) return; // Don't save progress for intro/quiz screens
+    if (step < 1) return; // Save from step 1 onward (lowered from 4 to preserve early progress)
     
     try {
       await updateProfile({
