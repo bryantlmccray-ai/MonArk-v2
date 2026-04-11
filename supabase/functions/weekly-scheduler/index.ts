@@ -6,56 +6,112 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+// ── Auth: accepts either a valid user JWT (individual) or CRON_SECRET header (scheduled) ──
+async function authenticateRequest(req: Request): Promise<{
+  mode: 'user' | 'cron';
+  userId?: string;
+  supabaseService: any;
+} | null> {
+  const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+  const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
+  const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+
+  const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
+
+  // Check for cron secret first (Supabase scheduled function invocation)
+  const cronSecret = req.headers.get('x-cron-secret');
+  const expectedSecret = Deno.env.get('CRON_SECRET');
+  if (expectedSecret && cronSecret && cronSecret === expectedSecret) {
+    return { mode: 'cron', supabaseService };
+  }
+
+  // Fall back to user JWT auth
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader) return null;
+
+  const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+  const { data: { user }, error } = await supabaseClient.auth.getUser(
+    authHeader.replace('Bearer ', '')
+  );
+  if (error || !user) return null;
+
+  return { mode: 'user', userId: user.id, supabaseService };
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    // Authenticate user first
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
-    );
-
-    const authHeader = req.headers.get('Authorization')
-    if (!authHeader) {
-      throw new Error('Missing authorization header')
+    const auth = await authenticateRequest(req);
+    if (!auth) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser(
-      authHeader.replace('Bearer ', '')
-    )
-    
-    if (authError || !user) {
-      throw new Error('Unauthorized')
-    }
+    const { mode, userId, supabaseService } = auth;
 
-    // Use service role for operations
-    const supabaseService = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    );
+    // ── CRON mode: Sunday batch delivery for all active users ──
+    if (mode === 'cron') {
+      console.log('weekly-scheduler: cron mode — running Sunday batch delivery');
 
-    const { action, user_id } = await req.json();
+      // Safety check: only run on Sundays (UTC)
+      const now = new Date();
+      const dayOfWeek = now.getUTCDay(); // 0 = Sunday
+      if (dayOfWeek !== 0) {
+        console.log('weekly-scheduler: skipping, today is not Sunday (UTC day=' + dayOfWeek + ')');
+        return new Response(
+          JSON.stringify({ skipped: true, reason: 'Not Sunday', day: dayOfWeek }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
 
-    // Ensure user can only generate options for themselves
-    if (user_id && user_id !== user.id) {
-      throw new Error('Cannot generate options for other users')
-    }
-
-    if (action === 'generate_weekly_options') {
-      // Generate options for the authenticated user only
-      const usersToProcess = [{ id: user.id }];
+      const activeUsers = await getActiveUsers(supabaseService);
+      console.log('weekly-scheduler: processing ' + activeUsers.length + ' active users');
 
       const results = [];
-      for (const usr of usersToProcess) {
-        const options = await generateWeeklyOptionsForUser(supabaseService, usr.id);
-        results.push({ user_id: usr.id, options });
+      let notifiedCount = 0;
+
+      for (const usr of activeUsers) {
+        try {
+          const options = await generateWeeklyOptionsForUser(supabaseService, usr.id);
+          results.push({ user_id: usr.id, options_generated: options.length });
+
+          // Send "Your Sunday matches are ready" email notification
+          const notified = await sendSundayReadyEmail(supabaseService, usr.id);
+          if (notified) notifiedCount++;
+        } catch (userErr) {
+          console.error('Error processing user ' + usr.id + ':', userErr);
+          results.push({ user_id: usr.id, error: String(userErr) });
+        }
       }
 
       return new Response(
-        JSON.stringify({ success: true, results }),
+        JSON.stringify({ success: true, usersProcessed: activeUsers.length, notifiedCount, results }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // ── USER mode: individual on-demand generation ──
+    let body: any = {};
+    try { body = await req.json(); } catch (_) {}
+    const { action, user_id } = body;
+
+    // Ensure user can only generate options for themselves
+    if (user_id && user_id !== userId) {
+      return new Response(
+        JSON.stringify({ error: 'Cannot generate options for other users' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (action === 'generate_weekly_options') {
+      const options = await generateWeeklyOptionsForUser(supabaseService, userId!);
+      return new Response(
+        JSON.stringify({ success: true, results: [{ user_id: userId, options }] }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -64,6 +120,7 @@ serve(async (req) => {
       JSON.stringify({ error: 'Unknown action' }),
       { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
+
   } catch (error) {
     console.error('Error in weekly-scheduler:', error);
     return new Response(
@@ -72,6 +129,42 @@ serve(async (req) => {
     );
   }
 });
+
+// ── Send "Your Sunday matches are ready" email ────────────────
+async function sendSundayReadyEmail(supabaseClient: any, userId: string): Promise<boolean> {
+  try {
+    const { data: profile } = await supabaseClient
+      .from('profiles')
+      .select('email, name')
+      .eq('id', userId)
+      .single();
+
+    if (!profile?.email) return false;
+
+    const firstName = profile.name?.split(' ')?.[0] || 'there';
+
+    const { error } = await supabaseClient.functions.invoke('send-notification-email', {
+      body: {
+        to: profile.email,
+        type: 'system',
+        title: 'Your Sunday matches just dropped, ' + firstName + ' 💖',
+        message: 'MonArk has handpicked 3 curated matches + 10 people from your dating pool — all waiting for you. Open the app now to see who caught our eye for you this week.',
+        actionUrl: 'https://monark.app/dashboard'
+      }
+    });
+
+    if (error) {
+      console.error('Error sending Sunday email to ' + userId + ':', error);
+      return false;
+    }
+
+    console.log('Sunday ready email sent to user ' + userId);
+    return true;
+  } catch (err) {
+    console.error('sendSundayReadyEmail error for ' + userId + ':', err);
+    return false;
+  }
+}
 
 async function getActiveUsers(supabaseClient: any) {
   const { data, error } = await supabaseClient
@@ -87,7 +180,6 @@ async function getActiveUsers(supabaseClient: any) {
 async function generateWeeklyOptionsForUser(supabaseClient: any, userId: string) {
   const weekStart = getWeekStart();
   
-  // Check if options already exist for this week
   const { data: existing } = await supabaseClient
     .from('weekly_options')
     .select('*')
@@ -96,11 +188,10 @@ async function generateWeeklyOptionsForUser(supabaseClient: any, userId: string)
     .eq('is_expired', false);
 
   if (existing && existing.length >= 3) {
-    console.log(`User ${userId} already has 3 options for this week`);
+    console.log('User ' + userId + ' already has 3 options for this week');
     return existing;
   }
 
-  // Get user's EQ settings
   const { data: eqSettings } = await supabaseClient
     .from('weekly_eq_settings')
     .select('*')
@@ -108,17 +199,14 @@ async function generateWeeklyOptionsForUser(supabaseClient: any, userId: string)
     .gte('expires_at', new Date().toISOString())
     .maybeSingle();
 
-  // Get user profile for location and preferences
   const { data: profile } = await supabaseClient
     .from('user_profiles')
     .select('location_data, interests, date_preferences')
     .eq('user_id', userId)
     .maybeSingle();
 
-  // Get venues within radius
   const venues = await getVenuesForUser(supabaseClient, profile, eqSettings);
   
-  // Generate 3 options
   const options = [];
   const optionsNeeded = 3 - (existing?.length || 0);
   
@@ -139,17 +227,10 @@ async function generateWeeklyOptionsForUser(supabaseClient: any, userId: string)
 }
 
 async function getVenuesForUser(supabaseClient: any, profile: any, eqSettings: any) {
-  const radius = eqSettings?.radius_km || 10;
-  
-  // Get all venues (in production, you'd filter by distance)
   const { data: venues } = await supabaseClient
     .from('venues')
-    .select(`
-      *,
-      venue_care_scores (*)
-    `)
+    .select('*, venue_care_scores (*)')
     .limit(20);
-
   return venues || [];
 }
 
@@ -164,20 +245,10 @@ async function generateSingleOption(
 ) {
   const venue = venues[Math.floor(Math.random() * Math.min(venues.length, 5))];
   const isTemplate = !venue || venues.length < 3;
-
-  // Generate time window based on EQ settings
   const timeWindow = generateTimeWindow(eqSettings);
-  
-  // Generate EQ fit chips based on settings
   const eqFitChips = generateEQFitChips(eqSettings);
-  
-  // Calculate care index
   const careIndex = venue?.venue_care_scores?.[0]?.overall_score || 0.8;
-
-  // Generate personalized "why this for you"
   const whyThisForYou = generateWhyText(eqSettings, venue, profile);
-
-  // Generate vibe line
   const vibeLine = generateVibeLine(eqSettings, venue);
 
   const optionData = {
@@ -191,13 +262,7 @@ async function generateSingleOption(
     eq_fit_chips: eqFitChips,
     care_index_score: careIndex,
     why_this_for_you: whyThisForYou,
-    venue_data: venue ? {
-      id: venue.id,
-      name: venue.name,
-      address: venue.address,
-      lat: venue.lat,
-      lng: venue.lng
-    } : null,
+    venue_data: venue ? { id: venue.id, name: venue.name, address: venue.address, lat: venue.lat, lng: venue.lng } : null,
     is_template: isTemplate
   };
 
@@ -214,7 +279,7 @@ async function generateSingleOption(
 function getWeekStart(): Date {
   const now = new Date();
   const day = now.getDay();
-  const diff = now.getDate() - day + (day === 0 ? -6 : 1); // Adjust to Monday
+  const diff = now.getDate() - day + (day === 0 ? -6 : 1);
   const monday = new Date(now.setDate(diff));
   monday.setUTCHours(0, 0, 0, 0);
   return monday;
@@ -223,69 +288,35 @@ function getWeekStart(): Date {
 function generateTimeWindow(eqSettings: any) {
   const durationMinutes = eqSettings?.duration_preference || 90;
   const boundaries = eqSettings?.time_boundaries || { earliest: "10:00", latest: "22:00" };
-  
-  // Generate a time window for next 3-7 days
   const daysAhead = Math.floor(Math.random() * 5) + 3;
   const startDate = new Date();
   startDate.setDate(startDate.getDate() + daysAhead);
-  
-  // Set time based on boundaries
-  const [earliestHour, earliestMinute] = boundaries.earliest.split(':').map(Number);
-  const [latestHour, latestMinute] = boundaries.latest.split(':').map(Number);
-  
+  const [earliestHour] = boundaries.earliest.split(':').map(Number);
+  const [latestHour] = boundaries.latest.split(':').map(Number);
   const hour = earliestHour + Math.floor(Math.random() * (latestHour - earliestHour));
   startDate.setHours(hour, 0, 0, 0);
-  
   const endDate = new Date(startDate);
   endDate.setMinutes(endDate.getMinutes() + durationMinutes);
-
-  return {
-    start: startDate.toISOString(),
-    end: endDate.toISOString()
-  };
+  return { start: startDate.toISOString(), end: endDate.toISOString() };
 }
 
 function generateEQFitChips(eqSettings: any): string[] {
   const chips = [];
-  
-  if (eqSettings?.conversation_style) {
-    chips.push(`${eqSettings.conversation_style}-conversation`);
-  }
-  
-  if (eqSettings?.crowd_tolerance) {
-    chips.push(eqSettings.crowd_tolerance);
-  }
-  
-  if (eqSettings?.duration_preference) {
-    chips.push(`${eqSettings.duration_preference}min`);
-  }
-
-  if (eqSettings?.energy_level) {
-    chips.push(`${eqSettings.energy_level}-energy`);
-  }
-
+  if (eqSettings?.conversation_style) chips.push(eqSettings.conversation_style + '-conversation');
+  if (eqSettings?.crowd_tolerance) chips.push(eqSettings.crowd_tolerance);
+  if (eqSettings?.duration_preference) chips.push(eqSettings.duration_preference + 'min');
+  if (eqSettings?.energy_level) chips.push(eqSettings.energy_level + '-energy');
   return chips.slice(0, 4);
 }
 
 function generateWhyText(eqSettings: any, venue: any, profile: any): string {
   const reasons = [];
-  
-  if (eqSettings?.conversation_style === 'quiet') {
-    reasons.push('intimate atmosphere for deep conversation');
-  } else if (eqSettings?.conversation_style === 'talkative') {
-    reasons.push('lively space that energizes discussion');
-  }
-  
-  if (eqSettings?.duration_preference <= 60) {
-    reasons.push('perfect for your preferred shorter meetups');
-  }
-  
-  if (venue) {
-    reasons.push(`high care score (${(venue.venue_care_scores?.[0]?.overall_score * 100 || 80).toFixed(0)}%)`);
-  }
-
-  return reasons.length > 0 
-    ? `Picked for you: ${reasons.join(', ')}`
+  if (eqSettings?.conversation_style === 'quiet') reasons.push('intimate atmosphere for deep conversation');
+  else if (eqSettings?.conversation_style === 'talkative') reasons.push('lively space that energizes discussion');
+  if (eqSettings?.duration_preference <= 60) reasons.push('perfect for your preferred shorter meetups');
+  if (venue) reasons.push('high care score (' + ((venue.venue_care_scores?.[0]?.overall_score * 100) || 80).toFixed(0) + '%)');
+  return reasons.length > 0
+    ? 'Picked for you: ' + reasons.join(', ')
     : 'A thoughtfully curated option that matches your preferences';
 }
 
@@ -297,7 +328,6 @@ function generateVibeLine(eqSettings: any, venue: any): string {
     'Welcoming with attentive service',
     'Perfect for meaningful connection'
   ];
-  
   return vibes[Math.floor(Math.random() * vibes.length)];
 }
 
@@ -309,6 +339,5 @@ function generateTemplateTitle(eqSettings: any): string {
     'Bookstore Browse & Coffee',
     'Sunset Walk & Conversation'
   ];
-  
   return templates[Math.floor(Math.random() * templates.length)];
 }
