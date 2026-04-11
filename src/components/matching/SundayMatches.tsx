@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -8,7 +8,8 @@ import {
   Coffee, Wine, Palette, Music, Compass, Moon, MessageCircle,
   Clock, X
 } from 'lucide-react';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow, startOfWeek } from 'date-fns';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useCuratedMatches, type CuratedMatch } from '@/hooks/useCuratedMatches';
 import { useDatingPool, type DatingPoolMatch } from '@/hooks/useDatingPool';
@@ -20,10 +21,6 @@ import { ApiErrorFallback } from '@/components/common/ApiErrorFallback';
 import { useActionProtection } from '@/hooks/useActionProtection';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { useDemo } from '@/contexts/DemoContext';
-
-/* ══════════════════════════════════════════════════════════════
-   Types
-   ══════════════════════════════════════════════════════════════ */
 
 export interface UnifiedMatch {
   id: string;
@@ -38,10 +35,6 @@ export interface UnifiedMatch {
   interests: string[];
   type: 'curated' | 'pool';
 }
-
-/* ══════════════════════════════════════════════════════════════
-   Demo Data
-   ══════════════════════════════════════════════════════════════ */
 
 const DEMO_CURATED: UnifiedMatch[] = [
   {
@@ -109,10 +102,6 @@ const DEMO_POOL: UnifiedMatch[] = [
   },
 ];
 
-/* ══════════════════════════════════════════════════════════════
-   Sub-components
-   ══════════════════════════════════════════════════════════════ */
-
 /** Branded image fallback — linen bg with MA compass monogram */
 const ImageWithFallback: React.FC<{
   src: string;
@@ -164,7 +153,6 @@ const MatchCard: React.FC<{
         name={match.name}
         className="h-full w-full group-hover:scale-[1.02] transition-transform duration-300"
       />
-      {/* Gradient vignette */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
       {spotlight && (
         <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground border-none text-xs">
@@ -236,15 +224,10 @@ const PoolCard: React.FC<{
         name={match.name}
         className="h-full w-full group-hover:scale-[1.02] transition-transform duration-300"
       />
-      {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
-
-      {/* Compatibility badge */}
       <Badge className="absolute top-2 right-2 bg-foreground/70 text-white border-none text-[10px] font-medium backdrop-blur-md">
         {match.compatibilityScore}%
       </Badge>
-
-      {/* Name / age / location overlay */}
       <div className="absolute bottom-0 left-0 right-0 p-3">
         <p className="font-semibold text-white text-sm font-serif">
           {match.name}, {match.age}
@@ -255,8 +238,6 @@ const PoolCard: React.FC<{
         </p>
       </div>
     </div>
-
-    {/* Quick actions */}
     <CardContent className="p-3 flex gap-2">
       <Button
         className="flex-1" size="sm"
@@ -286,7 +267,6 @@ const MatchChip: React.FC<{
     className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border/50 hover:shadow-sm transition-shadow cursor-pointer group"
     onClick={() => onDetail(match)}
   >
-    {/* Photo */}
     <div className="relative w-14 h-14 rounded-lg overflow-hidden flex-shrink-0">
       <ImageWithFallback
         src={match.photoUrl}
@@ -295,8 +275,6 @@ const MatchChip: React.FC<{
         className="h-full w-full"
       />
     </div>
-
-    {/* Details */}
     <div className="flex-1 min-w-0">
       <div className="flex items-center gap-2">
         <p className="font-serif font-semibold text-sm text-foreground truncate">
@@ -312,8 +290,6 @@ const MatchChip: React.FC<{
         <span className="truncate">{match.location}</span>
       </div>
     </div>
-
-    {/* Actions */}
     <div className="flex items-center gap-1.5 flex-shrink-0">
       <Button
         size="sm" className="h-8 w-8 p-0"
@@ -341,7 +317,6 @@ const StatusBar: React.FC<{
   refreshLabel: string;
 }> = ({ curatedCount, poolCount, refreshLabel }) => (
   <div className="flex items-center justify-between rounded-xl bg-card border border-border/50 px-4 py-3">
-    {/* Left: counts */}
     <div className="flex items-center gap-4">
       <div className="flex items-center gap-2">
         <Heart className="w-4 h-4 text-primary" />
@@ -359,8 +334,6 @@ const StatusBar: React.FC<{
         </div>
       </div>
     </div>
-
-    {/* Right: next drop countdown with pulse */}
     <div className="flex items-center gap-2">
       <div className="relative flex items-center justify-center">
         <span className="absolute inline-flex h-3 w-3 rounded-full bg-primary/40 animate-ping" />
@@ -393,6 +366,25 @@ export const SundayMatches: React.FC = () => {
   const { protectedAction } = useActionProtection({ debounceMs: 600 });
 
   const isDemo = demoData.isInDemo;
+
+  // Current week key for first-view reveal tracking
+  const weekKey = useMemo(() => {
+    const ws = startOfWeek(new Date(), { weekStartsOn: 0 });
+    return format(ws, 'yyyy-MM-dd');
+  }, []);
+
+  const revealStorageKey = `monark_matches_revealed_${weekKey}`;
+  const [isFirstReveal, setIsFirstReveal] = useState(() => {
+    try { return localStorage.getItem(revealStorageKey) !== 'true'; } catch { return true; }
+  });
+  const [revealComplete, setRevealComplete] = useState(!isFirstReveal);
+
+  // Mark as revealed once animation plays
+  const handleRevealDone = () => {
+    setRevealComplete(true);
+    setIsFirstReveal(false);
+    try { localStorage.setItem(revealStorageKey, 'true'); } catch {}
+  };
 
   // Curated display matches
   const displayMatches: UnifiedMatch[] = isDemo
@@ -434,7 +426,7 @@ export const SundayMatches: React.FC = () => {
   });
   const dismissTip = () => {
     setTipDismissed(true);
-    try { localStorage.setItem('monark-match-tip-dismissed', 'true'); } catch {}
+    try { localStorage.setItem('monark-match-tip-dismissed', 'true'); } catch {};
   };
 
   // Modal state
@@ -482,6 +474,51 @@ export const SundayMatches: React.FC = () => {
 
   const spotlightMatch = displayMatches[0] || null;
   const gridMatches = displayMatches.slice(1);
+
+  // Formatted week label for reveal header
+  const weekLabel = format(startOfWeek(new Date(), { weekStartsOn: 0 }), 'MMMM d');
+
+  // Render match cards with optional staggered reveal
+  const renderMatchCards = () => {
+    const cards = (
+      <div className="space-y-4 mt-2">
+        {spotlightMatch && (
+          <motion.div
+            initial={isFirstReveal ? { opacity: 0, y: 30, scale: 0.95 } : false}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.5, delay: isFirstReveal ? 0.6 : 0, ease: 'easeOut' }}
+          >
+            <MatchCard match={spotlightMatch} spotlight onConnect={handleConnect} onDetail={openDetail} />
+          </motion.div>
+        )}
+        {gridMatches.length > 0 && (
+          <div className="grid grid-cols-2 gap-4">
+            {gridMatches.map((m, i) => (
+              <motion.div
+                key={m.id}
+                initial={isFirstReveal ? { opacity: 0, y: 30, scale: 0.95 } : false}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.5, delay: isFirstReveal ? 0.75 + i * 0.15 : 0, ease: 'easeOut' }}
+                onAnimationComplete={i === gridMatches.length - 1 ? handleRevealDone : undefined}
+              >
+                <MatchCard match={m} onConnect={handleConnect} onDetail={openDetail} />
+              </motion.div>
+            ))}
+          </div>
+        )}
+        {gridMatches.length === 0 && isFirstReveal && spotlightMatch && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            onAnimationComplete={handleRevealDone}
+          />
+        )}
+      </div>
+    );
+
+    return cards;
+  };
 
   return (
     <div className="space-y-4 pb-8">
@@ -539,18 +576,28 @@ export const SundayMatches: React.FC = () => {
             </div>
           ) : (
             <MatchRevealCeremony matchCount={displayMatches.length}>
-              <div className="space-y-4 mt-2">
-                {spotlightMatch && (
-                  <MatchCard match={spotlightMatch} spotlight onConnect={handleConnect} onDetail={openDetail} />
+              <>
+                {/* First-view weekly header */}
+                {isFirstReveal && displayMatches.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    className="text-center py-4 mt-2"
+                  >
+                    <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-2">
+                      <Sparkles className="w-5 h-5 text-primary" />
+                    </div>
+                    <p className="text-sm font-serif text-foreground font-medium">
+                      Your matches for the week of {weekLabel} are ready
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Take your time with each one
+                    </p>
+                  </motion.div>
                 )}
-                {gridMatches.length > 0 && (
-                  <div className="grid grid-cols-2 gap-4">
-                    {gridMatches.map((m) => (
-                      <MatchCard key={m.id} match={m} onConnect={handleConnect} onDetail={openDetail} />
-                    ))}
-                  </div>
-                )}
-              </div>
+                {renderMatchCards()}
+              </>
             </MatchRevealCeremony>
           )}
         </TabsContent>
