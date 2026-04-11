@@ -77,8 +77,12 @@ serve(async (req) => {
 
       for (const usr of activeUsers) {
         try {
+          // 1. AI-curated match selection (replaces human curation)
+          const curatedMatches = await generateAICuratedMatches(supabaseService, usr.id);
+
+          // 2. Date venue options (weekly EQ-based suggestions)
           const options = await generateWeeklyOptionsForUser(supabaseService, usr.id);
-          results.push({ user_id: usr.id, options_generated: options.length });
+          results.push({ user_id: usr.id, options_generated: options.length, curated_matches: curatedMatches.length });
 
           // Send "Your Sunday matches are ready" email notification
           const notified = await sendSundayReadyEmail(supabaseService, usr.id);
@@ -129,6 +133,110 @@ serve(async (req) => {
     );
   }
 });
+
+
+// ── AI-curated match generation using ai-match-curator ────────────────
+async function generateAICuratedMatches(supabaseClient: any, userId: string): Promise<any[]> {
+  try {
+    const weekStart = getWeekStart();
+
+    // Check if already curated this week
+    const { data: existing } = await supabaseClient
+      .from('curated_matches')
+      .select('id')
+      .eq('user_id', userId)
+      .gte('created_at', weekStart.toISOString());
+
+    if (existing && existing.length >= 3) {
+      console.log('User ' + userId + ' already has curated matches this week');
+      return existing;
+    }
+
+    // Build a candidate pool: active users not already in curated_matches this week
+    const { data: recentMatchIds } = await supabaseClient
+      .from('curated_matches')
+      .select('match_user_id')
+      .eq('user_id', userId)
+      .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
+
+    const excludeIds = [userId, ...(recentMatchIds ?? []).map((m: any) => m.match_user_id)];
+
+    const { data: candidates } = await supabaseClient
+      .from('user_profiles')
+      .select('user_id')
+      .eq('is_profile_complete', true)
+      .eq('age_verified', true)
+      .not('user_id', 'in', '(' + excludeIds.join(',') + ')')
+      .limit(30);
+
+    if (!candidates?.length) {
+      console.log('No candidates found for user ' + userId);
+      return [];
+    }
+
+    const candidateIds = candidates.map((c: any) => c.user_id);
+
+    // Call ai-match-curator to score and rank candidates
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+    const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+
+    const response = await fetch(supabaseUrl + '/functions/v1/ai-match-curator', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + serviceKey,
+      },
+      body: JSON.stringify({
+        action: 'batch_curate',
+        data: {
+          requester_id: userId,
+          candidate_ids: candidateIds,
+          top_n: 3,
+        }
+      })
+    });
+
+    if (!response.ok) {
+      console.error('ai-match-curator error for user ' + userId + ':', response.status);
+      return [];
+    }
+
+    const curatorResult = await response.json();
+    if (!curatorResult.picks?.length) return [];
+
+    // Insert curated_matches rows from AI decisions
+    const now = new Date().toISOString();
+    const matchRows = curatorResult.picks.map((pick: any, idx: number) => ({
+      user_id: userId,
+      match_user_id: pick.user_id,
+      compatibility_score: pick.result.compatibility_score,
+      match_reason: pick.result.match_reason,
+      status: 'pending',
+      curator_confidence: pick.result.confidence,
+      curator_flags: pick.result.flags,
+      curation_model: 'ai-match-curator-v1',
+      week_start: weekStart.toISOString(),
+      position: idx + 1,
+      created_at: now,
+    }));
+
+    const { data: inserted, error: insertErr } = await supabaseClient
+      .from('curated_matches')
+      .insert(matchRows)
+      .select();
+
+    if (insertErr) {
+      console.error('Error inserting curated matches for ' + userId + ':', insertErr);
+      return [];
+    }
+
+    console.log('AI curator generated ' + (inserted?.length ?? 0) + ' matches for user ' + userId);
+    return inserted ?? [];
+  } catch (err) {
+    console.error('generateAICuratedMatches error for ' + userId + ':', err);
+    return [];
+  }
+}
 
 // ── Send "Your Sunday matches are ready" email ────────────────
 async function sendSundayReadyEmail(supabaseClient: any, userId: string): Promise<boolean> {
