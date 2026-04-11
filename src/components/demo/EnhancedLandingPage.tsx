@@ -525,6 +525,64 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <SectionDivider />
           </motion.div>
 
+          <div className="grid md:grid-cols-2 gap-10 lg:gap-14 items-center">
+            {/* Founder Image */}
+            <motion.div
+              className="relative order-2 md:order-1"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.1, margin: "-80px" }}
+              transition={{ duration: 0.8, ease: easeOut }}
+            >
+              <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-primary/20 via-border to-primary/15 blur-sm" />
+              <motion.div
+                className="relative overflow-hidden rounded-xl shadow-[var(--shadow-luxury)]"
+                whileHover={{ scale: 1.015 }}
+                transition={{ duration: 0.4, ease: easeOut }}
+              >
+                <img
+                  src={founderPortrait}
+                  alt="Bryant McCray, MonArk Founder"
+                  loading="lazy"
+                  className="w-full h-auto object-cover"
+                />
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-tr from-transparent via-card/8 to-transparent"
+                  initial={{ x: "-100%" }}
+                  whileInView={{ x: "100%" }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  transition={{ duration: 1.2, delay: 0.6, ease: "easeInOut" }}
+                />
+              </motion.div>
+            </motion.div>
+
+            {/* Text */}
+            <motion.div
+              className="space-y-5 order-1 md:order-2"
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.1, margin: "-80px" }}
+              transition={{ duration: 0.8, delay: 0.15, ease: easeOut }}
+            >
+              <p className="text-base text-muted-foreground font-body leading-relaxed">
+                I spent years on dating apps that felt more like slot machines than places to find real connection.
+              </p>
+              <p className="text-base text-muted-foreground font-body leading-relaxed">
+                Sure, we could meet people. But finding someone who truly <em className="font-medium not-italic text-foreground">got</em> you? That was rare.
+              </p>
+              <p className="text-base text-muted-foreground font-body leading-relaxed">
+                MonArk exists because I believed there was a better way — one that prioritizes depth over volume, and connection over convenience.
+              </p>
+              <div className="pt-2">
+                <p className="font-editorial italic text-[#A08C6E] text-base">— Bryant McCray, Founder</p>
+                <p className="font-editorial italic text-[#A08C6E] text-sm mt-3">
+                  As heard on <em>Save Me a Spot</em> — Chicago's leading relationship wellness podcast
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
       {/* ═══════════ DISCOVER MODE ═══════════ */}
       <section className="py-20 bg-foreground text-background overflow-hidden">
