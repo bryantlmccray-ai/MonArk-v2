@@ -3,10 +3,12 @@ import { Calendar, Star, Sparkles, BookOpen, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
+import { RifInsightsCard } from '@/components/rif/RifInsightsCard';
+import { toast } from 'sonner';
 
 interface DatesJournalProps {
   onStartDebrief: () => void;
@@ -25,7 +27,7 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
   const [showEntryModal, setShowEntryModal] = useState(false);
   const [entryText, setEntryText] = useState('');
   const [entryDate, setEntryDate] = useState(new Date().toISOString().slice(0, 10));
-  const [localEntries, setLocalEntries] = useState<LocalEntry[]>([]);
+  const queryClient = useQueryClient();
 
   const { data: completedDates = [] } = useQuery({
     queryKey: ['date-journal', user?.id],
@@ -49,13 +51,32 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
     enabled: !!user?.id,
   });
 
+  const saveEntryMutation = useMutation({
+    mutationFn: async () => {
+      if (!user?.id || !entryText.trim()) throw new Error('Missing data');
+      const { error } = await supabase.from('date_journal').insert({
+        user_id: user.id,
+        reflection_notes: entryText.trim(),
+        date_completed: entryDate,
+        date_title: 'Journal entry',
+        rating: 0,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['date-journal', user?.id] });
+      toast.success('Entry saved');
+      setEntryText('');
+      setEntryDate(new Date().toISOString().slice(0, 10));
+      setShowEntryModal(false);
+    },
+    onError: () => toast.error('Failed to save entry'),
+  });
+
   const handleSaveEntry = () => {
     if (!entryText.trim()) return;
-    setLocalEntries(prev => [{
-      id: crypto.randomUUID(),
-      text: entryText.trim(),
-      date: entryDate,
-    }, ...prev]);
+    saveEntryMutation.mutate();
+    // Optimistic: close modal immediately
     setEntryText('');
     setEntryDate(new Date().toISOString().slice(0, 10));
     setShowEntryModal(false);
@@ -88,6 +109,9 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
             ))}
           </div>
         )}
+
+        {/* MonArk Insights — shown when user has enough date reflections */}
+        <RifInsightsCard />
 
         <div className="space-y-3">
           <h3 className="text-base font-semibold text-foreground">Completed Dates</h3>
@@ -201,8 +225,8 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
               <Button variant="outline" onClick={() => setShowEntryModal(false)} className="text-sm">
                 Cancel
               </Button>
-              <Button onClick={handleSaveEntry} disabled={!entryText.trim()} className="text-sm">
-                Save Entry
+              <Button onClick={handleSaveEntry} disabled={!entryText.trim() || saveEntryMutation.isPending} className="text-sm">
+                {saveEntryMutation.isPending ? 'Saving...' : 'Save Entry'}
               </Button>
             </div>
           </div>
