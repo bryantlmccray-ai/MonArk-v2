@@ -5,12 +5,35 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Heart, X, MapPin, Briefcase, GraduationCap, Users } from 'lucide-react';
+import { Heart, X, MapPin, Briefcase, GraduationCap, Users, Sparkles } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 
 export const DatingPool = () => {
   const { pool, loading, likePoolMatch, passPoolMatch, pendingCount } = useDatingPool();
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const { user } = useAuth();
+
+  // Fetch which pool users have already liked/expressed interest in the current user
+  const { data: theyLikedSet = new Set<string>() } = useQuery({
+    queryKey: ['pool-they-liked', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return new Set<string>();
+      const poolUserIds = pool.map(m => m.pool_user_id).filter(Boolean);
+      if (!poolUserIds.length) return new Set<string>();
+      const { data } = await supabase
+        .from('matches')
+        .select('user_id')
+        .eq('liked_user_id', user.id)
+        .in('user_id', poolUserIds)
+        .eq('is_mutual', false);
+      return new Set<string>((data ?? []).map((r: any) => r.user_id));
+    },
+    enabled: !!user?.id && pool.length > 0,
+    staleTime: 60_000,
+  });
 
   const handleLike = async (matchId: string) => {
     setProcessingId(matchId);
@@ -98,6 +121,13 @@ export const DatingPool = () => {
                   )}
                 </div>
 
+                {/* They liked you badge — highest conversion signal */}
+                {theyLikedSet.has(match.pool_user_id) && (
+                  <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-1 bg-primary text-primary-foreground rounded-full text-[10px] font-semibold shadow-md">
+                    <Sparkles className="w-3 h-3" />
+                    Interested in you
+                  </div>
+                )}
                 {/* Compatibility badge */}
                 {match.compatibility_score && (
                   <Badge 
