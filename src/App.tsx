@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
-import { DemoProvider } from "@/context/DemoContext";
+import { DemoProvider } from "@/contexts/DemoContext";
 import { CookieConsent } from "@/components/legal/CookieConsent";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { AdminMFAGate } from "@/components/auth/AdminMFAGate";
