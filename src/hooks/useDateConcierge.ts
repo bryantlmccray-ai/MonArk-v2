@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useConversationReadiness } from './useConversationReadiness';
 import { Tables } from '@/integrations/supabase/types';
 import { sanitizeConciergePayload } from '@/lib/aiSanitizer';
+import { useNotifications } from './useNotifications';
 
 type Message = Tables<'messages'>;
 
@@ -65,6 +66,7 @@ export const useDateConcierge = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const { analyzeReadiness, setCooldown, updatePattern } = useConversationReadiness();
+  const { sendEmailNotification } = useNotifications();
 
   // Fetch user's date proposals
   const fetchProposals = async () => {
@@ -406,8 +408,36 @@ export const useDateConcierge = () => {
       const adjustedConfidence = readinessAnalysis.confidence * rifConfidenceModifier;
       const confidenceThreshold = userRifProfile?.intent_clarity >= 8 ? 0.65 : 0.7;
 
+      const shouldTrigger = readinessAnalysis.isReady && adjustedConfidence >= confidenceThreshold;
+
+      // ── Date Nudge Notification ──────────────────────────────
+      // Fire an email nudge when the conversation signals date-readiness
+      if (shouldTrigger) {
+        try {
+          const { data: matchProf } = await supabase
+            .from('profiles')
+            .select('name')
+            .eq('id', matchUserId)
+            .single();
+          const matchFirstName = matchProf?.name?.split(' ')?.[0] || 'your match';
+
+          await sendEmailNotification(
+            'date_proposal',
+            'The vibe is right — plan a date with ' + matchFirstName + ' 🌟',
+            'Your conversation with ' + matchFirstName + ' is flowing beautifully. It looks like a great moment to suggest a date! Open MonArk and tap \u201cPlan a Date\u201d to let the AI concierge craft a personalized idea for both of you.',
+            undefined,
+            'https://monark.app/matches?action=plan_date&match=' + matchUserId
+          );
+
+          // Set 24-hour cooldown so we don’t over-notify the same conversation
+          await markConciergeTriggered(conversationId, 24);
+        } catch (notifError) {
+          console.error('Date nudge notification failed (non-fatal):', notifError);
+        }
+      }
+
       return {
-        shouldTrigger: readinessAnalysis.isReady && adjustedConfidence >= confidenceThreshold,
+        shouldTrigger,
         confidence: adjustedConfidence,
         triggers: [...readinessAnalysis.triggers, ...rifTriggers]
       };
