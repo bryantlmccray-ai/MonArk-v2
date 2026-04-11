@@ -21,6 +21,7 @@ import { ApiErrorFallback } from '@/components/common/ApiErrorFallback';
 import { useActionProtection } from '@/hooks/useActionProtection';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { useDemo } from '@/contexts/DemoContext';
+import { toast } from 'sonner';
 
 export interface UnifiedMatch {
   id: string;
@@ -34,6 +35,7 @@ export interface UnifiedMatch {
   matchReason: string;
   interests: string[];
   type: 'curated' | 'pool';
+  theyLiked?: boolean; // true when the other user has already expressed interest
 }
 
 const DEMO_CURATED: UnifiedMatch[] = [
@@ -214,7 +216,7 @@ const PoolCard: React.FC<{
   onDetail: (m: UnifiedMatch) => void;
 }> = ({ match, onConnect, onDetail }) => (
   <Card
-    className="overflow-hidden border-border/50 shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
+    className={`overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group ${match.theyLiked ? 'border-amber-400/60 shadow-amber-100/40 ring-1 ring-amber-400/30' : 'border-border/50'}`}
     onClick={() => onDetail(match)}
   >
     <div className="relative aspect-[3/4] w-full">
@@ -228,6 +230,12 @@ const PoolCard: React.FC<{
       <Badge className="absolute top-2 right-2 bg-foreground/70 text-white border-none text-[10px] font-medium backdrop-blur-md">
         {match.compatibilityScore}%
       </Badge>
+      {match.theyLiked && (
+        <div className="absolute top-2 left-2 flex items-center gap-1 bg-amber-500/90 backdrop-blur-sm text-white text-[10px] font-semibold px-2 py-1 rounded-full shadow-sm">
+          <Heart className="w-2.5 h-2.5 fill-white" />
+          Interested in you
+        </div>
+      )}
       <div className="absolute bottom-0 left-0 right-0 p-3">
         <p className="font-semibold text-white text-sm font-serif">
           {match.name}, {match.age}
@@ -418,6 +426,7 @@ export const SundayMatches: React.FC = () => {
         matchReason: '',
         interests: m.profile.interests || [],
         type: 'pool' as const,
+        theyLiked: m.status === 'liked',
       }));
 
   // Tip banner state (localStorage-persisted)
@@ -433,6 +442,7 @@ export const SundayMatches: React.FC = () => {
   const [selectedMatch, setSelectedMatch] = useState<UnifiedMatch | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [showWhyOnly3, setShowWhyOnly3] = useState(false);
   const [mutualMatch, setMutualMatch] = useState<{
     name: string; photo?: string; conversationId?: string;
   } | null>(null);
@@ -455,10 +465,23 @@ export const SundayMatches: React.FC = () => {
     if (isDemo) return;
     await protectedAction(async () => {
       setProcessing(true);
-      await passMatch(match.id);
-      setProcessing(false);
       setDetailOpen(false);
       setSelectedMatch(null);
+      // Show undo toast for 4 seconds before committing the pass
+      let committed = false;
+      let undone = false;
+      const toastId = toast('Noted — we\'ll refine your next batch.', {
+        duration: 4000,
+        action: {
+          label: 'Undo',
+          onClick: () => { undone = true; toast.dismiss(toastId); }
+        },
+      });
+      await new Promise<void>((resolve) => setTimeout(resolve, 4100));
+      if (!undone) {
+        await passMatch(match.id);
+      }
+      setProcessing(false);
     });
   };
 
@@ -553,9 +576,17 @@ export const SundayMatches: React.FC = () => {
         <TabsList className="w-full">
           <TabsTrigger value="your3" className="flex-1">
             <Heart className="w-3.5 h-3.5 mr-1.5" /> Your 3
+            <span
+              role="button"
+              tabIndex={0}
+              aria-label="Why only 3 matches?"
+              onClick={(e) => { e.stopPropagation(); setShowWhyOnly3(true); }}
+              onKeyDown={(e) => e.key === 'Enter' && setShowWhyOnly3(true)}
+              className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-500/20 text-amber-600 text-[9px] font-bold cursor-pointer hover:bg-amber-500/30 transition-colors"
+            >?</span>
           </TabsTrigger>
           <TabsTrigger value="explore" className="flex-1 gap-1.5">
-            <Compass className="w-3.5 h-3.5" /> Explore
+            <Compass className="w-3.5 h-3.5" /> Explore ({poolMatches.length || 10})
           </TabsTrigger>
           <TabsTrigger value="plans" className="flex-1 gap-1.5">
             <Calendar className="w-3.5 h-3.5" /> Plans
@@ -567,12 +598,21 @@ export const SundayMatches: React.FC = () => {
           {curatedLoading && !isDemo ? (
             <div className="flex items-center justify-center py-12"><LoadingSpinner /></div>
           ) : displayMatches.length === 0 ? (
-            <div className="text-center py-12 bg-card/50 rounded-xl border border-border/50 mt-2">
-              <Moon className="w-10 h-10 mx-auto mb-3 text-muted-foreground/40" />
-              <h3 className="text-lg font-semibold text-foreground mb-2">No matches yet</h3>
-              <p className="text-muted-foreground text-sm max-w-sm mx-auto">
-                Your curated matches arrive every Sunday. Check back {refreshLabel}.
+            <div className="text-center py-10 bg-card/50 rounded-xl border border-border/50 mt-2 px-6">
+              <Calendar className="w-10 h-10 mx-auto mb-3 text-primary/50" />
+              <h3 className="text-lg font-semibold text-foreground mb-2">Your matches arrive Sunday</h3>
+              <p className="text-muted-foreground text-sm max-w-sm mx-auto mb-4">
+                {refreshLabel ? `Next drop in ${refreshLabel} — curated just for you.` : 'Your curated matches drop every Sunday.'}
               </p>
+              {poolMatches.length > 0 ? (
+                <div className="bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 text-sm text-foreground/80">
+                  <span className="font-medium text-primary">In the meantime</span> — explore {poolMatches.length} people curated for your city in the Explore tab below.
+                </div>
+              ) : (
+                <div className="bg-muted/30 border border-border/30 rounded-lg px-4 py-3 text-sm text-muted-foreground">
+                  You're on the early access list — matches are being curated for your city. We'll notify you when they're ready.
+                </div>
+              )}
             </div>
           ) : (
             <MatchRevealCeremony matchCount={displayMatches.length}>
@@ -606,7 +646,7 @@ export const SundayMatches: React.FC = () => {
         <TabsContent value="explore">
           <div className="mt-2 space-y-3">
             <p className="text-xs text-muted-foreground text-center px-4">
-              These members didn't make your curated 3 this week — but the connection potential is still high. Explore on your own terms.
+              People curated for you — <span className="text-primary font-medium">no match required to connect.</span> Browse freely and reach out to anyone here.
             </p>
             {poolLoading && !isDemo ? (
               <div className="flex items-center justify-center py-12"><LoadingSpinner /></div>
@@ -667,6 +707,30 @@ export const SundayMatches: React.FC = () => {
           matchPhoto={mutualMatch.photo}
           onStartChat={() => setMutualMatch(null)}
         />
+      )}
+      {/* Why Only 3 — Intentionality Explainer */}
+      {showWhyOnly3 && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm" onClick={() => setShowWhyOnly3(false)}>
+          <div className="bg-card w-full max-w-lg rounded-t-2xl p-6 pb-8 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="w-10 h-1 bg-border rounded-full mx-auto mb-5" />
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-9 h-9 rounded-full bg-amber-500/15 flex items-center justify-center text-amber-600 font-bold text-sm">3</span>
+              <h3 className="text-lg font-semibold text-foreground">Why only 3 matches?</h3>
+            </div>
+            <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+              We limit your weekly matches to 3 so you can give each person your full attention. Monark is built on intentionality — quality over endless scrolling.
+            </p>
+            <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+              Each match is carefully curated based on your Relational Identity Framework, values, and lifestyle. Three thoughtful connections beat thirty swipes every time.
+            </p>
+            <button
+              className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors"
+              onClick={() => setShowWhyOnly3(false)}
+            >
+              Got it
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
