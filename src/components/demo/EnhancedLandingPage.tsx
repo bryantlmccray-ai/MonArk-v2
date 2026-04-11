@@ -161,7 +161,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 </h1>
                 <div className="w-16 h-px mx-auto bg-primary/30" />
                 <p className="max-w-xl mx-auto text-base sm:text-lg font-body text-foreground/75 leading-relaxed px-2">
-                  MonArk gives you 3 curated introductions every week — powered by your <a href="#rif-framework" className="underline underline-offset-2 decoration-primary/50 hover:decoration-primary transition-colors cursor-pointer">Relational Intelligence</a> Profile. No swiping. No algorithm games. Just people who actually align with how you connect, communicate, and love.
+                                MonArk gives you 3 curated introductions every week — matched on <a href="#rif-framework" className="underline underline-offset-2 text-foreground/90 hover:text-foreground transition-colors">how you love</a>a>, not just who you are. No swiping. No algorithm games. Just people who actually align with how you connect, communicate, and build.</a>
                 </p>
               </div>
             </motion.div>
