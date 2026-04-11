@@ -225,6 +225,44 @@ export default function PaywallModal({
           </p>
         </div>
 
+        {/* Trust Score Explainer — always visible, not gated */}
+        <div
+          style={{
+            backgroundColor: "rgba(184,164,138,0.08)",
+            border: "1px solid rgba(184,164,138,0.2)",
+            borderRadius: 12,
+            padding: "16px 20px",
+            marginBottom: 24,
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 12,
+          }}
+        >
+          <div
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: "50%",
+              backgroundColor: "rgba(184,164,138,0.15)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+              fontSize: 14,
+              fontWeight: 700,
+              color: t.accent,
+            }}
+          >T</div>
+          <div>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: t.fg, marginBottom: 4 }}>
+              What is a Trust Score?
+            </p>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: t.sand, lineHeight: 1.6 }}>
+              Your Trust Score is a private measure of your intentionality, profile completeness, and engagement quality. Higher scores unlock better match visibility — it's our way of rewarding authenticity.
+            </p>
+          </div>
+        </div>
+
         {/* Billing Toggle */}
         <div
           style={{
