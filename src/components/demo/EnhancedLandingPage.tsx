@@ -160,6 +160,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                   Dating shouldn't feel like a second job.
                 </h1>
                 <div className="w-16 h-px mx-auto bg-primary/30" />
+                <p className="text-xs font-caption tracking-[0.2em] uppercase text-primary/70 mt-1 mb-0">We match you on how you love, not just who you are.</p>
                 <p className="max-w-xl mx-auto text-base sm:text-lg font-body text-foreground/75 leading-relaxed px-2">
                                 MonArk gives you 3 curated introductions every week — matched on <a href="#rif-framework" className="underline underline-offset-2 text-foreground/90 hover:text-foreground transition-colors">how you love</a>a>, not just who you are. No swiping. No algorithm games. Just people who actually align with how you connect, communicate, and build.</a>
                 </p>
@@ -351,7 +352,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           <div className="grid md:grid-cols-4 gap-5 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none -mx-6 px-6 md:mx-0 md:px-0">
             {[
               { icon: PenLine, num: "1", title: "Take the RIF", desc: "15 questions about how you communicate, connect, and date. Takes 5 minutes." },
-              { icon: Heart, num: "2", title: "Get Your 3", desc: "Every Sunday, receive 3 matches who fit your style—not just your type." },
+              { icon: Heart, num: "2", title: "Get Your 3", desc: "Every Sunday, your 3 curated matches drop in-app — no email required. Fit your style, not just your type." },
               { icon: MapPin, num: "3", title: "Date With Intention", desc: "We suggest premium first dates at vetted venues. No awkward coffee shop roulette." },
               { icon: MessageCircleHeart, num: "4", title: "Close the Loop", desc: "No ghosting. After every date, choose to advance or send a kind, automated closure. Everyone gets respect.", highlight: true },
             ].map((item, i) => (
@@ -514,6 +515,45 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
             className="text-center mb-10"
+
+            {/* ========== DISCOVER MODE ========== */}
+                  <section className="py-20 bg-foreground text-background overflow-hidden">
+                            <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
+                                        <motion.div
+                                                        className="text-center"
+                                                        initial={{ opacity: 0, y: 20 }}
+                                                        whileInView={{ opacity: 1, y: 0 }}
+                                                        viewport={{ once: true, amount: 0.1 }}
+                                                        transition={{ duration: 0.6, ease: easeOut }}
+                                                      >
+                                                      <p className="text-xs font-caption tracking-[0.15em] uppercase text-background/50 mb-3">Between Sundays</p>p>
+                                                      <h2 className="text-3xl sm:text-4xl font-editorial-headline text-background mb-4">
+                                                                      Stay in the signal.
+                                                      </h2>h2>
+                                                      <p className="text-base font-body text-background/70 leading-relaxed max-w-xl mx-auto mb-10">
+                                                                      Explore Discover Mode — a daily-capped browse experience that feeds your preferences directly into next Sunday's curation. The more you explore, the smarter your matches get.
+                                                      </p>p>
+                                                      <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-10">
+                                                        {[
+                                                        { icon: "📍", label: "Nearby by RIF compatibility" },
+                                                        { icon: "🔁", label: "Daily cap keeps it intentional" },
+                                                        { icon: "✦", label: "Every signal sharpens Sunday" },
+                                                                        ].map((pill) => (
+                                                                                            <span
+                                                                                                                  key={pill.label}
+                                                                                                                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-background/20 text-sm font-body text-background/80"
+                                                                                                                >
+                                                                                                                <span>{pill.icon}</span>span>
+                                                                                              {pill.label}
+                                                                                              </span>span>
+                                                                                          ))}
+                                                      </div>div>
+                                                      <p className="text-sm font-body italic text-background/40">
+                                                                      Your 3 still only drop once a week. Discover just makes them better.
+                                                      </p>p>
+                                        </motion.div>motion.div>
+                            </div>div>
+                  </section>section></section>
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.1 }}
@@ -592,6 +632,48 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               </div>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      
+      {/* ═══════════ DISCOVER MODE ═══════════ */}
+      <section className="py-20 bg-foreground text-background overflow-hidden">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <p className="text-xs font-caption tracking-[0.15em] uppercase text-background/50 mb-3">Between Sundays</p>
+            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-background mb-4">
+              Stay in the signal.
+            </h2>
+            <p className="text-base font-body text-background/70 leading-relaxed max-w-xl mx-auto mb-10">
+              Discover Mode lets you browse by RIF compatibility between drop days — a daily-capped experience that feeds your preferences directly into next Sunday's curation. Every signal sharpens your matches.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-10">
+              {[
+                { icon: "📍", label: "Nearby by RIF compatibility" },
+                { icon: "🔁", label: "Daily cap keeps it intentional" },
+                { icon: "✦", label: "Every signal sharpens Sunday" },
+              ].map((pill) => (
+                <span
+                  key={pill.label}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-background/20 text-sm font-body text-background/80"
+                >
+                  <span>{pill.icon}</span>
+                  {pill.label}
+                </span>
+              ))}
+            </div>
+
+            <p className="text-sm font-body italic text-background/50">
+              Between Sundays, explore. But your 3 still only drop once a week.
+            </p>
+          </motion.div>
         </div>
       </section>
 
@@ -790,6 +872,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
           <Accordion type="single" collapsible className="space-y-3">
             {[
+              { q: "Will I get email notifications?", a: "MonArk keeps your experience intentional and inbox-free. Your Sunday batch delivery, \'no matches this week\' updates, and post-date journal prompts are all delivered in-app — no email flooding. You stay in control, and in the moment." },
               { q: "How does curation actually work?", a: "MonArk uses the Relational Intelligence Framework (RIF) — a behavioral assessment rooted in emotional intelligence research. Your responses shape a compatibility profile that powers your weekly curated introductions." },
               { q: "What if none of my 3 interest me?", a: "You can pass on any introduction. Your feedback refines future curation. MonArk learns from every decision you make." },
               { q: "Is MonArk inclusive of all sexual orientations and gender identities?", a: "Yes. MonArk is designed for all adults seeking intentional connection, regardless of orientation or identity. Curation is always preference-informed." },
