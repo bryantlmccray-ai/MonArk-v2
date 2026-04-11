@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, MessageCircle, BookOpen, Calendar, Share2 } from 'lucide-react';
+import { User, MessageCircle, BookOpen, Calendar, Share2, Compass } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -70,9 +70,9 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, o
 
   const tabs = [
     { id: 'weekly', icon: Calendar, label: 'Your 3', badge: newMatchCount },
+    { id: 'discover', icon: Compass, label: 'Discover', badge: 0 },
     { id: 'matches', icon: MessageCircle, label: 'Chats', badge: unreadCount },
     { id: 'dates', icon: BookOpen, label: 'Journal', badge: 0 },
-    { id: 'shareables', icon: Share2, label: 'Milestones', badge: 0 },
     { id: 'profile', icon: User, label: 'Profile', badge: 0 },
   ];
 
