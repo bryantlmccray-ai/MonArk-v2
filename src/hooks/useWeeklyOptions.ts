@@ -30,6 +30,20 @@ export interface WeeklyOption {
   created_at: string;
 }
 
+/** Returns true if today is Sunday (local time) */
+export function isSundayToday(): boolean {
+  return new Date().getDay() === 0;
+}
+
+/** Returns the date of the next Sunday at midnight local time */
+export function getNextSunday(): Date {
+  const d = new Date();
+  const daysUntil = (7 - d.getDay()) % 7 || 7;
+  d.setDate(d.getDate() + daysUntil);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
 export const useWeeklyOptions = () => {
   const [options, setOptions] = useState<WeeklyOption[]>([]);
   const [loading, setLoading] = useState(true);
@@ -172,6 +186,8 @@ export const useWeeklyOptions = () => {
     options,
     loading,
     generating,
+    isSunday: isSundayToday(),
+    nextSunday: getNextSunday(),
     acceptOption,
     passOption,
     refetch: loadWeeklyOptions
