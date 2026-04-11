@@ -83,6 +83,27 @@ const DEMO_MATCHES: CuratedMatch[] = [
   }
 ];
 
+
+// Fire-and-forget: call ml-compatibility-trainer after any swipe decision
+// so the model learns from both positive (accept) and negative (pass) signals
+async function recordSwipeSignal(userId: string, matchUserId: string, interactionType: 'like' | 'pass', score: number) {
+  try {
+    await supabase
+      .from('user_compatibility_feedback')
+      .insert({
+        user_id: userId,
+        target_user_id: matchUserId,
+        interaction_type: interactionType,
+        feedback_score: interactionType === 'like' ? score : Math.max(1, 10 - score * 10),
+        created_at: new Date().toISOString(),
+      });
+    // Trigger trainer asynchronously — don't block the UI
+    supabase.functions.invoke('ml-compatibility-trainer', {}).catch(() => {});
+  } catch (_) {
+    // Non-blocking: never surface errors to the user
+  }
+}
+
 const getCurrentWeekStart = () => {
   const now = new Date();
   const day = now.getDay();
@@ -204,6 +225,11 @@ export const useCuratedMatches = () => {
         }
       }
 
+      // Record accept signal for ML trainer (non-blocking)
+      if (user) {
+        recordSwipeSignal(user.id, match.matched_user_id, 'like', match.compatibility_score ?? 0.7);
+      }
+
       return { matchId, isMutual: !!mutualCheck, conversationId, matchName: match.profile.name, matchPhoto: match.profile.photos?.[0] };
     },
     onSuccess: (result) => {
@@ -222,11 +248,18 @@ export const useCuratedMatches = () => {
       if (demoData.isInDemo) return matchId;
       if (!user) throw new Error('Not authenticated');
 
+      const match = matches.find(m => m.id === matchId);
       const { error } = await supabase.rpc('respond_to_curated_match' as any, {
         p_match_id: matchId,
         p_status: 'declined'
       });
       if (error) throw error;
+
+      // Record pass signal for ML trainer (non-blocking)
+      if (user && match) {
+        recordSwipeSignal(user.id, match.matched_user_id, 'pass', match.compatibility_score ?? 0.5);
+      }
+
       return matchId;
     },
     onSuccess: () => {
