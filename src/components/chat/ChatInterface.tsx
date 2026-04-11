@@ -35,8 +35,33 @@ interface ChatInterfaceProps {
   matchName: string;
   matchImage?: string;
   onClose?: () => void;
-   /** Whether the user has a mutual match (enables messaging) */
-   isMatched?: boolean;
+  /** Whether the user has a mutual match (enables messaging) */
+  isMatched?: boolean;
+  /** Shared interests from curation_decisions.interest_overlap — shown as icebreaker */
+  interestOverlap?: string[];
+}
+
+// Icebreaker banner component — shown at top of new conversations
+function IcebreakerBanner({ matchName, sharedInterests }: { matchName: string; sharedInterests: string[] }) {
+  const [dismissed, setDismissed] = React.useState(false);
+  if (dismissed) return null;
+  const top2 = sharedInterests.slice(0, 2);
+  return (
+    <div className="mx-4 mt-2 px-4 py-3 bg-primary/8 border border-primary/20 rounded-xl flex items-start gap-3">
+      <span className="text-primary text-base mt-0.5">✦</span>
+      <div className="flex-1 min-w-0">
+        <p className="text-xs font-semibold text-foreground mb-0.5">You both love {top2.join(' & ')}</p>
+        <p className="text-xs text-muted-foreground leading-relaxed">Great starting points. What’s your favorite {top2[0]?.toLowerCase()} experience?</p>
+      </div>
+      <button
+        onClick={() => setDismissed(true)}
+        className="text-muted-foreground/50 hover:text-muted-foreground text-xs mt-0.5 flex-shrink-0"
+        aria-label="Dismiss"
+      >
+        ✕
+      </button>
+    </div>
+  );
 }
 
 export const ChatInterface: React.FC<ChatInterfaceProps> = ({
@@ -44,8 +69,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   matchUserId,
   matchName,
   matchImage,
-   onClose,
-   isMatched = true // Default to true for backwards compatibility
+  onClose,
+  isMatched = true, // Default to true for backwards compatibility
+  interestOverlap,
 }) => {
   const [messageText, setMessageText] = useState('');
   const [showUserActions, setShowUserActions] = useState(false);
@@ -333,6 +359,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             </Button>
           </div>
         </div>
+      )}
+
+      {/* Icebreaker Banner — shown for new conversations with shared interests */}
+      {interestOverlap && interestOverlap.length > 0 && messages.length < 8 && (
+        <IcebreakerBanner matchName={matchName} sharedInterests={interestOverlap} />
       )}
 
       {/* Messages Area */}
