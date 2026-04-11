@@ -211,7 +211,8 @@ const handler = async (req: Request): Promise<Response> => {
     // ── After-Date Journal Prompts ────────────────────────────────────────
     // Find accepted date proposals whose time_suggestion ended 24+ hours ago
     // and no journal entry exists yet — send a personalized "how did it go?" email
-    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    // 48h delay: gives users space before prompting reflection
+    const twentyFourHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
     let journalPromptsCount = 0;
 
     try {
@@ -268,8 +269,8 @@ const handler = async (req: Request): Promise<Response> => {
                   body: {
                     to: creatorProfile.email,
                     type: 'system',
-                    title: `How did your date with ${partnerFirstNameForCreator} go? 📔`,
-                    message: `We hope \"${dateTitle}\" with ${partnerFirstNameForCreator} was wonderful! Take 2 minutes to log your thoughts in your date journal — your reflections help us find even better matches for you.`,
+                    title: `Reflect on your time with ${partnerFirstNameForCreator} — whenever you're ready 📔`,
+                    message: `No rush — your journal is here whenever you feel like reflecting on your time with ${partnerFirstNameForCreator}. Even a quick note helps MonArk find better connections for you.`,
                     actionUrl: `https://monark.app/dates?log=${proposal.id}`
                   }
                 });
@@ -282,8 +283,8 @@ const handler = async (req: Request): Promise<Response> => {
                   body: {
                     to: recipientProfile.email,
                     type: 'system',
-                    title: `How did your date with ${partnerFirstNameForRecipient} go? 📔`,
-                    message: `We hope \"${dateTitle}\" with ${partnerFirstNameForRecipient} was a great time! Log your experience in your date journal — your honest reflection helps MonArk keep improving your matches.`,
+                    title: `Reflect on your time with ${partnerFirstNameForRecipient} — whenever you're ready 📔`,
+                    message: `No rush — your journal is here whenever you feel like reflecting on your time with ${partnerFirstNameForRecipient}. Your honest take helps us keep improving your matches.`,
                     actionUrl: `https://monark.app/dates?log=${proposal.id}`
                   }
                 });
