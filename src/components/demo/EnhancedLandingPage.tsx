@@ -162,7 +162,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 <div className="w-16 h-px mx-auto bg-primary/30" />
                 <p className="text-xs font-caption tracking-[0.2em] uppercase text-primary/70 mt-1 mb-0">We match you on how you love, not just who you are.</p>
                 <p className="max-w-xl mx-auto text-base sm:text-lg font-body text-foreground/75 leading-relaxed px-2">
-                                MonArk gives you 3 curated introductions every week — matched on <a href="#rif-framework" className="underline underline-offset-2 text-foreground/90 hover:text-foreground transition-colors">how you love</a>a>, not just who you are. No swiping. No algorithm games. Just people who actually align with how you connect, communicate, and build.</a>
+                                MonArk gives you 3 curated introductions every week — matched on <a href="#rif-framework" className="underline underline-offset-2 text-foreground/90 hover:text-foreground transition-colors">how you love</a>, not just who you are. No swiping. No algorithm games. Just people who actually align with how you connect, communicate, and build.
                 </p>
               </div>
             </motion.div>
@@ -515,128 +515,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
             className="text-center mb-10"
-
-            {/* ========== DISCOVER MODE ========== */}
-                  <section className="py-20 bg-foreground text-background overflow-hidden">
-                            <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
-                                        <motion.div
-                                                        className="text-center"
-                                                        initial={{ opacity: 0, y: 20 }}
-                                                        whileInView={{ opacity: 1, y: 0 }}
-                                                        viewport={{ once: true, amount: 0.1 }}
-                                                        transition={{ duration: 0.6, ease: easeOut }}
-                                                      >
-                                                      <p className="text-xs font-caption tracking-[0.15em] uppercase text-background/50 mb-3">Between Sundays</p>p>
-                                                      <h2 className="text-3xl sm:text-4xl font-editorial-headline text-background mb-4">
-                                                                      Stay in the signal.
-                                                      </h2>h2>
-                                                      <p className="text-base font-body text-background/70 leading-relaxed max-w-xl mx-auto mb-10">
-                                                                      Explore Discover Mode — a daily-capped browse experience that feeds your preferences directly into next Sunday's curation. The more you explore, the smarter your matches get.
-                                                      </p>p>
-                                                      <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-10">
-                                                        {[
-                                                        { icon: "📍", label: "Nearby by RIF compatibility" },
-                                                        { icon: "🔁", label: "Daily cap keeps it intentional" },
-                                                        { icon: "✦", label: "Every signal sharpens Sunday" },
-                                                                        ].map((pill) => (
-                                                                                            <span
-                                                                                                                  key={pill.label}
-                                                                                                                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-background/20 text-sm font-body text-background/80"
-                                                                                                                >
-                                                                                                                <span>{pill.icon}</span>span>
-                                                                                              {pill.label}
-                                                                                              </span>span>
-                                                                                          ))}
-                                                      </div>div>
-                                                      <p className="text-sm font-body italic text-background/40">
-                                                                      Your 3 still only drop once a week. Discover just makes them better.
-                                                      </p>p>
-                                        </motion.div>motion.div>
-                            </div>div>
-                  </section>section></section>
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-2">Why I Built MonArk</h2>
-            <p className="text-sm font-body text-muted-foreground tracking-[0.08em] uppercase">A Founder's Note on Intentional Dating</p>
-            <SectionDivider />
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-10 lg:gap-14 items-center">
-            {/* Founder Image */}
-            <motion.div
-              className="relative order-2 md:order-1"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.1, margin: "-80px" }}
-              transition={{ duration: 0.8, ease: easeOut }}
-            >
-              <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-primary/20 via-border to-primary/15 blur-sm" />
-              <motion.div
-                className="relative overflow-hidden rounded-xl shadow-[var(--shadow-luxury)]"
-                whileHover={{ scale: 1.015 }}
-                transition={{ duration: 0.4, ease: easeOut }}
-              >
-                <img
-                  src={founderPortrait}
-                  alt="Bryant McCray, MonArk Founder"
-                  loading="lazy"
-                  className="w-full h-auto object-cover"
-                />
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-tr from-transparent via-card/8 to-transparent"
-                  initial={{ x: "-100%" }}
-                  whileInView={{ x: "100%" }}
-                  viewport={{ once: true, amount: 0.1 }}
-                  transition={{ duration: 1.2, delay: 0.6, ease: "easeInOut" }}
-                />
-              </motion.div>
-            </motion.div>
-
-            {/* Text */}
-            <motion.div
-              className="space-y-5 order-1 md:order-2"
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.1, margin: "-80px" }}
-              transition={{ duration: 0.8, delay: 0.15, ease: easeOut }}
-            >
-              <p className="text-base text-muted-foreground font-body leading-relaxed">
-                I spent years on dating apps that felt more like slot machines than places to find real connection.
-              </p>
-              <p className="text-base text-muted-foreground font-body leading-relaxed">
-                Sure, we could meet people. But finding someone who truly <em className="font-medium not-italic text-foreground">got</em> you? That was rare.
-              </p>
-              <p className="text-base text-muted-foreground font-body leading-relaxed">
-                I wanted something intentional. A way to match on emotional compatibility, not just a hot profile pic.
-                A way to make first dates feel effortless, not awkward.
-              </p>
-              <p className="text-base text-muted-foreground font-body leading-relaxed">
-                That's why MonArk matches on communication style, not just demographics.
-              </p>
-              <div className="pt-3">
-                <p
-                  className="text-muted-foreground"
-                  style={{ fontFamily: "'Pinyon Script', cursive", fontSize: '1.6rem', letterSpacing: '0.01em', lineHeight: 1.3 }}
-                >
-                  — Bryant McCray
-                </p>
-                <p className="text-xs text-muted-foreground font-body tracking-[0.15em] uppercase mt-0.5">
-                  CEO & Founder
-                </p>
-                <p className="font-editorial italic text-[#A08C6E] text-sm mt-3">
-                  As heard on <em>Save Me a Spot</em> — Chicago's leading relationship wellness podcast
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      
-      {/* ═══════════ DISCOVER MODE ═══════════ */}
+            {/* ═══════════ DISCOVER MODE ═══════════ */}
       <section className="py-20 bg-foreground text-background overflow-hidden">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
@@ -644,7 +523,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            transition={{ duration: 0.6, ease: easeOut }}
           >
             <p className="text-xs font-caption tracking-[0.15em] uppercase text-background/50 mb-3">Between Sundays</p>
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-background mb-4">
