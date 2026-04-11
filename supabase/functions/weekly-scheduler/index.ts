@@ -98,8 +98,23 @@ serve(async (req) => {
         }
       }
 
+      // Mid-week AI companion prompt (Wednesdays)
+      const midweekResults: string[] = [];
+      if (dayOfWeek === 3) {
+        console.log('weekly-scheduler: Wednesday — sending mid-week AI prompts');
+        for (const usr of activeUsers) {
+          try {
+            await sendMidweekPrompt(supabaseService, usr.id);
+            midweekResults.push(usr.id);
+          } catch (err) {
+            console.error('Midweek prompt error for ' + usr.id + ':', err);
+          }
+        }
+        console.log('Midweek prompts sent: ' + midweekResults.length);
+      }
+
       return new Response(
-        JSON.stringify({ success: true, usersProcessed: activeUsers.length, notifiedCount, results }),
+        JSON.stringify({ success: true, usersProcessed: activeUsers.length, notifiedCount, midweekPromptsSent: midweekResults.length, results }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -344,6 +359,60 @@ async function sendNoMatchesNotification(supabaseClient: any, userId: string): P
     }
   } catch (err) {
     console.error('sendNoMatchesNotification error for ' + userId + ':', err);
+  }
+}
+
+// ── Wednesday mid-week AI companion in-app prompt ────────────────
+async function sendMidweekPrompt(supabaseClient: any, userId: string): Promise<void> {
+  try {
+    // Get RIF profile for personalized prompt
+    const { data: rif } = await supabaseClient
+      .from('rif_profiles')
+      .select('pacing_preferences, emotional_readiness, intent_clarity, communication_style')
+      .eq('user_id', userId)
+      .eq('is_active', true)
+      .maybeSingle();
+
+    // Pick a prompt based on their RIF data
+    const pacing = rif?.pacing_preferences ?? 5;
+    const emotional = rif?.emotional_readiness ?? 5;
+    const intent = rif?.intent_clarity ?? 5;
+
+    let prompt = 'What’s one thing you’re hoping someone will understand about you after a first conversation?';
+    let title = 'A thought from MonArk this Wednesday';
+
+    if (pacing <= 3) {
+      prompt = 'You value taking things slow. What does that actually look like in practice for you?';
+    } else if (emotional >= 7) {
+      prompt = 'You show up emotionally for people. How do you recognize when someone does the same for you?';
+    } else if (intent >= 8) {
+      prompt = 'You know what you want. What would make you feel confident someone is on the same page?';
+    } else {
+      const prompts = [
+        'What’s something you’ve been looking forward to this week?',
+        'If you could describe your ideal first date in one sentence, what would it be?',
+        'What’s a quality in someone that you notice right away?',
+        'What’s something about you that takes a while to come out?',
+      ];
+      prompt = prompts[new Date().getDate() % prompts.length];
+    }
+
+    const { error } = await supabaseClient
+      .from('notifications')
+      .insert({
+        user_id: userId,
+        type: 'system',
+        title,
+        message: prompt,
+        action_url: '/ai-companion',
+        action_label: 'Reflect with your companion',
+        is_read: false,
+        created_at: new Date().toISOString(),
+      });
+
+    if (error) console.error('Midweek prompt insert error for ' + userId + ':', error);
+  } catch (err) {
+    console.error('sendMidweekPrompt error for ' + userId + ':', err);
   }
 }
 
