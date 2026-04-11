@@ -1,18 +1,79 @@
 import React from 'react';
 import { User, MessageCircle, BookOpen, Calendar, Share2 } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 
 interface BottomNavigationProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
 }
 
+// Lightweight hook — just counts unread in-app notifications + new pending matches
+function useNavBadges() {
+  const { user } = useAuth();
+
+  const { data: unreadCount = 0 } = useQuery({
+    queryKey: ['nav-unread', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return 0;
+      const { count } = await supabase
+        .from('notifications')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('is_read', false);
+      return count ?? 0;
+    },
+    enabled: !!user?.id,
+    refetchInterval: 60_000, // poll every minute
+    staleTime: 30_000,
+  });
+
+  const { data: newMatchCount = 0 } = useQuery({
+    queryKey: ['nav-new-matches', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return 0;
+      const now = new Date();
+      const dayOfWeek = now.getDay();
+      const diff = now.getDate() - dayOfWeek;
+      const weekStart = new Date(now.setDate(diff));
+      weekStart.setHours(0, 0, 0, 0);
+      const { count } = await supabase
+        .from('curated_matches' as any)
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('status', 'pending')
+        .gte('created_at', weekStart.toISOString());
+      return count ?? 0;
+    },
+    enabled: !!user?.id,
+    refetchInterval: 60_000,
+    staleTime: 30_000,
+  });
+
+  return { unreadCount, newMatchCount };
+}
+
+function NavBadge({ count, color = 'bg-primary' }: { count: number; color?: string }) {
+  if (count <= 0) return null;
+  return (
+    <span
+      className={`absolute -top-1 -right-1 min-w-[16px] h-4 px-0.5 ${color} text-primary-foreground text-[9px] font-bold rounded-full flex items-center justify-center leading-none ring-2 ring-card`}
+    >
+      {count > 9 ? '9+' : count}
+    </span>
+  );
+}
+
 export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, onTabChange }) => {
+  const { unreadCount, newMatchCount } = useNavBadges();
+
   const tabs = [
-    { id: 'weekly', icon: Calendar, label: 'Your 3' },
-    { id: 'matches', icon: MessageCircle, label: 'Chats' },
-    { id: 'dates', icon: BookOpen, label: 'Journal' },
-    { id: 'shareables', icon: Share2, label: 'Milestones' },
-    { id: 'profile', icon: User, label: 'Profile' },
+    { id: 'weekly', icon: Calendar, label: 'Your 3', badge: newMatchCount },
+    { id: 'matches', icon: MessageCircle, label: 'Chats', badge: unreadCount },
+    { id: 'dates', icon: BookOpen, label: 'Journal', badge: 0 },
+    { id: 'shareables', icon: Share2, label: 'Milestones', badge: 0 },
+    { id: 'profile', icon: User, label: 'Profile', badge: 0 },
   ];
 
   return (
@@ -37,6 +98,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, o
                   <div className="absolute -inset-1.5 bg-primary/10 rounded-lg" />
                 )}
                 <Icon className={`h-5 w-5 relative transition-all duration-200 ${isActive ? 'stroke-[2.4px]' : 'stroke-[1.5px]'}`} />
+                <NavBadge count={tab.badge} />
               </div>
               <span className={`text-[10px] leading-none tracking-wide ${isActive ? 'font-semibold' : 'font-medium opacity-80'}`}>{tab.label}</span>
             </button>
