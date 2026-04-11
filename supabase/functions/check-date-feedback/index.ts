@@ -206,13 +206,119 @@ const handler = async (req: Request): Promise<Response> => {
       }
     }
 
-    console.log(`Sent ${notificationsSent} feedback notifications`);
+    console.log(`Sent ${notificationsSent} feedback notifications for contact shares`);
+
+    // ── After-Date Journal Prompts ────────────────────────────────────────
+    // Find accepted date proposals whose time_suggestion ended 24+ hours ago
+    // and no journal entry exists yet — send a personalized "how did it go?" email
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    let journalPromptsCount = 0;
+
+    try {
+      const { data: pastProposals, error: proposalsError } = await supabase
+        .from('date_proposals')
+        .select(`
+          id,
+          creator_user_id,
+          recipient_user_id,
+          title,
+          activity,
+          time_suggestion,
+          journal_prompt_sent
+        `)
+        .eq('status', 'accepted')
+        .lte('time_suggestion', twentyFourHoursAgo)
+        .eq('journal_prompt_sent', false);
+
+      if (proposalsError) {
+        console.error('Error fetching past proposals:', proposalsError);
+      } else if (pastProposals && pastProposals.length > 0) {
+        console.log(`Found ${pastProposals.length} past proposals needing journal prompts`);
+
+        for (const proposal of pastProposals) {
+          try {
+            // Check if a journal entry already exists for this proposal
+            const { data: existingEntry } = await supabase
+              .from('date_journal')
+              .select('id')
+              .eq('date_proposal_id', proposal.id)
+              .maybeSingle();
+
+            if (!existingEntry) {
+              // Fetch partner name for the creator
+              const { data: recipientProfile } = await supabase
+                .from('profiles')
+                .select('name, email')
+                .eq('id', proposal.recipient_user_id)
+                .single();
+
+              const { data: creatorProfile } = await supabase
+                .from('profiles')
+                .select('name, email')
+                .eq('id', proposal.creator_user_id)
+                .single();
+
+              const partnerFirstNameForCreator = recipientProfile?.name?.split(' ')?.[0] || 'your date';
+              const partnerFirstNameForRecipient = creatorProfile?.name?.split(' ')?.[0] || 'your date';
+              const dateTitle = proposal.title || proposal.activity || 'your date';
+
+              // Send journal prompt to proposal creator
+              if (creatorProfile?.email) {
+                await supabase.functions.invoke('send-notification-email', {
+                  body: {
+                    to: creatorProfile.email,
+                    type: 'system',
+                    title: `How did your date with ${partnerFirstNameForCreator} go? 📔`,
+                    message: `We hope \"${dateTitle}\" with ${partnerFirstNameForCreator} was wonderful! Take 2 minutes to log your thoughts in your date journal — your reflections help us find even better matches for you.`,
+                    actionUrl: `https://monark.app/dates?log=${proposal.id}`
+                  }
+                });
+                journalPromptsCount++;
+              }
+
+              // Send journal prompt to recipient
+              if (recipientProfile?.email) {
+                await supabase.functions.invoke('send-notification-email', {
+                  body: {
+                    to: recipientProfile.email,
+                    type: 'system',
+                    title: `How did your date with ${partnerFirstNameForRecipient} go? 📔`,
+                    message: `We hope \"${dateTitle}\" with ${partnerFirstNameForRecipient} was a great time! Log your experience in your date journal — your honest reflection helps MonArk keep improving your matches.`,
+                    actionUrl: `https://monark.app/dates?log=${proposal.id}`
+                  }
+                });
+                journalPromptsCount++;
+              }
+            }
+
+            // Mark proposal so we don't prompt again
+            await supabase
+              .from('date_proposals')
+              .update({
+                journal_prompt_sent: true,
+                journal_prompt_sent_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', proposal.id);
+
+          } catch (proposalErr) {
+            console.error(`Error processing journal prompt for proposal ${proposal.id}:`, proposalErr);
+          }
+        }
+      }
+    } catch (journalCheckErr) {
+      console.error('Error in after-date journal prompt check:', journalCheckErr);
+      // Non-fatal — continue to return success
+    }
+
+    console.log(`Sent ${journalPromptsCount} after-date journal prompt emails`);
 
     return new Response(
       JSON.stringify({ 
         success: true, 
         notificationsSent,
-        sharesProcessed: contactShares.length 
+        sharesProcessed: contactShares.length,
+        journalPromptsCount
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
