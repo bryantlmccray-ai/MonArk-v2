@@ -248,7 +248,12 @@ async function generateSingleOption(
   const timeWindow = generateTimeWindow(eqSettings);
   const eqFitChips = generateEQFitChips(eqSettings);
   const careIndex = venue?.venue_care_scores?.[0]?.overall_score || 0.8;
-  const whyThisForYou = generateWhyText(eqSettings, venue, profile);
+  let rifProfile = null;
+  try {
+    const { data: rp } = await supabaseClient.from('rif_profiles').select('pacing_preferences,emotional_readiness,boundary_respect,intent_clarity').eq('user_id', userId).eq('is_active', true).maybeSingle();
+    rifProfile = rp;
+  } catch (_) {}
+  const whyThisForYou = generateWhyText(eqSettings, venue, profile, rifProfile);
   const vibeLine = generateVibeLine(eqSettings, venue);
 
   const optionData = {
@@ -309,14 +314,26 @@ function generateEQFitChips(eqSettings: any): string[] {
   return chips.slice(0, 4);
 }
 
-function generateWhyText(eqSettings: any, venue: any, profile: any): string {
+function generateWhyText(eqSettings: any, venue: any, profile: any, rifProfile?: any): string {
   const reasons = [];
+  // ── RIF-aware personalized reasoning ──
+  if (rifProfile) {
+    const pacing = rifProfile.pacing_preferences ?? 5;
+    const emotional = rifProfile.emotional_readiness ?? 5;
+    const boundary = rifProfile.boundary_respect ?? 5;
+    const intent = rifProfile.intent_clarity ?? 5;
+    if (pacing <= 3) reasons.push('low-pressure pacing that respects your preference for slow starts');
+    else if (pacing >= 8) reasons.push('setting that matches your energetic dating style');
+    if (emotional >= 7) reasons.push('environment suited for meaningful conversation');
+    if (boundary >= 8) reasons.push('relaxed setting that makes it easy to set the pace');
+    if (intent >= 8) reasons.push('venue that supports intentional connection');
+  }
   if (eqSettings?.conversation_style === 'quiet') reasons.push('intimate atmosphere for deep conversation');
   else if (eqSettings?.conversation_style === 'talkative') reasons.push('lively space that energizes discussion');
   if (eqSettings?.duration_preference <= 60) reasons.push('perfect for your preferred shorter meetups');
-  if (venue) reasons.push('high care score (' + ((venue.venue_care_scores?.[0]?.overall_score * 100) || 80).toFixed(0) + '%)');
+  if (venue?.venue_care_scores?.[0]?.overall_score) reasons.push('high care score (' + (venue.venue_care_scores[0].overall_score * 100).toFixed(0) + '%)');
   return reasons.length > 0
-    ? 'Picked for you: ' + reasons.join(', ')
+    ? 'Picked for you: ' + reasons.slice(0, 3).join(', ')
     : 'A thoughtfully curated option that matches your preferences';
 }
 
