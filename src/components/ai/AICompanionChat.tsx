@@ -31,6 +31,7 @@ export const AICompanionChat: React.FC<AICompanionChatProps> = ({ onClose }) => 
   const [userInput, setUserInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [circuitBreakerOpen, setCircuitBreakerOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   const { user } = useAuth();
@@ -241,7 +242,7 @@ What would you like to talk about? 😊`,
       const fallbackResponse: AIMessage = {
         id: `ai_${Date.now()}`,
         type: 'conversation',
-        content: "I'm having trouble thinking right now, but I'm here for you! Try asking again in a moment.",
+        content: "I'm recharging for a moment — please try again in about 60 seconds and I'll be right back with you.",
         timestamp: new Date().toISOString()
       };
       setMessages(prev => [...prev, fallbackResponse]);
@@ -293,6 +294,7 @@ What would you like to talk about? 😊`,
         throw error;
       }
 
+      if (data?.circuit_breaker === 'open') { setCircuitBreakerOpen(true); } else { setCircuitBreakerOpen(false); }
       return data?.message || "I'm here to help you with your dating journey! What's on your mind?";
     } catch (error) {
       console.error('Error generating AI response:', error);
@@ -435,6 +437,12 @@ What would you like to talk about? 😊`,
         <div ref={messagesEndRef} />
       </div>
 
+      {circuitBreakerOpen && (
+        <div className="px-3 py-2 bg-amber-500/10 border-t border-amber-500/20 flex items-center gap-2">
+          <span className="text-amber-400 text-xs">&#9889;</span>
+          <p className="text-xs text-amber-300/80 leading-tight">Ark is recharging — try again in ~60 seconds.</p>
+        </div>
+      )}
       {/* Input */}
       <div className="p-4 border-t border-gray-700">
         <div className="flex space-x-2">
