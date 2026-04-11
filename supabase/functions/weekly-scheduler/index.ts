@@ -84,9 +84,14 @@ serve(async (req) => {
           const options = await generateWeeklyOptionsForUser(supabaseService, usr.id);
           results.push({ user_id: usr.id, options_generated: options.length, curated_matches: curatedMatches.length });
 
-          // Send "Your Sunday matches are ready" email notification
-          const notified = await sendSundayReadyEmail(supabaseService, usr.id);
-          if (notified) notifiedCount++;
+          if (curatedMatches.length === 0) {
+            // No compatible matches found — send a supportive "still finding" email
+            await sendNoMatchesEmail(supabaseService, usr.id);
+          } else {
+            // Send "Your Sunday matches are ready" email notification
+            const notified = await sendSundayReadyEmail(supabaseService, usr.id);
+            if (notified) notifiedCount++;
+          }
         } catch (userErr) {
           console.error('Error processing user ' + usr.id + ':', userErr);
           results.push({ user_id: usr.id, error: String(userErr) });
@@ -271,6 +276,82 @@ async function sendSundayReadyEmail(supabaseClient: any, userId: string): Promis
   } catch (err) {
     console.error('sendSundayReadyEmail error for ' + userId + ':', err);
     return false;
+  }
+}
+
+// ── Send "MonArk is still finding the right people" email ────────────────
+async function sendNoMatchesEmail(supabaseClient: any, userId: string): Promise<void> {
+  try {
+    const { data: profile } = await supabaseClient
+      .from('profiles')
+      .select('email, name')
+      .eq('id', userId)
+      .single();
+
+    if (!profile?.email) return;
+
+    const firstName = profile.name?.split(' ')?.[0] || 'there';
+
+    // Check what's missing in user's RIF profile so we can give a concrete next step
+    const { data: rifProfile } = await supabaseClient
+      .from('rif_profiles')
+      .select('emotional_readiness, boundary_respect, pacing_preferences, intent_clarity, communication_style')
+      .eq('user_id', userId)
+      .eq('is_active', true)
+      .maybeSingle();
+
+    const { data: userProfile } = await supabaseClient
+      .from('user_profiles')
+      .select('location_data, interests, search_radius_km')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    // Determine the most actionable next step
+    let nextStep = 'adding more detail to your RIF profile so our AI can find a better fit for you';
+    let actionPath = '/profile?tab=rif';
+    let actionLabel = 'Update your RIF Profile';
+
+    const hasRif = rifProfile && Object.values(rifProfile).some(v => v !== null && v !== undefined);
+    const hasLocation = userProfile?.location_data?.city;
+    const hasInterests = (userProfile?.interests || []).length >= 3;
+    const radius = userProfile?.search_radius_km || 25;
+
+    if (!hasRif) {
+      nextStep = 'completing your RIF dating style quiz — it’s how our AI understands what you’re really looking for';
+      actionPath = '/profile?tab=rif';
+      actionLabel = 'Complete your RIF quiz';
+    } else if (!hasLocation) {
+      nextStep = 'adding your location so MonArk can search nearby';
+      actionPath = '/profile?tab=basics';
+      actionLabel = 'Add your location';
+    } else if (!hasInterests) {
+      nextStep = 'adding a few more interests to your profile';
+      actionPath = '/profile?tab=interests';
+      actionLabel = 'Add interests';
+    } else if (radius < 30) {
+      nextStep = 'expanding your search radius — you currently search within ' + radius + 'km, and a wider area could open up great matches';
+      actionPath = '/profile?tab=preferences';
+      actionLabel = 'Expand your search radius';
+    }
+
+    const { error } = await supabaseClient.functions.invoke('send-notification-email', {
+      body: {
+        to: profile.email,
+        type: 'system',
+        title: 'MonArk is still finding the right people for you, ' + firstName,
+        message: 'This Sunday’s pool didn’t surface a strong enough match to send you — we’d rather wait than send someone who isn’t right. The best thing you can do right now is ' + nextStep + '. We check again next Sunday.',
+        actionUrl: 'https://monark.app' + actionPath,
+        actionLabel,
+      }
+    });
+
+    if (error) {
+      console.error('Error sending no-matches email to ' + userId + ':', error);
+    } else {
+      console.log('No-matches email sent to user ' + userId + ' — next step: ' + actionLabel);
+    }
+  } catch (err) {
+    console.error('sendNoMatchesEmail error for ' + userId + ':', err);
   }
 }
 
