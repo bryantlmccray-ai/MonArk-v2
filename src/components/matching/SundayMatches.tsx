@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Sparkles, Users, Calendar, Heart, MapPin, ChevronRight,
   Coffee, Wine, Palette, Music, Compass, Moon, MessageCircle,
-  Clock, X
+  Clock, X, ThumbsDown, RefreshCw, Info
 } from 'lucide-react';
 import { format, formatDistanceToNow, startOfWeek } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -443,6 +443,8 @@ export const SundayMatches: React.FC = () => {
   const [detailOpen, setDetailOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [showWhyOnly3, setShowWhyOnly3] = useState(false);
+  const [passTarget, setPassTarget] = useState<UnifiedMatch | null>(null);
+  const [showPassReason, setShowPassReason] = useState(false);
   const [mutualMatch, setMutualMatch] = useState<{
     name: string; photo?: string; conversationId?: string;
   } | null>(null);
@@ -461,25 +463,47 @@ export const SundayMatches: React.FC = () => {
     });
   };
 
-  const handlePass = async (match: UnifiedMatch) => {
+  // Kick off pass: show reason picker first (for curated), or pass immediately (for pool)
+  const handlePass = (match: UnifiedMatch) => {
     if (isDemo) return;
+    setDetailOpen(false);
+    setSelectedMatch(null);
+    if (match.type === 'curated') {
+      setPassTarget(match);
+      setShowPassReason(true);
+    } else {
+      commitPass(match, null);
+    }
+  };
+
+  const commitPass = async (match: UnifiedMatch, reason: string | null) => {
+    setShowPassReason(false);
+    setPassTarget(null);
     await protectedAction(async () => {
       setProcessing(true);
-      setDetailOpen(false);
-      setSelectedMatch(null);
-      // Show undo toast for 4 seconds before committing the pass
-      let committed = false;
       let undone = false;
-      const toastId = toast('Noted — we\'ll refine your next batch.', {
+      const label = reason ? `Got it — we'll use that to tune your next batch.` : `Noted — we'll refine your next batch.`;
+      const toastId = toast(label, {
         duration: 4000,
-        action: {
-          label: 'Undo',
-          onClick: () => { undone = true; toast.dismiss(toastId); }
-        },
+        action: { label: 'Undo', onClick: () => { undone = true; toast.dismiss(toastId); } },
       });
       await new Promise<void>((resolve) => setTimeout(resolve, 4100));
       if (!undone) {
         await passMatch(match.id);
+        // Persist the pass reason as a behavior analytics event for future curation
+        if (reason) {
+          try {
+            const { supabase } = await import('@/integrations/supabase/client');
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+              await supabase.from('behavior_analytics').insert({
+                user_id: user.id,
+                event_type: 'pass_with_reason',
+                event_data: { match_id: match.id, match_name: match.name, reason, match_type: match.type }
+              });
+            }
+          } catch (e) { console.error('pass reason log failed', e); }
+        }
       }
       setProcessing(false);
     });
@@ -645,9 +669,17 @@ export const SundayMatches: React.FC = () => {
         {/* ── Tab 2: Explore — pool in 2-col PoolCard grid ── */}
         <TabsContent value="explore">
           <div className="mt-2 space-y-3">
-            <p className="text-xs text-muted-foreground text-center px-4">
-              People curated for you — <span className="text-primary font-medium">no match required to connect.</span> Browse freely and reach out to anyone here.
-            </p>
+            <div className="bg-primary/5 border border-primary/20 rounded-xl px-4 py-3 mb-1">
+              <div className="flex items-start gap-2">
+                <Info className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-xs font-medium text-foreground mb-0.5">Your 3 didn't feel right? Start here.</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    This pool is curated just for you — <span className="text-primary font-medium">no match required.</span> Browse freely and reach out to anyone. New people arrive every Sunday alongside your 3.
+                  </p>
+                </div>
+              </div>
+            </div>
             {poolLoading && !isDemo ? (
               <div className="flex items-center justify-center py-12"><LoadingSpinner /></div>
             ) : poolMatches.length === 0 ? (
@@ -708,7 +740,47 @@ export const SundayMatches: React.FC = () => {
           onStartChat={() => setMutualMatch(null)}
         />
       )}
-      {/* Why Only 3 — Intentionality Explainer */}
+      {/* Pass Reason Sheet — captures not-my-type signal */}
+      {showPassReason && passTarget && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm" onClick={() => { setShowPassReason(false); setPassTarget(null); }}>
+          <div className="bg-card w-full max-w-lg rounded-t-2xl p-6 pb-8 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="w-10 h-1 bg-border rounded-full mx-auto mb-5" />
+            <div className="flex items-center gap-3 mb-1">
+              <span className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
+                <ThumbsDown className="w-4 h-4 text-muted-foreground" />
+              </span>
+              <h3 className="text-base font-semibold text-foreground">Why are you passing on {passTarget.name}?</h3>
+            </div>
+            <p className="text-xs text-muted-foreground mb-4 pl-12">Your answer helps us curate better matches next Sunday.</p>
+            <div className="space-y-2">
+              {[
+                'Not my physical type',
+                'Too far away',
+                'Lifestyle doesn\'t align',
+                'Occupation or life stage mismatch',
+                'Vibes felt off from the bio',
+                'Just not feeling it — hard to explain',
+              ].map(reason => (
+                <button
+                  key={reason}
+                  className="w-full text-left px-4 py-3 rounded-xl border border-border hover:bg-muted/50 text-sm text-foreground transition-colors"
+                  onClick={() => commitPass(passTarget, reason)}
+                >
+                  {reason}
+                </button>
+              ))}
+              <button
+                className="w-full py-2.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                onClick={() => commitPass(passTarget, null)}
+              >
+                Skip — just pass
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+            {/* Why Only 3 — Intentionality Explainer */}
       {showWhyOnly3 && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm" onClick={() => setShowWhyOnly3(false)}>
           <div className="bg-card w-full max-w-lg rounded-t-2xl p-6 pb-8 shadow-2xl" onClick={(e) => e.stopPropagation()}>
