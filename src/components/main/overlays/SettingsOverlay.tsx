@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, User, Shield, LogOut, Trash2, AlertTriangle, Mail } from 'lucide-react';
+import { X, User, Shield, LogOut, Trash2, AlertTriangle } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -116,16 +116,6 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose }) => 
               <span className="text-foreground font-medium">{item.label}</span>
             </button>
           ))}
-
-          <div className="p-4 bg-secondary/50 rounded-lg border border-border">
-            <div className="flex items-center space-x-3 mb-2">
-              <Mail className="h-5 w-5 text-primary" />
-              <span className="text-foreground font-medium">Email Notifications</span>
-            </div>
-            <p className="text-muted-foreground text-sm">
-              You'll receive emails for new matches, messages, and date reminders at your registered email address.
-            </p>
-          </div>
 
           <div className="mt-8 pt-6 border-t border-border space-y-3">
             <button 
