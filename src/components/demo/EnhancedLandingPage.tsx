@@ -78,6 +78,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           <div className="hidden md:flex items-center gap-8">
             <a href="#how-it-works" className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide">How It Works</a>
             <a href="#pricing" className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide">Pricing</a>
+            <a href="#faq" className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors tracking-wide">FAQ</a>
             <button
               onClick={() => setShowSignInModal(true)}
               className="text-sm font-body text-foreground hover:text-primary transition-colors tracking-wide"
@@ -121,6 +122,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             <div className="flex-1 flex flex-col gap-2 p-5">
               <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-base font-body font-medium text-foreground py-3 border-b border-border/50 transition-colors hover:text-primary">How It Works</a>
               <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="text-base font-body font-medium text-foreground py-3 border-b border-border/50 transition-colors hover:text-primary">Pricing</a>
+              <a href="#faq" onClick={() => setMobileMenuOpen(false)} className="text-base font-body font-medium text-foreground py-3 border-b border-border/50 transition-colors hover:text-primary">FAQ</a>
               <button onClick={() => { setMobileMenuOpen(false); setShowSignInModal(true); }} className="text-base font-body font-medium text-foreground py-3 border-b border-border/50 transition-colors hover:text-primary text-left">Sign In</button>
             </div>
             <div className="p-5 border-t border-border">
@@ -604,16 +606,15 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-10">
               {[
-                { icon: "📍", label: "Nearby by RIF compatibility" },
-                { icon: "🔁", label: "Daily cap keeps it intentional" },
-                { icon: "✦", label: "Every signal sharpens Sunday" },
-              ].map((pill) => (
+                "Nearby by RIF compatibility",
+                "Daily cap keeps it intentional",
+                "Every signal sharpens Sunday",
+              ].map((label) => (
                 <span
-                  key={pill.label}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-background/20 text-sm font-body text-background/80"
+                  key={label}
+                  className="inline-flex items-center px-4 py-2 rounded-full border border-background/20 text-sm font-body text-background/80"
                 >
-                  <span>{pill.icon}</span>
-                  {pill.label}
+                  {label}
                 </span>
               ))}
             </div>
@@ -805,7 +806,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
       </div>
 
       {/* ═══════════ FAQ ═══════════ */}
-      <section className="py-16 bg-background">
+      <section id="faq" className="py-16 bg-background scroll-mt-16">
         <div className="max-w-3xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
             className="text-center mb-10"
