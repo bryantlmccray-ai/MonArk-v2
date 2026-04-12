@@ -30,6 +30,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { MonArkLogo } from '@/components/MonArkLogo';
 import NotificationBell from '@/components/NotificationBell';
+import { Settings, LogOut } from 'lucide-react';
 import { PremiumGreeting } from './PremiumGreeting';
 
 interface MainAppProps {
@@ -47,7 +48,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   const [reflectionPartnerName, setReflectionPartnerName] = useState('');
   const isMobile = useIsMobile();
   const { showPaywall, setShowPaywall, tier } = useSubscription();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const { profile } = useProfile();
   
   const firstName = profile?.first_name || user?.user_metadata?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'there';
@@ -72,6 +73,11 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   
   // Analytics tracking
   const { recordSession, recordWeeklyOptionsView } = useAnalytics();
+  const [isSigningOut, setIsSigningOut] = React.useState(false);
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+    try { await signOut(); } finally { setIsSigningOut(false); }
+  };
   
   // Record session on mount
   useEffect(() => {
@@ -189,6 +195,22 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
           />
           <div className="flex items-center gap-3">
             {user && <NotificationBell userId={user.id} />}
+            <button
+              onClick={() => setShowSettings(true)}
+              disabled={isSigningOut}
+              className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-xl transition-all active:scale-95"
+              aria-label="Settings"
+            >
+              <Settings className="h-5 w-5" />
+            </button>
+            <button
+              onClick={handleSignOut}
+              disabled={isSigningOut}
+              className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl transition-all disabled:opacity-50 active:scale-95"
+              aria-label="Sign out"
+            >
+              {isSigningOut ? <span className="h-5 w-5 animate-spin border-2 border-current border-t-transparent rounded-full inline-block" /> : <LogOut className="h-5 w-5" />}
+            </button>
             <button onClick={() => handleTabChange('profile')} aria-label="Profile" className="group">
               <Avatar className="h-8 w-8 border-2 border-primary/30 group-hover:border-primary/60 transition-colors shadow-sm">
                 {avatarUrl ? <AvatarImage src={avatarUrl} alt={firstName} className="object-cover" /> : null}
