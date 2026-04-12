@@ -14,9 +14,10 @@ import { MonArkLogo } from '@/components/MonArkLogo';
 interface SignInModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSignUp?: () => void;
 }
 
-export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => {
+export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, onSignUp }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -208,15 +209,18 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => 
               <p className="text-xs text-muted-foreground text-center font-medium">🔒 Your data is encrypted and secure</p>
 
               {/* Sign up link */}
-              <p className="text-center text-sm text-muted-foreground">
-                Don't have an account?{' '}
-                <button
-                  onClick={() => { onClose(); /* Let the parent handle navigation to sign-up */ }}
-                  className="text-primary font-medium hover:text-primary/80 transition-colors"
-                >
-                  Join the waitlist
-                </button>
-              </p>
+          <p className="text-center text-sm text-muted-foreground">
+            Don't have an account?{' '}
+            <button
+              onClick={() => {
+                onClose();
+                if (onSignUp) onSignUp();
+              }}
+              className="text-primary font-medium hover:text-primary/80 transition-colors"
+            >
+              Sign up here
+            </button>
+          </p>
             </>
           ) : (
             /* Forgot Password */
