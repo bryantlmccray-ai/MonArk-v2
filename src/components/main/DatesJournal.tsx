@@ -97,31 +97,31 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wider uppercase">
                                               <BookOpen className="w-3 h-3" />
                                               Your Journey
-                                  </div>div>
-                                  <h1 className="text-2xl font-serif font-bold text-foreground tracking-tight">Date Journal</h1>h1>
-                                  <p className="text-muted-foreground font-body text-sm">Reflect on the moments that matter</p>p>
-                        </div>div>
+                                  </div>
+                                  <h1 className="text-2xl font-serif font-bold text-foreground tracking-tight">Date Journal</h1>
+                                  <p className="text-muted-foreground font-body text-sm">Reflect on the moments that matter</p>
+                        </div>
                 
                   {/* Local entries */}
                   {localEntries.length > 0 && (
                       <div className="space-y-3">
-                                  <h3 className="text-base font-semibold text-foreground">Your Entries</h3>h3>
+                                  <h3 className="text-base font-semibold text-foreground">Your Entries</h3>
                         {localEntries.map((entry) => (
                                       <div key={entry.id} className="bg-card rounded-2xl p-4 border border-border/60 shadow-[0_1px_3px_rgba(100,80,60,0.04)]">
                                                       <p className="text-xs text-muted-foreground mb-1">
                                                         {new Date(entry.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                                                      </p>p>
-                                                      <p className="text-sm text-foreground font-body leading-relaxed line-clamp-3">{entry.text}</p>p>
-                                      </div>div>
+                                                      </p>
+                                                      <p className="text-sm text-foreground font-body leading-relaxed line-clamp-3">{entry.text}</p>
+                                      </div>
                                     ))}
-                      </div>div>
+                      </div>
                         )}
                 
                   {/* MonArk Insights — shown when user has enough date reflections */}
                         <RifInsightsCard />
                 
                         <div className="space-y-3">
-                                  <h3 className="text-base font-semibold text-foreground">Completed Dates</h3>h3>
+                                  <h3 className="text-base font-semibold text-foreground">Completed Dates</h3>
                           {completedDates.length > 0 ? (
                         completedDates.map((date: any) => (
                                         <div
@@ -132,14 +132,14 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                                                                           <div className="flex items-center gap-3.5">
                                                                                               <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 transition-colors">
                                                                                                                     <Calendar className="w-5 h-5 text-primary" />
-                                                                                                </div>div>
+                                                                                                </div>
                                                                                               <div>
-                                                                                                                    <h3 className="text-foreground font-semibold text-[15px]">{date.name}</h3>h3>
+                                                                                                                    <h3 className="text-foreground font-semibold text-[15px]">{date.name}</h3>
                                                                                                                     <p className="text-muted-foreground text-xs mt-0.5">
                                                                                                                       {new Date(date.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} &bull; {date.venue}
-                                                                                                                      </p>p>
-                                                                                                </div>div>
-                                                                          </div>div>
+                                                                                                                      </p>
+                                                                                                </div>
+                                                                          </div>
                                                                           <div className="flex items-center gap-0.5">
                                                                             {[1, 2, 3, 4, 5].map((star) => (
                                                                                 <Star
@@ -149,13 +149,13 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                                                                                                             }`}
                                                                                                         />
                                                                               ))}
-                                                                          </div>div>
-                                                        </div>div>
+                                                                          </div>
+                                                        </div>
                                           {!date.hasReflection && onDateCompleted ? (
                                                                             <div className="mt-3 space-y-1.5">
                                                                                                 <p className="text-xs text-muted-foreground italic font-body pl-0.5">
                                                                                                                       How did {date.venue?.toLowerCase()} with {date.name} go?
-                                                                                                  </p>p>
+                                                                                                  </p>
                                                                                                 <Button
                                                                                                                         variant="outline"
                                                                                                                         size="sm"
@@ -164,8 +164,8 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                                                                                                                       >
                                                                                                                       <Sparkles className="w-3.5 h-3.5 mr-1.5" />
                                                                                                                       Add Reflection
-                                                                                                  </Button>Button>
-                                                                            </div>div>
+                                                                                                  </Button>
+                                                                            </div>
                                                                           ) : date.hasReflection ? (
                                                                             <Button
                                                                                                   variant="ghost"
@@ -175,71 +175,71 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                                                                                                 >
                                                                                                 <BookOpen className="w-3.5 h-3.5 mr-1.5" />
                                                                                                 View Reflection
-                                                                            </Button>Button>
+                                                                            </Button>
                                                                           ) : null}
-                                        </div>div>
+                                        </div>
                                       ))
                       ) : localEntries.length === 0 ? (
                         <div className="text-center py-16 bg-card rounded-2xl border border-border/60">
                           {/* MA compass monogram */}
                                       <div className="w-16 h-16 rounded-full bg-[#E8DED4] flex items-center justify-center mx-auto mb-4">
-                                                      <span className="font-serif text-lg text-[#A08C6E] tracking-wide">MA</span>span>
-                                      </div>div>
-                                      <p className="font-editorial italic text-foreground text-xl mb-2">Your story starts here.</p>p>
+                                                      <span className="font-serif text-lg text-[#A08C6E] tracking-wide">MA</span>
+                                      </div>
+                                      <p className="font-editorial italic text-foreground text-xl mb-2">Your story starts here.</p>
                                       <p className="text-sm text-muted-foreground font-body max-w-xs mx-auto mb-6">
                                                       Every introduction, every date, every moment worth keeping — your journal holds it all.
-                                      </p>p>
+                                      </p>
                                       <button
                                                         onClick={() => setShowEntryModal(true)}
                                                         className="inline-flex items-center px-6 py-2.5 bg-[#A08C6E] text-[#F0EBE3] font-body font-medium text-xs tracking-[0.15em] uppercase rounded-[40px] hover:bg-[#A08C6E]/90 transition-all"
                                                       >
                                                       ADD YOUR FIRST ENTRY
-                                      </button>button>
-                        </div>div>
+                                      </button>
+                        </div>
                       ) : null}
-                        </div>div>
-                </div>div>
+                        </div>
+                </div>
           
             {/* Entry Modal */}
                 <Dialog open={showEntryModal} onOpenChange={setShowEntryModal}>
                         <DialogContent className="sm:max-w-md">
                                   <DialogHeader>
-                                              <DialogTitle className="font-serif text-lg">New Journal Entry</DialogTitle>DialogTitle>
-                                  </DialogHeader>DialogHeader>
+                                              <DialogTitle className="font-serif text-lg">New Journal Entry</DialogTitle>
+                                  </DialogHeader>
                                   <div className="space-y-4 pt-2">
                                               <div>
-                                                            <label className="text-xs font-body text-muted-foreground mb-1 block">Date</label>label>
+                                                            <label className="text-xs font-body text-muted-foreground mb-1 block">Date</label>
                                                             <Input
                                                                               type="date"
                                                                               value={entryDate}
                                                                               onChange={(e) => setEntryDate(e.target.value)}
                                                                               className="font-body text-sm"
                                                                             />
-                                              </div>div>
+                                              </div>
                                               <div>
-                                                            <label className="text-xs font-body text-muted-foreground mb-1 block">What happened? How did it feel?</label>label>
+                                                            <label className="text-xs font-body text-muted-foreground mb-1 block">What happened? How did it feel?</label>
                                                             <Textarea
                                                                               value={entryText}
                                                                               onChange={(e) => setEntryText(e.target.value)}
                                                                               placeholder="Write about your experience..."
                                                                               className="min-h-[120px] font-body text-sm resize-none"
                                                                             />
-                                              </div>div>
+                                              </div>
                                               <div className="flex gap-2 justify-end">
                                                             <Button variant="outline" onClick={() => setShowEntryModal(false)} className="text-sm">
                                                                             Cancel
-                                                            </Button>Button>
+                                                            </Button>
                                                             <Button
                                                                               onClick={handleSaveEntry}
                                                                               disabled={!entryText.trim() || saveEntryMutation.isPending}
                                                                               className="text-sm"
                                                                             >
                                                               {saveEntryMutation.isPending ? 'Saving...' : 'Save Entry'}
-                                                            </Button>Button>
-                                              </div>div>
-                                  </div>div>
-                        </DialogContent>DialogContent>
-                </Dialog>Dialog>
-          </div>div>
+                                                            </Button>
+                                              </div>
+                                  </div>
+                        </DialogContent>
+                </Dialog>
+          </div>
         );
 };</div>
