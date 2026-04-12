@@ -471,6 +471,48 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           </motion.div>
 
 
+{/* ═══════════ DISCOVER MODE ═══════════ */}
+      <section className="py-20 bg-foreground text-background overflow-hidden">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.6, ease: easeOut }}
+          >
+            <p className="text-xs font-caption tracking-[0.15em] uppercase text-background/50 mb-3">Between Sundays</p>
+            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-background mb-4">
+              Stay in the signal.
+            </h2>
+            <p className="text-base font-body text-background/70 leading-relaxed max-w-xl mx-auto mb-10">
+              Discover Mode lets you browse by RIF compatibility between drop days — a daily-capped experience that feeds your preferences directly into next Sunday's curation. Every signal sharpens your matches.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-10">
+              {[
+                "Nearby by RIF compatibility",
+                "Daily cap keeps it intentional",
+                "Every signal sharpens Sunday",
+              ].map((label) => (
+                <span
+                  key={label}
+                  className="inline-flex items-center px-4 py-2 rounded-full border border-background/20 text-sm font-body text-background/80"
+                >
+                  {label}
+                </span>
+              ))}
+            </div>
+
+            <p className="text-sm font-body italic text-background/50">
+              Between Sundays, explore. But your 3 still only drop once a week.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+
+
           {/* Sample RIF Question Preview */}
           <motion.div
             className="mt-12"
@@ -583,46 +625,6 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               </div>
             </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* ═══════════ DISCOVER MODE ═══════════ */}
-      <section className="py-20 bg-foreground text-background overflow-hidden">
-        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.6, ease: easeOut }}
-          >
-            <p className="text-xs font-caption tracking-[0.15em] uppercase text-background/50 mb-3">Between Sundays</p>
-            <h2 className="text-3xl sm:text-4xl font-editorial-headline text-background mb-4">
-              Stay in the signal.
-            </h2>
-            <p className="text-base font-body text-background/70 leading-relaxed max-w-xl mx-auto mb-10">
-              Discover Mode lets you browse by RIF compatibility between drop days — a daily-capped experience that feeds your preferences directly into next Sunday's curation. Every signal sharpens your matches.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-10">
-              {[
-                "Nearby by RIF compatibility",
-                "Daily cap keeps it intentional",
-                "Every signal sharpens Sunday",
-              ].map((label) => (
-                <span
-                  key={label}
-                  className="inline-flex items-center px-4 py-2 rounded-full border border-background/20 text-sm font-body text-background/80"
-                >
-                  {label}
-                </span>
-              ))}
-            </div>
-
-            <p className="text-sm font-body italic text-background/50">
-              Between Sundays, explore. But your 3 still only drop once a week.
-            </p>
-          </motion.div>
         </div>
       </section>
 
