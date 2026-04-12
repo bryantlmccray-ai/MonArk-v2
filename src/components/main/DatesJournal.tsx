@@ -242,4 +242,4 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                 </Dialog>
           </div>
         );
-};</div>
+};
