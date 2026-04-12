@@ -99,14 +99,14 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, onSig
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[420px] max-h-[90vh] overflow-y-auto p-0 bg-card border-border rounded-2xl">
+      <DialogContent className="sm:max-w-[420px] max-h-[85dvh] overflow-y-auto overscroll-contain p-0 bg-card border-border rounded-2xl">
         <DialogTitle className="sr-only">Sign In</DialogTitle>
         <DialogDescription className="sr-only">Sign in to your MonArk account</DialogDescription>
-        <div className="p-6 space-y-5">
+        <div className="p-6 pb-8 space-y-5">
           {/* Header */}
           <div className="text-center space-y-2">
-            <MonArkLogo size="lg" className="mb-4" />
-            <h2 className="text-2xl font-serif font-bold text-foreground">Welcome Back</h2>
+            <MonArkLogo size="md" className="mb-2 sm:mb-4" />
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-foreground">Welcome Back</h2>
             <p className="text-sm font-body text-muted-foreground">Sign in to continue your journey</p>
           </div>
 
