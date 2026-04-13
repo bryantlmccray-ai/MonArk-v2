@@ -34,56 +34,56 @@ import { Settings, LogOut, Sparkles, Heart, RotateCcw } from 'lucide-react';
 import { PremiumGreeting } from './PremiumGreeting';
 import { motion } from 'framer-motion';
 
-// ── RIF Results Dashboard ──────────────────────────────────────────────────────
-// Uses rifProfile._pct fields (normalised 0-100) from useRIF hook
+type RIFProfileType = NonNullable<ReturnType<typeof useRIF>['rifProfile']>;
+
+const DIM_CONFIGS: Array<{
+  pctKey: keyof RIFProfileType;
+  label: string;
+  description: string;
+  barColor: string;
+  textColor: string;
+}> = [
+  {
+    pctKey: 'intent_clarity_pct',
+    label: 'Intent Clarity',
+    description: "How clearly you know what you are looking for.",
+    barColor: 'bg-primary',
+    textColor: 'text-primary',
+  },
+  {
+    pctKey: 'emotional_readiness_pct',
+    label: 'Emotional Readiness',
+    description: 'Your capacity to show up present and open.',
+    barColor: 'bg-accent',
+    textColor: 'text-accent',
+  },
+  {
+    pctKey: 'pacing_preferences_pct',
+    label: 'Pacing Preference',
+    description: 'The rhythm that feels natural to you.',
+    barColor: 'bg-[hsl(350,30%,62%)]',
+    textColor: 'text-[hsl(350,30%,62%)]',
+  },
+  {
+    pctKey: 'boundary_respect_pct',
+    label: 'Boundary Respect',
+    description: 'How you hold and honor limits — yours and others.',
+    barColor: 'bg-[hsl(22,38%,36%)]',
+    textColor: 'text-[hsl(22,38%,36%)]',
+  },
+  {
+    pctKey: 'post_date_alignment_pct',
+    label: 'Post-Date Alignment',
+    description: 'Your follow-through and communication after connection.',
+    barColor: 'bg-muted-foreground',
+    textColor: 'text-muted-foreground',
+  },
+];
+
 const RIFResultsDashboard: React.FC<{
-  rifProfile: NonNullable<ReturnType<typeof useRIF>['rifProfile']>;
+  rifProfile: RIFProfileType;
   onRetake: () => void;
 }> = ({ rifProfile, onRetake }) => {
-  const dimensions = [
-    {
-      pctKey: 'intent_clarity_pct' as const,
-      rawKey: 'intent_clarity' as const,
-      label: 'Intent Clarity',
-      description: 'How clearly you know what you\'re looking for.',
-      barColor: 'bg-primary',
-      textColor: 'text-primary',
-    },
-    {
-      pctKey: 'emotional_readiness_pct' as const,
-      rawKey: 'emotional_readiness' as const,
-      label: 'Emotional Readiness',
-      description: 'Your capacity to show up present and open.',
-      barColor: 'bg-accent',
-      textColor: 'text-accent',
-    },
-    {
-      pctKey: 'pacing_preferences_pct' as const,
-      rawKey: 'pacing_preferences' as const,
-      label: 'Pacing Preference',
-      description: 'The rhythm that feels natural to you.',
-      barColor: 'bg-[hsl(350,30%,62%)]',
-      textColor: 'text-[hsl(350,30%,62%)]',
-    },
-    {
-      pctKey: 'boundary_respect_pct' as const,
-      rawKey: 'boundary_respect' as const,
-      label: 'Boundary Respect',
-      description: 'How you hold and honor limits — yours and others\'.',
-      barColor: 'bg-[hsl(22,38%,36%)]',
-      textColor: 'text-[hsl(22,38%,36%)]',
-    },
-    {
-      pctKey: 'post_date_alignment_pct' as const,
-      rawKey: 'post_date_alignment' as const,
-      label: 'Post-Date Alignment',
-      description: 'Your follow-through and communication after connection.',
-      barColor: 'bg-muted-foreground',
-      textColor: 'text-muted-foreground',
-    },
-  ];
-
-  // Use _pct values (0-100) for avg, display, and bar widths
   const avgPct =
     (rifProfile.intent_clarity_pct +
       rifProfile.emotional_readiness_pct +
@@ -96,8 +96,8 @@ const RIFResultsDashboard: React.FC<{
     avgPct >= 80
       ? { label: 'The Intentional Partner', tagline: 'You date with clarity, depth, and purpose.' }
       : avgPct >= 60 && rifProfile.emotional_readiness_pct >= 70
-      ? { label: 'The Hopeful Romantic', tagline: "You lead with your heart — and that's a strength." }
-      : { label: 'The Guarded Opener', tagline: "You're learning to open — on your own terms." };
+      ? { label: 'The Hopeful Romantic', tagline: "You lead with your heart and that is a strength." }
+      : { label: 'The Guarded Opener', tagline: "You are learning to open on your own terms." };
 
   return (
     <div className="space-y-5 px-5 pt-3 pb-8">
@@ -111,7 +111,6 @@ const RIFResultsDashboard: React.FC<{
         </p>
       </div>
 
-      {/* Archetype */}
       <div className="bg-card border border-primary/20 rounded-2xl p-5 shadow-sm">
         <div className="flex items-center gap-3 mb-1">
           <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
@@ -125,7 +124,6 @@ const RIFResultsDashboard: React.FC<{
         <p className="text-sm text-muted-foreground italic mt-1 pl-12">{archetype.tagline}</p>
       </div>
 
-      {/* How RIF improves */}
       <div className="bg-primary/5 border border-primary/20 rounded-xl px-4 py-3 flex items-start gap-2.5">
         <Sparkles className="w-4 h-4 text-primary mt-0.5 shrink-0" />
         <div>
@@ -137,16 +135,15 @@ const RIFResultsDashboard: React.FC<{
         </div>
       </div>
 
-      {/* Dimension scores — uses normalised _pct values */}
       <div className="bg-card border border-border/50 rounded-2xl p-5 shadow-sm">
         <p className="text-[11px] tracking-[0.15em] text-primary uppercase font-medium mb-4">
           Your Dimensions
         </p>
         <div className="space-y-5">
-          {dimensions.map(({ pctKey, label, description, barColor, textColor }) => {
-            const pct = rifProfile[pctKey];
+          {DIM_CONFIGS.map(({ pctKey, label, description, barColor, textColor }) => {
+            const pct = rifProfile[pctKey] as number;
             return (
-              <div key={pctKey}>
+              <div key={pctKey as string}>
                 <div className="flex justify-between items-baseline mb-1">
                   <span className="text-sm font-medium text-foreground">{label}</span>
                   <span className={`font-serif text-xl font-normal ${textColor}`}>{pct}</span>
@@ -299,7 +296,6 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
       case 'shareables':
         return <MilestoneCardShowcase />;
       case 'rif':
-        // Show RIF results dashboard if already completed (and not in retake mode)
         if (!rifLoading && rifProfile && !rifRetakeMode) {
           return <RIFResultsDashboard rifProfile={rifProfile} onRetake={() => setRifRetakeMode(true)} />;
         }
@@ -398,7 +394,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
                     <textarea
                       id="daily-q-input"
                       rows={3}
-                      placeholder="Your answer sharpens your Sunday matches…"
+                      placeholder="Your answer sharpens your Sunday matches..."
                       className="w-full text-sm bg-muted/50 border border-border/60 rounded-xl px-3 py-2 resize-none focus:outline-none focus:ring-1 focus:ring-primary/40 text-foreground placeholder:text-muted-foreground/60"
                     />
                     <div className="flex items-center gap-2 mt-2">
@@ -410,7 +406,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
                           if (el?.value.trim()) submitDailyQ(el.value);
                         }}
                       >
-                        {dailyQSubmitting ? 'Saving…' : 'Save answer'}
+                        {dailyQSubmitting ? 'Saving...' : 'Save answer'}
                       </button>
                       <button onClick={dismissDailyQ} className="text-xs text-muted-foreground hover:text-foreground">
                         Skip today
