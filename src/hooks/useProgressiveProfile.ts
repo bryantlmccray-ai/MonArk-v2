@@ -1,19 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import type { ProfileDepthAnswerInsert } from '@/integrations/supabase/types.extended';
 import { useAuth } from './useAuth';
 import { toast } from 'sonner';
-
-// ── Type shim for profile_depth_answers (not yet in generated types) ─────────
-// TODO: Run supabase gen types once the table is added to the schema.
-type ProfileDepthAnswerInsert = {
-  user_id: string;
-  question_id: string;
-  question_text: string;
-  answer_text: string;
-  field_key: string;
-  answered_at: string;
-};
 
 // ── 28 rotating questions — one surfaces per day between Sundays ──────────────
 export const PROFILE_QUESTIONS = [
@@ -69,11 +59,12 @@ export function useProgressiveProfile() {
   const question = getTodaysQuestion();
 
   // Check if today's question has already been answered
+  // profile_depth_answers table exists in migrations but not yet in generated types.ts —
+  // using (supabase.from as any) until `supabase gen types` is re-run post-migration.
   const { data: answered } = useQuery({
     queryKey: ['progressive-profile', user?.id, question.id],
     queryFn: async () => {
       if (!user) return false;
-      // Cast to unknown then any — table not yet in generated types
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data } = await (supabase.from as any)('profile_depth_answers')
         .select('id')
