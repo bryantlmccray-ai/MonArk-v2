@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
@@ -6,6 +5,7 @@ import { useAuth } from './useAuth';
 export interface RIFProfile {
   id: string;
   user_id: string;
+  // Raw stored values (DECIMAL 3,2 — range 0.00 to 9.99)
   intent_clarity: number;
   pacing_preferences: number;
   emotional_readiness: number;
@@ -15,6 +15,12 @@ export interface RIFProfile {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  // Normalised 0-100 scores (multiply raw × 10, clamped)
+  intent_clarity_pct: number;
+  pacing_preferences_pct: number;
+  emotional_readiness_pct: number;
+  boundary_respect_pct: number;
+  post_date_alignment_pct: number;
 }
 
 export interface RIFSettings {
@@ -30,6 +36,27 @@ export interface RIFSettings {
   updated_at: string;
 }
 
+// Normalise a stored DECIMAL(3,2) RIF value to a 0–100 display percentage
+// The DB column stores 0.00–9.99, so × 10 gives the 0–100 range.
+// We also handle legacy data: if the raw value > 10, assume it was already
+// stored in the 0–100 range (pre-fix data) and use it directly.
+export function normalizeRIFScore(raw: number): number {
+  if (raw == null) return 0;
+  if (raw > 10) return Math.min(100, Math.round(raw)); // legacy 0-100 storage
+  return Math.min(100, Math.round(raw * 10));           // new DECIMAL(3,2) storage
+}
+
+function attachNormalized(profile: Omit<RIFProfile, 'intent_clarity_pct' | 'pacing_preferences_pct' | 'emotional_readiness_pct' | 'boundary_respect_pct' | 'post_date_alignment_pct'>): RIFProfile {
+  return {
+    ...profile,
+    intent_clarity_pct: normalizeRIFScore(profile.intent_clarity),
+    pacing_preferences_pct: normalizeRIFScore(profile.pacing_preferences),
+    emotional_readiness_pct: normalizeRIFScore(profile.emotional_readiness),
+    boundary_respect_pct: normalizeRIFScore(profile.boundary_respect),
+    post_date_alignment_pct: normalizeRIFScore(profile.post_date_alignment),
+  };
+}
+
 export const useRIF = () => {
   const [rifProfile, setRifProfile] = useState<RIFProfile | null>(null);
   const [rifSettings, setRifSettings] = useState<RIFSettings | null>(null);
@@ -41,9 +68,7 @@ export const useRIF = () => {
   }, [user?.id, isDemoMode]);
 
   const loadRIFData = async () => {
-    // In demo mode, use mock data
     if (isDemoMode) {
-      console.log('Demo mode: using mock RIF data');
       setRifProfile(null);
       setRifSettings(null);
       setLoading(false);
@@ -51,14 +76,16 @@ export const useRIF = () => {
     }
 
     try {
-      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
+      const {
+        data: { user: authUser },
+        error: authError,
+      } = await supabase.auth.getUser();
+
       if (authError || !authUser) {
-        console.log('No authenticated user for RIF data');
         setLoading(false);
         return;
       }
 
-      // Load RIF profile with error handling
       const { data: profileData, error: profileError } = await supabase
         .from('rif_profiles')
         .select('*')
@@ -66,22 +93,17 @@ export const useRIF = () => {
         .eq('is_active', true)
         .maybeSingle();
 
-      if (profileError) {
-        console.error('Error loading RIF profile:', profileError);
-      }
+      if (profileError) console.error('Error loading RIF profile:', profileError);
 
-      // Load RIF settings with error handling
       const { data: settingsData, error: settingsError } = await supabase
         .from('rif_settings')
         .select('*')
         .eq('user_id', authUser.id)
         .maybeSingle();
 
-      if (settingsError) {
-        console.error('Error loading RIF settings:', settingsError);
-      }
+      if (settingsError) console.error('Error loading RIF settings:', settingsError);
 
-      setRifProfile(profileData);
+      setRifProfile(profileData ? attachNormalized(profileData) : null);
       setRifSettings(settingsData);
     } catch (error) {
       console.error('Exception loading RIF data:', error);
@@ -91,57 +113,28 @@ export const useRIF = () => {
   };
 
   const submitFeedback = async (type: string, data: any) => {
-    // In demo mode, just log and return success
-    if (isDemoMode) {
-      console.log('Demo mode: mock RIF feedback submitted', { type, data });
-      return;
-    }
-
+    if (isDemoMode) return;
     try {
-      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
-      if (authError) {
-        console.error('Auth error in submitFeedback:', authError);
-        throw new Error('Authentication failed');
-      }
-      if (!authUser) {
-        console.error('No user found in submitFeedback');
-        throw new Error('User not authenticated');
-      }
+      const {
+        data: { user: authUser },
+        error: authError,
+      } = await supabase.auth.getUser();
+      if (authError || !authUser) throw new Error('Not authenticated');
 
-      const encryptedData = {
-        type,
-        timestamp: new Date().toISOString(),
-        responses: data,
-        encrypted: true
-      };
-
+      const encryptedData = { type, timestamp: new Date().toISOString(), responses: data, encrypted: true };
       const { error: insertError } = await supabase
         .from('rif_feedback')
-        .insert({
-          user_id: authUser.id,
-          feedback_type: type,
-          data: encryptedData
-        });
+        .insert({ user_id: authUser.id, feedback_type: type, data: encryptedData });
 
-      if (insertError) {
-        console.error('Error inserting RIF feedback:', insertError);
-        throw insertError;
-      }
+      if (insertError) throw insertError;
 
-      // Process feedback immediately for behavioral types
       if (['post_date', 'behavioral'].includes(type)) {
         await processRIFFeedback();
       }
-
-      // Reload profile after feedback
       await loadRIFData();
     } catch (error: any) {
       console.error('Error submitting RIF feedback:', error);
-      // Don't re-throw if it's just a network error
-      if (error.message?.includes('Failed to fetch')) {
-        console.log('Network error in RIF feedback, continuing...');
-        return;
-      }
+      if (error.message?.includes('Failed to fetch')) return;
       throw error;
     }
   };
@@ -150,20 +143,10 @@ export const useRIF = () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
-
-      // Call RIF engine to process feedback
       const { data, error } = await supabase.functions.invoke('rif-engine', {
-        body: {
-          action: 'process_feedback',
-          data: { user_id: user.id }
-        }
+        body: { action: 'process_feedback', data: { user_id: user.id } },
       });
-
-      if (error) {
-        console.error('Error processing RIF feedback:', error);
-      } else {
-        console.log('RIF feedback processed:', data);
-      }
+      if (error) console.error('Error processing RIF feedback:', error);
     } catch (error) {
       console.error('Error calling RIF engine:', error);
     }
@@ -173,19 +156,10 @@ export const useRIF = () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return null;
-
       const { data, error } = await supabase.functions.invoke('rif-engine', {
-        body: {
-          action: 'calculate_compatibility',
-          data: { match_user_id: matchUserId }
-        }
+        body: { action: 'calculate_compatibility', data: { match_user_id: matchUserId } },
       });
-
-      if (error) {
-        console.error('Error calculating compatibility:', error);
-        return null;
-      }
-
+      if (error) { console.error('Error calculating compatibility:', error); return null; }
       return data.compatibility;
     } catch (error) {
       console.error('Error calculating compatibility:', error);
@@ -197,15 +171,10 @@ export const useRIF = () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
-
       await supabase
         .from('rif_settings')
-        .update({
-          ...newSettings,
-          last_consent_update: new Date().toISOString()
-        })
+        .update({ ...newSettings, last_consent_update: new Date().toISOString() })
         .eq('user_id', user.id);
-
       await loadRIFData();
     } catch (error) {
       console.error('Error updating RIF settings:', error);
@@ -217,7 +186,6 @@ export const useRIF = () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return [];
-
       const { data } = await supabase
         .from('rif_recommendations')
         .select('*')
@@ -225,7 +193,6 @@ export const useRIF = () => {
         .eq('recommendation_type', type)
         .eq('delivered', false)
         .order('created_at', { ascending: false });
-
       return data || [];
     } catch (error) {
       console.error('Error loading recommendations:', error);
@@ -241,6 +208,6 @@ export const useRIF = () => {
     updateSettings,
     getRecommendations,
     calculateCompatibility,
-    reload: loadRIFData
+    reload: loadRIFData,
   };
 };
