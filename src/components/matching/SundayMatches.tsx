@@ -52,7 +52,7 @@ const DEMO_CURATED: UnifiedMatch[] = [
     occupation: 'Music Producer',
     bio: 'Intentional dater who brings emotional presence to every conversation.',
     photoUrl: '/images/matches/marcus.jpg', compatibilityScore: 89,
-    matchReason: 'Complementary conflict styles — he speaks up, you reflect first.',
+    matchReason: 'Complementary conflict styles â he speaks up, you reflect first.',
     interests: ['Poetry', 'Yoga', 'Art Museums'], type: 'curated',
   },
   {
@@ -69,7 +69,7 @@ const DEMO_POOL: UnifiedMatch[] = [
   {
     id: 'pool-1', name: 'James', age: 30, location: 'Wicker Park',
     occupation: 'Filmmaker',
-    bio: 'Storyteller at heart — always chasing the next great narrative.',
+    bio: 'Storyteller at heart â always chasing the next great narrative.',
     photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400',
     compatibilityScore: 78,
     matchReason: 'Shared creative energy and curiosity-driven outlook.',
@@ -104,7 +104,7 @@ const DEMO_POOL: UnifiedMatch[] = [
   },
 ];
 
-/** Branded image fallback — linen bg with MA compass monogram */
+/** Branded image fallback â linen bg with MA compass monogram */
 const ImageWithFallback: React.FC<{
   src: string;
   alt: string;
@@ -135,7 +135,7 @@ const ImageWithFallback: React.FC<{
   );
 };
 
-/** Curated match card — used for spotlight hero and 2-col grid */
+/** Curated match card â used for spotlight hero and 2-col grid */
 const MatchCard: React.FC<{
   match: UnifiedMatch;
   spotlight?: boolean;
@@ -151,7 +151,7 @@ const MatchCard: React.FC<{
     <div className={`relative w-full ${spotlight ? 'h-64' : 'h-48'}`}>
       <ImageWithFallback
         src={match.photoUrl}
-        alt={`${match.name}, ${match.age} — MonArk member`}
+        alt={`${match.name}, ${match.age} â MonArk member`}
         name={match.name}
         className="h-full w-full group-hover:scale-[1.02] transition-transform duration-300"
       />
@@ -209,7 +209,7 @@ const MatchCard: React.FC<{
   </Card>
 );
 
-/** Pool card — compact 3:4 photo card with gradient overlay */
+/** Pool card â compact 3:4 photo card with gradient overlay */
 const PoolCard: React.FC<{
   match: UnifiedMatch;
   onConnect: (m: UnifiedMatch) => void;
@@ -264,7 +264,7 @@ const PoolCard: React.FC<{
   </Card>
 );
 
-/** MatchChip — horizontal card with photo + details (compact list view) */
+/** MatchChip â horizontal card with photo + details (compact list view) */
 const MatchChip: React.FC<{
   match: UnifiedMatch;
   onConnect: (m: UnifiedMatch) => void;
@@ -318,7 +318,7 @@ const MatchChip: React.FC<{
   </div>
 );
 
-/** StatusBar — curated count + next refresh countdown with pulse */
+/** StatusBar â curated count + next refresh countdown with pulse */
 const StatusBar: React.FC<{
   curatedCount: number;
   poolCount: number;
@@ -355,9 +355,9 @@ const StatusBar: React.FC<{
   </div>
 );
 
-/* ══════════════════════════════════════════════════════════════
+/* ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
    Main Component
-   ══════════════════════════════════════════════════════════════ */
+   ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
 
 export const SundayMatches: React.FC = () => {
   const { setShowPaywall } = useSubscription();
@@ -482,7 +482,7 @@ export const SundayMatches: React.FC = () => {
     await protectedAction(async () => {
       setProcessing(true);
       let undone = false;
-      const label = reason ? `Got it — we'll use that to tune your next batch.` : `Noted — we'll refine your next batch.`;
+      const label = reason ? `Got it â we'll use that to tune your next batch.` : `Noted â we'll refine your next batch.`;
       const toastId = toast(label, {
         duration: 4000,
         action: { label: 'Undo', onClick: () => { undone = true; toast.dismiss(toastId); } },
@@ -610,14 +610,14 @@ export const SundayMatches: React.FC = () => {
             >?</span>
           </TabsTrigger>
           <TabsTrigger value="explore" className="flex-1 gap-1.5">
-            <Compass className="w-3.5 h-3.5" /> Explore ({poolMatches.length || 10})
+            <Compass className="w-3.5 h-3.5" /> Explore ({poolMatches.length})
           </TabsTrigger>
           <TabsTrigger value="plans" className="flex-1 gap-1.5">
             <Calendar className="w-3.5 h-3.5" /> Plans
           </TabsTrigger>
         </TabsList>
 
-        {/* ── Tab 1: Your 3 — spotlight + 2-col grid ── */}
+        {/* ââ Tab 1: Your 3 â spotlight + 2-col grid ââ */}
         <TabsContent value="your3">
           {curatedLoading && !isDemo ? (
             <div className="flex items-center justify-center py-12"><LoadingSpinner /></div>
@@ -626,15 +626,15 @@ export const SundayMatches: React.FC = () => {
               <Calendar className="w-10 h-10 mx-auto mb-3 text-primary/50" />
               <h3 className="text-lg font-semibold text-foreground mb-2">Your matches arrive Sunday</h3>
               <p className="text-muted-foreground text-sm max-w-sm mx-auto mb-4">
-                {refreshLabel ? `Next drop in ${refreshLabel} — curated just for you.` : 'Your curated matches drop every Sunday.'}
+                {refreshLabel ? `Next drop in ${refreshLabel} â curated just for you.` : 'Your curated matches drop every Sunday.'}
               </p>
               {poolMatches.length > 0 ? (
                 <div className="bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 text-sm text-foreground/80">
-                  <span className="font-medium text-primary">In the meantime</span> — explore {poolMatches.length} people curated for your city in the Explore tab below.
+                  <span className="font-medium text-primary">In the meantime</span> â explore {poolMatches.length} people curated for your city in the Explore tab below.
                 </div>
               ) : (
                 <div className="bg-muted/30 border border-border/30 rounded-lg px-4 py-3 text-sm text-muted-foreground">
-                  You're on the early access list — matches are being curated for your city. We'll notify you when they're ready.
+                  You're on the early access list â matches are being curated for your city. We'll notify you when they're ready.
                 </div>
               )}
             </div>
@@ -666,7 +666,7 @@ export const SundayMatches: React.FC = () => {
           )}
         </TabsContent>
 
-        {/* ── Tab 2: Explore — pool in 2-col PoolCard grid ── */}
+        {/* ââ Tab 2: Explore â pool in 2-col PoolCard grid ââ */}
         <TabsContent value="explore">
           <div className="mt-2 space-y-3">
             <div className="bg-primary/5 border border-primary/20 rounded-xl px-4 py-3 mb-1">
@@ -675,7 +675,7 @@ export const SundayMatches: React.FC = () => {
                 <div>
                   <p className="text-xs font-medium text-foreground mb-0.5">Your 3 didn't feel right? Start here.</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    This pool is curated just for you — <span className="text-primary font-medium">no match required.</span> Browse freely and reach out to anyone. New people arrive every Sunday alongside your 3.
+                    This pool is curated just for you â <span className="text-primary font-medium">no match required.</span> Browse freely and reach out to anyone. New people arrive every Sunday alongside your 3.
                   </p>
                 </div>
               </div>
@@ -700,7 +700,7 @@ export const SundayMatches: React.FC = () => {
           </div>
         </TabsContent>
 
-        {/* ── Tab 3: Date Plans ── */}
+        {/* ââ Tab 3: Date Plans ââ */}
         <TabsContent value="plans">
           <div className="mt-2"><WeeklyRhythmPlans /></div>
         </TabsContent>
@@ -740,7 +740,7 @@ export const SundayMatches: React.FC = () => {
           onStartChat={() => setMutualMatch(null)}
         />
       )}
-      {/* Pass Reason Sheet — captures not-my-type signal */}
+      {/* Pass Reason Sheet â captures not-my-type signal */}
       {showPassReason && passTarget && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm" onClick={() => { setShowPassReason(false); setPassTarget(null); }}>
           <div className="bg-card w-full max-w-lg rounded-t-2xl p-6 pb-8 shadow-2xl" onClick={e => e.stopPropagation()}>
@@ -759,7 +759,7 @@ export const SundayMatches: React.FC = () => {
                 'Lifestyle doesn\'t align',
                 'Occupation or life stage mismatch',
                 'Vibes felt off from the bio',
-                'Just not feeling it — hard to explain',
+                'Just not feeling it â hard to explain',
               ].map(reason => (
                 <button
                   key={reason}
@@ -773,14 +773,14 @@ export const SundayMatches: React.FC = () => {
                 className="w-full py-2.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
                 onClick={() => commitPass(passTarget, null)}
               >
-                Skip — just pass
+                Skip â just pass
               </button>
             </div>
           </div>
         </div>
       )}
 
-            {/* Why Only 3 — Intentionality Explainer */}
+            {/* Why Only 3 â Intentionality Explainer */}
       {showWhyOnly3 && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm" onClick={() => setShowWhyOnly3(false)}>
           <div className="bg-card w-full max-w-lg rounded-t-2xl p-6 pb-8 shadow-2xl" onClick={(e) => e.stopPropagation()}>
@@ -790,7 +790,7 @@ export const SundayMatches: React.FC = () => {
               <h3 className="text-lg font-semibold text-foreground">Why only 3 matches?</h3>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-              We limit your weekly matches to 3 so you can give each person your full attention. Monark is built on intentionality — quality over endless scrolling.
+              We limit your weekly matches to 3 so you can give each person your full attention. Monark is built on intentionality â quality over endless scrolling.
             </p>
             <p className="text-muted-foreground text-sm leading-relaxed mb-6">
               Each match is carefully curated based on your Relational Identity Framework, values, and lifestyle. Three thoughtful connections beat thirty swipes every time.
