@@ -22,52 +22,85 @@ import { DiscoverMode } from '@/components/matching/DiscoverMode';
 import { PendingConnections } from '@/components/matching/PendingConnections';
 import { useProgressiveProfile } from '@/hooks/useProgressiveProfile';
 import { useRIF } from '@/hooks/useRIF';
-import { useProfile } from '@/hooks/useProfile';
-import RIFQuiz, { DIMENSION_META_EXPORT } from '@/components/onboarding/RIFQuiz';
+import RIFQuiz from '@/components/onboarding/RIFQuiz';
 import { ProfileGate } from '@/components/common/ProfileGate';
 import PaywallModal from '@/components/PaywallModal';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useAuth } from '@/hooks/useAuth';
+import { useProfile } from '@/hooks/useProfile';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { MonArkLogo } from '@/components/MonArkLogo';
 import NotificationBell from '@/components/NotificationBell';
 import { Settings, LogOut, Sparkles, Heart, RotateCcw } from 'lucide-react';
 import { PremiumGreeting } from './PremiumGreeting';
 import { motion } from 'framer-motion';
 
 // ── RIF Results Dashboard ──────────────────────────────────────────────────────
-// Shown instead of the quiz intro when a user has already completed the RIF
+// Uses rifProfile._pct fields (normalised 0-100) from useRIF hook
 const RIFResultsDashboard: React.FC<{
   rifProfile: NonNullable<ReturnType<typeof useRIF>['rifProfile']>;
   onRetake: () => void;
 }> = ({ rifProfile, onRetake }) => {
   const dimensions = [
-    { key: 'intent_clarity', label: 'Intent Clarity', description: 'How clearly you know what you're looking for.', color: 'bg-primary', textColor: 'text-primary' },
-    { key: 'emotional_readiness', label: 'Emotional Readiness', description: 'Your capacity to show up present and open.', color: 'bg-accent', textColor: 'text-accent' },
-    { key: 'pacing_preferences', label: 'Pacing Preference', description: 'The rhythm that feels natural to you.', color: 'bg-[hsl(350,30%,62%)]', textColor: 'text-[hsl(350,30%,62%)]' },
-    { key: 'boundary_respect', label: 'Boundary Respect', description: 'How you hold and honor limits — yours and others'.', color: 'bg-[hsl(22,38%,36%)]', textColor: 'text-[hsl(22,38%,36%)]' },
-    { key: 'post_date_alignment', label: 'Post-Date Alignment', description: 'Your follow-through and communication after connection.', color: 'bg-muted-foreground', textColor: 'text-muted-foreground' },
-  ] as const;
+    {
+      pctKey: 'intent_clarity_pct' as const,
+      rawKey: 'intent_clarity' as const,
+      label: 'Intent Clarity',
+      description: 'How clearly you know what you\'re looking for.',
+      barColor: 'bg-primary',
+      textColor: 'text-primary',
+    },
+    {
+      pctKey: 'emotional_readiness_pct' as const,
+      rawKey: 'emotional_readiness' as const,
+      label: 'Emotional Readiness',
+      description: 'Your capacity to show up present and open.',
+      barColor: 'bg-accent',
+      textColor: 'text-accent',
+    },
+    {
+      pctKey: 'pacing_preferences_pct' as const,
+      rawKey: 'pacing_preferences' as const,
+      label: 'Pacing Preference',
+      description: 'The rhythm that feels natural to you.',
+      barColor: 'bg-[hsl(350,30%,62%)]',
+      textColor: 'text-[hsl(350,30%,62%)]',
+    },
+    {
+      pctKey: 'boundary_respect_pct' as const,
+      rawKey: 'boundary_respect' as const,
+      label: 'Boundary Respect',
+      description: 'How you hold and honor limits — yours and others\'.',
+      barColor: 'bg-[hsl(22,38%,36%)]',
+      textColor: 'text-[hsl(22,38%,36%)]',
+    },
+    {
+      pctKey: 'post_date_alignment_pct' as const,
+      rawKey: 'post_date_alignment' as const,
+      label: 'Post-Date Alignment',
+      description: 'Your follow-through and communication after connection.',
+      barColor: 'bg-muted-foreground',
+      textColor: 'text-muted-foreground',
+    },
+  ];
 
-  const scores = {
-    intent_clarity: rifProfile.intent_clarity,
-    emotional_readiness: rifProfile.emotional_readiness,
-    pacing_preferences: rifProfile.pacing_preferences,
-    boundary_respect: rifProfile.boundary_respect,
-    post_date_alignment: rifProfile.post_date_alignment,
-  };
+  // Use _pct values (0-100) for avg, display, and bar widths
+  const avgPct =
+    (rifProfile.intent_clarity_pct +
+      rifProfile.emotional_readiness_pct +
+      rifProfile.pacing_preferences_pct +
+      rifProfile.boundary_respect_pct +
+      rifProfile.post_date_alignment_pct) /
+    5;
 
-  const avg = Object.values(scores).reduce((a, b) => a + b, 0) / 5;
   const archetype =
-    avg >= 80
+    avgPct >= 80
       ? { label: 'The Intentional Partner', tagline: 'You date with clarity, depth, and purpose.' }
-      : avg >= 60 && scores.emotional_readiness >= 70
-      ? { label: 'The Hopeful Romantic', tagline: 'You lead with your heart — and that's a strength.' }
-      : { label: 'The Guarded Opener', tagline: 'You're learning to open — on your own terms.' };
+      : avgPct >= 60 && rifProfile.emotional_readiness_pct >= 70
+      ? { label: 'The Hopeful Romantic', tagline: "You lead with your heart — and that's a strength." }
+      : { label: 'The Guarded Opener', tagline: "You're learning to open — on your own terms." };
 
   return (
     <div className="space-y-5 px-5 pt-3 pb-8">
-      {/* Header */}
       <div>
         <p className="text-[11px] tracking-[0.2em] text-primary uppercase font-medium mb-1">
           Relational Intelligence Framework
@@ -78,7 +111,7 @@ const RIFResultsDashboard: React.FC<{
         </p>
       </div>
 
-      {/* Archetype card */}
+      {/* Archetype */}
       <div className="bg-card border border-primary/20 rounded-2xl p-5 shadow-sm">
         <div className="flex items-center gap-3 mb-1">
           <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
@@ -92,7 +125,7 @@ const RIFResultsDashboard: React.FC<{
         <p className="text-sm text-muted-foreground italic mt-1 pl-12">{archetype.tagline}</p>
       </div>
 
-      {/* How RIF improves over time — sprinkled questions banner */}
+      {/* How RIF improves */}
       <div className="bg-primary/5 border border-primary/20 rounded-xl px-4 py-3 flex items-start gap-2.5">
         <Sparkles className="w-4 h-4 text-primary mt-0.5 shrink-0" />
         <div>
@@ -104,26 +137,26 @@ const RIFResultsDashboard: React.FC<{
         </div>
       </div>
 
-      {/* Dimension scores */}
+      {/* Dimension scores — uses normalised _pct values */}
       <div className="bg-card border border-border/50 rounded-2xl p-5 shadow-sm">
         <p className="text-[11px] tracking-[0.15em] text-primary uppercase font-medium mb-4">
           Your Dimensions
         </p>
         <div className="space-y-5">
-          {dimensions.map(({ key, label, description, color, textColor }) => {
-            const value = scores[key];
+          {dimensions.map(({ pctKey, label, description, barColor, textColor }) => {
+            const pct = rifProfile[pctKey];
             return (
-              <div key={key}>
+              <div key={pctKey}>
                 <div className="flex justify-between items-baseline mb-1">
                   <span className="text-sm font-medium text-foreground">{label}</span>
-                  <span className={`font-serif text-xl font-normal ${textColor}`}>{value}</span>
+                  <span className={`font-serif text-xl font-normal ${textColor}`}>{pct}</span>
                 </div>
                 <p className="text-xs text-muted-foreground mb-2">{description}</p>
                 <div className="h-[3px] bg-secondary rounded overflow-hidden">
                   <motion.div
-                    className={`h-full rounded ${color}`}
+                    className={`h-full rounded ${barColor}`}
                     initial={{ width: 0 }}
-                    animate={{ width: `${value}%` }}
+                    animate={{ width: `${pct}%` }}
                     transition={{ duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
                   />
                 </div>
@@ -133,7 +166,6 @@ const RIFResultsDashboard: React.FC<{
         </div>
       </div>
 
-      {/* Retake option */}
       <button
         onClick={onRetake}
         className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mx-auto"
@@ -157,7 +189,6 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   const [showSettings, setShowSettings] = useState(false);
   const [showPostDateReflection, setShowPostDateReflection] = useState(false);
   const [reflectionPartnerName, setReflectionPartnerName] = useState('');
-  // Allow user to force-retake RIF even if already completed
   const [rifRetakeMode, setRifRetakeMode] = useState(false);
 
   const isMobile = useIsMobile();
@@ -174,7 +205,6 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   const avatarUrl = profile?.photos?.[0] || user?.user_metadata?.avatar_url || null;
   const initials = firstName.slice(0, 2).toUpperCase();
 
-  // Progressive daily profile question
   const {
     question: dailyQ,
     showCard: showDailyQ,
@@ -220,21 +250,14 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   }, []);
 
   useEffect(() => {
-    if (activeTab === 'weekly') {
-      recordWeeklyOptionsView();
-    }
+    if (activeTab === 'weekly') recordWeeklyOptionsView();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    if (tab !== 'dates') {
-      setDatesJournalTab('dates');
-    }
-    // Reset retake mode when navigating away from RIF tab
-    if (tab !== 'rif') {
-      setRifRetakeMode(false);
-    }
+    if (tab !== 'dates') setDatesJournalTab('dates');
+    if (tab !== 'rif') setRifRetakeMode(false);
   };
 
   const handleJournalNavigation = () => {
@@ -259,10 +282,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
         );
       case 'matches':
         return (
-          <ProfileGate
-            featureName="conversations"
-            onNavigateToProfile={() => handleTabChange('profile')}
-          >
+          <ProfileGate featureName="conversations" onNavigateToProfile={() => handleTabChange('profile')}>
             <Conversations />
           </ProfileGate>
         );
@@ -281,14 +301,8 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
       case 'rif':
         // Show RIF results dashboard if already completed (and not in retake mode)
         if (!rifLoading && rifProfile && !rifRetakeMode) {
-          return (
-            <RIFResultsDashboard
-              rifProfile={rifProfile}
-              onRetake={() => setRifRetakeMode(true)}
-            />
-          );
+          return <RIFResultsDashboard rifProfile={rifProfile} onRetake={() => setRifRetakeMode(true)} />;
         }
-        // Otherwise show the full quiz (first time or retake)
         return (
           <RIFQuiz
             userId={user?.id || ''}
@@ -312,10 +326,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
         );
       default:
         return (
-          <ProfileGate
-            featureName="weekly matches"
-            onNavigateToProfile={() => handleTabChange('profile')}
-          >
+          <ProfileGate featureName="weekly matches" onNavigateToProfile={() => handleTabChange('profile')}>
             <SundayMatches />
           </ProfileGate>
         );
@@ -325,7 +336,6 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
   if (isMobile) {
     return (
       <div className="h-screen bg-background relative flex flex-col overflow-hidden isolate">
-        {/* Mobile header */}
         <header
           className="flex-shrink-0 z-40 flex items-center justify-between px-5 py-3 bg-card/98 backdrop-blur-2xl border-b border-border/50"
           style={{ boxShadow: '0 1px 12px rgba(90, 70, 50, 0.06)' }}
@@ -359,9 +369,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
             </button>
             <button onClick={() => handleTabChange('profile')} aria-label="Profile" className="group">
               <Avatar className="h-8 w-8 border-2 border-primary/30 group-hover:border-primary/60 transition-colors shadow-sm">
-                {avatarUrl ? (
-                  <AvatarImage src={avatarUrl} alt={firstName} className="object-cover" />
-                ) : null}
+                {avatarUrl ? <AvatarImage src={avatarUrl} alt={firstName} className="object-cover" /> : null}
                 <AvatarFallback className="bg-muted text-primary font-caption text-xs tracking-wider">
                   {initials}
                 </AvatarFallback>
@@ -371,16 +379,11 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
         </header>
 
         <div className="flex-1 overflow-y-auto pb-24">
-          {/* Greeting */}
           <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-xl border-b border-border/30">
             <PremiumGreeting firstName={firstName} />
           </div>
-
           <div className="px-5 pt-3 space-y-5">
-            {/* RIF Insights */}
             {activeTab === 'profile' && <RifInsightsCard />}
-
-            {/* Daily profile question — weekly tab only */}
             {activeTab === 'weekly' && showDailyQ && (
               <div className="bg-card border border-primary/20 rounded-2xl p-4 shadow-sm">
                 <div className="flex items-start gap-3">
@@ -417,16 +420,12 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
                 </div>
               </div>
             )}
-
-            {/* Pending connections — weekly tab */}
             {activeTab === 'weekly' && <PendingConnections />}
-
             {renderActiveScreen()}
           </div>
         </div>
 
         <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
-
         {showDebrief && <DebriefOverlay onClose={() => setShowDebrief(false)} />}
         {showTrustScore && <TrustScoreOverlay onClose={() => setShowTrustScore(false)} />}
         {showSettings && <SettingsOverlay onClose={() => setShowSettings(false)} />}
@@ -449,7 +448,6 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
     );
   }
 
-  // Desktop
   return (
     <SidebarProvider>
       <div className="h-screen flex w-full bg-background overflow-hidden">
@@ -459,14 +457,12 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
         >
           <SidebarTrigger className="ml-4 text-muted-foreground hover:text-primary transition-colors" />
         </header>
-
         <SidebarNavigation
           activeTab={activeTab}
           onTabChange={handleTabChange}
           onArkNavigation={handleJournalNavigation}
           onUpgrade={() => setShowPaywall(true)}
         />
-
         <main className="flex-1 pt-12 overflow-y-auto">
           <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-xl border-b border-border/30">
             <PremiumGreeting firstName={firstName} />
@@ -478,7 +474,6 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
           )}
           {renderActiveScreen()}
         </main>
-
         {showDebrief && <DebriefOverlay onClose={() => setShowDebrief(false)} />}
         {showTrustScore && <TrustScoreOverlay onClose={() => setShowTrustScore(false)} />}
         {showSettings && <SettingsOverlay onClose={() => setShowSettings(false)} />}
