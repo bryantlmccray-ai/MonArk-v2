@@ -8,7 +8,7 @@ import { useDiscover } from '@/hooks/useDiscover';
 import { Heart, X, MapPin, Briefcase, Compass, Info, Lock, CheckCircle } from 'lucide-react';
 
 // ── Image fallback ────────────────────────────────────────────────────────────
-const PhotoOrFallback: React.FC<{ src: string; name: string; className?: string }> = ({
+const PhotoOrFallback: React.FC<{ src: string; name: string; clasName?: string }> = ({
   src,
   name,
   className = '',
@@ -163,7 +163,7 @@ export const DiscoverMode: React.FC = () => {
         <div>
           <p className="text-xs font-medium text-foreground">This isn't swiping</p>
           <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">
-            No instant match happens here. When two people both express interest, the AI weighs that
+            No instant match happens here. When two people both express interest, smart matching weighs that
             heavily for your next Sunday drop. You can browse up to{' '}
             <span className="font-semibold text-foreground">{dailyCap} people per day</span> — take
             your time with each one.
@@ -230,7 +230,7 @@ export const DiscoverMode: React.FC = () => {
           <Compass className="w-10 h-10 mx-auto text-muted-foreground/40 mb-3" />
           <p className="font-semibold text-foreground">You've seen everyone for now</p>
           <p className="text-sm text-muted-foreground mt-1 max-w-xs mx-auto">
-            New people arrive every Sunday. Your expressed interests are queued for the AI.
+            New people arrive every Sunday. Your expressed interests are queued for Smart Matching.
           </p>
         </div>
       ) : (
