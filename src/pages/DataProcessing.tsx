@@ -177,7 +177,7 @@ export default function DataProcessing() {
                     </tr>
                     <tr>
                       <td className="py-3 pr-4">OpenAI</td>
-                      <td className="py-3 pr-4">AI-powered matching insights and companion chat</td>
+                      <td className="py-3 pr-4">Smart matching insights and companion chat</td>
                       <td className="py-3">United States</td>
                     </tr>
                     <tr>
