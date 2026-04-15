@@ -116,7 +116,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, o
                                                                                               isActive ? 'font-semibold' : 'font-medium opacity-80'
                                                                           }`}
                                                                 
-                                                          {tab
+                                                          {tab.label}
                                                         </span>
                                           </button>
                                     
