@@ -5,7 +5,10 @@ import { Badge } from '@/components/ui/badge';
 import { Sparkles, MapPin, Clock, Heart, ChevronDown, ChevronUp, Calendar } from 'lucide-react';
 import { useDateConcierge, DateProposal } from '@/hooks/useDateConcierge';
 import { useAuth } from '@/hooks/useAuth';
+import { useRIF, normalizeRIFScore } from '@/hooks/useRIF';
 import { supabase } from '@/integrations/supabase/client';
+import { VenueRecommendationStrip } from '@/components/date-concierge/VenueRecommendationStrip';
+import type { RIFScores } from '@/lib/venueMatching';
 
 interface MatchDateSuggestionCardProps {
   conversationId: string;
@@ -22,8 +25,28 @@ export const MatchDateSuggestionCard: React.FC<MatchDateSuggestionCardProps> = (
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(false);
   const [dismissed, setDismissed] = useState(false);
-  const { updateProposalStatus } = useDateConcierge();
   const { user } = useAuth();
+  const { rifProfile } = useRIF();
+
+  // Map RIF profile to the 5-pillar RIFScores shape used by venue matching.
+  // The stored RIF uses different pillar names; we map the closest equivalents.
+  const rifScores: RIFScores = {
+    emotional_intelligence: rifProfile ? normalizeRIFScore(rifProfile.emotional_readiness) : 50,
+    communication_style: rifProfile ? normalizeRIFScore(rifProfile.intent_clarity) : 50,
+    lifestyle_alignment: rifProfile ? normalizeRIFScore(rifProfile.pacing_preferences) : 50,
+    relationship_readiness: rifProfile ? normalizeRIFScore(rifProfile.post_date_alignment) : 50,
+    growth_orientation: rifProfile ? normalizeRIFScore(rifProfile.boundary_respect) : 50,
+  };
+
+  const {
+    updateProposalStatus,
+    venueRecommendations,
+    venueLoading,
+    venueConfidence,
+  } = useDateConcierge({
+    activeConversationId: conversationId,
+    rifScores,
+  });
 
   useEffect(() => {
     const fetchProposal = async () => {
@@ -140,6 +163,15 @@ export const MatchDateSuggestionCard: React.FC<MatchDateSuggestionCardProps> = (
             )}
           </div>
         )}
+
+        {/* Venue recommendations strip */}
+        <VenueRecommendationStrip
+          venues={venueRecommendations}
+          loading={venueLoading}
+          confidence={venueConfidence}
+          rifScores={rifScores}
+          className="mb-3"
+        />
 
         {/* Actions */}
         <div className="flex items-center gap-2">
