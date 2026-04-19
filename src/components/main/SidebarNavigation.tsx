@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, MessageCircle, BookOpen, Calendar, Share2, Crown, Brain, LogOut, Compass } from 'lucide-react';
+import { User, MessageCircle, BookOpen, Calendar, Share2, Crown, Brain, LogOut, Compass, Navigation } from 'lucide-react';
 import { useProfile } from '@/hooks/useProfile';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useAuth } from '@/hooks/useAuth';
@@ -41,7 +41,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
   // The RIF tab label adapts based on completion state
   const tabs = [
     { id: 'weekly', icon: Calendar, label: 'Your 3', hasNotification: false },
-    { id: 'discover', icon: Compass, label: 'Discover', hasNotification: false },
+    { id: 'discover', icon: Navigation, label: 'Discover', hasNotification: false },
     { id: 'matches', icon: MessageCircle, label: 'Connections', hasNotification: true },
     { id: 'dates', icon: BookOpen, label: 'Journal', hasNotification: false },
     {
@@ -51,6 +51,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
       hasNotification: !rifCompleted, // nudge badge if not yet completed
     },
     { id: 'shareables', icon: Share2, label: 'Milestone Cards', hasNotification: false },
+    { id: 'compass', icon: Compass, label: 'Compass', hasNotification: false },
     { id: 'profile', icon: User, label: 'Profile', hasNotification: false },
   ];
 
