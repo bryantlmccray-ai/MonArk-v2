@@ -22,14 +22,13 @@ export const MatchDateSuggestionCard: React.FC<MatchDateSuggestionCardProps> = (
   matchName,
 }) => {
   const [proposal, setProposal] = useState<DateProposal | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [proposalLoading, setProposalLoading] = useState(true);
   const [expanded, setExpanded] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const { user } = useAuth();
   const { rifProfile } = useRIF();
 
-  // Map RIF profile to the 5-pillar RIFScores shape used by venue matching.
-  // The stored RIF uses different pillar names; we map the closest equivalents.
+  // Map stored RIF pillars to the 5-pillar RIFScores shape for venue matching
   const rifScores: RIFScores = {
     emotional_intelligence: rifProfile ? normalizeRIFScore(rifProfile.emotional_readiness) : 50,
     communication_style: rifProfile ? normalizeRIFScore(rifProfile.intent_clarity) : 50,
@@ -51,7 +50,6 @@ export const MatchDateSuggestionCard: React.FC<MatchDateSuggestionCardProps> = (
   useEffect(() => {
     const fetchProposal = async () => {
       if (!user) return;
-
       try {
         const { data, error } = await supabase
           .from('date_proposals')
@@ -67,26 +65,35 @@ export const MatchDateSuggestionCard: React.FC<MatchDateSuggestionCardProps> = (
       } catch (err) {
         console.error('Error fetching match date proposal:', err);
       } finally {
-        setLoading(false);
+        setProposalLoading(false);
       }
     };
-
     fetchProposal();
   }, [conversationId, user]);
 
-  if (loading || !proposal || dismissed) return null;
-  if (proposal.status === 'declined' || proposal.status === 'completed') return null;
+  // Always show the venue strip — it has its own loading/empty guards.
+  // Only hide the whole component if both the strip is empty AND there is no proposal.
+  const hasVenues = venueRecommendations.length > 0 || venueLoading;
+  const hasProposal =
+    proposal !== null &&
+    !dismissed &&
+    proposal.status !== 'declined' &&
+    proposal.status !== 'completed';
 
-  const isCreator = user?.id === proposal.creator_user_id;
-  const isRecipient = user?.id === proposal.recipient_user_id;
-  const isAccepted = proposal.status === 'accepted';
+  if (!hasVenues && !hasProposal && !proposalLoading) return null;
+
+  const isCreator = user?.id === proposal?.creator_user_id;
+  const isRecipient = user?.id === proposal?.recipient_user_id;
+  const isAccepted = proposal?.status === 'accepted';
 
   const handleAccept = async () => {
+    if (!proposal) return;
     await updateProposalStatus(proposal.id, 'accepted');
     setProposal({ ...proposal, status: 'accepted' });
   };
 
   const handleDecline = async () => {
+    if (!proposal) return;
     await updateProposalStatus(proposal.id, 'declined');
     setDismissed(true);
   };
@@ -94,146 +101,147 @@ export const MatchDateSuggestionCard: React.FC<MatchDateSuggestionCardProps> = (
   return (
     <Card className="border-primary/20 bg-primary/5 mb-4 overflow-hidden">
       <CardContent className="p-4">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-foreground">
-                Curated Date Idea
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Personalized for you & {matchName}
-              </p>
-            </div>
-          </div>
-          {isAccepted && (
-            <Badge variant="outline" className="text-xs border-green-500/30 text-green-600 bg-green-500/10">
-              Accepted
-            </Badge>
-          )}
-        </div>
 
-        {/* Title */}
-        <h4 className="text-base font-medium text-foreground mb-2">
-          {proposal.title}
-        </h4>
-
-        {/* Quick details */}
-        <div className="flex flex-wrap gap-3 mb-3 text-sm text-muted-foreground">
-          {proposal.vibe && (
-            <span className="flex items-center gap-1">
-              <Heart className="w-3.5 h-3.5 text-primary" />
-              {proposal.vibe}
-            </span>
-          )}
-          {proposal.location_type && (
-            <span className="flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 text-primary" />
-              {proposal.location_type}
-            </span>
-          )}
-          {proposal.time_suggestion && (
-            <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-primary" />
-              {proposal.time_suggestion}
-            </span>
-          )}
-        </div>
-
-        {/* Expandable details */}
-        {expanded && (
-          <div className="space-y-3 mb-3 animate-in fade-in slide-in-from-top-2 duration-200">
-            <div className="bg-background/60 rounded-lg p-3">
-              <p className="text-sm font-medium text-foreground mb-1">Activity</p>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {proposal.activity}
-              </p>
-            </div>
-
-            {proposal.rationale && (
-              <div className="bg-primary/5 rounded-lg p-3 border border-primary/10">
-                <p className="text-sm font-medium text-foreground mb-1">Why this works</p>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {proposal.rationale}
-                </p>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Venue recommendations strip */}
+        {/* Venue strip — always shown, independent of proposal state */}
         <VenueRecommendationStrip
           venues={venueRecommendations}
           loading={venueLoading}
           confidence={venueConfidence}
           rifScores={rifScores}
-          className="mb-3"
+          className="mb-4"
         />
 
-        {/* Actions */}
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setExpanded(!expanded)}
-            className="text-xs text-muted-foreground"
-          >
-            {expanded ? (
-              <>
-                <ChevronUp className="w-3.5 h-3.5 mr-1" />
-                Less
-              </>
-            ) : (
-              <>
-                <ChevronDown className="w-3.5 h-3.5 mr-1" />
-                Details
-              </>
+        {/* Proposal card — only shown when a proposal exists and hasn't been dismissed */}
+        {hasProposal && proposal && (
+          <>
+            {/* Header */}
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground">
+                    Curated Date Idea
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Personalized for you & {matchName}
+                  </p>
+                </div>
+              </div>
+              {isAccepted && (
+                <Badge variant="outline" className="text-xs border-green-500/30 text-green-600 bg-green-500/10">
+                  Accepted
+                </Badge>
+              )}
+            </div>
+
+            {/* Title */}
+            <h4 className="text-base font-medium text-foreground mb-2">
+              {proposal.title}
+            </h4>
+
+            {/* Quick details */}
+            <div className="flex flex-wrap gap-3 mb-3 text-sm text-muted-foreground">
+              {proposal.vibe && (
+                <span className="flex items-center gap-1">
+                  <Heart className="w-3.5 h-3.5 text-primary" />
+                  {proposal.vibe}
+                </span>
+              )}
+              {proposal.location_type && (
+                <span className="flex items-center gap-1">
+                  <MapPin className="w-3.5 h-3.5 text-primary" />
+                  {proposal.location_type}
+                </span>
+              )}
+              {proposal.time_suggestion && (
+                <span className="flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5 text-primary" />
+                  {proposal.time_suggestion}
+                </span>
+              )}
+            </div>
+
+            {/* Expandable details */}
+            {expanded && (
+              <div className="space-y-3 mb-3 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="bg-background/60 rounded-lg p-3">
+                  <p className="text-sm font-medium text-foreground mb-1">Activity</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {proposal.activity}
+                  </p>
+                </div>
+                {proposal.rationale && (
+                  <div className="bg-primary/5 rounded-lg p-3 border border-primary/10">
+                    <p className="text-sm font-medium text-foreground mb-1">Why this works</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {proposal.rationale}
+                    </p>
+                  </div>
+                )}
+              </div>
             )}
-          </Button>
 
-          <div className="flex-1" />
-
-          {proposal.status === 'proposed' && isRecipient && (
-            <>
+            {/* Actions */}
+            <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={handleDecline}
+                onClick={() => setExpanded(!expanded)}
                 className="text-xs text-muted-foreground"
               >
-                Not for me
+                {expanded ? (
+                  <>
+                    <ChevronUp className="w-3.5 h-3.5 mr-1" />
+                    Less
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="w-3.5 h-3.5 mr-1" />
+                    Details
+                  </>
+                )}
               </Button>
-              <Button
-                size="sm"
-                onClick={handleAccept}
-                className="text-xs"
-              >
-                <Calendar className="w-3.5 h-3.5 mr-1" />
-                Let's do it
-              </Button>
-            </>
-          )}
 
-          {proposal.status === 'proposed' && isCreator && (
-            <span className="text-xs text-muted-foreground">
-              Waiting for {matchName}'s response
-            </span>
-          )}
+              <div className="flex-1" />
 
-          {isAccepted && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => updateProposalStatus(proposal.id, 'completed')}
-              className="text-xs"
-            >
-              Mark Complete
-            </Button>
-          )}
-        </div>
+              {proposal.status === 'proposed' && isRecipient && (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleDecline}
+                    className="text-xs text-muted-foreground"
+                  >
+                    Not for me
+                  </Button>
+                  <Button size="sm" onClick={handleAccept} className="text-xs">
+                    <Calendar className="w-3.5 h-3.5 mr-1" />
+                    Let's do it
+                  </Button>
+                </>
+              )}
+
+              {proposal.status === 'proposed' && isCreator && (
+                <span className="text-xs text-muted-foreground">
+                  Waiting for {matchName}'s response
+                </span>
+              )}
+
+              {isAccepted && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => updateProposalStatus(proposal.id, 'completed')}
+                  className="text-xs"
+                >
+                  Mark Complete
+                </Button>
+              )}
+            </div>
+          </>
+        )}
       </CardContent>
     </Card>
   );
