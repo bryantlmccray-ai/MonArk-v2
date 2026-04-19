@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, MessageCircle, BookOpen, Calendar, Compass, Brain, Share2 } from 'lucide-react';
+import { User, MessageCircle, BookOpen, Calendar, Compass, Brain, Share2, Navigation } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
