@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { useToast } from '@/hooks/use-toast';
@@ -7,6 +6,10 @@ import { useConversationReadiness } from './useConversationReadiness';
 import { Tables } from '@/integrations/supabase/types';
 import { sanitizeConciergePayload } from '@/lib/aiSanitizer';
 import { useNotifications } from './useNotifications';
+// --- Venue intelligence (additive) ---
+import { useVenues } from './useVenues';
+import { useVenueRecommendations } from './useVenueRecommendations';
+import type { RIFScores } from '@/lib/venueMatching';
 
 type Message = Tables<'messages'>;
 
@@ -58,7 +61,20 @@ export interface ConversationTracker {
   updated_at: string;
 }
 
-export const useDateConcierge = () => {
+/**
+ * Options for venue recommendations inside the date concierge flow.
+ * Pass activeConversationId + rifScores when the chat readiness threshold is crossed.
+ */
+export interface VenueRecommendationOptions {
+  /** The Supabase conversation_id for the active chat thread */
+  activeConversationId: string;
+  /** The current user's five-pillar RIF scores */
+  rifScores: RIFScores;
+  /** Max venues to surface (default 3) */
+  limit?: number;
+}
+
+export const useDateConcierge = (venueOptions?: VenueRecommendationOptions) => {
   const [proposals, setProposals] = useState<DateProposal[]>([]);
   const [journalEntries, setJournalEntries] = useState<DateJournalEntry[]>([]);
   const [conversations, setConversations] = useState<ConversationTracker[]>([]);
@@ -67,6 +83,33 @@ export const useDateConcierge = () => {
   const { toast } = useToast();
   const { analyzeReadiness, setCooldown, updatePattern } = useConversationReadiness();
   const { sendEmailNotification } = useNotifications();
+
+  // --- Venue intelligence (additive) ---
+  const { venues: allVenues } = useVenues();
+  const venueRecs = useVenueRecommendations(
+    venueOptions
+      ? {
+          conversationId: venueOptions.activeConversationId,
+          userId: user?.id ?? '',
+          rifScores: venueOptions.rifScores,
+          venues: allVenues,
+          limit: venueOptions.limit ?? 3,
+        }
+      : {
+          // Disabled state - no conversation active yet
+          conversationId: '',
+          userId: '',
+          rifScores: {
+            emotional_intelligence: 50,
+            communication_style: 50,
+            lifestyle_alignment: 50,
+            relationship_readiness: 50,
+            growth_orientation: 50,
+          },
+          venues: [],
+          limit: 3,
+        }
+  );
 
   // Fetch user's date proposals
   const fetchProposals = async () => {
@@ -81,7 +124,6 @@ export const useDateConcierge = () => {
 
       if (error) {
         console.error('Error fetching proposals:', error);
-        // Don't crash, just continue with empty array
         setProposals([]);
         return;
       }
@@ -144,7 +186,6 @@ export const useDateConcierge = () => {
     if (!user) return null;
 
     try {
-      // Get additional context for AI
       const { data: userProfile } = await supabase
         .from('user_profiles')
         .select('bio, location')
@@ -157,7 +198,6 @@ export const useDateConcierge = () => {
         .eq('user_id', matchUserId)
         .single();
 
-      // ── LLM Firewall: Sanitize before sending to edge function ──
       const { data: aiResponse, error: aiError } = await supabase.functions.invoke('ai-date-concierge', {
         body: sanitizeConciergePayload({
           matchUserId,
@@ -177,7 +217,6 @@ export const useDateConcierge = () => {
         throw new Error('Failed to generate AI proposal');
       }
 
-      // Use AI response or fallback if there was an error
       const proposalData = aiError ? aiResponse.fallback : aiResponse;
 
       const { data, error } = await supabase
@@ -247,7 +286,6 @@ export const useDateConcierge = () => {
     if (!user) return;
 
     try {
-      // Ensure required fields are present and properly typed
       const insertData = {
         user_id: user.id,
         partner_name: entryData.partner_name || '',
@@ -291,13 +329,12 @@ export const useDateConcierge = () => {
     if (!user) return { shouldTrigger: false, confidence: 0, triggers: [] };
 
     try {
-      // Fetch recent messages for analysis
       const { data: messages, error } = await supabase
         .from('messages')
         .select('*')
         .eq('conversation_id', conversationId)
         .order('created_at', { ascending: true })
-        .limit(50); // Analyze last 50 messages
+        .limit(50);
 
       if (error) throw error;
 
@@ -306,7 +343,6 @@ export const useDateConcierge = () => {
       
       const readinessAnalysis = analyzeReadiness(conversationId, messagesTyped);
       
-      // Get user's RIF profile for personalized timing
       const { data: userRifProfile } = await supabase
         .from('rif_profiles')
         .select('*')
@@ -314,7 +350,6 @@ export const useDateConcierge = () => {
         .eq('is_active', true)
         .maybeSingle();
 
-      // Get match's RIF profile for compatibility
       const { data: matchRifProfile } = await supabase
         .from('rif_profiles')
         .select('*')
@@ -322,10 +357,8 @@ export const useDateConcierge = () => {
         .eq('is_active', true)
         .maybeSingle();
 
-      // Additional checks for AI concierge triggering
       const conversation = conversations.find(c => c.conversation_id === conversationId);
       
-      // Don't trigger if already triggered recently
       if (conversation?.ai_concierge_triggered) {
         return { 
           shouldTrigger: false, 
@@ -334,27 +367,22 @@ export const useDateConcierge = () => {
         };
       }
 
-      // RIF-based timing considerations
       const rifTriggers: string[] = [];
       let rifConfidenceModifier = 1.0;
       let minMessageThreshold = 8;
       let minEngagementThreshold = 0.6;
 
       if (userRifProfile) {
-        // Adjust timing based on pacing preferences (1-10 scale)
         if (userRifProfile.pacing_preferences <= 3) {
-          // Slow pacers need more time and messages
           minMessageThreshold = 15;
           minEngagementThreshold = 0.7;
           rifTriggers.push('User prefers slow pacing - higher thresholds applied');
         } else if (userRifProfile.pacing_preferences >= 8) {
-          // Fast pacers can handle earlier suggestions
           minMessageThreshold = 6;
           minEngagementThreshold = 0.5;
           rifTriggers.push('User prefers fast pacing - lower thresholds applied');
         }
 
-        // Consider emotional readiness (1-10 scale)
         if (userRifProfile.emotional_readiness < 5) {
           rifConfidenceModifier *= 0.8;
           rifTriggers.push('Lower emotional readiness - reduced confidence');
@@ -363,7 +391,6 @@ export const useDateConcierge = () => {
           rifTriggers.push('High emotional readiness - increased confidence');
         }
 
-        // Factor in boundary respect and intent clarity
         if (userRifProfile.boundary_respect >= 7 && userRifProfile.intent_clarity >= 7) {
           rifConfidenceModifier *= 1.1;
           rifTriggers.push('High boundary respect and intent clarity');
@@ -373,7 +400,6 @@ export const useDateConcierge = () => {
         }
       }
 
-      // Consider compatibility if both RIF profiles exist
       if (userRifProfile && matchRifProfile) {
         const pacingDifference = Math.abs(userRifProfile.pacing_preferences - matchRifProfile.pacing_preferences);
         if (pacingDifference <= 2) {
@@ -404,14 +430,11 @@ export const useDateConcierge = () => {
         };
       }
 
-      // Apply RIF confidence modifier
       const adjustedConfidence = readinessAnalysis.confidence * rifConfidenceModifier;
       const confidenceThreshold = userRifProfile?.intent_clarity >= 8 ? 0.65 : 0.7;
 
       const shouldTrigger = readinessAnalysis.isReady && adjustedConfidence >= confidenceThreshold;
 
-      // ── Date Nudge Notification ──────────────────────────────
-      // Fire an email nudge when the conversation signals date-readiness
       if (shouldTrigger) {
         try {
           const { data: matchProf } = await supabase
@@ -423,13 +446,12 @@ export const useDateConcierge = () => {
 
           await sendEmailNotification(
             'date_proposal',
-            'The vibe is right — plan a date with ' + matchFirstName + ' 🌟',
-            'Your conversation with ' + matchFirstName + ' is flowing beautifully. It looks like a great moment to suggest a date! Open MonArk and tap \u201cPlan a Date\u201d to let the AI concierge craft a personalized idea for both of you.',
+            'The vibe is right - plan a date with ' + matchFirstName,
+            'Your conversation with ' + matchFirstName + ' is flowing beautifully. It looks like a great moment to suggest a date! Open MonArk and tap Plan a Date to let the AI concierge craft a personalized idea for both of you.',
             undefined,
             'https://monark.app/matches?action=plan_date&match=' + matchUserId
           );
 
-          // Set 24-hour cooldown so we don’t over-notify the same conversation
           await markConciergeTriggered(conversationId, 24);
         } catch (notifError) {
           console.error('Date nudge notification failed (non-fatal):', notifError);
@@ -450,7 +472,6 @@ export const useDateConcierge = () => {
   // Mark AI concierge as triggered and set cooldown
   const markConciergeTriggered = async (conversationId: string, cooldownHours: number = 24) => {
     try {
-      // Update conversation tracker
       const { error } = await supabase
         .from('conversation_tracker')
         .update({ ai_concierge_triggered: true })
@@ -458,7 +479,6 @@ export const useDateConcierge = () => {
 
       if (error) throw error;
 
-      // Set cooldown
       setCooldown(conversationId, cooldownHours);
       
       await fetchConversations();
@@ -467,7 +487,7 @@ export const useDateConcierge = () => {
     }
   };
 
-  // Reset AI concierge trigger status (for testing or if user wants to try again)
+  // Reset AI concierge trigger status
   const resetConciergeStatus = async (conversationId: string) => {
     try {
       const { error } = await supabase
@@ -503,7 +523,6 @@ export const useDateConcierge = () => {
       }
 
       if (existing) {
-        // Update existing tracker
         const { error } = await supabase
           .from('conversation_tracker')
           .update({
@@ -515,7 +534,6 @@ export const useDateConcierge = () => {
 
         if (error) throw error;
       } else {
-        // Create new tracker
         const { error } = await supabase
           .from('conversation_tracker')
           .insert({
@@ -555,7 +573,6 @@ export const useDateConcierge = () => {
     if (!user) return;
 
     try {
-      // Determine which field to update based on user role
       const { data: proposal } = await supabase
         .from('date_proposals')
         .select('creator_user_id, recipient_user_id')
@@ -659,6 +676,10 @@ export const useDateConcierge = () => {
     checkConversationReadiness,
     markConciergeTriggered,
     resetConciergeStatus,
+    // --- Venue intelligence (additive) ---
+    venueRecommendations: venueRecs.venues,
+    venueLoading: venueRecs.loading,
+    venueConfidence: venueRecs.confidence,
     refetch: async () => {
       await fetchProposals();
       await fetchJournalEntries();
