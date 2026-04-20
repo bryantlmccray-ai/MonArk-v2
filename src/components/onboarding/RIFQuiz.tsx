@@ -389,7 +389,7 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                                               )}
                                   </div>
                         </div>
-                </motion.div>motion.div>
+                </motion.div>
               );
   }
   
@@ -429,7 +429,7 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                                                   className="mx-auto w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mb-6"
                                                 >
                                                 <Heart className="w-7 h-7 text-primary" />
-                                    </motion.div>motion.div>
+                                    </motion.div>
                                     <h2 className="font-serif text-3xl font-normal text-foreground mb-2">You're in.</h2>
                                     <p className="text-[14px] text-foreground/70 leading-[1.75] mb-4">
                                                 Your starter profile is live. MonArk will begin curating your first connections.
@@ -438,7 +438,7 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                                                 ✦ &nbsp;More questions await on your home tab — each one sharpens your Sunday matches.
                                     </p>
                           </div>
-                  </motion.div>motion.div>
+                  </motion.div>
                 );
     }
   
@@ -502,8 +502,8 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                                                                                   );
                                               })}
                                               </div>
-                                  </motion.div>motion.div>
-                        </AnimatePresence>AnimatePresence>
+                                  </motion.div>
+                        </AnimatePresence>
                 
                   {error && <p className="text-[13px] text-destructive mt-3">{error}</p>}
                 
