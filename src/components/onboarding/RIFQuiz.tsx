@@ -529,6 +529,7 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                         </div>
                 </div>
           </div>
+          </div>
         </motion.div>
         );
 }
