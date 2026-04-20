@@ -20,6 +20,7 @@ import { ContactShareFeedback } from '@/components/feedback/ContactShareFeedback
 import { MilestoneCardShowcase } from '@/components/social/MilestoneCardShowcase';
 import { DiscoverMode } from '@/components/matching/DiscoverMode';
 import { CompassPage } from '@/components/compass/CompassPage';
+import { DatePlansTab } from './DatePlansTab';
 import { PendingConnections } from '@/components/matching/PendingConnections';
 import { useProgressiveProfile } from '@/hooks/useProgressiveProfile';
 import { useRIF } from '@/hooks/useRIF';
@@ -296,6 +297,8 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
         return <DiscoverMode />;
       case 'compass':
         return <CompassPage />;
+      case 'plans':
+        return <DatePlansTab onNavigateCompass={() => handleTabChange('compass')} />;
       case 'shareables':
         return <MilestoneCardShowcase />;
       case 'rif':
