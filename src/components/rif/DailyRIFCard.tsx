@@ -320,8 +320,11 @@ export function DailyRIFCard() {
             {saveMutation.isError && (
                     <p className="text-xs text-destructive mt-2">Couldn't save — try again.</p>
                 )}
+                </div>
           </div>
+        </div>
+      </motion.div>
         );
 }
 
-export default DailyRIFCard;</div>
+export default DailyRIFCard;
