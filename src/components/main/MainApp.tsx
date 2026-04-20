@@ -12,7 +12,8 @@ import { SettingsOverlay } from './overlays/SettingsOverlay';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useNotificationTriggers } from '@/hooks/useNotificationTriggers';
-import { RifInsightsCard } from '@/components/rif/RifInsightsCard';
+import { RifInsightsCard } from '@/comonents/rif/RifInsightsCard';
+import { DailyRIFCard } from '@/components/rif/DailyRIFCard';
 import { PostDateReflection } from '@/components/rif/PostDateReflection';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { useContactFeedback } from '@/hooks/useContactFeedback';
@@ -422,6 +423,7 @@ export const MainApp: React.FC<MainAppProps> = ({ initialTab = 'weekly' }) => {
                 </div>
               </div>
             )}
+          {activeTab === 'weekly' && <DailyRIFCard />}
             {activeTab === 'weekly' && <PendingConnections />}
             {renderActiveScreen()}
           </div>
