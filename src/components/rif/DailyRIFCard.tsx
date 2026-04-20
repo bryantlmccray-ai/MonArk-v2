@@ -170,16 +170,16 @@ export function DailyRIFCard() {
                                   <Sparkles className="w-4 h-4 text-primary" />
                                   <span className="text-xs font-semibold text-primary uppercase tracking-wider">
                                               RIF Profile Complete
-                                  </span>span>
-                        </div>div>
+                                  </span>
+                        </div>
                         <p className="text-sm text-foreground/75 leading-snug">
                                   Your Relational Intelligence profile is fully built. Your Sunday matches
                                   are as sharp as they can get.
-                        </p>p>
+                        </p>
                         <div className="mt-3 h-1.5 bg-secondary rounded-full overflow-hidden">
                                   <div className="h-full bg-gradient-to-r from-primary to-accent rounded-full w-full" />
-                        </div>div>
-                </div>div>
+                        </div>
+                </div>
               );
   }
   
@@ -196,12 +196,12 @@ export function DailyRIFCard() {
                                     <Sparkles className="w-4 h-4 text-primary" />
                                     <span className="text-xs font-semibold text-primary uppercase tracking-wider">
                                                 RIF Updated
-                                    </span>span>
-                                    <span className="ml-auto text-xs text-muted-foreground">{newCompleteness}%</span>span>
-                          </div>div>
+                                    </span>
+                                    <span className="ml-auto text-xs text-muted-foreground">{newCompleteness}%</span>
+                          </div>
                           <p className="text-sm text-foreground/75 leading-snug mb-3">
                                     Answer saved. Your Sunday matches just got a little sharper.
-                          </p>p>
+                          </p>
                           <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
                                     <motion.div
                                                   className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
@@ -209,8 +209,8 @@ export function DailyRIFCard() {
                                                   animate={{ width: `${newCompleteness}%` }}
                                                   transition={{ duration: 0.8, ease: "easeOut" }}
                                                 />
-                          </div>div>
-                  </motion.div>motion.div>
+                          </div>
+                  </motion.div>
                 );
     }
   
@@ -229,28 +229,28 @@ export function DailyRIFCard() {
                                   <div>
                                               <p className="text-xs font-semibold text-primary uppercase tracking-wider leading-none mb-0.5">
                                                             Today's RIF Question
-                                              </p>p>
+                                              </p>
                                     {dimMeta && (
                           <p className={`text-[10px] uppercase tracking-wider ${dimMeta.color}`}>
                             {dimMeta.label}
-                          </p>p>
+                          </p>
                                               )}
-                                  </div>div>
-                        </div>div>
+                                  </div>
+                        </div>
                         <div className="flex items-center gap-2">
                           {/* Completeness badge */}
                                   <span className="text-[10px] text-muted-foreground bg-secondary px-2 py-0.5 rounded-full">
                                     {completeness}% · {completenessLabel}
-                                  </span>span>
+                                  </span>
                                   <button
                                                 onClick={handleDismiss}
                                                 className="text-muted-foreground hover:text-foreground transition-colors p-0.5"
                                                 aria-label="Dismiss"
                                               >
                                               <X className="w-3.5 h-3.5" />
-                                  </button>button>
-                        </div>div>
-                </div>div>
+                                  </button>
+                        </div>
+                </div>
           
             {/* Completeness bar */}
                 <div className="h-1 bg-secondary rounded-full overflow-hidden mb-4">
@@ -258,14 +258,14 @@ export function DailyRIFCard() {
                                     className="h-full bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-500"
                                     style={{ width: `${completeness}%` }}
                                   />
-                </div>div>
+                </div>
           
             {/* Question */}
                 <p className="text-sm font-medium text-foreground leading-snug mb-1">
                   {todayQuestion.text}
-                </p>p>
+                </p>
             {todayQuestion.subtext && (
-                    <p className="text-[11px] text-muted-foreground italic mb-3">{todayQuestion.subtext}</p>p>
+                    <p className="text-[11px] text-muted-foreground italic mb-3">{todayQuestion.subtext}</p>
                 )}
           
             {/* Options */}
@@ -291,13 +291,13 @@ export function DailyRIFCard() {
                                                           {isSelected && (
                                                                                                 <span className="w-1.5 h-1.5 rounded-full bg-primary block" />
                                                                                               )}
-                                                        </span>span>
+                                                        </span>
                                           {opt.label}
-                                        </button>button>
+                                        </button>
                                       );
           })}
-                        </div>div>
-                </AnimatePresence>AnimatePresence>
+                        </div>
+                </AnimatePresence>
           
             {/* Submit */}
                 <div className="flex items-center gap-3 mt-4">
@@ -308,19 +308,19 @@ export function DailyRIFCard() {
                                   >
                           {saveMutation.isPending ? "Saving…" : "Save answer"}
                           {!saveMutation.isPending && <ChevronRight className="w-3 h-3" />}
-                        </button>button>
+                        </button>
                         <button
                                     onClick={handleDismiss}
                                     className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                                   >
                                   Skip today
-                        </button>button>
-                </div>div>
+                        </button>
+                </div>
           
             {saveMutation.isError && (
-                    <p className="text-xs text-destructive mt-2">Couldn't save — try again.</p>p>
+                    <p className="text-xs text-destructive mt-2">Couldn't save — try again.</p>
                 )}
-          </div>div>
+          </div>
         );
 }
 
