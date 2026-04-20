@@ -80,7 +80,7 @@ function NavBadge({ count, color = 'bg-primary' }: { count: number; color?: stri
                   className={`absolute -top-1 -right-1 min-w-[16px] h-4 px-0.5 ${color} text-primary-foreground text-[9px] font-bold rounded-full flex items-center justify-center leading-none ring-2 ring-card`}
                 >
             {count > 9 ? '9+' : count}
-          </span>span>
+            </span>
         );
 }
 
