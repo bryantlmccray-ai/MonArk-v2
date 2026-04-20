@@ -52,6 +52,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
     },
     { id: 'shareables', icon: Share2, label: 'Milestone Cards', hasNotification: false },
     { id: 'compass', icon: Compass, label: 'Compass', hasNotification: false },
+    { id: 'plans', icon: CalendarCheck, label: 'My Date Plans', hasNotification: false },
     { id: 'profile', icon: User, label: 'Profile', hasNotification: false },
   ];
 
