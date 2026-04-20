@@ -1,5 +1,5 @@
 /**
- * MonArk â Starter RIF Quiz (4 questions)
+ * MonArk — Starter RIF Quiz (4 questions)
  * Collects one question per key dimension to unlock matching.
  * Remaining 11 questions surface as daily RIF cards on the Home tab.
  */
@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, Heart, ArrowRigh } from "lucide-react";
 import { queryKeys } from "@/lib/queryKeys";
 
-// ââ TYPES ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── TYPES ──────────────────────────────────────────────────────────────────
 type Dimension = "IC" | "ER" | "PP" | "BR" | "PA";
 
 interface RIFQuestion {
@@ -33,16 +33,16 @@ export interface RIFScores {
     post_date_alignment: number;
 }
 
-// ââ FULL QUESTION BANK (15q) â exported so DailyRIFCard can use the remaining ones
+// ── FULL QUESTION BANK (15q) — exported so DailyRIFCard can use the remaining ones
 export const RIF_QUESTIONS: RIFQuestion[] = [
   {
         id: "IC_1", dimension: "IC",
         text: "When you think about what you're looking for right now, how clear does that picture feel?",
-        subtext: "There's no right answer â just what's true for you today.",
+        subtext: "There's no right answer — just what's true for you today.",
         options: [
           { label: "Very clear. I know exactly what I'm looking for.", value: 100 },
           { label: "Mostly clear, with some open questions.", value: 75 },
-          { label: "Somewhere in between â exploring as I go.", value: 50 },
+          { label: "Somewhere in between — exploring as I go.", value: 50 },
           { label: "Still figuring it out, and that feels okay.", value: 25 },
               ],
   },
@@ -50,9 +50,9 @@ export const RIF_QUESTIONS: RIFQuestion[] = [
         id: "IC_2", dimension: "IC",
         text: "How do you feel about communicating what you want early in getting to know someone?",
         options: [
-          { label: "Natural and important â I lead with honesty.", value: 100 },
+          { label: "Natural and important — I lead with honesty.", value: 100 },
           { label: "Comfortable once there's a little trust built.", value: 75 },
-          { label: "A bit cautious â I prefer to read the room first.", value: 50 },
+          { label: "A bit cautious — I prefer to read the room first.", value: 50 },
           { label: "Tend to wait and let things reveal themselves.", value: 25 },
               ],
   },
@@ -68,20 +68,20 @@ export const RIF_QUESTIONS: RIFQuestion[] = [
   },
   {
         id: "ER_1", dimension: "ER",
-        text: "How present do you feel in your life right now â emotionally and mentally?",
+        text: "How present do you feel in your life right now — emotionally and mentally?",
         subtext: "Think about how you'd honestly show up on a first date this week.",
         options: [
           { label: "Very present. I'm in a good place.", value: 100 },
           { label: "Mostly grounded, with some things on my mind.", value: 75 },
           { label: "Managing a few things, but open to connection.", value: 50 },
-          { label: "Going through something â still open, but aware.", value: 25 },
+          { label: "Going through something — still open, but aware.", value: 25 },
               ],
   },
   {
         id: "ER_2", dimension: "ER",
         text: "When you're on a date and something emotionally meaningful comes up, how do you tend to respond?",
         options: [
-          { label: "I lean in â depth is what I'm here for.", value: 100 },
+          { label: "I lean in — depth is what I'm here for.", value: 100 },
           { label: "I engage thoughtfully, at my own pace.", value: 75 },
           { label: "I listen well but keep my own depth private for now.", value: 50 },
           { label: "I prefer to keep things lighter early on.", value: 25 },
@@ -89,12 +89,12 @@ export const RIF_QUESTIONS: RIFQuestion[] = [
   },
   {
         id: "ER_3", dimension: "ER",
-        text: "How do you typically process things after a date â good or not?",
+        text: "How do you typically process things after a date — good or not?",
         options: [
           { label: "I reflect and usually know how I feel fairly quickly.", value: 100 },
           { label: "I need a day or two to let things settle.", value: 75 },
           { label: "I talk it through with someone I trust.", value: 60 },
-          { label: "I try not to overthink â I let it be what it was.", value: 40 },
+          { label: "I try not to overthink — I let it be what it was.", value: 40 },
               ],
   },
   {
@@ -102,8 +102,8 @@ export const RIF_QUESTIONS: RIFQuestion[] = [
         text: "How quickly do you like things to develop when there's a real connection?",
         subtext: "Think about the pace that feels natural and comfortable to you.",
         options: [
-          { label: "Slowly and intentionally â I value the build.", value: 25 },
-{ label: "Steady â meaningful but not rushed.", value: 75 },
+          { label: "Slowly and intentionally — I value the build.", value: 25 },
+{ label: "Steady — meaningful but not rushed.", value: 75 },
           { label: "I follow the natural energy of the connection.", value: 100 },
           { label: "When it's right, I'm open to things moving quickly.", value: 60 },
               ],
@@ -122,16 +122,16 @@ export const RIF_QUESTIONS: RIFQuestion[] = [
         id: "PP_3", dimension: "PP",
         text: "How important is it that the other person matches your pacing preference?",
         options: [
-          { label: "Very â mismatched pace is a dealbreaker for me.", value: 100 },
+          { label: "Very — mismatched pace is a dealbreaker for me.", value: 100 },
           { label: "Important, but I can adapt if the connection is strong.", value: 75 },
-          { label: "Somewhat â I'd address it but could work through it.", value: 50 },
-          { label: "Not very â I find I adjust naturally.", value: 25 },
+          { label: "Somewhat — I'd address it but could work through it.", value: 50 },
+          { label: "Not very — I find I adjust naturally.", value: 25 },
               ],
   },
   {
         id: "BR_1", dimension: "BR",
         text: "How comfortable are you stating a boundary when you need to?",
-        subtext: "No judgment here â just honest reflection.",
+        subtext: "No judgment here — just honest reflection.",
         options: [
           { label: "Very comfortable. I do it calmly and directly.", value: 100 },
           { label: "Comfortable, though it takes a little courage.", value: 75 },
@@ -143,7 +143,7 @@ export const RIF_QUESTIONS: RIFQuestion[] = [
         id: "BR_2", dimension: "BR",
         text: "When someone expresses a boundary or hesitation, what's your instinct?",
         options: [
-          { label: "Respect it fully â no questions asked.", value: 100 },
+          { label: "Respect it fully — no questions asked.", value: 100 },
           { label: "Honor it, and check in later if appropriate.", value: 85 },
           { label: "Try to understand the reason behind it.", value: 60 },
           { label: "Work to reassure them and keep things moving.", value: 20 },
@@ -153,20 +153,20 @@ export const RIF_QUESTIONS: RIFQuestion[] = [
         id: "BR_3", dimension: "BR",
         text: "How do you feel about physical and emotional boundaries being clearly named early in connection?",
         options: [
-          { label: "I appreciate it â it creates safety.", value: 100 },
+          { label: "I appreciate it — it creates safety.", value: 100 },
           { label: "I'm comfortable with it, though it depends on timing.", value: 75 },
           { label: "I prefer to let things emerge naturally.", value: 40 },
-          { label: "It feels clinical to me â I prefer intuition.", value: 20 },
+          { label: "It feels clinical to me — I prefer intuition.", value: 20 },
               ],
   },
   {
         id: "PA_1", dimension: "PA",
         text: "After a date that went well, what does your follow-through typically look like?",
         options: [
-          { label: "I reach out the same day â connection matters.", value: 100 },
+          { label: "I reach out the same day — connection matters.", value: 100 },
           { label: "Within a day or two, thoughtfully.", value: 85 },
           { label: "I wait for them to reach out first.", value: 40 },
-          { label: "I keep it loose â no pressure on either side.", value: 25 },
+          { label: "I keep it loose — no pressure on either side.", value: 25 },
               ],
   },
   {
@@ -181,30 +181,30 @@ export const RIF_QUESTIONS: RIFQuestion[] = [
   },
   {
         id: "PA_3", dimension: "PA",
-        text: "How do you feel about the 'Close the Loop' principle â always acknowledging an experience, good or not?",
+        text: "How do you feel about the 'Close the Loop' principle — always acknowledging an experience, good or not?",
         subtext: "This is a core value at MonArk. We believe every connection deserves a response.",
         options: [
-          { label: "Deeply aligned â it's how I already operate.", value: 100 },
+          { label: "Deeply aligned — it's how I already operate.", value: 100 },
           { label: "I believe in it and try to live it.", value: 85 },
           { label: "I agree but sometimes fall short.", value: 60 },
-          { label: "I'm working on it â this is new for me.", value: 40 },
+          { label: "I'm working on it — this is new for me.", value: 40 },
               ],
   },
   ];
 
-// ââ STARTER QUESTIONS (4) â shown during onboarding ââââââââââââââââââââââââ
+// ── STARTER QUESTIONS (4) — shown during onboarding ────────────────────────
 // One anchor question per dimension (IC, ER, BR, PA). PP surfaces via daily cards.
 export const STARTER_QUESTION_IDS = ["IC_1", "ER_1", "BR_1", "PA_1"];
 export const STARTER_QUESTIONS = RIF_QUESTIONS.filter(q =>
     STARTER_QUESTION_IDS.includes(q.id)
                                                       );
 
-// ââ REMAINING QUESTIONS â surface as daily RIF cards post-onboarding ââââââââ
+// ── REMAINING QUESTIONS — surface as daily RIF cards post-onboarding ────────
 export const DAILY_RIF_QUESTION_IDS = RIF_QUESTIONS
   .filter(q => !STARTER_QUESTION_IDS.includes(q.id))
   .map(q => q.id);
 
-// ââ SCORING ENGINE ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── SCORING ENGINE ──────────────────────────────────────────────────────────
 export function scoreRifAnswers(answers: RIFAnswers): RIFScores {
     const dimensionMap: Record<Dimension, keyof RIFScores> = {
           IC: "intent_clarity",
@@ -227,8 +227,8 @@ export function scoreRifAnswers(answers: RIFAnswers): RIFScores {
     return result as RIFScores;
 }
 
-// ââ SAVE TO SUPABASE ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-// DB column is DECIMAL(3,2) â max 9.99. Scores 0-100 are divided by 10 before storing.
+// ── SAVE TO SUPABASE ────────────────────────────────────────────────────────
+// DB column is DECIMAL(3,2) — max 9.99. Scores 0-100 are divided by 10 before storing.
 export async function saveRifProfile(
     userId: string,
     answers: RIFAnswers
@@ -285,7 +285,7 @@ export async function saveRifProfile(
     }
 }
 
-// ââ DIMENSION METADATA ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── DIMENSION METADATA ──────────────────────────────────────────────────────
 const DIMENSION_META: Record<Dimension, { label: string; colorClass: string }> = {
     IC: { label: "Intent Clarity", colorClass: "text-primary" },
     ER: { label: "Emotional Readiness", colorClass: "text-accent" },
@@ -294,7 +294,7 @@ const DIMENSION_META: Record<Dimension, { label: string; colorClass: string }> =
     PA: { label: "Post-Date Alignment", colorClass: "text-muted-foreground" },
 };
 
-// ââ COMPONENT âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── COMPONENT ───────────────────────────────────────────────────────────────
 interface RIFQuizProps {
     userId: string;
     onComplete: (scores: RIFScores) => void;
@@ -351,7 +351,7 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
       setTimeout(() => onComplete(result.scores!), 1800);
   }
 
-  // ââ INTRO SCREEN ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ── INTRO SCREEN ──────────────────────────────────────────────────────────
   if (phase === "intro") {
         return (
                 <motion.div
@@ -369,11 +369,11 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                                   </h1>
                                   <p className="text-[15px] text-foreground/85 leading-[1.7] mb-4">
                                               4 quick questions to unlock your first matches. Your RIF profile deepens
-                                              over time â one question a day keeps your Sunday matches sharp.
+                                              over time — one question a day keeps your Sunday matches sharp.
                                   </p>
                                   <div className="flex items-center gap-2 mb-6 text-xs text-foreground/50">
                                               <span className="w-2 h-2 rounded-full bg-primary inline-block" />
-                                              Takes about 90 seconds &nbsp;Â·&nbsp; Your responses are private.
+                                              Takes about 90 seconds &nbsp;·&nbsp; Your responses are private.
                                   </div>
                                   <div className="flex items-center gap-3">
                                               <button
@@ -393,13 +393,13 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
               );
   }
   
-    // ââ SAVING ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ── SAVING ────────────────────────────────────────────────────────────────
     if (phase === "saving") {
           return (
                   <div className="min-h-screen bg-background flex items-center justify-center p-6">
                           <div className="bg-card rounded-2xl p-10 max-w-[540px] w-full shadow-sm text-center">
                                     <p className="font-serif text-lg tracking-[0.15em] text-primary mb-6">MA</p>
-                                    <p className="text-[15px] text-foreground/85 leading-[1.7] mb-6">Building your relational profileâ¦</p>
+                                    <p className="text-[15px] text-foreground/85 leading-[1.7] mb-6">Building your relational profile…</p>
                                     <div className="h-[3px] bg-secondary rounded overflow-hidden">
                                                 <motion.div
                                                                 className="h-full bg-gradient-to-r from-primary to-accent rounded"
@@ -413,7 +413,7 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                 );
     }
   
-    // ââ DONE / CELEBRATION ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ── DONE / CELEBRATION ────────────────────────────────────────────────────
     if (phase === "done") {
           return (
                   <motion.div
@@ -435,14 +435,14 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                                                 Your starter profile is live. MonArk will begin curating your first connections.
                                     </p>
                                     <p className="text-[12px] text-primary/80 tracking-wide">
-                                                â¦ &nbsp;More questions await on your home tab â each one sharpens your Sunday matches.
+                                                ✦ &nbsp;More questions await on your home tab — each one sharpens your Sunday matches.
                                     </p>
                           </div>
                   </motion.div>
                 );
     }
   
-    // ââ QUIZ ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ── QUIZ ──────────────────────────────────────────────────────────────────
     return (
           <div className="min-h-screen bg-background flex items-center justify-center p-6">
                 <div className="bg-card rounded-2xl p-10 max-w-[560px] w-full shadow-sm">
@@ -531,4 +531,4 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
           </div>
         </motion.div>
         );
-           }
+        }
