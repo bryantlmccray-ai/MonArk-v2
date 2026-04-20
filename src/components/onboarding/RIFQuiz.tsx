@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, Heart, ArrowRight } from "lucide-react";
+import { ChevronLeft, Heart, ArrowRigh } from "lucide-react";
 import { queryKeys } from "@/lib/queryKeys";
 
 // ── TYPES ──────────────────────────────────────────────────────────────────
@@ -360,35 +360,35 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                           className="min-h-screen bg-background flex items-center justify-center p-6"
                         >
                         <div className="bg-card rounded-2xl p-10 max-w-[540px] w-full shadow-sm">
-                                  <p className="font-serif text-lg tracking-[0.15em] text-primary border-b border-border pb-3 mb-6 inline-block">MA</p>p>
+                                  <p className="font-serif text-lg tracking-[0.15em] text-primary border-b border-border pb-3 mb-6 inline-block">MA</p>
                                   <p className="font-body text-[11px] tracking-[0.2em] text-primary mb-3 uppercase">
                                               Relational Intelligence Framework
-                                  </p>p>
+                                  </p>
                                   <h1 className="font-serif text-4xl font-normal text-foreground leading-[1.2] mb-4">
                                               Know yourself.<br />Connect better.
-                                  </h1>h1>
+                                  </h1>
                                   <p className="text-[15px] text-foreground/85 leading-[1.7] mb-4">
                                               4 quick questions to unlock your first matches. Your RIF profile deepens
                                               over time — one question a day keeps your Sunday matches sharp.
-                                  </p>p>
+                                  </p>
                                   <div className="flex items-center gap-2 mb-6 text-xs text-foreground/50">
                                               <span className="w-2 h-2 rounded-full bg-primary inline-block" />
                                               Takes about 90 seconds &nbsp;·&nbsp; Your responses are private.
-                                  </div>div>
+                                  </div>
                                   <div className="flex items-center gap-3">
                                               <button
                                                               onClick={() => setPhase("quiz")}
                                                               className="bg-primary text-primary-foreground border-none rounded-full px-8 py-3.5 text-xs font-medium tracking-[0.12em] cursor-pointer transition-opacity hover:opacity-90 active:scale-[0.97]"
                                                             >
                                                             BEGIN
-                                              </button>button>
+                                              </button>
                                     {onSkip && (
                                         <button onClick={onSkip} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                                                         Skip for now
-                                        </button>button>
+                                        </button>
                                               )}
-                                  </div>div>
-                        </div>div>
+                                  </div>
+                        </div>
                 </motion.div>motion.div>
               );
   }
@@ -398,8 +398,8 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
           return (
                   <div className="min-h-screen bg-background flex items-center justify-center p-6">
                           <div className="bg-card rounded-2xl p-10 max-w-[540px] w-full shadow-sm text-center">
-                                    <p className="font-serif text-lg tracking-[0.15em] text-primary mb-6">MA</p>p>
-                                    <p className="text-[15px] text-foreground/85 leading-[1.7] mb-6">Building your relational profile…</p>p>
+                                    <p className="font-serif text-lg tracking-[0.15em] text-primary mb-6">MA</p>
+                                    <p className="text-[15px] text-foreground/85 leading-[1.7] mb-6">Building your relational profile…</p>
                                     <div className="h-[3px] bg-secondary rounded overflow-hidden">
                                                 <motion.div
                                                                 className="h-full bg-gradient-to-r from-primary to-accent rounded"
@@ -407,9 +407,9 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                                                                 animate={{ width: "100%" }}
                                                                 transition={{ duration: 1.6, ease: "easeOut" }}
                                                               />
-                                    </div>div>
-                          </div>div>
-                  </div>div>
+                                    </div>
+                          </div>
+                  </div>
                 );
     }
   
@@ -430,14 +430,14 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                                                 >
                                                 <Heart className="w-7 h-7 text-primary" />
                                     </motion.div>motion.div>
-                                    <h2 className="font-serif text-3xl font-normal text-foreground mb-2">You're in.</h2>h2>
+                                    <h2 className="font-serif text-3xl font-normal text-foreground mb-2">You're in.</h2>
                                     <p className="text-[14px] text-foreground/70 leading-[1.75] mb-4">
                                                 Your starter profile is live. MonArk will begin curating your first connections.
-                                    </p>p>
+                                    </p>
                                     <p className="text-[12px] text-primary/80 tracking-wide">
                                                 ✦ &nbsp;More questions await on your home tab — each one sharpens your Sunday matches.
-                                    </p>p>
-                          </div>div>
+                                    </p>
+                          </div>
                   </motion.div>motion.div>
                 );
     }
@@ -450,19 +450,19 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                         <div className="flex justify-between mb-2">
                                   <span className="text-[11px] text-foreground/50 tracking-[0.1em] uppercase">
                                     {currentIndex + 1} of {totalQuestions}
-                                  </span>span>
+                                  </span>
                           {dimMeta && (
                         <span className={`text-[11px] tracking-[0.1em] uppercase ${dimMeta.colorClass}`}>
                           {dimMeta.label}
-                        </span>span>
+                        </span>
                                   )}
-                        </div>div>
+                        </div>
                         <div className="h-[3px] bg-secondary rounded overflow-hidden mb-6">
                                   <div
                                                 className="h-full bg-gradient-to-r from-primary to-accent rounded transition-all duration-400"
                                                 style={{ width: `${progress}%` }}
                                               />
-                        </div>div>
+                        </div>
                 
                   {/* Question */}
                         <AnimatePresence mode="wait">
@@ -475,11 +475,11 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                                               >
                                               <h2 className="font-serif text-[22px] font-normal text-foreground leading-[1.35] mb-2">
                                                 {currentQuestion.text}
-                                              </h2>h2>
+                                              </h2>
                                     {currentQuestion.subtext && (
                                                               <p className="text-[13px] text-foreground/55 mt-1 mb-5 leading-relaxed italic">
                                                                 {currentQuestion.subtext}
-                                                              </p>p>
+                                                              </p>
                                               )}
                                               <div className="mt-6 space-y-2.5">
                                                 {currentQuestion.options.map((opt, i) => {
@@ -496,16 +496,16 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                                                                                                         >
                                                                                                         <span className="w-[18px] h-[18px] rounded-full border-[1.5px] border-border flex-shrink-0 mt-0.5 flex items-center justify-center">
                                                                                                           {isSelected && <span className="w-2 h-2 rounded-full bg-primary block" />}
-                                                                                                          </span>span>
-                                                                                                        <span className="text-sm text-foreground leading-relaxed">{opt.label}</span>span>
-                                                                                      </button>button>
+                                                                                                          </span>
+                                                                                                        <span className="text-sm text-foreground leading-relaxed">{opt.label}</span>
+                                                                                      </button>
                                                                                   );
                                               })}
-                                              </div>div>
+                                              </div>
                                   </motion.div>motion.div>
                         </AnimatePresence>AnimatePresence>
                 
-                  {error && <p className="text-[13px] text-destructive mt-3">{error}</p>p>}
+                  {error && <p className="text-[13px] text-destructive mt-3">{error}</p>}
                 
                   {/* Navigation */}
                         <div className="flex justify-between items-center mt-7">
@@ -514,7 +514,7 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                                                 className="flex items-center gap-1 border border-primary text-primary rounded-full px-6 py-3 text-xs font-medium tracking-[0.12em] cursor-pointer hover:bg-primary/5 transition-colors active:scale-[0.97]"
                                               >
                                               <ChevronLeft className="w-3.5 h-3.5" /> BACK
-                                  </button>button>
+                                  </button>
                                   <button
                                                 onClick={handleNext}
                                                 disabled={selected === null}
@@ -525,9 +525,9 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                                                             ) : (
                                                               "NEXT"
                                                             )}
-                                  </button>button>
-                        </div>div>
-                </div>div>
-          </div>div>
+                                  </button>
+                        </div>
+                </div>
+          </div>
         );
 }</></motion.div>
