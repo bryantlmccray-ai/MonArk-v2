@@ -521,7 +521,7 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                                                 className="bg-primary text-primary-foreground border-none rounded-full px-8 py-3 text-xs font-medium tracking-[0.12em] cursor-pointer transition-opacity hover:opacity-90 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-2"
                                               >
                                     {currentIndex === totalQuestions - 1 ? (
-                                                              <>COMPLETE <ArrowRight className="w-3.5 h-3.5" /></>>
+                                                              <>COMPLETE <ArrowRight className="w-3.5 h-3.5" /></>
                                                             ) : (
                                                               "NEXT"
                                                             )}
@@ -530,4 +530,4 @@ export default function RIFQuiz({ userId, onComplete, onSkip }: RIFQuizProps) {
                 </div>
           </div>
         );
-}</></motion.div>
+}</motion.div>
