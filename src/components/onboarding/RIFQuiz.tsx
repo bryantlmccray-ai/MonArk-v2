@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, Heart, ArrowRigh } from "lucide-react";
+import { ChevronLeft, Heart, ArrowRight } from "lucide-react";
 import { queryKeys } from "@/lib/queryKeys";
 
 // ── TYPES ──────────────────────────────────────────────────────────────────
