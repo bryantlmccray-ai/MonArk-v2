@@ -108,16 +108,16 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, o
                                                                                               }`}
                                                                                           />
                                                                         <NavBadge count={tab.badge} />
-                                                        </div>div>
+                                                        </div>
                                                         <span
                                                                           className={`text-[7.5px] leading-none tracking-wide truncate w-full text-center ${isActive ? 'font-semibold' : 'font-medium opacity-80'}`}
                                                                         >
                                                           {tab.label}
-                                                        </span>span>
-                                          </button>button>
+                                                        </span>
+                                          </button>
                                         );
                 })}
-                </div>div>
-          </div>div>
+                </div>
+          </div>
         );
-};</span>
+};
