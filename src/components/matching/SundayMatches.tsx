@@ -6,8 +6,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Sparkles, Users, Calendar, Heart, MapPin, ChevronRight,
   Coffee, Wine, Palette, Music, Compass, Moon, MessageCircle,
-  Clock, X, ThumbsDown, RefreshCw, Info
+  Clock, X, ThumbsDown, RefreshCw, Info, Search
 } from 'lucide-react';
+import { DiscoverMode } from '@/components/matching/DiscoverMode';
 import { format, formatDistanceToNow, startOfWeek } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSubscription } from '@/hooks/useSubscription';
@@ -615,6 +616,9 @@ export const SundayMatches: React.FC = () => {
           <TabsTrigger value="plans" className="flex-1 gap-1.5">
             <Calendar className="w-3.5 h-3.5" /> Plans
           </TabsTrigger>
+          <TabsTrigger value="discover" className="flex-1 gap-1.5">
+            <Search className="w-3.5 h-3.5" /> Discover
+          </TabsTrigger>
         </TabsList>
 
         {/* ââ Tab 1: Your 3 â spotlight + 2-col grid ââ */}
@@ -703,6 +707,11 @@ export const SundayMatches: React.FC = () => {
         {/* ââ Tab 3: Date Plans ââ */}
         <TabsContent value="plans">
           <div className="mt-2"><WeeklyRhythmPlans /></div>
+        </TabsContent>
+
+        {/* Tab 4: Discover */}
+        <TabsContent value="discover">
+          <div className="mt-2"><DiscoverMode /></div>
         </TabsContent>
       </Tabs>
 
