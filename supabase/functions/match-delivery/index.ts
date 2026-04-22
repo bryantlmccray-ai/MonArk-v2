@@ -119,7 +119,8 @@ serve(async (req) => {
             { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
           );
         }
-        return await addCuratedMatch(supabaseAdmin, user_id, target_user_id, match_reason, curation_notes, compatibility_score);
+        const __rhythm = await fetchWeeklyRhythm(supabaseAdmin, user_id);
+        return await addCuratedMatch(supabaseAdmin, user_id, target_user_id, match_reason, curation_notes, compatibility_score, __rhythm);
       
       case 'remove_curated_match':
         if (!user_id || !target_user_id) {
@@ -251,7 +252,8 @@ async function addCuratedMatch(
   targetUserId: string, 
   matchReason: string,
   curationNotes: string,
-  compatibilityScore: number
+  compatibilityScore: number,
+  weeklyRhythm?: string | null
 ) {
   const weekStart = getCurrentWeekStart();
 
@@ -293,7 +295,8 @@ async function addCuratedMatch(
       curation_notes: curationNotes,
       compatibility_score: compatibilityScore,
       status: 'pending',
-      is_delivered: false
+      is_delivered: false,
+      ...(weeklyRhythm ? { weekly_rhythm: weeklyRhythm } : {})
     })
     .select()
     .single();
@@ -393,10 +396,18 @@ async function generateDatingPool(supabase: any, userId: string) {
     }
   }
 
-  const scored = (candidates || []).map((candidate: any) => ({
-    ...candidate,
-    score: calculateCompatibility(userProfile, candidate)
-  }));
+  // Fetch user's weekly rhythm to boost same-rhythm candidates
+  const userRhythm = await fetchWeeklyRhythm(supabase, userId);
+
+  const scored = (candidates || []).map((candidate: any) => {
+    const base = calculateCompatibility(userProfile, candidate);
+    // Apply +10% boost when both users share the same rhythm this week
+    const rhythmBonus = (userRhythm && candidate.weekly_rhythm === userRhythm) ? 0.10 : 0;
+    return {
+      ...candidate,
+      score: Math.min(base + rhythmBonus, 1)
+    };
+  });
 
   scored.sort((a: any, b: any) => b.score - a.score);
   const top10 = scored.slice(0, 10);
@@ -614,3 +625,16 @@ function getCurrentWeekStart(): string {
   sunday.setHours(0, 0, 0, 0);
   return sunday.toISOString().split('T')[0];
 }
+
+/** Fetch user's rhythm selection for the current week (null if not set). */
+async function fetchWeeklyRhythm(supabase: any, userId: string): Promise<string | null> {
+  const weekStart = getCurrentWeekStart();
+  const { data } = await supabase
+    .from('user_weekly_rhythm')
+    .select('rhythm')
+    .eq('user_id', userId)
+    .eq('week_start', weekStart)
+    .maybeSingle();
+  return data?.rhythm ?? null;
+}
+
