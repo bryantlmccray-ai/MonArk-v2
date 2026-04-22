@@ -310,7 +310,6 @@ export const WeeklyRhythmPlans = () => {
               ))}
             </div>
           </motion.div>
-        )}
       </AnimatePresence>
 
       {/* ═══ SUGGESTED THIS WEEK ═══ */}
