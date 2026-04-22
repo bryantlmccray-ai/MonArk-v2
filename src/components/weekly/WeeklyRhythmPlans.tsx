@@ -244,7 +244,6 @@ const rhythmConfig = {
 };
 
 export const WeeklyRhythmPlans = () => {
-  const [selectedRhythm, setSelectedRhythm] = useState<'reset' | 'spark' | 'stretch' | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<DatePlan | null>(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -369,16 +368,15 @@ export const WeeklyRhythmPlans = () => {
 
       {/* Plans Display */}
       <AnimatePresence mode="wait">
-        {selectedRhythm && (
           <motion.div
-            key={selectedRhythm}
+                      key="plans-list"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             className="px-6 pb-12"
           >
             <div className="max-w-4xl mx-auto">
-              {DEMO_PLANS.filter(p => p.rhythm === selectedRhythm).map((plan) => (
+              {DEMO_PLANS.map((plan) => (
                 <PlanCard 
                   key={plan.id} 
                   plan={plan} 
@@ -391,7 +389,7 @@ export const WeeklyRhythmPlans = () => {
       </AnimatePresence>
 
       {/* ═══ SUGGESTED THIS WEEK ═══ */}
-      {!selectedRhythm && (
+      {(
         <div className="px-6 pb-6">
           <div className="max-w-4xl mx-auto space-y-4">
             <div className="flex items-center gap-2">
