@@ -598,7 +598,7 @@ export const SundayMatches: React.FC = () => {
 
       {/* 3-tab layout */}
       <Tabs defaultValue="your3" className="w-full">
-        <TabsList className="w-full">
+        <TabsList className="w-full overflow-x-auto">
           <TabsTrigger value="your3" className="flex-1">
             <Heart className="w-3.5 h-3.5 mr-1.5" /> Your 3
             <span
