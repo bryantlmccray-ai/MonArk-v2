@@ -291,81 +291,6 @@ export const WeeklyRhythmPlans = () => {
         </div>
       </div>
 
-      {/* Mood Explainer */}
-      <div className="px-6 pb-2">
-        <div className="max-w-[420px]">
-          <p className="font-body text-sm text-[#3D3428]/80 leading-relaxed">
-            Your mood shapes this week's introductions. Reset brings calm, reflective profiles. Spark brings energy and curiosity. Stretch brings someone who'll challenge your growth edge. You can update this once per week.
-          </p>
-        </div>
-      </div>
-
-      {/* Rhythm Selector */}
-      <div className="px-6 pb-4">
-        <div className="max-w-4xl mx-auto grid grid-cols-3 gap-4">
-          {(['reset', 'spark', 'stretch'] as const).map((rhythm, idx) => {
-            const config = rhythmConfig[rhythm];
-            const Icon = config.icon;
-            const isSelected = selectedRhythm === rhythm;
-            
-            return (
-              <button
-                key={rhythm}
-                onClick={() => setSelectedRhythm(isSelected ? null : rhythm)}
-                className={`
-                  relative p-4 sm:p-6 rounded-2xl border-2 transition-all duration-300
-                  ${isSelected 
-                    ? `${config.border} bg-gradient-to-br ${config.gradient}` 
-                    : 'border-border/50 hover:border-border bg-card/50'
-                  }
-                `}
-              >
-                <div className={`
-                  w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 sm:mb-3 rounded-xl flex items-center justify-center
-                  ${isSelected ? config.bg : 'bg-muted/50'}
-                `}>
-                  <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${isSelected ? config.accent : 'text-muted-foreground'}`} />
-                </div>
-                <div className={`font-semibold text-base sm:text-lg ${isSelected ? 'text-foreground' : 'text-muted-foreground'}`}>
-                  {config.label}
-                </div>
-                <div className="text-xs sm:text-sm text-muted-foreground mt-1">
-                  {config.description}
-                </div>
-                
-                {isSelected && (
-                  <motion.div
-                    layoutId="rhythm-check"
-                    className={`absolute top-3 right-3 w-6 h-6 rounded-full ${config.bg} flex items-center justify-center`}
-                  >
-                    <Check className={`w-4 h-4 ${config.accent}`} />
-                  </motion.div>
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Bone divider before cards */}
-        <div className="h-px bg-[#EDE6DF] mx-6 mt-2" />
-
-        {/* Clear CTA after mood selection */}
-        <AnimatePresence>
-          {selectedRhythm && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="mt-6 text-center"
-            >
-              <p className="text-sm text-muted-foreground mb-2">
-                Showing <span className="font-medium text-foreground">{rhythmConfig[selectedRhythm].label}</span> date plans ↓
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
       {/* Plans Display */}
       <AnimatePresence mode="wait">
           <motion.div
@@ -466,7 +391,7 @@ export const WeeklyRhythmPlans = () => {
       )}
 
       {/* ═══ YOUR SAVED PLANS ═══ */}
-      {!selectedRhythm && (
+      {(
         <div className="px-6 pb-10">
           <div className="max-w-4xl mx-auto space-y-4">
             <div className="flex items-center gap-2">
