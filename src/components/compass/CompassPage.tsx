@@ -9,6 +9,7 @@ import { useRIF, normalizeRIFScore } from '@/hooks/useRIF';
 import { useAuth } from '@/hooks/useAuth';
 import { useItineraries } from '@/hooks/useItineraries';
 import type { RIFScores } from '@/lib/venueMatching';
+import { VenueDirectory } from '@/components/venues/VenueDirectory';
 
 const RIF_PILLAR_LABELS: Record<string, string> = {
   emotional_intelligence: 'Emotional Intelligence',
@@ -240,7 +241,7 @@ export const CompassPage: React.FC<CompassPageProps> = ({ conversationId = '', m
   const { rifProfile } = useRIF();
   const { venues } = useVenues();
   const [showConcierge, setShowConcierge] = useState(false);
-  const [activeSection, setActiveSection] = useState<'compass' | 'plans' | 'how'>('compass');
+  const [activeSection, setActiveSection] = useState<'compass' | 'plans' | 'how' | 'venues'>('compass');
 
   const rifScores: RIFScores = {
     emotional_intelligence: rifProfile ? normalizeRIFScore(rifProfile.emotional_readiness) : 50,
@@ -273,9 +274,9 @@ export const CompassPage: React.FC<CompassPageProps> = ({ conversationId = '', m
           {matchName ? `Your shared bearing with ${matchName}` : 'Your relational bearing, mapped to where you should be tonight'}
         </p>
         <div className="flex gap-1 mt-4 bg-muted rounded-xl p-1 w-fit">
-          {(['compass', 'plans', 'how'] as const).map((s) => (
+          {(['compass', 'plans', 'venues', 'how'] as const).map((s) => (
             <button key={s} onClick={() => setActiveSection(s)} className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ${activeSection === s ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
-              {s === 'compass' ? 'Your Reading' : s === 'plans' ? 'My Plans' : 'How It Works'}
+              {s === 'compass' ? 'Your Reading' : s === 'plans' ? 'My Plans' : s === 'venues' ? 'The Map' : 'How It Works'}
             </button>
           ))}
         </div>
@@ -377,6 +378,11 @@ export const CompassPage: React.FC<CompassPageProps> = ({ conversationId = '', m
               <p className="text-sm text-muted-foreground mt-1 leading-snug">Plans saved from Compass - confirmed or waiting, all in one place.</p>
             </div>
             <MyPlansSection onNavigateCompass={() => setActiveSection('compass')} />
+          </motion.div>
+        )}
+        {activeSection === 'venues' && (
+          <motion.div key="venues" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}>
+            <VenueDirectory />
           </motion.div>
         )}
         {activeSection === 'how' && (
