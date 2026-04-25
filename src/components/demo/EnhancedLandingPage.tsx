@@ -860,7 +860,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-16">
           <div className="text-center mb-8">
             <a
-              href="https://www.instagram.com/monark.eq/"
+              href="https://www.instagram.com/joinmonark/"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-3 group"
@@ -870,7 +870,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               </div>
               <div className="text-left">
                 <h2 className="text-xl sm:text-2xl font-editorial-headline text-foreground group-hover:text-primary transition-colors">
-                  @monark.eq
+                  @joinmonark
                 </h2>
                 <p className="text-xs text-muted-foreground font-body">Follow us on Instagram</p>
               </div>
@@ -886,7 +886,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             ].map((image, i) => (
               <a
                 key={i}
-                href="https://www.instagram.com/monark.eq/"
+                href="https://www.instagram.com/joinmonark/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="relative aspect-square rounded-xl overflow-hidden group cursor-pointer shadow-sm hover:shadow-elevated transition-all duration-400 animate-fade-in"
@@ -906,7 +906,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           </div>
 
           <p className="text-center mt-6 text-sm text-muted-foreground font-body">
-            @monark.eq — Follow our journey
+            @joinmonark — Follow our journey
           </p>
         </div>
       </section>
