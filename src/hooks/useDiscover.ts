@@ -1,11 +1,13 @@
 import { useState, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import type { DiscoverInterestInsert } from '@/integrations/supabase/types.extended';
+import type {
+  DiscoverInterestInsert,
+  DiscoverInterestRow,
+} from '@/integrations/supabase/types.extended';
 import { useAuth } from './useAuth';
 import { toast } from 'sonner';
 
-// ── Daily cap: 8 profiles per day ─────────────────────────────────────────────
 const DAILY_CAP = 8;
 
 export interface DiscoverProfile {
@@ -18,54 +20,90 @@ export interface DiscoverProfile {
   photos: string[];
   interests: string[];
   compatibility_score?: number;
+  distance_km?: number | null;
 }
 
-// ── Local today key for cap tracking ──────────────────────────────────────────
-function todayKey() { return 'monark_discover_count_' + new Date().toISOString().split('T')[0]; }
-function getViewedToday(): number { try { return parseInt(localStorage.getItem(todayKey()) || '0', 10); } catch { return 0; } }
+function todayKey() {
+  return 'monark_discover_count_' + new Date().toISOString().split('T')[0];
+}
+
+function getViewedToday(): number {
+  try { return parseInt(localStorage.getItem(todayKey()) || '0', 10); }
+  catch { return 0; }
+}
+
 function incrementViewedToday(): number {
   const next = getViewedToday() + 1;
   try { localStorage.setItem(todayKey(), String(next)); } catch {}
   return next;
 }
 
-// ── Fetch profiles not yet seen or interacted with ────────────────────────────
 async function fetchDiscoverPool(userId: string): Promise<DiscoverProfile[]> {
   const [{ data: interests }, { data: matches }, { data: pool }] = await Promise.all([
-    // discover_interests and curated_matches are not yet in generated types —
-    // using (supabase.from as any) until supabase gen types is re-run.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (supabase.from as any)('discover_interests').select('target_user_id').eq('user_id', userId),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (supabase.from as any)('curated_matches').select('match_user_id').eq('user_id', userId),
+    (supabase.from('discover_interests' as any) as any).select('target_user_id').eq('user_id', userId),
+    (supabase.from('curated_matches' as any) as any).select('match_user_id').eq('user_id', userId),
     supabase.from('dating_pool').select('pool_user_id').eq('user_id', userId),
   ]);
 
   const seenIds: string[] = [
     userId,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...(interests ?? []).map((r: any) => r.target_user_id),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...(matches ?? []).map((r: any) => r.match_user_id),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...(pool ?? []).map((r: any) => r.pool_user_id),
   ];
 
-  const { data: profiles, error } = await supabase
+  const { data: myProfile } = await supabase
     .from('user_profiles')
-    .select('user_id, bio, age, location, interests, photos, occupation')
-    .eq('is_profile_complete', true)
-    .eq('age_verified', true)
-    .not('user_id', 'in', '(' + seenIds.join(',') + ')')
-    .limit(DAILY_CAP + 5);
+    .select('geo_lat, geo_lng, search_radius_km')
+    .eq('user_id', userId)
+    .maybeSingle();
 
-  if (error) throw error;
+  const myLat = (myProfile as any)?.geo_lat ?? null;
+  const myLng = (myProfile as any)?.geo_lng ?? null;
+  const radiusKm = (myProfile as any)?.search_radius_km ?? 50;
 
-  const userIds = (profiles ?? []).map((p: any) => p.user_id);
+  let candidateIds: string[] = [];
+  let distanceMap: Record<string, number> = {};
+  let geoFiltered = false;
+
+  if (myLat != null && myLng != null) {
+    const { data: geoRows, error: geoErr } = await (supabase.rpc as any)(
+      'get_candidates_within_radius',
+      { center_lat: myLat, center_lng: myLng, radius_km: radiusKm, exclude_ids: seenIds }
+    );
+    if (!geoErr && geoRows && (geoRows as any[]).length > 0) {
+      candidateIds = (geoRows as any[]).map((r: any) => r.user_id);
+      distanceMap = Object.fromEntries((geoRows as any[]).map((r: any) => [r.user_id, r.distance_km]));
+      geoFiltered = true;
+    }
+  }
+
+  let profiles: any[] = [];
+  if (geoFiltered && candidateIds.length > 0) {
+    const { data } = await supabase
+      .from('user_profiles')
+      .select('user_id, bio, age, location, interests, photos, occupation')
+      .in('user_id', candidateIds)
+      .eq('is_profile_complete', true)
+      .eq('age_verified', true);
+    profiles = data ?? [];
+  } else {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .select('user_id, bio, age, location, interests, photos, occupation')
+      .eq('is_profile_complete', true)
+      .eq('age_verified', true)
+      .not('user_id', 'in', `(${seenIds.join(',')})`)
+      .limit(DAILY_CAP + 5);
+    if (error) throw error;
+    profiles = data ?? [];
+  }
+
+  const userIds = profiles.map((p: any) => p.user_id);
   const { data: names } = await supabase.from('profiles').select('id, name').in('id', userIds);
   const nameMap = Object.fromEntries((names ?? []).map((n: any) => [n.id, n.name]));
 
-  return (profiles ?? []).slice(0, DAILY_CAP).map((p: any) => ({
+  const enriched: DiscoverProfile[] = profiles.slice(0, DAILY_CAP).map((p: any) => ({
     user_id: p.user_id,
     name: nameMap[p.user_id] || 'Member',
     age: p.age,
@@ -74,10 +112,13 @@ async function fetchDiscoverPool(userId: string): Promise<DiscoverProfile[]> {
     occupation: p.occupation,
     photos: p.photos || [],
     interests: p.interests || [],
+    distance_km: distanceMap[p.user_id] ?? null,
   }));
+
+  if (geoFiltered) enriched.sort((a, b) => (a.distance_km ?? 999) - (b.distance_km ?? 999));
+  return enriched;
 }
 
-// ── Hook ──────────────────────────────────────────────────────────────────────
 export function useDiscover() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -91,18 +132,14 @@ export function useDiscover() {
     staleTime: 5 * 60_000,
   });
 
-  // ── Express interest ────────────────────────────────────────────────────────
   const interestMutation = useMutation({
     mutationFn: async (targetUserId: string) => {
       if (!user) throw new Error('Not authenticated');
       const payload: DiscoverInterestInsert = {
-        user_id: user.id,
-        target_user_id: targetUserId,
-        skipped: false,
+        user_id: user.id, target_user_id: targetUserId, skipped: false,
         created_at: new Date().toISOString(),
       };
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { error } = await (supabase.from as any)('discover_interests').insert(payload);
+      const { error } = await (supabase.from('discover_interests' as any) as any).insert(payload);
       if (error && !error.message?.includes('duplicate')) throw error;
       return targetUserId;
     },
@@ -115,18 +152,14 @@ export function useDiscover() {
     onError: () => toast.error('Could not save interest'),
   });
 
-  // ── Skip ────────────────────────────────────────────────────────────────────
   const skipMutation = useMutation({
     mutationFn: async (targetUserId: string) => {
       if (!user) throw new Error('Not authenticated');
       const payload: DiscoverInterestInsert = {
-        user_id: user.id,
-        target_user_id: targetUserId,
-        skipped: true,
+        user_id: user.id, target_user_id: targetUserId, skipped: true,
         created_at: new Date().toISOString(),
       };
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (supabase.from as any)('discover_interests').insert(payload).then(() => {});
+      await (supabase.from('discover_interests' as any) as any).insert(payload).then(() => {});
       return targetUserId;
     },
     onSuccess: () => {
@@ -137,22 +170,12 @@ export function useDiscover() {
   });
 
   const expressInterest = useCallback(
-    (targetUserId: string) => interestMutation.mutateAsync(targetUserId),
-    [interestMutation]
+    (targetUserId: string) => interestMutation.mutateAsync(targetUserId), [interestMutation]
   );
   const skip = useCallback(
-    (targetUserId: string) => skipMutation.mutateAsync(targetUserId),
-    [skipMutation]
+    (targetUserId: string) => skipMutation.mutateAsync(targetUserId), [skipMutation]
   );
 
-  return {
-    profiles,
-    isLoading,
-    capReached,
-    viewedToday,
-    dailyCap: DAILY_CAP,
-    expressInterest,
-    skip,
-    isPending: interestMutation.isPending || skipMutation.isPending,
-  };
-}
+  return { profiles, isLoading, capReached, viewedToday, dailyCap: DAILY_CAP,
+    expressInterest, skip, isPending: interestMutation.isPending || skipMutation.isPending };
+                                                                                }
