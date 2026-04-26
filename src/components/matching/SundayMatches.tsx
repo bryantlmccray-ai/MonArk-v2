@@ -339,7 +339,7 @@ const StatusBar: React.FC<{
         <Compass className="w-4 h-4 text-muted-foreground" />
         <div>
           <p className="text-sm font-semibold text-foreground">{poolCount}</p>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">In Pool</p>
+          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">In Your City</p>
         </div>
       </div>
     </div>
@@ -630,16 +630,33 @@ export const SundayMatches: React.FC = () => {
               <Calendar className="w-10 h-10 mx-auto mb-3 text-primary/50" />
               <h3 className="text-lg font-semibold text-foreground mb-2">Your matches arrive Sunday</h3>
               <p className="text-muted-foreground text-sm max-w-sm mx-auto mb-4">
-                {refreshLabel ? `Next drop in ${refreshLabel} â curated just for you.` : 'Your curated matches drop every Sunday.'}
+                {refreshLabel ? `Next drop in ${refreshLabel} — curated just for you.` : 'Your curated matches drop every Sunday.'}
               </p>
               {poolMatches.length > 0 ? (
                 <div className="bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 text-sm text-foreground/80">
-                  <span className="font-medium text-primary">In the meantime</span> â explore {poolMatches.length} people curated for your city in the Explore tab below.
+                  <span className="font-medium text-primary">In the meantime</span> — explore {poolMatches.length} people curated for your city in the Explore tab below.
                 </div>
               ) : (
                 <div className="bg-muted/30 border border-border/30 rounded-lg px-4 py-3 text-sm text-muted-foreground">
-                  You're on the early access list â matches are being curated for your city. We'll notify you when they're ready.
+                  You're on the early access list — matches are being curated for your city. We'll notify you when they're ready.
                 </div>
+
+              {/* Daily engagement while waiting for Sunday drop */}
+              <div className="mt-6 space-y-3">
+                <div className="bg-primary/5 border border-primary/20 rounded-xl px-5 py-4 text-left">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-primary mb-1">Your Curation Is Running</p>
+                  <p className="text-sm text-foreground/80 leading-relaxed">
+                    Your RIF profile is active in this week's pool. Every signal you send in Discover sharpens Sunday's drop.
+                  </p>
+                </div>
+                <div className="bg-card border border-border/50 rounded-xl px-5 py-4 text-left">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground mb-2">Today's Reflection</p>
+                  <p className="text-sm text-foreground italic leading-relaxed">
+                    "What does emotional safety actually look like for you in a relationship?"
+                  </p>
+                  <p className="text-[11px] text-muted-foreground mt-2">Reflect in your <span className="text-primary font-medium">Journal</span> — it sharpens your matches.</p>
+                </div>
+              </div>
               )}
             </div>
           ) : (
