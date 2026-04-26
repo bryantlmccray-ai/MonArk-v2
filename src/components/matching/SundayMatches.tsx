@@ -639,24 +639,18 @@ export const SundayMatches: React.FC = () => {
               ) : (
                 <div className="bg-muted/30 border border-border/30 rounded-lg px-4 py-3 text-sm text-muted-foreground">
                   You're on the early access list — matches are being curated for your city. We'll notify you when they're ready.
-                </div>
 
-              {/* Daily engagement while waiting for Sunday drop */}
-              <div className="mt-6 space-y-3">
-                <div className="bg-primary/5 border border-primary/20 rounded-xl px-5 py-4 text-left">
-                  <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-primary mb-1">Your Curation Is Running</p>
-                  <p className="text-sm text-foreground/80 leading-relaxed">
-                    Your RIF profile is active in this week's pool. Every signal you send in Discover sharpens Sunday's drop.
-                  </p>
+                  <div className="mt-4 pt-3 border-t border-border/20 space-y-2">
+                    <div className="bg-primary/5 border border-primary/15 rounded-lg px-3 py-2.5 text-left">
+                      <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-primary mb-0.5">Your Curation Is Running</p>
+                      <p className="text-xs text-foreground/70 leading-relaxed">Your RIF profile is active in this week's pool. Every Discover signal sharpens Sunday's drop.</p>
+                    </div>
+                    <div className="bg-card/60 border border-border/30 rounded-lg px-3 py-2.5 text-left">
+                      <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground mb-0.5">Today's Reflection</p>
+                      <p className="text-xs text-foreground/80 italic">"What does emotional safety look like for you in a relationship?"</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="bg-card border border-border/50 rounded-xl px-5 py-4 text-left">
-                  <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground mb-2">Today's Reflection</p>
-                  <p className="text-sm text-foreground italic leading-relaxed">
-                    "What does emotional safety actually look like for you in a relationship?"
-                  </p>
-                  <p className="text-[11px] text-muted-foreground mt-2">Reflect in your <span className="text-primary font-medium">Journal</span> — it sharpens your matches.</p>
-                </div>
-              </div>
               )}
             </div>
           ) : (
