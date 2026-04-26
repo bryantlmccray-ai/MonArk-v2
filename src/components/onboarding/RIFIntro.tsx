@@ -37,8 +37,9 @@ export const RIFIntro: React.FC<RIFIntroProps> = ({ onNext, onBack }) => {
             Your Relational Intelligence.
           </h2>
           <p className="text-sm text-muted-foreground font-light leading-relaxed mb-7">
-            The RIF Quiz takes about 4 minutes. It maps how you connect — your pacing, your
-            boundaries, your emotional readiness. This is what makes your matches feel different.
+            Start with 4 quick questions — your Starter RIF. It maps your pacing, boundaries,
+            and emotional readiness to unlock your first matches. Your full 15-question profile
+            builds from here, sharpening every Sunday drop.
           </p>
         </div>
 
@@ -60,7 +61,7 @@ export const RIFIntro: React.FC<RIFIntroProps> = ({ onNext, onBack }) => {
             Back
           </Button>
           <Button onClick={onNext} className="flex-1 rounded-full uppercase tracking-[0.12em] text-xs py-4">
-            Take the RIF Quiz
+            Start Your RIF Profile
           </Button>
         </div>
       </motion.div>
