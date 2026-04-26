@@ -67,6 +67,9 @@ export const OnboardingDifference: React.FC<OnboardingDifferenceProps> = ({ onNe
           ))}
         </div>
 
+        <p className="text-xs text-center text-muted-foreground mb-4">
+          Next: a 4-question Starter RIF — takes about 90 seconds.
+        </p>
         <div className="flex gap-3">
           <Button onClick={onBack} variant="outline" className="rounded-full uppercase tracking-wider text-xs">
             Back
