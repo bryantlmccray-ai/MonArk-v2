@@ -350,6 +350,16 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                         View Reflection
                       </Button>
                     ) : null}
+              {localEntries.length > 0 && (
+                <div className="mt-4 text-center">
+                  <button
+                    onClick={() => setShowEntryModal(true)}
+                    className="inline-flex items-center px-6 py-2.5 bg-[#A08C6E] text-[#F0EBE3] font-body font-medium text-xs tracking-[0.15em] uppercase rounded-[40px] hover:bg-[#A08C6E]/90 transition-all"
+                  >
+                    Add Another Entry
+                  </button>
+                </div>
+              )}
                   </div>
                 ))
               ) : localEntries.length === 0 ? (
@@ -365,7 +375,7 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                     onClick={() => setShowEntryModal(true)}
                     className="inline-flex items-center px-6 py-2.5 bg-[#A08C6E] text-[#F0EBE3] font-body font-medium text-xs tracking-[0.15em] uppercase rounded-[40px] hover:bg-[#A08C6E]/90 transition-all"
                   >
-                    ADD YOUR FIRST ENTRY
+                    Add Your First Entry
                   </button>
                 </div>
               ) : null}
