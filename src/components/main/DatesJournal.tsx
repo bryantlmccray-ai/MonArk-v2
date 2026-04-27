@@ -375,7 +375,7 @@ export const DatesJournal: React.FC<DatesJournalProps> = ({ onStartDebrief, onDa
                     onClick={() => setShowEntryModal(true)}
                     className="inline-flex items-center px-6 py-2.5 bg-[#A08C6E] text-[#F0EBE3] font-body font-medium text-xs tracking-[0.15em] uppercase rounded-[40px] hover:bg-[#A08C6E]/90 transition-all"
                   >
-                    Add Your First Entry
+                    {completedDates.length > 0 ? 'Add Another Entry' : 'Add Your First Entry'}
                   </button>
                 </div>
               ) : null}
