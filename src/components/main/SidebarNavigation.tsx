@@ -30,7 +30,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
   const { rifProfile } = useRIF();
 
   const displayName = profile?.first_name || 'Member';
-  const rifCompleted = !!rifProfile || !!(profile?.rif_quiz_answers) || !!(profile?.rif_scores);
+  const rifCompleted = !!rifProfile || !!(profile?.rif_quiz_answers) || !!(profile?.rif_scores) || !!(profile?.rif_archetype) || !!(profile?.dating_style);
 
   const tabs = [
     { id: 'weekly', icon: Calendar, label: 'Your 3', hasNotification: false },
@@ -40,7 +40,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
     {
       id: 'rif',
       icon: Brain,
-      label: rifCompleted ? 'Relational Profile' : 'Your RIF Profile',
+      label: rifCompleted ? 'Relational Profile' : 'Take RIF Quiz',
       hasNotification: !rifCompleted,
     },
     { id: 'compass', icon: Compass, label: 'Compass', hasNotification: false },
