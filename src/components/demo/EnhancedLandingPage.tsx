@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { MonArkLogo } from '@/components/MonArkLogo';
 import monarkLogoHorizontal from '@/assets/monark-logo-horizontal.png';
 import { PenLine, Heart, MapPin, ArrowRight, Instagram, Menu, X, HelpCircle, MessageCircleHeart, ChevronDown } from 'lucide-react';
 import { MonArkPricing } from '@/components/pricing/MonArkPricing';
-import { motion } from 'framer-motion'
+import { motion, useInView, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
 import founderPortrait from '@/assets/founder-bryant.jpeg';
 import gracePortrait from '@/assets/team/grace-omalley.png';
 import { useDemo } from '@/contexts/DemoContext';
@@ -19,6 +19,102 @@ import {
 } from "@/components/ui/accordion";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
+
+// ─── Reusable scroll-reveal wrapper ─────────────────────────────────────────
+const Reveal = ({ children, delay = 0, y = 28, className = '' }: {
+  children: React.ReactNode; delay?: number; y?: number; className?: string;
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: '-60px' });
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      initial={{ opacity: 0, y }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.75, delay, ease: easeOut }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+// ─── Word-by-word stagger headline ───────────────────────────────────────────
+const StaggerHeadline = ({ text, className = '', delay = 0 }: { text: string; className?: string; delay?: number }) => {
+  const words = text.split(' ');
+  return (
+    <span className={className} aria-label={text}>
+      {words.map((word, i) => (
+        <motion.span
+          key={i}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: delay + i * 0.08, ease: easeOut }}
+          style={{ display: 'inline-block', marginRight: '0.25em' }}
+        >
+          {word}
+        </motion.span>
+      ))}
+    </span>
+  );
+};
+
+// ─── Scarcity bar ─────────────────────────────────────────────────────────────
+const ScarcityBar = ({ claimed = 147, total = 200 }: { claimed?: number; total?: number }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: '-40px' });
+  const pct = Math.round((claimed / total) * 100);
+  const remaining = total - claimed;
+  return (
+    <div ref={ref} className="space-y-2">
+      <div className="flex justify-between items-center">
+        <span className="text-[11px] font-caption tracking-[0.15em] uppercase text-muted-foreground">
+          {remaining} spots remaining
+        </span>
+        <span className="text-[11px] font-caption tracking-[0.15em] uppercase text-primary">
+          {claimed}/{total} claimed
+        </span>
+      </div>
+      <div className="h-1 rounded-full bg-border overflow-hidden">
+        <motion.div
+          className="h-full rounded-full bg-gradient-to-r from-primary to-[#c9a96e]"
+          initial={{ width: 0 }}
+          animate={inView ? { width: pct + '%' } : {}}
+          transition={{ duration: 1.4, ease: easeOut, delay: 0.2 }}
+        />
+      </div>
+    </div>
+  );
+};
+
+// ─── RIF Pillar Card ──────────────────────────────────────────────────────────
+const RIFCard = ({ num, title, desc, delay = 0 }: { num: string; title: string; desc: string; delay?: number }) => (
+  <Reveal delay={delay}>
+    <motion.div
+      className="relative p-6 rounded-2xl border border-border/60 bg-card hover:border-primary/30 hover:shadow-[var(--shadow-editorial)] transition-all duration-300 group"
+      whileHover={{ y: -3 }}
+      transition={{ duration: 0.25, ease: easeOut }}
+    >
+      <span className="absolute top-4 right-5 font-editorial text-6xl text-primary/10 leading-none select-none font-bold">{num}</span>
+      <h3 className="font-editorial-headline text-base text-foreground mb-2 relative z-10">{title}</h3>
+      <p className="text-sm text-muted-foreground font-body leading-relaxed relative z-10">{desc}</p>
+    </motion.div>
+  </Reveal>
+);
+
+// ─── Quote Card ───────────────────────────────────────────────────────────────
+const QuoteCard = ({ quote, name, delay = 0 }: { quote: string; name: string; delay?: number }) => (
+  <Reveal delay={delay}>
+    <div className="bg-[#EDE6DF] rounded-xl p-6 sm:p-7 border-l-[3px] border-l-primary flex flex-col justify-between h-full">
+      <p className="font-editorial italic text-foreground text-lg sm:text-xl leading-relaxed mb-4">
+        &ldquo;{quote}&rdquo;
+      </p>
+      <p className="font-body text-xs uppercase tracking-[0.18em] text-foreground/60">
+        — {name} · Early Access Member, Chicago
+      </p>
+    </div>
+  </Reveal>
+);
 
 const SectionDivider = () => (
   <div className="flex items-center justify-center py-2">
@@ -69,7 +165,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
   return (
     <div id="main-content" className="min-h-screen bg-background relative isolate">
       <div className="relative">
-      {/* ═══════════ STICKY NAV ═══════════ */}
+      {/* ─── STICKY NAV ─── */}
       <nav className="sticky top-0 z-50 bg-background/95 border-b border-border/50" style={{ backdropFilter: 'none' }}>
         <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-16 flex items-center justify-between h-14">
           <div className="flex items-center gap-2">
@@ -92,7 +188,6 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           >
             Join the Waitlist
           </button>
-          {/* Mobile hamburger */}
           <button
             onClick={() => setMobileMenuOpen(true)}
             className="md:hidden p-2 text-foreground"
@@ -134,11 +229,11 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       )}
 
-      {/* ═══════════ HERO — Emotional Hook ═══════════ */}
+      {/* ─── HERO ─── */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-card via-background to-secondary/40" />
 
-        {/* Warm ambient orbs — subtle */}
+        {/* Warm ambient orb — heartbeat pulse */}
         <motion.div
           className="absolute top-16 left-1/3 w-[420px] h-[420px] rounded-full"
           style={{ background: "radial-gradient(circle, hsl(var(--color-rosegold) / 0.06) 0%, transparent 70%)" }}
@@ -146,35 +241,64 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
           transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
         />
 
+        {/* Gold pulse ring behind logo */}
+        <div className="absolute inset-0 flex items-start justify-center pt-10 pointer-events-none">
+          <motion.div
+            className="w-[160px] h-[160px] rounded-full"
+            style={{ background: "radial-gradient(circle, hsl(var(--color-goldenrod) / 0.12) 0%, transparent 70%)" }}
+            animate={{ scale: [0.9, 1.15, 0.9], opacity: [0.3, 0, 0.3] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
+
         <div className="relative max-w-4xl mx-auto px-6 sm:px-8 lg:px-16 pt-8 pb-6 sm:pt-12 sm:pb-8">
           <div className="text-center space-y-7">
-            {/* Brand */}
-            <motion.div
-              className="space-y-5"
-              initial={{ opacity: 1 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: easeOut }}
-            >
-              <MonArkLogo size="xl" animated={true} rotateOnLoad={true} className="mx-auto" />
+            {/* Brand + logo with single-rotation on load */}
+            <div className="space-y-5">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.7, ease: easeOut }}
+              >
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 2, ease: [0.22, 1, 0.36, 1], repeat: 0 }}
+                  style={{ display: 'inline-block' }}
+                >
+                  <MonArkLogo size="xl" animated={true} rotateOnLoad={true} className="mx-auto" />
+                </motion.div>
+              </motion.div>
 
               <div className="space-y-4">
                 <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-editorial-headline italic text-foreground leading-[1.08] tracking-tight px-2">
-                  Dating shouldn't feel like a second job.
+                  <StaggerHeadline text="Dating shouldn't feel like a second job." delay={0.4} />
                 </h1>
                 <div className="w-16 h-px mx-auto bg-primary/30" />
-                <p className="text-xs font-caption tracking-[0.2em] uppercase text-primary/70 mt-1 mb-0">We match you on how you love, not just who you are.</p>
-                <p className="max-w-xl mx-auto text-base sm:text-lg font-body text-foreground/75 leading-relaxed px-2">
-                                MonArk gives you 3 curated introductions every week — matched on <a href="#rif-framework" className="underline underline-offset-2 text-foreground/90 hover:text-foreground transition-colors">how you love</a>, not just who you are. No swiping. No algorithm games. Just people who actually align with how you connect, communicate, and build.
-                </p>
+                <motion.p
+                  className="text-xs font-caption tracking-[0.2em] uppercase text-primary/70 mt-1 mb-0"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 1.15, ease: easeOut }}
+                >
+                  We match you on how you love, not just who you are.
+                </motion.p>
+                <motion.p
+                  className="max-w-xl mx-auto text-base sm:text-lg font-body text-foreground/75 leading-relaxed px-2"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 1.25, ease: easeOut }}
+                >
+                  MonArk gives you 3 curated introductions every week — matched on <a href="#rif-framework" className="underline underline-offset-2 text-foreground/90 hover:text-foreground transition-colors">how you love</a>, not just who you are. No swiping. No algorithm games. Just people who actually align with how you connect, communicate, and build.
+                </motion.p>
               </div>
-            </motion.div>
+            </div>
 
-            {/* As Heard On — inline in hero */}
+            {/* As Heard On */}
             <motion.div
               className="flex flex-col items-center gap-2"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15, ease: easeOut }}
+              transition={{ duration: 0.6, delay: 1.4, ease: easeOut }}
             >
               <p className="font-body text-[10px] tracking-[0.15em] uppercase text-muted-foreground">As Heard On</p>
               <a href="https://open.spotify.com/episode/3AcuI12nSrUWqGvwPFwNGP" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 bg-[#121212] rounded-full px-5 py-2.5 shadow-lg hover:scale-105 transition-transform cursor-pointer">
@@ -188,20 +312,20 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               </a>
             </motion.div>
 
-            {/* Pull Quote Cards */}
+            {/* Pull Quote Cards — SURFACED, full opacity, gold left border */}
             <motion.div
               className="flex flex-col sm:flex-row gap-4 justify-center items-stretch max-w-lg mx-auto"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.25, ease: easeOut }}
+              transition={{ duration: 0.6, delay: 1.55, ease: easeOut }}
             >
               {[
                 { quote: "You're doing my investigation for me.", name: "Aisha" },
                 { quote: "MonArk feels like comfort.", name: "Samuel" },
               ].map((item, i) => (
-                <div key={i} className="flex-1 bg-[#EDE6DF] rounded-xl p-5 text-center">
-                  <p className="font-editorial italic text-[#A08C6E] text-sm leading-relaxed mb-2">
-                    "{item.quote}"
+                <div key={i} className="flex-1 bg-[#EDE6DF] rounded-xl p-5 text-center border-l-[3px] border-l-primary">
+                  <p className="font-editorial italic text-foreground text-base leading-relaxed mb-2">
+                    &ldquo;{item.quote}&rdquo;
                   </p>
                   <p className="font-body text-xs uppercase tracking-[0.15em] text-foreground/60">
                     — {item.name} · Early Access Member, Chicago
@@ -210,19 +334,17 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               ))}
             </motion.div>
 
-            {/* ── Primary CTA Card ── */}
+            {/* Primary CTA Card */}
             <motion.div
               className="max-w-sm mx-auto"
               initial={{ opacity: 1 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3, ease: easeOut }}
+              transition={{ duration: 0.6, delay: 1.7, ease: easeOut }}
             >
               <div className="relative group">
                 <div className="absolute -inset-1.5 rounded-2xl blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-700 bg-primary/20" />
-
                 <div className="relative bg-card rounded-2xl p-7 border border-border shadow-[var(--shadow-elevated)]">
                   <p className="text-[10px] font-caption text-primary tracking-[0.2em] mb-2">LIMITED EARLY ACCESS</p>
-
                   <h2 className="text-2xl sm:text-3xl font-editorial-headline text-foreground mb-1">Get Your 3</h2>
                   <p className="text-sm text-muted-foreground font-body mb-4">Reserve your spot among intentional daters</p>
 
@@ -279,7 +401,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               </div>
             </motion.div>
 
-            {/* App Store badges in hero */}
+            {/* App Store badges */}
             <div className="flex items-center justify-center gap-3 pt-2">
               <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-muted-foreground/30 text-muted-foreground/50 font-body text-xs tracking-[0.08em] cursor-not-allowed select-none opacity-60">
                 App Store — Coming Soon
@@ -301,16 +423,10 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </motion.div>
       </section>
 
-      {/* ═══════════ RIF SECTION ═══════════ */}
+      {/* ─── RIF FRAMEWORK ─── */}
       <section id="rif-framework" className="py-16 bg-background scroll-mt-16">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
-          <motion.div
-            className="text-center mb-10"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.6, ease: easeOut }}
-          >
+          <Reveal className="text-center mb-10">
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
               The Relational Intelligence Framework
             </h2>
@@ -322,34 +438,40 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 Most platforms sort by photos and proximity. MonArk sorts by emotional readiness, relational values, and behavioral compatibility — a proprietary framework we call RIF. Your 3 weekly introductions aren't random. They're the result of a system built to surface alignment, not just attraction.
               </p>
             </div>
-            <div className="flex flex-wrap justify-center gap-3">
-              {['Emotional Readiness', 'Relational Values', 'Behavioral Compatibility'].map((pill) => (
-                <span
-                  key={pill}
-                  className="font-body text-xs font-medium uppercase tracking-[0.15em] text-[#7A6A55] bg-[#EDE6DF] px-5 py-2 rounded-full"
-                >
-                  {pill}
-                </span>
-              ))}
-            </div>
-          </motion.div>
+          </Reveal>
+
+          {/* RIF Pillars as cards — not inline text pills */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <RIFCard
+              num="01"
+              title="Emotional Readiness"
+              desc="Where you are in your journey right now — your capacity to give and receive."
+              delay={0}
+            />
+            <RIFCard
+              num="02"
+              title="Relational Values"
+              desc="What you stand for together — the non-negotiables beneath attraction."
+              delay={0.1}
+            />
+            <RIFCard
+              num="03"
+              title="Behavioral Compatibility"
+              desc="How you love day to day — communication, conflict, and closeness patterns."
+              delay={0.2}
+            />
+          </div>
         </div>
       </section>
 
-      {/* ═══════════ HOW IT WORKS ═══════════ */}
+      {/* ─── HOW IT WORKS ─── */}
       <section id="how-it-works" className="py-16 bg-background scroll-mt-16">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
-          <motion.div
-            className="text-center mb-10"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.5 }}
-          >
+          <Reveal className="text-center mb-10">
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-3">How Smart Matching Works</h2>
             <p className="text-xs sm:text-sm font-caption text-muted-foreground tracking-[0.15em] uppercase max-w-lg mx-auto leading-relaxed">Four steps from your RIF profile to your Sunday 3.</p>
             <SectionDivider />
-          </motion.div>
+          </Reveal>
 
           <div className="grid md:grid-cols-4 gap-5 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none -mx-6 px-6 md:mx-0 md:px-0">
             {[
@@ -397,7 +519,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             No swipes. No chaos. Just connection that feels like alignment.
           </motion.p>
 
-          {/* Match Profile Card Mockups */}
+          {/* Match Profile Card Mockups — dealt like cards */}
           <motion.div
             className="mt-14 mb-14"
             initial={{ opacity: 0, y: 20 }}
@@ -405,26 +527,32 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
             viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <p className="text-center text-xs font-caption text-primary tracking-[0.2em] uppercase mb-8">Every Sunday morning, your 3 arrive.</p>
+            {/* Animated Sunday drop label */}
+            <div className="text-center mb-8 flex items-center justify-center gap-2">
+              <motion.div
+                className="w-2 h-2 rounded-full bg-primary"
+                animate={{ scale: [1, 1.3, 1] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <p className="text-center text-xs font-caption text-primary tracking-[0.2em] uppercase">Every Sunday Morning, Your 3 Arrive.</p>
+            </div>
             <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
               {[
-                { photo: "/images/matches/jordan.jpg", name: "Jordan", age: 28, location: "River North, Chicago", score: 92, tagline: "Strong communicator · Values depth", reason: "You both value slow-building trust and direct communication.", interests: ["Live Jazz", "Cooking", "Hiking"] },
-                { photo: "/images/matches/marcus.jpg", name: "Marcus", age: 31, location: "Lincoln Park, Chicago", score: 85, tagline: "Intentional dater · Emotionally present", reason: "Complementary conflict styles—he speaks up, you reflect first.", interests: ["Poetry", "Yoga", "Art Museums"] },
-                { photo: "/images/matches/priya.jpg", name: "Priya", age: 27, location: "West Loop, Chicago", score: 78, tagline: "Curious spirit · Steady pacing", reason: "Shared pacing preference and aligned relationship goals.", interests: ["Film", "Running", "Travel"] },
+                { photo: "/images/matches/jordan.jpg", name: "Jordan", age: 28, location: "River North, Chicago", score: 92, tagline: "Strong communicator · Values depth", reason: "You both value slow-building trust and direct communication.", interests: ["Live Jazz", "Cooking", "Hiking"], rotateFrom: -2 },
+                { photo: "/images/matches/marcus.jpg", name: "Marcus", age: 31, location: "Lincoln Park, Chicago", score: 85, tagline: "Intentional dater · Emotionally present", reason: "Complementary conflict styles—he speaks up, you reflect first.", interests: ["Poetry", "Yoga", "Art Museums"], rotateFrom: 0 },
+                { photo: "/images/matches/priya.jpg", name: "Priya", age: 27, location: "West Loop, Chicago", score: 78, tagline: "Curious spirit · Steady pacing", reason: "Shared pacing preference and aligned relationship goals.", interests: ["Film", "Running", "Travel"], rotateFrom: 2 },
               ].map((card, i) => (
                 <motion.div
                   key={i}
                   className="bg-[hsl(230_18%_15%)] border border-[hsl(30_40%_72%/0.15)] rounded-2xl p-5 shadow-[0_4px_24px_rgba(28,31,46,0.3)] hover:border-[hsl(30_40%_72%/0.35)] transition-all duration-300"
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 16, rotate: card.rotateFrom }}
+                  whileInView={{ opacity: 1, y: 0, rotate: 0 }}
                   viewport={{ once: true, amount: 0.1 }}
-                  transition={{ duration: 0.4, delay: 0.12 * i }}
+                  transition={{ duration: 0.55, delay: 0.15 * i, ease: easeOut }}
                 >
-                  {/* Badge */}
                   <div className="mb-3">
                     <span className="inline-block text-[10px] uppercase tracking-[0.2em] text-primary bg-primary/10 border border-primary/20 rounded-full px-3 py-1">✦ Your Match</span>
                   </div>
-                  {/* Avatar + Name */}
                   <div className="flex items-center gap-3 mb-4">
                     <img src={card.photo} alt={`${card.name}, ${card.age} — MonArk member`} loading="lazy" className="w-12 h-12 rounded-full object-cover shrink-0 border border-primary/20" />
                     <div>
@@ -436,22 +564,21 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                       <span className="text-[11px] text-primary/80 mt-0.5 block">{card.tagline}</span>
                     </div>
                   </div>
-
-                  {/* RIF Bar */}
                   <div className="mb-4">
                     <div className="flex justify-between mb-1.5">
                       <span className="text-[10px] uppercase tracking-[0.2em] text-[hsl(30_40%_72%/0.5)]">RIF Compatibility</span>
                       <span className="text-[10px] uppercase tracking-[0.2em] text-primary">{card.score}%</span>
                     </div>
                     <div className="h-1 rounded-full bg-[hsl(230_18%_22%)]">
-                      <div
+                      <motion.div
                         className="h-1 rounded-full bg-gradient-to-r from-primary to-accent"
-                        style={{ width: `${card.score}%` }}
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${card.score}%` }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: 0.3 + i * 0.15, ease: easeOut }}
                       />
                     </div>
                   </div>
-
-                  {/* Interests */}
                   <div className="flex flex-wrap gap-1.5 mb-4">
                     {card.interests.map((interest, idx) => (
                       <span key={idx} className="text-[11px] px-2.5 py-1 rounded-full border border-[hsl(30_40%_72%/0.2)] text-[hsl(30_40%_72%/0.8)] bg-[hsl(30_40%_72%/0.05)]">
@@ -459,19 +586,18 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                       </span>
                     ))}
                   </div>
-
-                  {/* Match Reason */}
                   <div className="bg-[hsl(230_18%_12%)] rounded-xl p-3 border-l-[3px] border-primary">
                     <div className="text-[9px] uppercase tracking-[0.2em] text-[hsl(30_40%_72%/0.4)] mb-1">Why we curated this match</div>
-                    <p className="text-[12px] text-[hsl(40_30%_88%/0.85)] leading-relaxed italic font-light">"{card.reason}"</p>
+                    <p className="text-[12px] text-[hsl(40_30%_88%/0.85)] leading-relaxed italic">"{card.reason}"</p>
                   </div>
                 </motion.div>
               ))}
             </div>
           </motion.div>
+        </div>
+      </section>
 
-
-{/* ═══════════ DISCOVER MODE ═══════════ */}
+      {/* ─── DISCOVER MODE ─── */}
       <section className="py-20 bg-foreground text-background overflow-hidden">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
           <motion.div
@@ -511,66 +637,54 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
-
-
-          {/* Sample RIF Question Preview */}
-          <motion.div
-            className="mt-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-          >
-            <h3 className="text-center font-editorial-headline text-xl sm:text-2xl text-foreground mb-2">A Glimpse Into Your RIF</h3>
+      {/* ─── RIF QUESTIONS PREVIEW ─── */}
+      <section className="py-16 bg-background">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
+          <Reveal className="text-center mb-10">
+            <h3 className="font-editorial-headline text-xl sm:text-2xl text-foreground mb-2">A Glimpse Into Your RIF</h3>
             <p className="text-center text-xs font-caption text-primary tracking-[0.2em] uppercase mb-8">The questions that power smarter matches</p>
-            <div className="flex flex-col gap-4 max-w-2xl mx-auto">
-              {[
-                { num: "Q3", text: "How do you typically show up in conflict — do you go quiet or speak up immediately?" },
-                { num: "Q7", text: "What does emotional safety look like to you in a relationship?" },
-                { num: "Q12", text: "Are you looking for something to build slowly, or do you know quickly when someone is right?" },
-              ].map((q, i) => (
-                <motion.div
-                  key={i}
-                  className="relative bg-[hsl(230_18%_15%)] border border-[hsl(30_40%_72%/0.2)] rounded-2xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(28,31,46,0.25)] hover:border-[hsl(30_40%_72%/0.4)] transition-all duration-300"
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.1 }}
-                  transition={{ duration: 0.4, delay: 0.1 * i }}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-9 h-9 rounded-xl bg-[hsl(30_40%_72%/0.15)] flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <HelpCircle className="w-4.5 h-4.5 text-[hsl(30_40%_72%)]" strokeWidth={1.5} />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-editorial-headline text-base sm:text-lg text-[hsl(30_40%_85%)] leading-relaxed italic">"{q.text}"</p>
-                    </div>
+          </Reveal>
+          <div className="flex flex-col gap-4 max-w-2xl mx-auto">
+            {[
+              { num: "Q3", text: "How do you typically show up in conflict — do you go quiet or speak up immediately?" },
+              { num: "Q7", text: "What does emotional safety look like to you in a relationship?" },
+              { num: "Q12", text: "Are you looking for something to build slowly, or do you know quickly when someone is right?" },
+            ].map((q, i) => (
+              <motion.div
+                key={i}
+                className="relative bg-[hsl(230_18%_15%)] border border-[hsl(30_40%_72%/0.2)] rounded-2xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(28,31,46,0.25)] hover:border-[hsl(30_40%_72%/0.4)] transition-all duration-300"
+                initial={{ opacity: 0, x: -10 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ duration: 0.4, delay: 0.1 * i }}
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-9 h-9 rounded-xl bg-[hsl(30_40%_72%/0.15)] flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <HelpCircle className="w-4.5 h-4.5 text-[hsl(30_40%_72%)]" strokeWidth={1.5} />
                   </div>
-                  <span className="absolute top-4 right-5 text-[10px] font-caption text-[hsl(30_40%_72%/0.4)] tracking-[0.15em] uppercase">{q.num}</span>
-                </motion.div>
-              ))}
-            </div>
-            <p className="text-center mt-6 text-xs text-muted-foreground font-body">15 thoughtful questions. 5 minutes. That's all it takes to unlock smarter matches.</p>
-          </motion.div>
+                  <div className="flex-1">
+                    <p className="font-editorial-headline text-base sm:text-lg text-[hsl(30_40%_85%)] leading-relaxed italic">"{q.text}"</p>
+                  </div>
+                </div>
+                <span className="absolute top-4 right-5 text-[10px] font-caption text-[hsl(30_40%_72%/0.4)] tracking-[0.15em] uppercase">{q.num}</span>
+              </motion.div>
+            ))}
+          </div>
+          <p className="text-center mt-6 text-xs text-muted-foreground font-body">15 thoughtful questions. 5 minutes. That's all it takes to unlock smarter matches.</p>
         </div>
       </section>
 
-      {/* ═══════════ FOUNDER STORY ═══════════ */}
+      {/* ─── FOUNDER STORY ─── */}
       <section className="py-16 bg-secondary/30 overflow-hidden">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
-          <motion.div
-            className="text-center mb-10"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.5 }}
-          >
+          <Reveal className="text-center mb-10">
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-2">Why I Built MonArk</h2>
             <p className="text-sm font-body text-muted-foreground tracking-[0.08em] uppercase">A Founder's Note on Intentional Dating</p>
             <SectionDivider />
-          </motion.div>
+          </Reveal>
 
           <div className="grid md:grid-cols-2 gap-10 lg:gap-14 items-center">
-            {/* Founder Image */}
+            {/* Founder Image — scales in on scroll */}
             <motion.div
               className="relative order-2 md:order-1"
               initial={{ opacity: 0, x: -20 }}
@@ -581,8 +695,11 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-primary/20 via-border to-primary/15 blur-sm" />
               <motion.div
                 className="relative overflow-hidden rounded-xl shadow-[var(--shadow-luxury)]"
+                initial={{ scale: 0.97 }}
+                whileInView={{ scale: 1.0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, ease: easeOut }}
                 whileHover={{ scale: 1.015 }}
-                transition={{ duration: 0.4, ease: easeOut }}
               >
                 <img
                   src={founderPortrait}
@@ -600,47 +717,48 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               </motion.div>
             </motion.div>
 
-            {/* Text */}
-            <motion.div
-              className="space-y-5 order-1 md:order-2"
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.1, margin: "-80px" }}
-              transition={{ duration: 0.8, delay: 0.15, ease: easeOut }}
-            >
-              <p className="text-base text-muted-foreground font-body leading-relaxed">
-                I spent years on dating apps that felt more like slot machines than places to find real connection.
-              </p>
-              <p className="text-base text-muted-foreground font-body leading-relaxed">
-                Sure, we could meet people. But finding someone who truly <em className="font-medium not-italic text-foreground">got</em> you? That was rare.
-              </p>
-              <p className="text-base text-muted-foreground font-body leading-relaxed">
-                MonArk exists because I believed there was a better way — one that prioritizes depth over volume, and connection over convenience.
-              </p>
-              <div className="pt-2">
+            {/* Text — paragraphs reveal one by one */}
+            <div className="space-y-5 order-1 md:order-2">
+              {[
+                "I spent years on dating apps that felt more like slot machines than places to find real connection.",
+                <>Sure, we could meet people. But finding someone who truly <em className="font-medium not-italic text-foreground">got</em> you? That was rare.</>,
+                "MonArk exists because I believed there was a better way — one that prioritizes depth over volume, and connection over convenience.",
+              ].map((text, i) => (
+                <motion.p
+                  key={i}
+                  className="text-base text-muted-foreground font-body leading-relaxed"
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.1, margin: "-80px" }}
+                  transition={{ duration: 0.6, delay: 0.12 * i, ease: easeOut }}
+                >
+                  {text}
+                </motion.p>
+              ))}
+              <motion.div
+                className="pt-2"
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.4, ease: easeOut }}
+              >
                 <p className="font-editorial italic text-[#A08C6E] text-base">— Bryant McCray, Founder</p>
                 <p className="font-editorial italic text-[#A08C6E] text-sm mt-3">
                   As heard on <em>Save Me a Spot</em> — Chicago's leading relationship wellness podcast
                 </p>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ═══════════ BUILT WITH CARE ═══════════ */}
+      {/* ─── BUILT WITH CARE ─── */}
       <section className="py-16 bg-background">
         <div className="max-w-3xl mx-auto px-6 sm:px-8 lg:px-16">
-          <motion.div
-            className="text-center mb-10"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.5 }}
-          >
+          <Reveal className="text-center mb-10">
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-2">Built with Care</h2>
             <SectionDivider />
-          </motion.div>
+          </Reveal>
 
           <div className="grid md:grid-cols-2 gap-10">
             {[
@@ -662,12 +780,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
                 >
                   <div className="absolute -inset-0.5 rounded-full bg-gradient-to-br from-primary/25 via-border to-primary/20" />
                   <div className="relative w-full h-full overflow-hidden rounded-full shadow-[var(--shadow-editorial)]">
-                    <img
-                      src={member.img}
-                      alt={member.name}
-                      loading="lazy"
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={member.img} alt={member.name} loading="lazy" className="w-full h-full object-cover" />
                   </div>
                 </motion.div>
                 <div>
@@ -685,67 +798,43 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
-      {/* ═══════════ TESTIMONIALS — From Early Access Members ═══════════ */}
+      {/* ─── SOCIAL PROOF — surfaced, visible, full weight ─── */}
       <section className="py-16 bg-background">
         <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-16">
-          <motion.div
-            className="text-center mb-10"
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.5 }}
-          >
+          <Reveal className="text-center mb-10">
             <h2 className="font-editorial-headline italic text-2xl sm:text-[28px] text-foreground mb-2">From Early Access Members</h2>
             <SectionDivider />
-          </motion.div>
+          </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl mx-auto">
-            {[
-              { quote: "I've tried every app. MonArk is the first time I felt like someone was actually paying attention to who I am.", name: "Janelle · Early Access Member, Chicago" },
-              { quote: "Three people, once a week. It sounds simple until you realize how much thought went into each one.", name: "Marcus T. · Early Access Member, Chicago" },
-            ].map((item, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.1 }}
-                transition={{ duration: 0.5, delay: idx * 0.12, ease: easeOut }}
-                className="bg-[hsl(230_18%_15%)] rounded-2xl p-7 flex flex-col justify-between shadow-[0_8px_32px_rgba(28,31,46,0.25)]"
-              >
-                <p className="text-[hsl(240_6%_78%)] font-body text-sm leading-relaxed mb-6 italic">
-                  "{item.quote}"
-                </p>
-                <p className="text-[hsl(30_40%_72%)] font-caption text-xs tracking-[0.12em] uppercase">
-                  — {item.name}
-                </p>
-              </motion.div>
-            ))}
+            <QuoteCard
+              quote="I've tried every app. MonArk is the first time I felt like someone was actually paying attention to who I am."
+              name="Janelle · Early Access Member, Chicago"
+              delay={0}
+            />
+            <QuoteCard
+              quote="Three people, once a week. It sounds simple until you realize how much thought went into each one."
+              name="Marcus T. · Early Access Member, Chicago"
+              delay={0.12}
+            />
           </div>
         </div>
       </section>
 
-
-
-      {/* ═══════════ SKEPTIC COMPARISON ═══════════ */}
+      {/* ─── SKEPTIC COMPARISON ─── */}
       <section className="py-16 bg-secondary/30">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
-          <motion.div
-            className="text-center mb-10"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.6, ease: easeOut }}
-          >
+          <Reveal className="text-center mb-10">
             <h2 className="font-editorial-headline italic text-3xl sm:text-[32px] text-foreground mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
               You've tried the apps.
             </h2>
             <p className="font-body font-medium text-base text-[#A08C6E]">
               Here's what's different.
             </p>
-          </motion.div>
+          </Reveal>
 
           <div className="grid md:grid-cols-2 gap-5 max-w-3xl mx-auto">
-            {/* The Apps column */}
+            {/* The Apps */}
             <motion.div
               className="bg-[#EDE6DF] rounded-xl border border-[#EDE6DF] p-6 sm:p-8"
               initial={{ opacity: 0, x: -16 }}
@@ -769,7 +858,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
               </ul>
             </motion.div>
 
-            {/* MonArk column */}
+            {/* MonArk */}
             <motion.div
               className="bg-[#EDE6DF] rounded-xl border border-[#EDE6DF] border-l-[3px] border-l-[#A08C6E] p-6 sm:p-8"
               initial={{ opacity: 0, x: 16 }}
@@ -796,9 +885,14 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
-      {/* ═══════════ PRICING ═══════════ */}
+      {/* ─── PRICING ─── */}
       <SectionDivider />
       <MonArkPricing onSelectPlan={(planName) => openWaitlist(planName)} />
+
+      {/* Founding Member scarcity bar — injected below pricing section */}
+      <div className="max-w-sm mx-auto px-6 pb-8 -mt-4 space-y-4">
+        <ScarcityBar claimed={147} total={200} />
+      </div>
 
       {/* Early access line below pricing */}
       <div className="text-center pb-8 -mt-4">
@@ -807,23 +901,17 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </p>
       </div>
 
-      {/* ═══════════ FAQ ═══════════ */}
+      {/* ─── FAQ ─── */}
       <section id="faq" className="py-16 bg-background scroll-mt-16">
         <div className="max-w-3xl mx-auto px-6 sm:px-8 lg:px-16">
-          <motion.div
-            className="text-center mb-10"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.5 }}
-          >
+          <Reveal className="text-center mb-10">
             <h2 className="text-3xl sm:text-4xl font-editorial-headline text-foreground mb-2">Your Questions, Answered</h2>
             <SectionDivider />
-          </motion.div>
+          </Reveal>
 
           <Accordion type="single" collapsible className="space-y-3">
             {[
-              { q: "Will I get email notifications?", a: "MonArk keeps your experience intentional and inbox-free. Your Sunday batch delivery, \'no matches this week\' updates, and post-date journal prompts are all delivered in-app — no email flooding. You stay in control, and in the moment." },
+              { q: "Will I get email notifications?", a: "MonArk keeps your experience intentional and inbox-free. Your Sunday batch delivery, 'no matches this week' updates, and post-date journal prompts are all delivered in-app — no email flooding. You stay in control, and in the moment." },
               { q: "How does curation actually work?", a: "MonArk uses the Relational Intelligence Framework (RIF) — a behavioral assessment rooted in emotional intelligence research. Your responses shape a compatibility profile that powers your weekly curated introductions." },
               { q: "What if none of my 3 interest me?", a: "You can pass on any introduction. Your feedback refines future curation. MonArk learns from every decision you make." },
               { q: "Is MonArk inclusive of all sexual orientations and gender identities?", a: "Yes. MonArk is designed for all adults seeking intentional connection, regardless of orientation or identity. Curation is always preference-informed." },
@@ -855,7 +943,7 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         }}
       />
 
-      {/* ═══════════ INSTAGRAM ═══════════ */}
+      {/* ─── INSTAGRAM ─── */}
       <section className="py-14 bg-secondary/30">
         <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-16">
           <div className="text-center mb-8">
@@ -911,17 +999,15 @@ export const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onExit
         </div>
       </section>
 
-      {/* ═══════════ FOOTER ═══════════ */}
+      {/* ─── FOOTER ─── */}
       <footer className="py-12 bg-muted border-t border-border">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16 text-center">
           <img src={monarkLogoHorizontal} alt="MonArk — Date well." className="h-10 w-auto object-contain mx-auto mb-6" />
-
 
           <p className="text-muted-foreground font-body text-sm mb-5">
             &copy; {new Date().getFullYear()} MonArk. Dating reimagined with Smart Matching.
           </p>
 
-          {/* App Store Badges */}
           <div className="flex items-center justify-center gap-3 mb-5">
             <span className="inline-flex items-center px-5 py-2.5 rounded-[40px] border-[1.5px] border-muted-foreground/30 text-muted-foreground/50 font-body text-xs tracking-[0.08em] cursor-not-allowed select-none opacity-60">
               App Store — Coming Soon
