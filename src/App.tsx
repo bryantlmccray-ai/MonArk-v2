@@ -1,4 +1,3 @@
-
 import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -13,6 +12,7 @@ import { AdminMFAGate } from "@/components/auth/AdminMFAGate";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { AuthGuard } from "@/components/common/AuthGuard";
+import { OnboardingGuard } from "@/components/common/OnboardingGuard";
 import { AuthPage } from "@/components/auth/AuthPage";
 
 // Lazy-load routes that are NOT on the critical path
@@ -28,69 +28,111 @@ const AdminAnalytics = lazy(() => import("./pages/AdminAnalytics"));
 const AdminMatchCuration = lazy(() => import("./pages/AdminMatchCuration"));
 const MilestoneCardShowcase = lazy(() => import("./components/social/MilestoneCardShowcase").then(m => ({ default: m.MilestoneCardShowcase })));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Onboarding = lazy(() => import("./pages/Onboarding"));
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 30_000,
-      gcTime: 5 * 60_000,
-      retry: 1,
-      refetchOnWindowFocus: true,
+    defaultOptions: {
+          queries: {
+                  staleTime: 30_000,
+                  gcTime: 5 * 60_000,
+                  retry: 1,
+                  refetchOnWindowFocus: true,
+          },
     },
-  },
 });
 
 const PageFallback = () => (
-  <div className="min-h-screen bg-background flex items-center justify-center">
-    <div className="text-foreground text-lg">Loading...</div>
-  </div>
-);
+    <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-foreground text-lg">Loading...</div>div>
+    </div>div>
+  );
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ErrorBoundary>
-      <DemoProvider>
-        <AuthProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter basename={import.meta.env.BASE_URL}>
-              <Suspense fallback={<PageFallback />}>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/dashboard" element={<AuthGuard><Dashboard /></AuthGuard>} />
-                  <Route path="/journal" element={<AuthGuard><Dashboard /></AuthGuard>} />
-                  <Route path="/connections" element={<AuthGuard><Dashboard /></AuthGuard>} />
-                  <Route path="/index" element={<Index />} />
-                  <Route path="/privacy" element={<Privacy />} />
-                  <Route path="/terms" element={<Terms />} />
-                  <Route path="/cookie-policy" element={<CookiePolicy />} />
-                  <Route path="/data-processing" element={<DataProcessing />} />
-                  <Route path="/waitlist" element={<Waitlist />} />
-                  <Route path="/reset-password" element={<ResetPassword />} />
-                  <Route path="/admin" element={<AdminMFAGate><Admin /></AdminMFAGate>} />
-                  <Route path="/admin/waitlist" element={<AdminMFAGate><AdminWaitlist /></AdminMFAGate>} />
-                  <Route path="/admin/analytics" element={<AdminMFAGate><AdminAnalytics /></AdminMFAGate>} />
-                  <Route path="/admin/curation" element={<AdminMFAGate><AdminMatchCuration /></AdminMFAGate>} />
-                  <Route path="/milestone-cards" element={<MilestoneCardShowcase />} />
-                  <Route path="/signin" element={<AuthPage defaultMode="login" />} />
-                  <Route path="/sign-in" element={<AuthPage defaultMode="login" />} />
-                  <Route path="/login" element={<AuthPage defaultMode="login" />} />
-                  <Route path="/signup" element={<AuthPage defaultMode="signup" />} />
-                  <Route path="/sign-up" element={<AuthPage defaultMode="signup" />} />
-                  <Route path="/auth" element={<AuthPage defaultMode="login" />} />
-                  <Route path="/privacy-policy" element={<Navigate to="/privacy" replace />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
-            </BrowserRouter>
-            <CookieConsent />
-          </TooltipProvider>
-        </AuthProvider>
-      </DemoProvider>
-    </ErrorBoundary>
-  </QueryClientProvider>
-);
-
-export default App;
+    <QueryClientProvider client={queryClient}>
+        <ErrorBoundary>
+              <DemoProvider>
+                      <AuthProvider>
+                                <TooltipProvider>
+                                            <Toaster />
+                                            <Sonner />
+                                            <BrowserRouter basename={import.meta.env.BASE_URL}>
+                                                          <Suspense fallback={<PageFallback />}>
+                                                                          <Routes>
+                                                                                            <Route path="/" element={<Index />} />
+                                                                          
+                                                                            {/* Onboarding — requires auth, blocks dashboard until complete */}
+                                                                                            <Route
+                                                                                                                  path="/onboarding"
+                                                                                                                  element={
+                                                                                                                                          <AuthGuard>
+                                                                                                                                                                  <Onboarding />
+                                                                                                                                            </AuthGuard>AuthGuard>
+                                                                                              }
+                                                                                                              />
+                                                                                            
+                                                                                              {/* Protected dashboard routes — require auth AND completed onboarding */}
+                                                                                                              <Route
+                                                                                                                                    path="/dashboard"
+                                                                                                                                    element={
+                                                                                                                                                            <AuthGuard>
+                                                                                                                                                                                    <OnboardingGuard>
+                                                                                                                                                                                                              <Dashboard />
+                                                                                                                                                                                                            </OnboardingGuard>OnboardingGuard>
+                                                                                                                                                              </AuthGuard>AuthGuard>
+                                                                                                                }
+                                                                                                                                />
+                                                                                                                                <Route
+                                                                                                                                                      path="/journal"
+                                                                                                                                                      element={
+                                                                                                                                                                              <AuthGuard>
+                                                                                                                                                                                                      <OnboardingGuard>
+                                                                                                                                                                                                                                <Dashboard />
+                                                                                                                                                                                                                              </OnboardingGuard>OnboardingGuard>
+                                                                                                                                                                                </AuthGuard>AuthGuard>
+                                                                                                                                  }
+                                                                                                                                                  />
+                                                                                                                                                  <Route
+                                                                                                                                                                        path="/connections"
+                                                                                                                                                                        element={
+                                                                                                                                                                                                <AuthGuard>
+                                                                                                                                                                                                                        <OnboardingGuard>
+                                                                                                                                                                                                                                                  <Dashboard />
+                                                                                                                                                                                                                                                </OnboardingGuard>OnboardingGuard>
+                                                                                                                                                                                                                      </AuthGuard>AuthGuard>
+                                                                                                                                                    }
+                                                                                                                                                                    />
+                                                                                                                                                  
+                                                                                                                                                                    <Route path="/index" element={<Index />} />
+                                                                                                                                                                    <Route path="/privacy" element={<Privacy />} />
+                                                                                                                                                                    <Route path="/terms" element={<Terms />} />
+                                                                                                                                                                    <Route path="/cookie-policy" element={<CookiePolicy />} />
+                                                                                                                                                                    <Route path="/data-processing" element={<DataProcessing />} />
+                                                                                                                                                                    <Route path="/waitlist" element={<Waitlist />} />
+                                                                                                                                                                    <Route path="/reset-password" element={<ResetPassword />} />
+                                                                                                                                                                    <Route path="/admin" element={<AdminMFAGate><Admin /></AdminMFAGate>AdminMFAGate>} />
+                                                                                                                                                                                      <Route path="/admin/waitlist" element={<AdminMFAGate><AdminWaitlist /></AdminMFAGate>AdminMFAGate>} />
+                                                                                                                                                                                                        <Route path="/admin/analytics" element={<AdminMFAGate><AdminAnalytics /></AdminMFAGate>} />
+                                                                                                                                                                                                        <Route path="/admin/curation" element={<AdminMFAGate><AdminMatchCuration /></AdminMFAGate>AdminMFAGate>} />
+                                                                                                                                                                                                                          <Route path="/milestone-cards" element={<MilestoneCardShowcase />} />
+                                                                                                                                                                                                                          <Route path="/signin" element={<AuthPage defaultMode="login" />} />
+                                                                                                                                                                                                                          <Route path="/sign-in" element={<AuthPage defaultMode="login" />} />
+                                                                                                                                                                                                                          <Route path="/login" element={<AuthPage defaultMode="login" />} />
+                                                                                                                                                                                                                          <Route path="/signup" element={<AuthPage defaultMode="signup" />} />
+                                                                                                                                                                                                                          <Route path="/sign-up" element={<AuthPage defaultMode="signup" />} />
+                                                                                                                                                                                                                          <Route path="/auth" element={<AuthPage defaultMode="login" />} />
+                                                                                                                                                                                                                          <Route path="/privacy-policy" element={<Navigate to="/privacy" replace />} />
+                                                                                                                                                                                                        
+                                                                                                                                                                                                                          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                                                                                                                                                                                                                          <Route path="*" element={<NotFound />} />
+                                                                                                                                                                                                                        </Routes>
+                                                                                                                                                                      </Route>Suspense>
+                                                            </Route>BrowserRouter>
+                                                                                                                                                              <CookieConsent />
+                                                                                                                                                    </Route>TooltipProvider>
+                                                                                                                                  </Route>AuthProvider>
+                                                                                              </Route>DemoProvider>
+                                                                                            </Route>ErrorBoundary>
+                                                                          </Routes>QueryClientProvider>
+                                                          );
+                                                          
+                                                          export default App;</div>
