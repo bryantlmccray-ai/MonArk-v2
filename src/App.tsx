@@ -42,9 +42,9 @@ const queryClient = new QueryClient({
 });
 
 const PageFallback = () => (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-foreground text-lg">Loading...</div></div>
-    </div></div>
+  <div className="min-h-screen bg-background flex items-center justify-center">
+    <div className="text-foreground text-lg">Loading...</div>
+  </div>
   );
 
 const App = () => (
@@ -60,7 +60,7 @@ const App = () => (
                                                                           <Routes>
                                                                                             <Route path="/" element={<Index />} />
                                                                           
-                                                                            {/* Onboarding â requires auth, blocks dashboard until complete */}
+                                                                            {/* Onboarding Ã¢ÂÂ requires auth, blocks dashboard until complete */}
                                                                                             <Route
                                                                                                                   path="/onboarding"
                                                                                                                   element={
@@ -70,7 +70,7 @@ const App = () => (
                                                                                               }
                                                                                                               />
                                                                                             
-                                                                                              {/* Protected dashboard routes â require auth AND completed onboarding */}
+                                                                                              {/* Protected dashboard routes Ã¢ÂÂ require auth AND completed onboarding */}
                                                                                                               <Route
                                                                                                                                     path="/dashboard"
                                                                                                                                     element={
