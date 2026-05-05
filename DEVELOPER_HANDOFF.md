@@ -7,6 +7,45 @@
 - **Validation:** Zod (`src/lib/validation.ts`)
 - **State:** React Context + TanStack React Query
 
+## AI Architecture
+
+> **Important for contributors and evaluators:** MonArk is an **AI-powered app**, not an agentic AI system.
+>
+> ### What we use
+> - **OpenAI gpt-4o-mini** — called via individual `fetch()` requests inside Supabase edge functions
+> - - No LangChain, LlamaIndex, CrewAI, or any LLM orchestration framework
+>   - - No multi-step agent reasoning, no tool-use loops, no autonomous planning
+>    
+>     - ### AI-powered edge functions
+>    
+>     - | Function | What it does | AI? |
+>     - |----------|-------------|-----|
+>     - | `ai-match-curator` | Scores match pairs with RIF + interest + behavioral signals | Single GPT call per pair (with deterministic fallback) |
+> | `ai-companion-chat` | In-app AI companion conversation | Single GPT call per message |
+> | `ai-date-concierge` | Date itinerary suggestions | Single GPT call |
+> | `analyze-conversation-signals` | Sentiment/signal extraction | Single GPT call |
+> | `rif-engine` | RIF compatibility scoring | **No AI** — deterministic rule/weight-based math |
+> | `ml-compatibility-trainer` | Adjusts per-user match weights | **No AI** — rule-based pattern analysis on feedback |
+>
+> ### The RIF (Relationship Intention Framework)
+> The RIF is a **15-question structured assessment**, not a machine-learning model. It captures answers across 5 dimensions:
+> 1. Intent clarity
+> 2. 2. Pacing preferences
+>    3. 3. Emotional readiness
+>       4. 4. Boundary respect
+>          5. 5. Post-date alignment
+>            
+>             6. Compatibility scoring is **deterministic** (absolute difference between dimension scores, normalized 0–1). There is no trained embedding model, vector database, or model versioning involved.
+>            
+>             7. ### Matching Logic
+>             8. Match scoring today is **rule/weight-based** with ML aspirations for a future v3:
+>             9. - Geo pre-filter (PostGIS `ST_DWithin`)
+> - RIF dimension distance scoring
+> - - Interest overlap (Jaccard-style)
+>   - - Behavioral signal alignment
+>     - - Optional single GPT call for natural-language rationale + confidence boost
+>       - - Deterministic fallback if GPT unavailable
+>         - 
 ## Project Structure
 
 ```
