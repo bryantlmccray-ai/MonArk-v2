@@ -1,73 +1,50 @@
-# Welcome to your Lovable project
+# MonArk
 
-## Project info
+Relationship wellness platform — a premium dating app focused on intentional connection.
 
-**URL**: https://lovable.dev/projects/f278e5cf-2518-488d-bb35-172e4505688f
+**Live app:** https://lovable.dev/projects/f278e5cf-2518-488d-bb35-172e4505688f
 
-## How can I edit this code?
+## Stack
 
-There are several ways of editing your application.
+| Layer | Technology |
+|-------|------------|
+| Frontend | React 18 + TypeScript + Vite + Tailwind CSS + shadcn/ui |
+| Backend | Supabase (Auth, Postgres, Edge Functions, Realtime, Storage) |
+| AI | OpenAI gpt-4o-mini — individual stateless API calls |
+| Payments | RevenueCat subscription sync |
+| Maps | Google Maps Platform |
 
-**Use Lovable**
+## AI Architecture
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/f278e5cf-2518-488d-bb35-172e4505688f) and start prompting.
+MonArk uses **AI-powered features** — not agentic AI or LLM orchestration frameworks.
 
-Changes made via Lovable will be committed automatically to this repo.
+There is no LangChain, LlamaIndex, CrewAI, or any multi-agent system in this codebase. AI is invoked through individual, stateless OpenAI calls from Supabase edge functions.
 
-**Use your preferred IDE**
+### AI-powered edge functions
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+| Function | AI Usage |
+|----------|----------|
+| ai-match-curator | Single GPT-4o-mini call per match pair (deterministic fallback) |
+| ai-companion-chat | Single GPT call per message |
+| ai-date-concierge | Single GPT call for itinerary suggestions |
+| analyze-conversation-signals | Single GPT call for sentiment/signals |
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Non-AI rule/weight-based functions
 
-Follow these steps:
+| Function | What it does |
+|----------|--------------|
+| rif-engine | Deterministic RIF scoring — no OpenAI |
+| ml-compatibility-trainer | Rule-based feedback weight adjustment — no trained model |
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## The RIF
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+The RIF (Relationship Intention Framework) is a **15-question structured assessment**, not a machine-learning model. It measures readiness across 5 dimensions: intent clarity, pacing preferences, emotional readiness, boundary respect, and post-date alignment. Scoring is **deterministic**. No embedding model, vector DB, or model versioning.
 
-# Step 3: Install the necessary dependencies.
-npm i
+## Development
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+    git clone https://github.com/bryantlmccray-ai/MonArk-v2.git
+    cd MonArk-v2
+    npm install
+    npm run dev
 
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/f278e5cf-2518-488d-bb35-172e4505688f) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+See [DEVELOPER_HANDOFF.md](./DEVELOPER_HANDOFF.md) for full architecture docs.
