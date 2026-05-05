@@ -1,3 +1,19 @@
+/**
+ * rif-engine
+  *
+   * The RIF (Relationship Intention Framework) is a structured 15-question
+    * assessment — NOT an adaptive machine-learning model. It captures user
+     * preferences across five dimensions: intent clarity, pacing preferences,
+      * emotional readiness, boundary respect, and post-date alignment.
+       *
+        * Matching is rule/weight-based (dimension distance scoring). There is no
+         * trained embedding model, vector database, or model-versioning system.
+          * The `calculateMLCompatibility` action below applies personalized weights
+           * from prior feedback — it is weight-based scoring, not ML inference.
+            *
+             * AI features in this function: NONE — all logic is deterministic.
+              * OpenAI is NOT called from this function.
+               */
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
