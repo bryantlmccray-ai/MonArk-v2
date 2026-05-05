@@ -1,3 +1,21 @@
+/**
+ * ai-match-curator
+  *
+   * AI ARCHITECTURE NOTE: This function makes individual, stateless OpenAI API
+    * calls (gpt-4o-mini via fetch) to score candidate match pairs. It is NOT
+     * an agentic AI system. There is no LangChain, LlamaIndex, CrewAI, or any
+      * LLM orchestration framework involved. Each curatePair call issues one
+       * OpenAI completion request and returns — no multi-step reasoning, no tool
+        * use, no agent loops.
+         *
+          * The scoring pipeline is:
+           * 1. Deterministic pre-filtering (geo distance, skipped users, weekly rhythm)
+            * 2. Rule-based feature scoring (RIF compatibility, interest overlap, behavioral)
+             * 3. Optional single OpenAI call for natural-language rationale + confidence
+              * 4. Fallback to deterministic scoring if OpenAI is unavailable
+               *
+                * This is accurately described as an "AI-powered feature," not agentic AI.
+                 */
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
